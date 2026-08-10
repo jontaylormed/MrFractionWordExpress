@@ -11,7 +11,7 @@
 
 ---
 
-> **The rules most likely to save you time.** §29: bulk content edits go through `Edit`, never a shell — **this project has no version control**, and a PowerShell replace once corrupted seven files here. §31: deletion is the cheapest fix to write and the most expensive to live with. §34 and §35 are new and are about deployment and about instruments that break what they measure.
+> **The rules most likely to save you time.** §29: bulk content edits go through `Edit`, never a shell — a PowerShell replace once corrupted seven files here. **There is a git repo now (2026-08-10), so the worst case is a `git checkout` rather than a lost session — but only for what is committed, so the rule stands.** §31: deletion is the cheapest fix to write and the most expensive to live with. §34 and §35 are new and are about deployment and about instruments that break what they measure.
 
 **Next session's work is §0.** Everything after it is the state you are picking up.
 
@@ -45,7 +45,16 @@
 
 **The first upload shipped broken**, and the failure is worth knowing because it will recur with any new folder: `index.html` and the ten images were uploaded but **`assets/` and `content/` were not**, and the images landed at the repository root rather than in `assets/art/`. GitHub's drag-and-drop uploader flattens silently when files are selected instead of a directory being dragged. Every local check had passed — they verified the local folder was internally consistent, which was true and useless.
 
-**The user is learning git and hosting**, and this folder is still **not a git repo**. `git` is installed; `gh` is not. Making it one is the single biggest gap in the project — `VERIFICATION.md` §29 exists entirely because there is no `git checkout` to recover from.
+**This folder IS a git repository now — initialised 2026-08-10**, branch `main`, one commit, 105 files tracked. Identity is set **locally on this repo only**; nothing global was touched. `.gitignore` excludes the duplicated `Mr Fraction Word Express Art/` (an exact copy of `assets/art/`, verified name-for-name and byte-length), and `.gitattributes` normalises line endings so a Windows working copy and a Linux Pages deploy stop disagreeing about every file.
+
+**No remote is configured and nothing has been pushed.** The live site was uploaded by hand and its history is unrelated to this one, so a first push needs `--force` and is the user's call, not an agent's:
+
+```
+git remote add origin https://github.com/jtaylor-cloud/MrFractionWordProblemExpress.git
+git push -f origin main
+```
+
+**The safety net was tested rather than assumed.** The 2026-08-04 corruption was re-staged exactly — a scripted `w`→`h` substitution across `ch-water-tank.js` — and `git checkout -- <file>` restored it byte-for-byte. `VERIFICATION.md` §29 is updated: the "no version control" clause is struck, and the rest of the rule stands.
 
 Still true and still the thing most likely to break the art: **Pages serves from Linux, which is case-sensitive, and Windows is not.** All 67 references currently resolve case-exact. Re-check after adding any asset.
 

@@ -1470,6 +1470,45 @@ Asked whether a single-file build would be better, since the sister site is one 
 
 ---
 
+## Cycle 28 — 2026-08-10 — the licence, the palette, and a repo at last
+
+Three small items, and one of them turned out not to be an item.
+
+### Item 5b did not need a ruling. It needed looking at.
+
+It had sat marked **"open — one decision"** for two days. Both of its original conflicts had already been settled by what got built:
+
+| Recorded as open | What the build actually does |
+|---|---|
+| Display fonts are remote, and this site is zero-dependency | **Self-hosted and adopted.** `BlackHanSans-400.woff2` and `LibreBaskerville-400i.woff2` sit in `assets/fonts/`; all five `@font-face` rules are local; **zero** remote requests; `--font-display` used 13 times. |
+| Spinning gears break the ban on motion near problem text | **Never imported.** `gear` appears nowhere in the CSS, the JS or the HTML. |
+
+Only the third part — three line colours missing AA as normal text on `--cream-mid` — is genuinely open, and nothing is failing today because the one surface it touches is patched.
+
+**The lesson is `VERIFICATION.md` §9 in miniature, pointing the other way from usual.** Doc drift is normally the docs claiming something the build does not do. This was the docs holding a decision open that the build had closed — and the cost was nearly asking the user to rule on a conflict that no longer existed. *Before escalating a design decision, check whether it is still a decision.*
+
+**One call made, not deferred:** the semantic colour aliases §5 suggested (`--teal`, `--blue`, `--green`) were **not** added. `--orange` exists and is used twice; the others have no consumer, because no Factory artwork has been ported. Three variables nothing reads is dead content, and §8 is about exactly that. Two lines to add the day something needs them.
+
+### The licence
+
+`LICENSE` now carries **CC BY-NC-SA 4.0**, matching the sister site and the badge already in the README. It calls out the bundled typefaces separately under their own **SIL OFL 1.1**, because a blanket project licence over third-party fonts would be a claim the project cannot make.
+
+### The repository
+
+**This folder is a git repo.** Branch `main`, one commit, **105 files**. Identity set **locally on this repo only**. `.gitignore` excludes the duplicated `Mr Fraction Word Express Art/`; `.gitattributes` normalises line endings, which matters on a project authored on Windows and served from Linux.
+
+**The safety net was tested, not assumed.** The 2026-08-04 disaster was re-staged exactly — a scripted `w`→`h` substitution across `ch-water-tank.js`, the same 28,261 characters — and one `git checkout -- <file>` restored it byte-for-byte.
+
+**And the verification of that restore failed first, for the usual reason.** The naive check compared raw character counts: 28,261 before, 28,621 after, and reported RECOVERY FAILED. The 360-character gap was 360 LF→CRLF conversions — `.gitattributes` doing precisely its job. Normalised, the content was identical and `git status` was clean. **Comparing lengths across a line-ending boundary is comparing two different objects**, which is this project's most-repeated instrument error wearing yet another disguise.
+
+`VERIFICATION.md` §29 is updated rather than deleted: the "no version control" clause is struck through, and everything else stands. Recovery being cheap is not a licence to write carelessly, and anything uncommitted is still unprotected.
+
+**No remote is configured and nothing was pushed.** The live site was uploaded by hand and has an unrelated history, so a first push needs `--force` — the user's call, not an agent's.
+
+**Verified after all of it:** 30 problems · 120 materialisations · 1196 screens · every check at zero.
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.

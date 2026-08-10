@@ -527,11 +527,13 @@ The authority is `PEDAGOGY.md` §2.2 and its three tiers: **tier 1 names the ope
 
 > **Corrected 2026-08-10.** This section said *"None outstanding… the next one to pick up is item 7, the Learning Hub"* while item 7 was finished on 2026-08-09 and **5b was flagged open two screens above it**. Spec-says and build-does disagreeing in the one section a new session reads for *what next* is `VERIFICATION.md` §9.
 
-**One outstanding — item 5b, the palette.** Three things now, all needing a ruling rather than an agent:
+**Item 5b closed 2026-08-10, and two of its three parts never needed a ruling** — the build had already answered them. Checked rather than assumed; see §5 for the evidence.
 
-1. The sister site's display fonts are **remote** and this site is zero-dependency `file://`, so Black Han Sans and Libre Baskerville get self-hosted in the repo or dropped.
-2. Its **spinning gear watermarks** break the existing ban on decorative animation near problem text, so they go static or stay out of the reading column.
-3. **New, measured 2026-08-10:** three of the five line colours miss AA as normal text on `--cream-mid` — **change 4.26, ratio 4.41, groups 4.09** against 4.5. Compare (4.98) and partwhole (5.43) pass; the new `--line-percent` is the strongest at 5.67. The one surface where it bites is patched by bolding the label, so nothing is failing today — but if the palette is being reconciled anyway, **darkening those three is the fix that holds everywhere** instead of per-surface.
+1. ~~Remote display fonts~~ — **already self-hosted.** `assets/fonts/` carries both faces, all five `@font-face` rules are local, zero remote requests.
+2. ~~Spinning gears~~ — **never imported.** `gear` appears nowhere in the codebase.
+3. **Genuinely open, and the only one left:** three of the five line colours miss AA as normal text on `--cream-mid` — **change 4.26, ratio 4.41, groups 4.09** against 4.5. Compare (4.98) and partwhole (5.43) pass; `--line-percent` is strongest at 5.67. The one surface where it bites is patched by bolding the label, so **nothing is failing today** — but darkening those three is the fix that holds everywhere instead of per-surface. A design call, small, and safe to leave.
+
+**Also settled 2026-08-10:** the licence. `LICENSE` now carries **CC BY-NC-SA 4.0**, matching the sister site, with the bundled typefaces called out separately under their own SIL OFL 1.1 terms.
 
 **Unblocked and ready to pick up:** **item 6, Challenge Mode** — the last thing on this roadmap. Everything it wanted is in place: all five lines, all four hubs, and the percent card that gave the site its first worked example of one surface sitting on several structures. Read §6 before starting; it is larger than a line and wants its own planning document.
 

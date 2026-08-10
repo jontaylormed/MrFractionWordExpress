@@ -291,7 +291,9 @@ Recovery cost roughly a quarter of the session and turned on a cache that could 
 
 - **Bulk content edits go through `Edit`, not a shell.** It matches an exact unique string, fails loudly when the string is absent, and cannot address a file by character offset. Every one of the seven repairs after recovery was an `Edit`, and every one either applied or errored.
 - **A replace whose arguments are single characters is a bug**, not an edit. Assert the length of every search string before using it.
-- **This project has no version control.** There is no `git checkout` here. Treat every scripted write to `content/` as irreversible, because it is.
+- ~~**This project has no version control.** There is no `git checkout` here. Treat every scripted write to `content/` as irreversible, because it is.~~
+  **THIS IS NO LONGER TRUE, AS OF 2026-08-10.** The folder is a git repository with a full initial commit (105 files). `git checkout -- <file>` now exists and works. **Proven, not assumed:** the exact 2026-08-04 disaster was re-staged — a scripted `w`→`h` substitution across `ch-water-tank.js`, same shape, same 28,261 characters — and one `git checkout --` restored it byte-for-byte, verified by normalising line endings and confirming `git status` clean.
+  **The rest of this rule stands unchanged and matters more, not less.** Recovery being cheap is not a licence to write carelessly: a scripted bulk edit can still corrupt seven files between two commits, and everything uncommitted is still unprotected. `Edit` over a shell remains the rule, single-character replacements are still a bug, and the discipline of reading one file back before writing the rest still costs a minute and saves a session. What has changed is only the worst case: it is now a command rather than a quarter of a session spent scraping a browser cache.
 - **If a bulk write must happen, read one file back and eyeball it before writing the rest.** The corruption was visible in the first line of the first file.
 
 ## 30. A permitted use of a forbidden pattern must be marked in the data, not judged by the reader
