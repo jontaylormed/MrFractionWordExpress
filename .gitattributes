@@ -1,0 +1,28 @@
+# Normalise line endings so the repository stores LF regardless of who commits.
+#
+# This matters here for a specific reason: the site is authored on Windows and
+# served by GitHub Pages from Linux. Without this, every text file can show as
+# wholly modified the first time it is touched on another machine, which buries
+# a real one-line change in a diff of four hundred.
+* text=auto
+
+# Explicitly text, so they are never guessed at.
+*.html   text
+*.css    text
+*.js     text
+*.json   text
+*.md     text
+*.yml    text
+
+# PowerShell is Windows tooling and is happiest with CRLF in the working copy.
+*.ps1    text eol=crlf
+
+# Binary: never touched, never diffed, never line-ending-converted. Corrupting
+# a woff2 or a png by "normalising" it is a real failure mode.
+*.png    binary
+*.gif    binary
+*.jpg    binary
+*.woff2  binary
+*.woff   binary
+*.ttf    binary
+*.otf    binary

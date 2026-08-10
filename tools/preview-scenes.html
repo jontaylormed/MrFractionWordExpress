@@ -1,0 +1,324 @@
+<!doctype html>
+<!-- Test scaffolding, not part of the site. Opens on file:// like everything
+     else here, and pulls the REAL stylesheet, the REAL scene libraries and the
+     REAL problem manifests, so what you are looking at is what a station
+     renders rather than a copy that can drift.
+
+     WHY THIS EXISTS AND NOT JUST preview-compare-scenes.html
+     There are now four families of illustration on this site — the icon grid
+     and the unit grid on Part-Whole, and three `anim` libraries on Ratio,
+     Change and Compare. Nothing has ever shown them together, and "do these
+     look like they came from the same place?" is a question you can only
+     answer by seeing them side by side. Every one of them is on this page, at
+     the width a station gives the scene column and again wider.
+
+     THE ART COVERAGE IS DERIVED, NOT LISTED. It walks RatioScenes.names,
+     ChangeScenes.names and CompareScenes.names, so an art added to any library
+     appears here without anyone remembering to come and add it. The problem
+     files below are loaded only to supply each art's real caption and the
+     Part-Whole manifests; an art with no problem yet still renders, labelled
+     as such. If a scene is missing from this page it is missing from a
+     library, which is the only thing that should be able to hide it.
+
+     REDUCED MOTION follows your OS setting and cannot be faked with a checkbox,
+     because the freeze rules live in a media query. Windows Settings >
+     Accessibility > Visual effects > Animation effects. Turn it off and every
+     picture on this page must still read as a finished drawing. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Every scene on the site — preview</title>
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+  body { background: var(--cream-light); padding: 28px;
+         font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: var(--ink); }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  h2 { font-size: 17px; margin: 34px 0 4px; border-bottom: 2px solid var(--border-strong); padding-bottom: 5px; }
+  h3 { font-size: 14px; margin: 0 0 8px; font-weight: 700; }
+  p.note { margin: 0 0 22px; max-width: 74ch; font-size: 14px; line-height: 1.55; }
+  .row { display: flex; flex-wrap: wrap; gap: 26px; margin: 0 0 30px; align-items: start; }
+  .col   { width: 340px; }   /* the width a station gives the scene column */
+  .wide  { width: 560px; }   /* and a generous one, to check it does not fall apart */
+  /* 210px is not a round number picked for looks: it is the `minmax(210px,
+     300px)` floor the station's two-column grid gives the scene, and therefore
+     the narrowest this picture is ever asked to be. Below 760px the column
+     goes full width and gets MORE room, not less. */
+  .narrow{ width: 210px; }
+  .tag { font: 700 11px/1.6 system-ui; letter-spacing: .05em; text-transform: uppercase;
+         opacity: .62; margin-left: 6px; }
+  .changed { border-left: 5px solid var(--orange-deep); padding-left: 12px; }
+  .changed h3::after { content: ' — CHANGED THIS SESSION'; font-size: 10px; letter-spacing: .06em;
+         color: var(--orange-deep); }
+  .what { font-size: 13px; line-height: 1.5; max-width: 62ch; margin: 0 0 10px; color: var(--ink-mid); }
+</style>
+</head>
+<body>
+<h1>Every illustration on the site, in one place</h1>
+<!-- THIS PARAGRAPH IS A HAND-KEPT COUNT AND IT HAS ALREADY BEEN WRONG ONCE.
+     It said "four families... the three anim libraries" while five libraries
+     were loaded and twenty-three arts were drawn below it — stale the moment
+     Equal Groups and then Part-Whole grew their own. It says "every line" now
+     rather than naming them, because the list underneath is discovered and this
+     sentence is not, and a number typed here can only ever go out of date. -->
+<p class="note">Every illustration family on the site: the Part&ndash;Whole <strong>icon grid</strong> and
+<strong>unit grid</strong>, and an <strong>anim</strong> library for each line. The question this page exists
+to answer is whether they read as one site. The Part&ndash;Whole grids are shown masked &mdash; the state a
+student meets on the numberless first read &mdash; because that is the hardest state for a picture to
+survive. The bars marked in orange are what changed in this session. <strong>Check the two banners at the
+foot of the page</strong>: one says how much was drawn, the other says whether this preview's own script
+list still matches the site's.</p>
+
+<div id="out"></div>
+
+<!-- data.js is what defines MF and MF.registerProblem, not mrfraction.js. The
+     first draft of this page loaded mrfraction.js alone, every problem file
+     then threw on an undefined MF, and the page came up with the headings and
+     NOTHING ELSE — a preview that renders nothing looks exactly like a preview
+     of nothing. Assert the counts at the bottom of this file; do not trust the
+     absence of an error. -->
+<script src="../assets/js/mrfraction.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/scene.js"></script>
+<script src="../assets/js/ratio-scenes.js"></script>
+<script src="../assets/js/change-scenes.js"></script>
+<script src="../assets/js/compare-scenes.js"></script>
+<script src="../assets/js/groups-scenes.js"></script>
+<script src="../assets/js/partwhole-scenes.js"></script>
+<!-- Loaded for their captions and, on the Part-Whole line, their bar models.
+     A problem missing from this list costs a caption, never a picture. -->
+<script src="../content/problems/pw-soup-serving.js"></script>
+<script src="../content/problems/pw-helmet-savings.js"></script>
+<script src="../content/problems/pw-free-throws.js"></script>
+<script src="../content/problems/pw-orders-day.js"></script>
+<script src="../content/problems/pw-quilt-colors.js"></script>
+<script src="../content/problems/pw-band-brass.js"></script>
+<script src="../content/problems/pw-cycling-club.js"></script>
+<script src="../content/problems/rr-poster-run.js"></script>
+<script src="../content/problems/rr-bread-dough.js"></script>
+<script src="../content/problems/rr-van-hours.js"></script>
+<script src="../content/problems/rr-timetable-run.js"></script>
+<script src="../content/problems/rr-market-stall.js"></script>
+<script src="../content/problems/rr-cordial-mix.js"></script>
+<script src="../content/problems/ch-lost-property.js"></script>
+<script src="../content/problems/ch-kiosk-sandwiches.js"></script>
+<script src="../content/problems/ch-water-tank.js"></script>
+<script src="../content/problems/cp-late-trains.js"></script>
+<script src="../content/problems/cp-ticket-queues.js"></script>
+<script src="../content/problems/cp-bench-count.js"></script>
+<script src="../content/problems/cp-parking-spaces.js"></script>
+<script src="../content/problems/cp-hot-drinks.js"></script>
+<script src="../content/problems/eg-crate-bottles.js"></script>
+<script src="../content/problems/eg-mail-sacks.js"></script>
+<script src="../content/problems/eg-carriage-seats.js"></script>
+<script src="../content/problems/eg-bunting-ribbon.js"></script>
+<script src="../content/problems/eg-water-cans.js"></script>
+<script src="../content/problems/ch-barrier-count.js"></script>
+<script src="../content/problems/ch-fare-rise.js"></script>
+<script src="../content/problems/pw-seats-reserved.js"></script>
+<script src="../content/problems/rr-drink-rate.js"></script>
+<script>
+  var out = document.getElementById('out');
+
+  /* Which art belongs to which problem, DERIVED from the manifests rather than
+     typed out again here. An authored copy of this map would be wrong the first
+     time a problem changed its art and nobody would notice. */
+  var byArt = {};
+  Object.keys(MF.problems || {}).forEach(function (id) {
+    var sc = MF.problems[id].scene;
+    if (sc && sc.mode === 'anim') byArt[sc.art] = { id: id, caption: sc.caption };
+  });
+
+  /* Things this session changed, so the eye goes to them first. Purely a
+     highlight; nothing here affects what is drawn. */
+  /* THE ORANGE BAR AND THE NOTE ARE TWO DIFFERENT THINGS, and conflating them
+     made the highlight useless. `CHANGED` accumulates — every art that has ever
+     earned an explanation keeps it, which is the valuable part — so using it to
+     decide the highlight lit thirteen of twenty-three bars orange under a
+     sentence promising "what changed in this session". A highlight that marks
+     half the page marks nothing. This names the current session only; the notes
+     below stay on everything. */
+  var NEW_THIS_SESSION = { barriers: 1, fares: 1, seats: 1, barrow: 1 };
+
+  var CHANGED = {
+    /* NEW 2026-08-10 — the percent card's four arts, one per line it landed on. */
+    barriers: 'NEW. The ticket gateline for `ch-barrier-count`, the reverse-percent keystone. This problem COUNTS PASSENGERS, so the crowd is the quantity and had to be undrawable as a number: figures at a pitch of 12 with coats 20 wide and heads 14 wide, so every one overlaps both neighbours, running -22 to 358 in a 320 frame. Measured after building it — 29 heads, none of them isolated. The gate paddles clack because a gate working is not an amount changing.',
+    fares: 'NEW. The station fares board for `ch-fare-rise`, the gentle percent increase. A PRICE cannot be counted off a drawing at all, so uncountability comes free here — but a board with figures on it would be the problem\'s givens and its answer, so every price panel is a blank slat. One slat turns over, which is the event, and the arrow beside it says which way.',
+    seats: 'NEW, and the first art in a fifth library — `partwhole-scenes.js`. A percent problem on Part-Whole has no bar model, so the unit grid cannot derive itself and drew nothing. The seats ARE the quantity: backs 34 wide at a pitch of 24, overlapping by ten, off both edges. The reserved ones are deliberately NOT marked — a reservation card on some seats makes the reserved count tallyable, and that is step one\'s answer — so the slips are in the guard\'s hand instead.',
+    barrow: 'NEW. The tea barrow for `rr-drink-rate`, percent as a rate. BOTH quantities are counts here and both are on the picture, so both had to be untallyable: the crowd overlaps and runs off both edges, and the cups are a stack clipped by the barrow\'s front board so its base cannot be seen. Nothing runs out — this problem is keyed to "steady", and a shrinking stack would say an amount had changed.',
+    /* Previous session — the five Equal Groups arts. */
+    crates: 'Rebuilt in an earlier session. It shipped with a single blinking lamp and nothing else, which is what prompted "less reading, more animation". A loader now runs the length of the platform past crates that stay put, with gantry lamps blinking out of step. It carries nothing and changes nothing, because this line is keyed to "no amount ends up different".',
+    sacks: 'A motion audit found it carrying ONE animated element — the swinging sign. An overhead sorting belt now turns above the bags, carrying nothing: a parcel dropping into a sack would show a group being filled. Its row also had a visible LAST BAG, ending 12 units inside the frame, on a line where how many groups there are can be the answer.',
+    carriages: 'Couplings rock in place; the carriages themselves run off both frame edges so the number of them is never on screen.',
+    bunting: 'Its flags straddled neither edge — the first was wholly off-frame and the second wholly inside, so the row visibly BEGAN just inside the picture. Now cut by both edges.',
+    cans: 'REWORKED — the spinning vane is gone. It used rsc-roller, a continuous 360° turn at 1.5s, which is what a wheel or a belt roller does and not what a weather vane does; it read as an abstract cross whirling like a fan. It was also sliced off by the ceiling at y −10, unnoticed because the sweep’s geometry check could not see this library at all. Now the tap drips into a puddle on the GROUND (never into a can, which would be a group being filled) and the flower beds the story mentions sway from their base in the breeze. The tower still carries no gauge markings, because a scale on it would be a number, and on this problem it would be the number.',
+    /* Compare arts, thickened after the same motion audit. */
+    platforms: 'A train now runs through behind the express platform, and lamps blink down both. It had two animated elements against nine and thirteen elsewhere. A train PASSING changes no bench count, so the picture still agrees with the Platform Check.',
+    spaces: 'A barrier arm added at the car park entrance — it ROCKS rather than lifting, because a lifting barrier means a car arriving, and a car arriving changes how many spaces are taken.',
+    buffet: 'Steam off a second cup, two indicator lamps, and the menu board moved down: its hanger straps spanned y −2.7 in a 0..130 frame and were sliced off through the swing.',
+    queues: 'The heads were 12.8 wide on a 17 pitch — 4.2 apart and never touching — above bodies that overlapped by 5. The crowd was uncountable from the neck down and a tidy row of tallyable circles above it. Heads are 17.2 wide now, so they meet.'
+  };
+
+  function block(title, tagText, html, what, changed) {
+    var s = document.createElement('section');
+    if (changed) s.className = 'changed';
+    s.innerHTML = '<h3>' + title + '<span class="tag">' + tagText + '</span></h3>' +
+      (what ? '<p class="what">' + what + '</p>' : '') +
+      '<div class="row">' +
+        '<div class="narrow">' + html + '</div>' +
+        '<div class="col">'    + html + '</div>' +
+        '<div class="wide">'   + html + '</div>' +
+      '</div>';
+    out.appendChild(s);
+  }
+
+  function heading(t, note) {
+    var h = document.createElement('div');
+    h.innerHTML = '<h2>' + t + '</h2><p class="note">' + note + '</p>';
+    out.appendChild(h);
+  }
+
+  /* ---- the anim libraries, DISCOVERED rather than listed ----
+
+     This block used to be a hand-written array of three. The header above says
+     "art coverage is derived, not listed", and that was only half true: it
+     derived the ART NAMES inside each library and hardcoded the LIBRARIES. So
+     when Equal Groups Express arrived with `groups-scenes.js` and five new
+     arts, this page went on showing fourteen illustrations and reporting itself
+     complete. A preview that silently omits a whole line is worse than no
+     preview, because it looks like an answer.
+
+     It now scans `window` for anything shaped like a scene library — a `names`
+     array and an `html` function — so a sixth library appears here the moment
+     it is loaded, without anyone remembering to come back. Blurbs are keyed by
+     name and fall back to a generic line rather than dropping the family. */
+  var BLURB = {
+    RatioScenes: ['Ratio &amp; Rate Rail',
+      'A rate is something happening over time, so every one of these is a small machine doing its job.'],
+    ChangeScenes: ['The Change Line',
+      'A before, an after, and an event between them &mdash; the direction of travel has to be visible, and it has to agree with the arrow beside it.'],
+    CompareScenes: ['The Compare Line',
+      'Two amounts side by side. The objects here ARE the quantities, so they are drawn uncountable on purpose: running off both edges, overlapping, never pairing up.'],
+    GroupsScenes: ['Equal Groups Express',
+      'The hardest line to illustrate honestly, because THREE quantities can be the answer &mdash; how many groups, how big a group is, and what they come to. So no row has an end, and what is inside a group is never resolved into countable things. Motion may not imply a group being filled or emptied.']
+  };
+  Object.keys(window).filter(function (k) {
+    var v = window[k];
+    return /Scenes$/.test(k) && v && Array.isArray(v.names) && typeof v.html === 'function';
+  }).map(function (k) {
+    var b = BLURB[k] || [k, 'An animated scene library.'];
+    return [b[0], k, window[k], b[1]];
+  }).forEach(function (fam) {
+    if (!fam[2]) return;
+    heading(fam[0], fam[3]);
+    fam[2].names.forEach(function (art) {
+      var owner = byArt[art];
+      var caption = owner ? owner.caption : '(no problem uses this art yet)';
+      block(art, owner ? owner.id : 'unused',
+            fam[2].html({ scene: { art: art, caption: caption } }),
+            CHANGED[art] || '', !!NEW_THIS_SESSION[art]);
+    });
+  });
+
+  /* ---- the two Part-Whole families, MASKED, which is the state that matters ---- */
+  heading('Part&ndash;Whole Loop &mdash; the icon grid and the unit grid',
+    'Shown <strong>masked</strong>, the state a student meets on the numberless first read: the picture is ' +
+    'drawn in full and the legend loses its values. These are the oldest illustrations on the site and the ' +
+    'only ones with no inner picture frame &mdash; adding one costs 16px of column width, which at the ' +
+    'narrowest column takes the soup problem from four bowls in a row to three and a stray, so it was ' +
+    'measured and left alone.');
+  Object.keys(MF.problems).forEach(function (id) {
+    var p = MF.problems[id], sc = p.scene;
+    if (!sc || sc.mode === 'anim') return;
+    var m = MF.materialize(p, 0);
+    block(id, sc.mode === 'unit' ? 'unit grid' : 'icon grid &middot; ' + sc.icon,
+          Scene.html(m, true), '', false);
+  });
+
+  /* SAY OUT LOUD WHAT GOT DRAWN. A preview whose scripts failed looks like a
+     preview of a site with no pictures, and this page has already come up that
+     way once (MF lives in data.js, which the first draft did not load). The
+     banner is red until the counts are non-zero, so an empty page cannot be
+     mistaken for an honest one. */
+  (function () {
+    var svgs   = document.querySelectorAll('.rsc-svg').length;
+    var icons  = document.querySelectorAll('.sc-grid').length;
+    var units  = document.querySelectorAll('.unit-grid').length;
+    /* Counted from the SAME discovery the page draws from, not from a list of
+       libraries typed out here. Naming three libraries meant that when Equal
+       Groups arrived the expected total stayed at 14 while 19 arts were drawn,
+       and the banner turned red and shouted SOMETHING DID NOT LOAD at a page
+       where nothing had failed. A check that cries wolf is worse than no check:
+       it is read once, disbelieved, and then ignored on the day it is right. */
+    var arts = Object.keys(window).filter(function (k) {
+      var v = window[k];
+      return /Scenes$/.test(k) && v && Array.isArray(v.names) && typeof v.html === 'function';
+    }).reduce(function (n, k) { return n + window[k].names.length; }, 0);
+    var ok = svgs === arts * 3 && icons > 0 && units > 0;   // 3 widths each
+    var bar = document.createElement('p');
+    bar.style.cssText = 'margin:26px 0 0;padding:10px 12px;border-radius:6px;font-size:13px;font-weight:700;' +
+      'background:' + (ok ? 'var(--cream-mid)' : '#7A1F12') + ';color:' + (ok ? 'var(--ink)' : '#fff');
+    bar.textContent = (ok ? 'Drawn: ' : 'SOMETHING DID NOT LOAD — ') +
+      arts + ' anim arts at 3 widths (' + svgs + ' frames), ' +
+      icons + ' icon grids, ' + units + ' unit grid(s), from ' +
+      Object.keys(MF.problems || {}).length + ' problem manifests.';
+    document.body.appendChild(bar);
+  })();
+
+  /* ---- DOES THIS PAGE'S OWN SCRIPT LIST STILL MATCH THE SITE'S? ----
+
+     The header above says the art coverage is derived, and it is — but only
+     from libraries that have been LOADED, and the <script> tags at the top of
+     this file are a hand-kept list. That is the same defect the discovery block
+     was written to kill, one level up: on 2026-08-10 a fifth scene library and
+     four new problems shipped, and this page went on rendering confidently
+     while showing neither the library nor the captions. Discovery cannot find
+     what was never loaded, and "0 subjects" prints exactly like "0 faults".
+
+     `index.html` is the site's own answer to what exists, so this asks it.
+     Over http (tools/serve.ps1) the fetch works and any drift is named
+     outright. On file:// the fetch is blocked by the origin rules and the check
+     SAYS SO rather than staying quiet — a check that cannot run must never look
+     like a check that passed. */
+  (function () {
+    var note = document.createElement('p');
+    note.style.cssText = 'margin:10px 0 40px;padding:10px 12px;border-radius:6px;font-size:13px;' +
+      'background:var(--cream-mid);color:var(--ink)';
+    note.textContent = 'Checking this preview’s script list against index.html…';
+    document.body.appendChild(note);
+
+    function mine() {
+      return [].map.call(document.querySelectorAll('script[src]'), function (s) {
+        return s.getAttribute('src').replace(/^\.\.\//, '');
+      });
+    }
+    fetch('../index.html').then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    }).then(function (html) {
+      var want = (html.match(/content\/problems\/[a-z0-9-]+\.js/g) || [])
+        .concat(html.match(/assets\/js\/[a-z-]+-scenes\.js/g) || []);
+      var have = mine();
+      var missing = want.filter(function (p) { return have.indexOf(p) === -1; });
+      var extra = have.filter(function (p) {
+        return /content\/problems\/|-scenes\.js/.test(p) && want.indexOf(p) === -1;
+      });
+      var ok = !missing.length && !extra.length;
+      note.style.background = ok ? 'var(--cream-mid)' : '#7A1F12';
+      note.style.color = ok ? 'var(--ink)' : '#fff';
+      note.style.fontWeight = ok ? '400' : '700';
+      note.textContent = ok
+        ? 'Script list matches index.html — ' + want.length +
+          ' scene libraries and problem manifests, all loaded here.'
+        : 'THIS PREVIEW HAS DRIFTED FROM index.html. ' +
+          (missing.length ? 'Missing here: ' + missing.join(', ') + '. ' : '') +
+          (extra.length ? 'Here but not on the site: ' + extra.join(', ') + '.' : '');
+    }).catch(function (e) {
+      note.style.background = '#6B5A38'; note.style.color = '#fff';
+      note.textContent = 'Could not read index.html to check this page’s script list (' + e.message +
+        '). On file:// that is expected — run tools/serve.ps1 and open this page over http to check it. ' +
+        'Until then, treat the coverage above as unverified rather than complete.';
+    });
+  })();
+</script>
+</body>
+</html>

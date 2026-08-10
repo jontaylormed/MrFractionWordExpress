@@ -1,0 +1,64 @@
+<!doctype html>
+<!-- Test scaffolding, not part of the site. Opens on file:// like everything
+     else here, and pulls the real stylesheet and the real scene library so what
+     you are looking at is what a station renders — not a copy that can drift.
+
+     Reduced motion follows your OS setting; it cannot be faked with a checkbox,
+     because the site's freeze rules live in a media query. Turn animation off in
+     Windows Settings > Accessibility > Visual effects to see the frozen state. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Compare Line scenes — preview</title>
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+  body { background: var(--cream-light); padding: 28px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: var(--ink); }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.note { margin: 0 0 26px; max-width: 60ch; opacity: .8; font-size: 14px; }
+  h2 { font-size: 15px; margin: 0 0 8px; }
+  .row { display: flex; flex-wrap: wrap; gap: 26px; margin-bottom: 34px; align-items: start; }
+  .col { width: 340px; }        /* the width a station gives the scene column */
+  .wide { width: 560px; }       /* and a generous one, to check it does not fall apart */
+  .tag { font: 700 12px/1.6 system-ui; letter-spacing: .04em; text-transform: uppercase; opacity: .6; }
+</style>
+</head>
+<body>
+<h1>The Compare Line — animated scenes</h1>
+<p class="note">Three new illustrations, shown at the width a station gives them and again wider.
+Nothing in any of them is countable: the benches and the queue run off both edges of the frame, and
+the delays scene draws minutes, which cannot be counted off a picture at all.</p>
+
+<div id="out"></div>
+
+<script src="../assets/js/compare-scenes.js"></script>
+<script>
+  var SCENES = [
+    { art: 'delays',
+      id: 'cp-late-trains · difference unknown',
+      caption: "Two trains at Thorne Bridge, both late on the same day, one further down the line than the other." },
+    { art: 'queues',
+      id: 'cp-ticket-queues · larger unknown',
+      caption: "The ticket hall at its busiest: people waiting at the window, people waiting at the machines, and no end in sight to either queue." },
+    { art: 'platforms',
+      id: 'cp-bench-count · smaller unknown',
+      caption: "The express platform under its canopy and the local platform below it, benches running away along both." },
+    { art: 'spaces',
+      id: 'cp-parking-spaces · multiplicative, referent unknown',
+      caption: "The car park beside the station and the bike rack outside it, both running away past the edge of the picture." },
+    { art: 'buffet',
+      id: 'cp-hot-drinks · percent, larger unknown',
+      caption: "The buffet counter at Thorne Bridge: hot drinks along the shelf, cold ones below, both running away past the edge of the picture." }
+  ];
+  var out = document.getElementById('out');
+  SCENES.forEach(function (s) {
+    var block = document.createElement('section');
+    block.innerHTML = '<h2>' + s.art + ' <span class="tag">' + s.id + '</span></h2>' +
+      '<div class="row">' +
+        '<div class="col">' + CompareScenes.html({ scene: s }) + '</div>' +
+        '<div class="wide">' + CompareScenes.html({ scene: s }) + '</div>' +
+      '</div>';
+    out.appendChild(block);
+  });
+</script>
+</body>
+</html>

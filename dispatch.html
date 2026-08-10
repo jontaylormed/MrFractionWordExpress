@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Dispatch Office — Mr Fraction's Word Problem Express</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  .dispatch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--su)*3); align-items: start; }
+  @media (max-width: 900px) { .dispatch-grid { grid-template-columns: 1fr; } }
+  .sticky { position: sticky; top: var(--su); }
+  .val-list { list-style: none; padding: 0; margin: 0; }
+  .val-list li { padding: 6px 0; border-bottom: 1px solid #E2D9C6; font-size: .85em; }
+  .val-err { color: var(--status-stop); font-weight: 700; }
+  .val-warn { color: var(--status-caution); }
+  .val-ok { color: var(--status-go); font-weight: 700; }
+  textarea.code { font-family: ui-monospace, Consolas, monospace; font-size: .8em; min-height: 240px; }
+  details { margin-bottom: calc(var(--su)*2); border: 1px solid #E2D9C6; border-radius: 8px; padding: var(--su); }
+  summary { cursor: pointer; font-weight: 700; padding: var(--su); min-height: var(--target-min); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="shell">
+  <header class="station-sign">
+    <div class="sign-inner">
+      <span aria-hidden="true" id="sign-portrait" class="sign-mark"></span>
+      <div class="sign-text">
+        <h1 class="sign-title">The Dispatch Office</h1>
+        <span class="sign-sub">Add your own word problems</span>
+      </div>
+      <div class="sign-nav">
+        <a class="pill" href="index.html" style="text-decoration:none">
+          <span aria-hidden="true">&larr;</span> Back to the station
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <div class="mf-aside">
+      <span id="mf-here"></span>
+      <div class="mf-bubble">
+        <p>Write the problem, fill in what you can, and I&rsquo;ll tell you what&rsquo;s still missing.</p>
+        <p><strong>You don&rsquo;t have to fill it all in.</strong> Anything you leave blank just means that station
+        gets skipped for this problem. A half-filled problem still works &mdash; it teaches less, and the checks
+        on the right will tell you exactly what.</p>
+      </div>
+    </div>
+
+    <div class="msg msg-caution">
+      <span class="ico" aria-hidden="true">!</span>
+      <p><strong>This page does not check your maths.</strong> It checks structure &mdash; missing hints, an estimate
+      range that doesn&rsquo;t contain your answer, answer forms that aren&rsquo;t actually equal. It cannot tell you
+      that 3/4 of 8 isn&rsquo;t 5. For an independent maths check, run the file through
+      <code>/add-problems</code> in Claude Code afterwards.</p>
+    </div>
+
+    <div class="dispatch-grid">
+
+      <!-- ------- FORM ------- -->
+      <div>
+        <div class="card">
+          <span class="eyebrow">Step one</span>
+          <h2>The problem</h2>
+
+          <div class="field">
+            <label for="f-id">Problem id
+              <span class="hint-text">Lower-case letters, numbers and hyphens. Becomes the filename.</span></label>
+            <input type="text" id="f-id" value="pw-my-problem-01">
+          </div>
+
+          <div class="field">
+            <label for="f-title">Title <span class="hint-text">Only you see this.</span></label>
+            <input type="text" id="f-title" value="">
+          </div>
+
+          <div class="inline-fields">
+            <div class="field">
+              <label for="f-line">Which line?</label>
+              <select id="f-line">
+                <option value="partwhole">⬢ Part–Whole Loop</option>
+                <option value="change">● Change Line</option>
+                <option value="compare">■ Compare Line</option>
+                <option value="groups">▲ Equal Groups Express</option>
+                <option value="ratio">◆ Ratio &amp; Rate Rail</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-context">Context
+                <span class="hint-text">Used to vary trips.</span></label>
+              <select id="f-context">
+                <option>cooking</option><option>money</option><option>sport</option>
+                <option>work</option><option>craft</option><option>music</option>
+                <option>rail-travel</option><option>school</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-unknown">What&rsquo;s missing?</label>
+              <input type="text" id="f-unknown" value="part" placeholder="part / whole / other-part…">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-cars">Missing-car choices
+              <span class="hint-text">What the Ticket Booth offers. Comma separated, <strong>*</strong> on the answer:
+              <code>*part, whole, fraction</code></span></label>
+            <input type="text" id="f-cars" value="*part, whole, fraction">
+          </div>
+
+          <div class="field">
+            <label for="f-carwhy">Why that car is the missing one</label>
+            <textarea id="f-carwhy" rows="2">You know the whole pot and you know the fraction. The part is what's missing.</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-whycorrect">Why this line is the right one
+              <span class="hint-text">Shown as a reminder at the Ticket Booth.</span></label>
+            <textarea id="f-whycorrect" rows="2">There's one whole thing — the pot — and we're taking a piece of it. Whole, and a part of that whole.</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-text">The word problem
+              <span class="hint-text">Write <strong>{{n1}}</strong>, <strong>{{n2}}</strong>… where the numbers go &mdash;
+              that&rsquo;s what lets the site hide them on the first read. One sentence per line.</span></label>
+            <textarea id="f-text" rows="5">The station cafe makes a pot of soup that holds {{n1}} cups.
+The cafe has {{n3}} tables.
+At lunch they serve {{n2}} of the pot.
+How many cups of soup did they serve?</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-numbers">The numbers
+              <span class="hint-text">One per line:
+              <code>n1 = 12 | cups | 12 | what it measures</code>.<br>
+              Start a line with <strong>&ndash;</strong> to mark a number the student does
+              <strong>not</strong> need &mdash; deliberately distracting information. Every problem
+              should have at least one.</span></label>
+            <textarea id="f-numbers" rows="4">n1 = 12 | cups | 12 | how much the whole pot holds
+n2 = 3/4 | | three quarters | the share of the pot they served
+-n3 = 14 | tables | 14 | how many tables the cafe has</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-relationship">How the quantities connect
+              <span class="hint-text">Shown once the student has picked the right set.</span></label>
+            <textarea id="f-relationship" rows="2">One of these is the whole thing. The other is a fraction of that whole. The tables have nothing to do with the soup.</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-read3">What is the question asking for?
+              <span class="hint-text">One option per line. Put <strong>*</strong> on the correct one.
+              Add <strong>|</strong> then an explanation &mdash; a wrong pick must teach something.
+              At least 3 options.</span></label>
+            <textarea id="f-read3" rows="5">*The number of cups served at lunch | A number of cups — the part of the pot that went out.
+The number of cups still left in the pot | A real number, but the opposite of what was asked.
+What fraction of the pot was served | You were handed that. The question wants cups, not a fraction.
+How many tables the cafe has | That number is in the problem, but nothing asks for it.</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-qindex">Which line is the question? <span class="hint-text">Counting from 1.</span></label>
+            <input type="number" id="f-qindex" value="4" min="1" style="max-width:120px">
+          </div>
+
+          <div class="field">
+            <label for="f-pcindex">Which lines show what KIND of situation this is?
+              <span class="hint-text">Counting from 1, and never the question line. Separate several with commas
+                — a Change problem usually needs two, because a before and an after cannot fit in one sentence.
+                On the second screen of the first read the student taps these: the event for a Change problem,
+                the "for every" for a rate, the "of the whole" for a part and whole.</span></label>
+            <input type="text" id="f-pcindex" value="3" style="max-width:160px">
+          </div>
+
+          <div class="field">
+            <label for="f-pcwhy">Why is that the one?
+              <span class="hint-text">What the student reads once they find it. No numbers at all — not digits
+                and not words like "two", because the numbers are still covered up on this screen.</span></label>
+            <textarea id="f-pcwhy" rows="2">"of the pot" ties what they served to the pot it came out of. The pot is the whole, and lunch takes a share of it.</textarea>
+          </div>
+
+          <div class="field">
+            <label for="f-pckinds">What is being counted?
+              <span class="hint-text">One line. "Everything counted here is soup from the same pot." Again, no numbers.</span></label>
+            <textarea id="f-pckinds" rows="2">Everything counted here is soup from the same pot.</textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="eyebrow">Step two</span>
+          <h2>The answer</h2>
+          <div class="inline-fields">
+            <div class="field">
+              <label for="f-ans">Answer</label>
+              <input type="text" id="f-ans" value="9">
+            </div>
+            <div class="field">
+              <label for="f-unit">Units</label>
+              <input type="text" id="f-unit" value="cups">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-forms">Also accept
+              <span class="hint-text">Comma separated. Every one must equal the answer &mdash; checked below.
+              Be generous: a student who writes 0.75 for 3/4 is right.</span></label>
+            <input type="text" id="f-forms" value="9, 9 cups">
+          </div>
+          <div class="inline-fields">
+            <div class="field">
+              <label for="f-estmin">Estimate: sensible lowest</label>
+              <input type="text" id="f-estmin" value="6">
+            </div>
+            <div class="field">
+              <label for="f-estmax">Estimate: sensible highest</label>
+              <input type="text" id="f-estmax" value="11">
+            </div>
+          </div>
+        </div>
+
+        <details>
+          <summary>3. Why the other lines are wrong <span class="badge">worth your time</span></summary>
+          <p class="hint-text">When a student picks the wrong line, this is what they read. It is the single
+          most valuable thing on the page &mdash; a generated one is fine, yours is better, because you have watched
+          your students make this exact mistake. Explain the <strong>structure</strong>, never the keywords.</p>
+          <div id="distractor-fields"></div>
+        </details>
+
+        <details>
+          <summary>4. Hints (four rungs)</summary>
+          <p class="hint-text">Each rung gives away exactly one more step. Rung 1 should still leave a student
+          productively stuck.</p>
+          <div class="field"><label for="f-h1">1 · Whistle — redirect attention, no maths</label><input type="text" id="f-h1"></div>
+          <div class="field"><label for="f-h2">2 · Signal — name the strategy, don&rsquo;t do it</label><input type="text" id="f-h2"></div>
+          <div class="field"><label for="f-h3">3 · Coupling — set up the step, leave the arithmetic</label><input type="text" id="f-h3"></div>
+          <div class="field"><label for="f-h4">4 · Full route — do the step, with reasoning</label><input type="text" id="f-h4"></div>
+        </details>
+
+        <details>
+          <summary>5. Common wrong answers</summary>
+          <p class="hint-text">One per line: <code>16 = You divided instead of multiplying.</code><br>
+          Only list answers a student could genuinely arrive at &mdash; a made-up wrong answer gets a student
+          diagnosed for a mistake they didn&rsquo;t make.</p>
+          <textarea id="f-misc" rows="4">16 = You divided by 3/4 instead of multiplying by it. That gives you more soup than the pot holds.
+3 = That's one quarter. The top number says how many quarters you want — three of them.</textarea>
+        </details>
+      </div>
+
+      <!-- ------- PREVIEW + VALIDATION ------- -->
+      <div class="sticky">
+        <div class="card">
+          <h2>What the student sees</h2>
+          <p class="hint-text">First read &mdash; numbers hidden:</p>
+          <div id="preview-masked" class="problem-well"></div>
+          <p class="hint-text">Second read &mdash; numbers shown:</p>
+          <div id="preview-plain" class="problem-well"></div>
+          <p class="hint-text">Read aloud will say:</p>
+          <p id="preview-speech" style="font-size:.85em;color:var(--ink-secondary)"></p>
+        </div>
+
+        <div class="card">
+          <h2>Checks</h2>
+          <ul class="val-list" id="validation"></ul>
+        </div>
+
+        <div class="card">
+          <h2>Save it</h2>
+          <p class="hint-text">Save this as
+            <code id="filename">content/problems/pw-my-problem-01.js</code>,
+            then add one <code>&lt;script&gt;</code> line for it in <code>index.html</code>.</p>
+          <div class="field">
+            <label for="out" class="visually-hidden">Generated file contents</label>
+            <textarea id="out" class="code" readonly></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn" id="copy" type="button">Copy to clipboard</button>
+            <button class="btn btn-secondary" id="download" type="button">Download the file</button>
+          </div>
+          <p id="copied" role="status" aria-live="polite" style="font-size:.85em;color:var(--status-go)"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="rail-foot">
+    <p>Nothing here is uploaded anywhere. This page works with no internet connection.</p>
+  </footer>
+</div>
+
+<div id="live" class="visually-hidden" role="status" aria-live="polite"></div>
+
+<script src="assets/js/mrfraction.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/scenery.js"></script>
+<script src="assets/js/dispatch.js"></script>
+</body>
+</html>

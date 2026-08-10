@@ -1,0 +1,16 @@
+# The delivered art folder, kept on disk and out of the repository.
+#
+# `Mr Fraction Word Express Art/` is the original drop. Every one of its ten
+# files was copied into `assets/art/` — verified name-for-name and byte-length
+# for byte-length — and `assets/art/` is the only one anything references.
+# Publishing both would put 3.2 MB of exact duplicates on Pages, in a folder
+# whose name contains spaces (so every URL to it carries %20).
+#
+# Ignored rather than deleted, deliberately: this project has no version
+# control history to recover from, so the original drop stays where it is.
+Mr Fraction Word Express Art/
+
+# OS and editor noise
+Thumbs.db
+.DS_Store
+desktop.ini
