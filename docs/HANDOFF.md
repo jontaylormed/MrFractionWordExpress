@@ -21,6 +21,31 @@
 
 ---
 
+## 0-NEW. Read this first — the state changed substantially on 2026-08-16
+
+**Challenge Mode is largely BUILT.** Everything in §0 below describes the site before it existed and is now history rather than a brief. The current plan and the next session's work are in **[`CHALLENGE-MODE.md`](CHALLENGE-MODE.md)**.
+
+**35 problems, 140 materialisations, 1388 rendered screens, every sweep count 0.**
+
+What exists that did not before:
+
+| | |
+|---|---|
+| **Crossover Island** | Its own map — coast, mountains, forest, three rivers, a lake, one irregular circuit, a train on the rails, a lighthouse. Reached from the Challenge Line card, which is live. Five stops, all open. |
+| **Five two-line problems** | `cl-signal-delay`, `cl-season-tickets`, `cl-platform-planters`, `cl-lost-umbrellas`, `cl-buffet-crates`. Each is two situations joined by a **transfer** — a number that is an answer on one side and a given on the other. |
+| **The Crossover Read** | A new numberless phase that REPLACES the Platform Check on a paired problem. Three stages: find the seam, then run the same five-question checklist on each half. |
+| **The two-model Plan phase** | `pair-model.js`. First picture, a crossover slot naming what crosses, then a second picture drawn *waiting* — because on a two-line problem nothing in it can be known yet. |
+| **The Lighthouse** | A fifth Learning Hub, seven pages, on both maps. Teaches the crossover, the checklist and the five situations in depth. |
+| **Engine and checker changes** | `MF.CHALLENGE` route key; `pair` on a problem; `optionTrue` (the answer key can no longer be just `p.line`); `stacked` inverted on the Platform Check; the sweep's transfer rule and `solve@N` second-half screens; a numberless rule over the Crossover Read's own copy; `buildTrip` excluding paired problems from every mainland ride. |
+
+**Three things a new session should know before touching any of it:**
+
+1. **An island answer may not be 1, 2 or 5**, and no authored island copy may contain a number word. The station header says *"Two situations, joined"* on every island screen and *"five"* is everywhere the checklist is — the leak scan reads spelled-out answers, and it has already caught one.
+2. **`fadeLevel: "independent"` is the unstaffed-halt switch**, not a label. It skips the Crossover Read and fades the Plan phase to the estimate alone. The Three Reads, the estimate and the hint ladder stay — settled by the user, do not re-open.
+3. **`SWEEP.report()` ends with a Challenge coverage line.** If it says *examined: 0*, the check ran over nothing and the run is not a pass. `SWEEP.selfTestChallenge()` proves the transfer rule independently of content.
+
+---
+
 ## 0. Next session — the brief
 
 > ### Rewritten 2026-08-10, the day the site went live. Read §0, then §1, then `ROADMAP.md`. Everything past the ⏹ marker below is finished work kept for its reasoning.

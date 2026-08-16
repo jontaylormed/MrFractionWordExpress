@@ -180,10 +180,31 @@ Seven so a second visit to the island differs, the same reason every problem car
 
 Coverage as built: compare 3, part–whole 3, ratio 2, change 1, equal groups 1. **Change and Equal Groups appear once each, and only on one side of a crossover** — which is the property §5.2 was written to guarantee and no longer holds at five.
 
-Three ways out, and it is a scope call rather than a defect:
-1. **Leave it at five.** Honest, complete, and the coverage gap is real but small.
-2. **Build 6 and 7 and pool two stops** — a stop draws from two problems, which is what "seven built, five ridden" originally meant and needs `buildIslandStop` to choose rather than name.
-3. **Build 6 and 7 as two more stops**, making a seven-stop island. The circuit has room; the fade ladder does not obviously extend.
+### ▶ DECIDED BY THE USER 2026-08-16: **option 2 — build 6 and 7, and pool two stops.**
+
+The island stays five stops with the fade ladder as approved. Two of those stops draw from a pool of two problems, so a second visit differs by problem and not only by number set — which is what "seven built, five ridden" meant in the first place.
+
+**This is the next session's work. It was not started, on the user's instruction, with the 5-hour budget at 91% — a two-manifest build left half-finished is worse than one not begun.**
+
+#### The brief, so nothing has to be re-derived
+
+**Which two problems.** From §5.2, the two unbuilt pairs are `cl-track-sleepers` (Equal Groups → Change) and `cl-carriage-clean` (Rate → Change, percent). Between them they carry **change ×2 and equal groups ×1**, which is exactly the coverage hole: as built, change and equal groups each appear once and on one side of a crossover only.
+
+**Which stops pool.** Match the pool to the marker, because the map draws a stop's two colours from its `pair` and a pooled stop must not lie about what is waiting:
+- `cl-track-sleepers` is Equal Groups → Change. **Fell Crossing** is drawn `['partwhole','groups']` and holds `cl-platform-planters` (Part–Whole → Equal Groups). Groups is common to both; the marker would need to become the honest one for a pool, or the stop's marker drops to neutral ink when it pools. **Decide this before authoring** — it is the same "the map must not claim what is not there" rule that corrected Marsh Halt.
+- `cl-carriage-clean` is Rate → Change. **Marsh Halt** is `['ratio','partwhole']` and holds `cl-buffet-crates` (Ratio → Part–Whole). Ratio is common.
+
+**The engine change is small and it is in one place.** `Selector.buildIslandStop(id)` currently names its problem. It needs to take a stop and choose from that stop's pool at random, exactly as `buildTrip` picks a number set — same shape, same `{line, route, stations, hub, seed, notes}` return. `ISL_STOPS` entries gain `ids: [...]` in place of `id`, and everything reading `st.id` follows: the island map's open/closed test, `renderIsland`'s button list, `islandLeg`'s stop match (which already refuses an unknown id and must keep doing so), and the `data-stop` attribute, which should carry the STOP rather than the problem once a stop can hold two.
+
+**Rules the new content must obey** — all of them learned the hard way and all of them enforced:
+- an island answer may not be **1, 2 or 5** (`cl-platform-planters` header);
+- no number words in `pair.crossoverWhy/firstWhy/secondWhy/readWhy` — watch for **"half"**, since *"the first half hands the second half a number"* is the natural sentence and is refused;
+- no digits anywhere in `signalBox.crossover`;
+- `platformCheck.sentences` is the sentences carrying quantities the solution needs, not the ones carrying the signal;
+- a staffed stop must have a `crossover` block; an unstaffed one must have neither that nor any first-half model;
+- the `fit` question is tailored, the other four are left abstract — `phRead1` names the second true answer itself.
+
+**Both new problems are staffed-stop content** (`fadeLevel` other than `independent`), because the two unstaffed halts are built and the fade ladder is settled.
 
 **`cl-signal-delay` first**, because the user named it and because it is the sharpest case: the compare produces a *difference*, and the difference is not the answer — it is a **rate**. A student who does not see the crossover reads the whole thing as one comparison and answers with the gap. That is the mode's thesis in one problem.
 
