@@ -185,17 +185,33 @@
        honest than a map that pretends it is. It says "under construction" in
        the same `.soon` pill a line with too few problems uses, so the vocabulary
        for "not yet" is already one a student has met. */
-    special += '<li><button class="line-card line-card-soon" type="button" disabled ' +
-      'aria-label="The Challenge Line. Problems that need more than one strategy at once. ' +
-      'Under construction, not open yet.">' +
+    /* THE CHALLENGE LINE IS OPEN, and it does not go to `chooseRoute`.
+       It used to be inert by CONSTRUCTION — no `data-line`, so the map's
+       handler could not route it even if `disabled` were dropped. That is now
+       deliberately reversed: `data-island` is its own attribute and its own
+       handler, because the island is not a line and must never be handed to
+       `chooseRoute`. There is no Local/Express/Limited here — the island is
+       open, any stop, any order (user, 2026-08-15) — so the map IS the route
+       screen and the ticket window has nothing to ask.
+
+       Counted, never claimed. `MF.pairedProblems()` is the same source the
+       island map draws from, so the card cannot advertise stops the island
+       does not have. With one problem built it says so. */
+    var isle = MF.pairedProblems().length, isleTotal = Scenery.islandStops().length;
+    special += '<li><button class="line-card line-card-challenge" type="button" data-island="1" ' +
+      'aria-label="The Challenge Line, on Crossover Island. ' +
+      'Every stop joins two of the five situations together. ' +
+      isle + ' of ' + isleTotal + ' stops open. Opens the island map.">' +
       /* ✦, not ◆◆ — the first draft doubled the Ratio Rail's marker, which on a
          map whose markers are how a line is identified reads as "two of those"
          rather than as a line of its own. Every marker on this map is unique
          and this one has to be too. */
       '<span class="line-name"><span aria-hidden="true">&#10022;</span>The Challenge Line</span>' +
-      '<span class="line-form">More than one strategy at once</span>' +
-      '<span class="line-desc">Problems that need two of the five together, with the scaffolding fading as you go.</span>' +
-      '<span class="soon">Under construction &mdash; track still being laid.</span>' +
+      '<span class="line-form">Two situations, joined</span>' +
+      '<span class="line-desc">Problems that need two of the five together, with the scaffolding fading as you go. Its own island, and one line all the way round it.</span>' +
+      (isle
+        ? '<span class="badge">' + isle + ' of ' + isleTotal + ' stops open &middot; Crossover Island</span>'
+        : '<span class="soon">Track still being laid &mdash; the island opens with its first stop.</span>') +
       '</button></li>';
 
     var hubs = Object.keys(MF.hubs).map(function (k) {
@@ -288,10 +304,84 @@
 
     node.addEventListener('click', function (e) {
       if (e.target.closest('#resume')) { resumeTrip(); return; }
+      /* Before [data-line], because the island card carries neither and must
+         not fall through to a route chooser that would call MF.rideInfo on a
+         key describing a place rather than a line. */
+      if (e.target.closest('[data-island]')) { renderIsland(); return; }
       var l = e.target.closest('[data-line]');
       if (l && !l.disabled) { chooseRoute(l.getAttribute('data-line')); return; }
       var h = e.target.closest('[data-hub]');
       if (h) renderHub(h.getAttribute('data-hub'));
+    });
+    setView(node);
+  }
+
+  /* ---------- Crossover Island ----------
+
+     THE MAP IS THE ROUTE SCREEN. Every other line goes map → route choice →
+     first stop; the island goes map → stop, because it is open and there is no
+     number of stops to choose. That is why this is its own view rather than a
+     branch inside `chooseRoute`.
+
+     A STOP IS A TRIP OF ONE. Nothing on the island is a multi-stop journey
+     yet, and pretending otherwise would promise a circuit that four unbuilt
+     problems cannot fill — the exact overpromise `routeChoices` was rewritten
+     to stop making on the mainland. */
+  function renderIsland() {
+    var open = {}, built = 0;
+    MF.pairedProblems().forEach(function (p) { open[p.id] = true; built++; });
+
+    /* The buttons are built from the map's OWN stop list, so the two cannot
+       disagree about what exists or about which stops are staffed. This is the
+       list the map's aria-label promises is "below". */
+    var stops = Scenery.islandStops().map(function (st) {
+      var isOpen = !!open[st.id];
+      var kindWord = st.kind === 'staffed' ? 'Staffed platform' : 'Unstaffed halt';
+      var kindNote = st.kind === 'staffed'
+        ? 'The crossover is taught here.'
+        : 'No one on the platform. The five-situations checklist is the only thing to hand.';
+      return '<li><button class="choice" type="button"' +
+        (isOpen ? ' data-stop="' + esc(st.id) + '"' : ' disabled') +
+        ' aria-label="' + esc(st.name + '. ' + kindWord + '. ' + kindNote +
+          (isOpen ? ' Open.' : ' Track still being laid.')) + '">' +
+        '<span class="marker" aria-hidden="true">' + (st.kind === 'staffed' ? '&#9679;' : '&#9675;') + '</span>' +
+        '<span><strong>' + esc(st.name) + '</strong>' +
+        '<small>' + esc(kindWord + ' &mdash; ' + kindNote).replace('&amp;mdash;', '&mdash;') + '</small>' +
+        (isOpen ? '' : '<small>Track still being laid.</small>') +
+        '</span></button></li>';
+    }).join('');
+
+    var node = html(
+      '<div>' +
+      MrFraction.aside('steady',
+        '<p><strong>This is Crossover Island, and it is not one of the five.</strong> ' +
+        'Every stop here joins two of them together &mdash; one situation, and then a different one, ' +
+        'with a number handed between them.</p>' +
+        /* Said before the map rather than after it, because it is the thing a
+           student needs in order to read the map: the two colours on a stop
+           are not decoration, they are what is waiting. */
+        '<p>Each stop is marked in <strong>two colours</strong> for the two situations it joins. ' +
+        'Ride them in any order you like &mdash; the three filled stops teach the join, and the two ' +
+        'open ones leave it to you.</p>') +
+      '<div class="island-hero" id="island-hero"></div>' +
+      '<div class="section-head"><span class="eyebrow">Crossover Island</span>' +
+        '<h2>Pick a stop</h2><div class="rule"></div></div>' +
+      '<ul class="choices">' + stops + '</ul>' +
+      (built < Scenery.islandStops().length
+        ? '<div class="msg msg-caution"><span class="ico" aria-hidden="true">&#9888;</span><p>' +
+          '<strong>The island is still being built.</strong> ' + built + ' of ' +
+          Scenery.islandStops().length + ' stops ' + (built === 1 ? 'is' : 'are') + ' open. ' +
+          'The rest have their track laid on the map and nothing behind them yet.</p></div>'
+        : '') +
+      '<div class="btn-row"><button class="btn btn-secondary" data-back="1" type="button">&larr; Back to the map</button></div>' +
+      '</div>');
+
+    node.querySelector('#island-hero').appendChild(Scenery.islandMap(open));
+
+    node.addEventListener('click', function (e) {
+      if (e.target.closest('[data-back]')) { renderMap(); return; }
+      var s = e.target.closest('[data-stop]');
+      if (s && !s.disabled) startIslandStop(s.getAttribute('data-stop'));
     });
     setView(node);
   }
@@ -462,6 +552,25 @@
   }
 
   /* ---------- Trip ---------- */
+
+  /* One stop on Crossover Island. Not `startTrip`: that builds its ride label
+     from a route that is either a number of stops or a name like "Local", and
+     the island has neither — the label has to name the STOP, because that is
+     what the student chose off the map and what the top bar has to say when
+     they come back to it from the map (`resumeTrip` reads `rideLabel`). */
+  function startIslandStop(id) {
+    var t = Selector.buildIslandStop(id);
+    if (!t) return;
+    trip = t;
+    stationIdx = 0;
+    metrics = newMetrics();
+    tripDone = false;
+    var stops = Scenery.islandStops().filter(function (s) { return s.id === id; });
+    trip.rideLabel = 'Crossover Island · ' + (stops.length ? stops[0].name : 'one stop');
+    document.getElementById('sign-sub').textContent = trip.rideLabel;
+    drawRoute();
+    nextStation();
+  }
 
   function startTrip(line, route) {
     trip = Selector.buildTrip(line, route);

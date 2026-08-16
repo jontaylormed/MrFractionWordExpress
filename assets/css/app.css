@@ -1168,6 +1168,39 @@ select {
   box-shadow: 0 2px 6px var(--shadow);
   margin: calc(var(--su) * 3) 0;
 }
+/* ---------- Crossover Island ----------
+   The island map sits in the same frame the mainland map does, so the two read
+   as the same kind of object — `.map-figure` already carries the framing, the
+   700px min-width and the `overflow-x: auto` that makes a wide map scroll
+   inside its own box instead of scrolling the page.
+
+   THERE WAS A SECOND `svg { width: 100%; height: auto }` RULE HERE AND IT WAS
+   PURE DUPLICATION. It was added on a measurement that said the island SVG ran
+   past the right edge of a 390px viewport — which is true, and is what the
+   mainland does too: measured, both figures come out 363 wide with 732 of
+   scroll, and neither scrolls the page. The instrument was asking "is the SVG
+   inside the viewport" when the question is "does anything but the figure
+   scroll". Deleted rather than left as a harmless copy: a second declaration
+   of the same intent is a second thing to keep in step. */
+.island-hero { margin: calc(var(--su) * 2) 0 calc(var(--su) * 4); }
+
+/* The one animated mark on the island. A lighthouse that does not sweep is a
+   tower. Slow enough to read as a beacon rather than a spinner, and it stops
+   entirely under reduced motion — the beam is still drawn, so the lighthouse
+   is a lighthouse either way. */
+.mf-beam { transform-box: fill-box; transform-origin: 4% 50%; animation: xo-sweep 6.5s ease-in-out infinite; }
+@keyframes xo-sweep {
+  0%, 100% { transform: rotate(-18deg); opacity: .18; }
+  50%      { transform: rotate(16deg);  opacity: .34; }
+}
+@media (prefers-reduced-motion: reduce) { .mf-beam { animation: none; } }
+
+/* The island's card on the main map. It is not one of the five and not one of
+   the two specials either, so it takes the ink outline rather than a line
+   colour — the same reasoning as the neutral track on the island itself. */
+.line-card-challenge { border-color: var(--ink); }
+.line-card-challenge .line-name { color: var(--ink); }
+
 /* ---------- The Crossover ----------
    The Plan phase of a two-line problem: first picture, the slot, second
    picture. The slot is the only new furniture; both pictures are the existing

@@ -1170,10 +1170,301 @@
            'aria-hidden="true" loading="lazy" decoding="async">';
   }
 
+  /* ============================================================
+     CROSSOVER ISLAND — the Challenge Line's own map.
+
+     A SINGLE island with ONE irregular circuit running round it, against a
+     mainland of five separate territories with five lines meeting at
+     junctions. That contrast is the point and not a saving: on the mainland
+     you pick a line and it takes you somewhere; here there is one line and it
+     comes back to where it started, because every stop on it is the same kind
+     of problem wearing a different pair.
+
+     STYLE MATCHES BY CONSTRUCTION, NOT BY IMITATION. Every primitive below is
+     the mainland's — `closedSpline`, `trackPath`, `river`, `range`, `forests`,
+     `waves`, `bridge`, `compassRose`, `makeWaterTest`, `waterSpans`. Redrawing
+     a coastline or a bridge "in the same style" by hand is how two maps drift
+     into looking like two maps. The only genuinely new marks here are the ones
+     the mainland has no concept of: a stop belonging to TWO lines, an
+     unstaffed halt, and a lighthouse.
+
+     THE BRIDGES ARE FOUND, NOT PLACED, and that is worth knowing because it is
+     also the pedagogy. `waterSpans` walks the circuit and returns every stretch
+     that crosses water; each becomes a bridge. So a bridge appears wherever the
+     line crosses a river — and a bridge is exactly what a crossover is: the
+     span that carries you from one side to the other. Nothing was positioned to
+     make that true; it falls out of running the mainland's own water test over
+     the loop.
+
+     MEASURED: TWO BRIDGES, NOT THREE. This comment first said the circuit
+     "happens to cross three rivers", which was a guess written beside a
+     generator whose whole point is that I do not have to guess. The island has
+     three rivers; the loop crosses water in two places, because the short
+     feeder runs into the lake well inside the circuit. `islandMap.bridgeCount`
+     reports it and the map's own aria-label is built from `spans.length`, so
+     the description cannot drift from the drawing the way this sentence did.
+     Also measured on the rendered SVG: 390 samples along the 1557-unit
+     circuit, none of them off the island, and all five stops within 1.4px of
+     the rail.
+
+     WHY THE TRACK IS NEUTRAL INK RATHER THAN A LINE COLOUR. Challenge is a
+     route, not a sixth schema — the same reason `MIXED` and `PERCENT` are kept
+     out of `LINES`. A single colour would claim it is one of the five; six
+     colours would need a palette decision that ROADMAP §5b has open. So the
+     track is the same neutral the mainland uses for junctions, for the same
+     stated reason — "it reads the same whether the lines it joins are running
+     or still being built" — and the two line colours live on the STOPS, where
+     they are true: each stop is one pair.
+     ============================================================ */
+
+  var ISL_W = 1040, ISL_H = 700;
+
+  /* One landmass. Irregular on purpose: a circle would make the circuit a
+     racetrack, and the whole reading of this map is that the line goes round
+     something with a shape. Deep bay on the west, headland north-east, a spit
+     running south. */
+  var ISLAND = [[214, 132], [318, 96], [438, 88], [548, 104], [612, 78], [706, 92],
+                [792, 140], [846, 214], [858, 300], [896, 356], [872, 430],
+                [806, 486], [742, 512], [700, 574], [612, 606], [508, 596],
+                [430, 618], [346, 592], [286, 528], [214, 500], [166, 434],
+                [140, 350], [124, 258], [158, 178]];
+
+  /* The circuit. Closed, irregular, and threaded so it crosses each river once
+     — which is what puts the bridges where they belong. It runs inside the
+     coast the whole way except at the two coastal stops, where it comes out to
+     meet the sea. */
+  var CIRCUIT = [[286, 214], [386, 168], [498, 158], [598, 176], [686, 168],
+                 [762, 210], [788, 286], [812, 356], [780, 424], [706, 452],
+                 [648, 508], [552, 528], [462, 520], [392, 540], [330, 494],
+                 [278, 428], [252, 350], [244, 268]];
+
+  var ISL_RIVERS = [
+    [[402, 250], [388, 306], [366, 372], [330, 436], [300, 500], [286, 552]],   // south-west, to the sea
+    [[672, 246], [700, 300], [736, 348], [772, 392], [820, 440]],               // east, to the sea
+    [[498, 300], [520, 336], [548, 364], [586, 384]]                            // short feeder into the lake
+  ];
+
+  var ISL_LAKE = [[586, 380], [622, 362], [664, 366], [692, 392],
+                  [684, 428], [644, 446], [604, 434], [582, 408]];
+
+  /* THE FIVE STOPS, AND THE ORDER IS NOT A SEQUENCE. The island is open — any
+     stop, any order (user, 2026-08-15) — so these are positions round a loop,
+     not steps 1 to 5. `kind` is what the map has to say instead: staffed
+     platforms teach, unstaffed halts do not.
+
+     `pair` gives each stop its two line colours. That is the one thing on this
+     map a student can read before arriving: what two situations are waiting. */
+  var ISL_STOPS = [
+    { id: 'cl-signal-delay',  at: [386, 168], kind: 'staffed', pair: ['compare', 'ratio'],
+      name: 'Thorne Bridge',  note: 'Compare, then a rate' },
+    { id: null, at: [788, 286], kind: 'staffed', pair: ['compare', 'partwhole'],
+      name: 'Kelder Sands',   note: 'Track being laid' },
+    { id: null, at: [648, 508], kind: 'staffed', pair: ['partwhole', 'groups'],
+      name: 'Fell Crossing',  note: 'Track being laid' },
+    { id: null, at: [330, 494], kind: 'halt',    pair: ['change', 'compare'],
+      name: 'Cold Halt',      note: 'Track being laid' },
+    { id: null, at: [252, 350], kind: 'halt',    pair: ['ratio', 'change'],
+      name: 'Marsh Halt',     note: 'Track being laid' }
+  ];
+
+  var ISL_TERMINUS = [762, 210];
+
+  /* A stop belonging to TWO lines. The mainland's `stop()` takes one colour
+     because a mainland stop is on one line; this one is split down the middle,
+     which is the only honest way to draw a problem that is two situations.
+
+     Colour is never the only signal. A staffed platform is a filled disc with a
+     ring; a halt is an open disc with a post and a crossbar — different SHAPES,
+     so the difference survives a greyscale print and a colour-blind reader,
+     and the button list below the map says which is which in words. */
+  function pairStop(x, y, c1, c2, staffed) {
+    var r = staffed ? 11 : 9;
+    var s = '<circle cx="' + x + '" cy="' + y + '" r="' + (r + 2.5) + '" fill="#FDF8F0" stroke="#2C2214" stroke-width="2.4"/>';
+    if (staffed) {
+      // Two half-discs, split vertically: the first half of the problem on the
+      // left, the second on the right, which is the order they are read in.
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + ' Z" fill="var(--line-' + c1 + ')"/>';
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + ' Z" fill="var(--line-' + c2 + ')"/>';
+      s += '<line x1="' + x + '" y1="' + (y - r) + '" x2="' + x + '" y2="' + (y + r) + '" stroke="#FDF8F0" stroke-width="1.6"/>';
+    } else {
+      // An unstaffed halt: the two colours as an open ring, and a signpost.
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + '" fill="none" stroke="var(--line-' + c1 + ')" stroke-width="3.4"/>';
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + '" fill="none" stroke="var(--line-' + c2 + ')" stroke-width="3.4"/>';
+      s += '<line x1="' + x + '" y1="' + (y - r - 3) + '" x2="' + x + '" y2="' + (y - r - 15) + '" stroke="#5A3E28" stroke-width="2.2"/>';
+      s += '<line x1="' + (x - 7) + '" y1="' + (y - r - 15) + '" x2="' + (x + 7) + '" y2="' + (y - r - 15) + '" stroke="#5A3E28" stroke-width="2.6" stroke-linecap="round"/>';
+    }
+    return s;
+  }
+
+  /* The terminus, on the headland. A lighthouse rather than another disc,
+     because it is the one place on the island that is not a problem — and it is
+     what you steer by from anywhere on the loop. */
+  function lighthouse(x, y) {
+    return '<g>' +
+      '<path d="M ' + (x - 9) + ' ' + y + ' L ' + (x - 6) + ' ' + (y - 30) + ' L ' + (x + 6) + ' ' + (y - 30) + ' L ' + (x + 9) + ' ' + y + ' Z" ' +
+        'fill="#FDF8F0" stroke="#2C2214" stroke-width="2.2" stroke-linejoin="round"/>' +
+      '<rect x="' + (x - 7.6) + '" y="' + (y - 23) + '" width="15.2" height="5" fill="#A85413"/>' +
+      '<rect x="' + (x - 6.6) + '" y="' + (y - 13) + '" width="13.2" height="5" fill="#A85413"/>' +
+      '<rect x="' + (x - 7) + '" y="' + (y - 38) + '" width="14" height="8" rx="1.5" fill="#F2C230" stroke="#2C2214" stroke-width="1.8"/>' +
+      '<path d="M ' + (x - 10) + ' ' + (y - 40) + ' L ' + x + ' ' + (y - 45) + ' L ' + (x + 10) + ' ' + (y - 40) + ' Z" fill="#2C2214"/>' +
+      // the beam, and it sweeps — the one animated mark on the island
+      '<path class="mf-beam" d="M ' + (x + 7) + ' ' + (y - 34) + ' L ' + (x + 62) + ' ' + (y - 50) + ' L ' + (x + 62) + ' ' + (y - 16) + ' Z" ' +
+        'fill="#F2C230" opacity=".28"/>' +
+      '</g>';
+  }
+
+  /**
+   * Crossover Island.
+   * @param {object} counts  map of stop id -> true when that stop has a
+   *                         published problem behind it. Discovered by the
+   *                         caller from the problem bank, never listed here —
+   *                         a map that hardcodes what is built is a map that
+   *                         lies the day something opens.
+   */
+  function islandMap(counts) {
+    counts = counts || {};
+    var W = ISL_W, H = ISL_H, s = '';
+    var land = closedSpline(ISLAND, 9);
+    var lake = closedSpline(ISL_LAKE, 8);
+    var circuit = closedSpline(CIRCUIT, 10);
+
+    s += '<defs><clipPath id="xo-land"><path d="' + land.d + '"/></clipPath></defs>';
+
+    /* --- sea --- */
+    s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" rx="10" fill="#DCEEF6"/>';
+    s += waves([[52, 118], [46, 300], [72, 470], [140, 606], [300, 60],
+                [560, 46], [852, 96], [962, 300], [934, 520], [760, 646],
+                [420, 664], [180, 640]]);
+
+    /* --- the island --- */
+    s += '<path d="' + land.d + '" fill="#F5EDE0" stroke="#A9CFE2" stroke-width="7" stroke-linejoin="round"/>';
+    s += '<path d="' + land.d + '" fill="#F5EDE0" stroke="#2C2214" stroke-width="2.5" stroke-linejoin="round"/>';
+
+    /* --- inland water. Same ordering rule as the mainland: rivers first,
+           then the lake painted over them, then the lake's outline masked at
+           each river mouth so the border does not cut across the water where a
+           river arrives. Copied as an ORDER, not as code. --- */
+    var mouths = [];
+    ISL_RIVERS.forEach(function (r) {
+      [r[0], r[r.length - 1]].forEach(function (p) {
+        if (near(p, lake.pts, 22) || pointInPoly(p, lake.pts)) mouths.push(p);
+      });
+    });
+    s += '<g clip-path="url(#xo-land)">' +
+         ISL_RIVERS.map(function (r) { return river(smoothPath(r)); }).join('') +
+         '</g>';
+    s += '<path d="' + lake.d + '" fill="#BFE0EF"/>';
+    s += '<defs><mask id="xo-lake-edge">' +
+         '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#fff"/>' +
+         mouths.map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="11" fill="#000"/>'; }).join('') +
+         '</mask></defs>';
+    s += '<path d="' + lake.d + '" fill="none" stroke="#8FBBD1" stroke-width="2.5" mask="url(#xo-lake-edge)"/>';
+    s += '<path class="mf-flow mf-flow-slow" d="M 600 400 C 618 392, 646 396, 668 390" fill="none" ' +
+         'stroke="#E4F4FB" stroke-width="2" stroke-linecap="round" stroke-dasharray="10 16"/>';
+    s += '<text x="636" y="412" text-anchor="middle" font-family="' + BODY +
+         '" font-size="9.5" font-style="italic" fill="#4E7C92">Lake Transfer</text>';
+
+    /* --- mountains, inland and away from the circuit --- */
+    var RANGES = [[452, 306, 3, 26, 30], [606, 268, 2, 24, 27], [368, 424, 2, 22, 24]];
+    RANGES.forEach(function (r) { s += range(r[0], r[1], r[2], r[3], r[4]); });
+    var rangeBoxes = RANGES.map(function (r) {
+      return [r[0] - 2, r[1] - r[4] * 1.22 - 2, r[0] + (r[2] - 1) * r[3] + r[3] * 1.24 + 2, r[1] + 2];
+    });
+
+    /* --- forests, placed procedurally and rejected against everything already
+           on the plate. Same reason as the mainland: placing them by hand means
+           guessing at collisions on a map I cannot see. --- */
+    var riverSamples = [];
+    ISL_RIVERS.forEach(function (r) { splinePoints(r, 20).forEach(function (p) { riverSamples.push(p); }); });
+    var nodePts = ISL_STOPS.map(function (st) { return st.at; }).concat([ISL_TERMINUS, [636, 406]]);
+    var wood = forests({
+      land: [land.pts], lake: lake.pts, rivers: riverSamples, track: circuit.pts,
+      nodes: nodePts,
+      boxes: [[30, 30, 430, 96], [846, 560, 1010, 670]].concat(rangeBoxes),
+      clusters: [
+        [340, 260, 6], [520, 220, 5], [700, 340, 6], [430, 470, 5],
+        [560, 470, 6], [250, 300, 5], [740, 420, 4], [470, 560, 5], [620, 130, 4]
+      ]
+    });
+    s += wood.svg;
+    islandMap.treeCount = wood.count;
+
+    /* --- BRIDGES, FOUND BY RUNNING THE MAINLAND'S WATER TEST OVER THE CIRCUIT.
+           Not placed. Wherever the loop crosses a river or the lake, a bridge
+           is drawn, which is why the number of bridges on this island is a
+           consequence of its geography rather than a decision. --- */
+    var isWater = makeWaterTest([land.pts], riverSamples, lake.pts);
+    var spans = waterSpans(circuit.pts, isWater, 2);
+    spans.forEach(function (span) { s += bridge(span); });
+    islandMap.bridgeCount = spans.length;
+
+    /* --- the circuit itself --- */
+    s += trackPath(circuit.d, '#5A3E28', true);
+
+    /* --- stops --- */
+    ISL_STOPS.forEach(function (st) {
+      var open = !!counts[st.id];
+      s += '<g' + (open ? ' data-stop="' + st.id + '" class="map-hit"' : ' opacity=".72"') + '>' +
+           pairStop(st.at[0], st.at[1], st.pair[0], st.pair[1], st.kind === 'staffed') +
+           '</g>';
+      var below = st.at[1] > 400;
+      s += '<text x="' + st.at[0] + '" y="' + (st.at[1] + (below ? 34 : -26)) + '" text-anchor="middle" ' +
+           'font-family="' + BODY + '" font-size="11" font-weight="700" fill="#2C2214">' + st.name + '</text>';
+      s += '<text x="' + st.at[0] + '" y="' + (st.at[1] + (below ? 47 : -13)) + '" text-anchor="middle" ' +
+           'font-family="' + BODY + '" font-size="9.5" fill="#6B5138">' +
+           (open ? st.note : 'track being laid') + '</text>';
+    });
+
+    /* --- the terminus --- */
+    s += lighthouse(ISL_TERMINUS[0], ISL_TERMINUS[1]);
+    s += '<text x="' + ISL_TERMINUS[0] + '" y="' + (ISL_TERMINUS[1] + 20) + '" text-anchor="middle" font-family="' + BODY +
+         '" font-size="10" font-weight="700" letter-spacing="1.4" fill="#5A3E28">LIGHTHOUSE HUB</text>';
+
+    /* --- furniture, in the mainland's own positions-relative style --- */
+    s += compassRose(946, 610, 30);
+    s += '<text x="52" y="60" font-family="' + DISPLAY + '" font-size="21" letter-spacing="1.5" fill="#2C2214" opacity=".8">' +
+         'Crossover Island</text>';
+    s += '<text x="52" y="82" font-family="' + BODY + '" font-size="11.5" font-weight="700" letter-spacing="2.6" fill="#A85413">' +
+         'MR FRACTION&rsquo;S EXPRESS &middot; THE CHALLENGE LINE</text>';
+
+    var openCount = ISL_STOPS.filter(function (st) { return !!counts[st.id]; }).length;
+
+    /* The built/being-laid sentence is DERIVED, exactly as the mainland's is.
+       That one used to be a hardcoded string and silently became a lie to
+       screen-reader users the moment a second line opened; this is the same
+       trap with one problem built and four to come, so it is counted. */
+    var openSay = !openCount
+      ? 'No stop on the island is open yet; the whole circuit is still being laid.'
+      : openCount === ISL_STOPS.length
+        ? 'All five stops are open.'
+        : openCount + ' of the ' + ISL_STOPS.length + ' stops ' + (openCount > 1 ? 'are' : 'is') +
+          ' open; the rest of the circuit is still being laid.';
+
+    var fig = document.createElement('figure');
+    fig.className = 'map-figure';
+    fig.style.margin = '0';
+    fig.innerHTML =
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="' + NS + '" role="img" aria-label="' +
+      'Illustrated map of Crossover Island: a single island with a coast, mountains, forest, three rivers and a lake, ' +
+      'ringed by one irregular circuit of railway that crosses the rivers on ' + spans.length + ' bridges. ' +
+      'Five stops sit round the loop and each one is marked in two colours, for the two situations that ' +
+      'problem joins together. Three are staffed platforms, drawn as filled discs, where the crossover is taught; ' +
+      'two are unstaffed halts, drawn as open discs with a signpost, where you work it out yourself. ' +
+      'A lighthouse on the north-east headland is the hub. ' + openSay +
+      ' The same stops are listed as buttons below.">' +
+      s + '</svg>';
+    return fig;
+  }
+
   global.Scenery = {
     art: art,
     ambient: ambient,
     railMap: railMap,
+    islandMap: islandMap,
+    /* Exported so the view can build its button list from the SAME array the
+       map draws. Two copies of the stop list is how the map and the buttons
+       below it come to disagree about what exists. */
+    islandStops: function () { return ISL_STOPS.slice(); },
     legMap: legMap,
     stopsOn: function (line) { return (STOPS[line] || []).length; },
     ticker: ticker,

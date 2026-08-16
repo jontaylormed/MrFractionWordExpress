@@ -148,7 +148,23 @@
        anything (VERIFICATION.md §21). */
     var percent = (line === MF.PERCENT);
 
+    /* A PAIRED PROBLEM IS NEVER DEALT INTO A MAINLAND RIDE, and this filter is
+       what lets Crossover Island's problems be `published` at all.
+
+       Every one of them carries a `line` — `cl-signal-delay` says "compare" —
+       because the station header, the scene dispatch and the Ticket Booth all
+       read `p.line` and it has to be renderable. That makes it eligible for a
+       Compare Line ride by every rule this function had, and the Grand Tour
+       takes EVERYTHING, so `mixed ? true` would have swept it up regardless of
+       its line. A student would have met a two-line problem on a station whose
+       header names one line, with the Platform Check answering `stacked`.
+
+       Excluded here rather than by leaving the problems unpublished, because
+       "unpublished" also hides them from the island, and an island that can
+       only show draft content is an island nobody can ride. The island uses
+       `buildIslandStop`, which names its problem instead of drawing one. */
     var pool = MF.publishedProblems().filter(function (p) {
+      if (p.pair) return false;
       return mixed ? true : percent ? p.surface === 'percent' : p.line === line;
     });
 
@@ -331,8 +347,44 @@
     return ps.length >= 2 && Object.keys(lines).length >= 2;
   }
 
+  /* A CROSSOVER ISLAND STOP IS A TRIP OF ONE, AND IT IS NAMED RATHER THAN
+     DRAWN. Every other trip on this site is a SELECTION — roles, weights,
+     no-repeat constraints, a seed. The island is not: the student pointed at a
+     stop on a map, so there is nothing to choose and `buildTrip`'s whole
+     machinery would be answering a question nobody asked.
+
+     It lives here anyway, beside `buildTrip`, because the TRIP SHAPE is what
+     must not drift. `{ line, route, stations, hub, seed, notes }` is read by
+     `drawRoute`, `resumeTrip`, `nextStation` and the hub assessment; building
+     that object in app.js would make a second author of a shape only this file
+     currently owns.
+
+     The number set is still drawn at random, so meeting the same stop twice
+     does not give the same numbers — the one part of the mainland's behaviour
+     that does apply. */
+  function buildIslandStop(id) {
+    var base = MF.problems[id];
+    if (!base || !base.pair) return null;
+    var seed = Math.floor(Math.random() * 1e9);
+    var rng = makeRng(seed);
+    return {
+      line: MF.CHALLENGE,
+      route: 1,
+      stations: [{ role: (base.stationRoles && base.stationRoles[0]) || 'reading',
+                   problem: MF.materialize(base, Math.floor(rng() * MF.setCount(base))) }],
+      /* No Terminus Hub. The island's hub is the Lighthouse and it is a place
+         on the map you choose to visit, not something a one-stop ride ends at.
+         Returning a hub here would send a student who picked one stop into a
+         hub assessment they never asked for. */
+      hub: null,
+      seed: seed,
+      notes: []
+    };
+  }
+
   global.Selector = {
     buildTrip: buildTrip,
+    buildIslandStop: buildIslandStop,
     availableLines: availableLines,
     mixedAvailable: mixedAvailable,
     percentAvailable: percentAvailable,

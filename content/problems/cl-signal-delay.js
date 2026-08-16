@@ -16,14 +16,15 @@
    the whole island rests on and the reason `tools/sweep.js` needed a new rule
    before this file could be written.
 
-   ▸ STATUS IS "draft", AND THAT IS LOAD-BEARING, NOT TIDINESS.
-     `Selector` pools `MF.publishedProblems()`, so a published two-line problem
-     carrying `line: "compare"` would be dealt into ordinary Compare Line rides
-     — where the station header says Compare, the Platform Check now answers
-     `stacked`, and the student is three screens into a mode that does not
-     exist yet. It stays draft until Crossover Island can route to it.
-     `MF.validate()` and `tools/sweep.js` both read every problem regardless of
-     status, so it is checked from today.
+   ▸ PUBLISHED 2026-08-16, WHEN CROSSOVER ISLAND OPENED — and the reason it
+     was draft until then is worth keeping, because it is the reason this is
+     safe now. `Selector` pools `MF.publishedProblems()`, so a published
+     two-line problem carrying `line: "compare"` would be dealt into ordinary
+     Compare Line rides, where the station header says Compare and the Platform
+     Check answers `stacked`. What changed is not the risk but the pool:
+     `buildTrip` now excludes any problem carrying a `pair`, so this reaches a
+     student only through the island's own map. That exclusion is the thing to
+     check if this problem ever turns up somewhere it should not.
 
    ▸ `line: "compare"` IS PROVISIONAL AND IS THE FIRST HALF ONLY. A Challenge
      problem has no single line; it has `pair`. But the station header, the
@@ -70,7 +71,7 @@
 MF.registerProblem({
   id: "cl-signal-delay",
   schemaVersion: 1,
-  status: "draft",
+  status: "published",
   title: "How far past Kelder the express has got",
   line: "compare",
   topics: ["two-line", "crossover", "difference-unknown", "rate", "transfer"],

@@ -450,9 +450,36 @@
        residual tell is the geometry, and it is real but weak: a student would
        have to recognise a zoomed fragment of one line's curve. Stated rather
        than claimed away. */
+    /* AND IT HAPPENED AGAIN ON THE ISLAND, exactly as described above, which is
+       why that paragraph is worth its length.
+
+       A Crossover Island problem carries `line: "compare"` so that the scene
+       library, the Ticket Booth and this header have something to render — and
+       this header duly printed "The Compare Line · Larger − Smaller =
+       Difference" above a Platform Check whose `fit` question now answers
+       STACKED. The header was not merely leaking the first half; it was
+       CONTRADICTING the answer the student was two screens from giving.
+
+       Found by riding the island, not by reading the file. Every file involved
+       was correct on its own — §13 again, and the second time this precise
+       surface has done it.
+
+       A paired problem therefore names its ROUTE too. Same treatment as the
+       percent ride and for the same reason: honest (they are on the Challenge
+       Line), silent about the answer, and the colour goes with it so the tint
+       cannot say what the words no longer do. Ink rather than a line colour,
+       because the island's track is neutral for the reason set out in
+       scenery.js — a single colour would claim it is one of the five.
+
+       The LEG MAP keeps `p.line` here for the same reason it does on a percent
+       ride: `STOPS` is keyed by schema and has no `challenge` entry, so passing
+       the route key there throws and kills the station. */
     var onPercentRoute = this.asksHiddenLine();
-    var route = onPercentRoute ? MF.rideInfo(MF.PERCENT) : MF.LINES[this.p.line];
-    var colour = onPercentRoute ? 'var(--line-percent)' : 'var(--line-' + this.p.line + ')';
+    var paired = !!this.p.pair;
+    var route = paired ? MF.rideInfo(MF.CHALLENGE)
+              : onPercentRoute ? MF.rideInfo(MF.PERCENT) : MF.LINES[this.p.line];
+    var colour = paired ? 'var(--ink)'
+               : onPercentRoute ? 'var(--line-percent)' : 'var(--line-' + this.p.line + ')';
     /* The journey panel sits ABOVE the station title, so the first thing on
        the screen is where you are on the line — not a heading. The picture is
        a zoom-in on the leg you are travelling right now; the numbered stops
@@ -471,9 +498,16 @@
       leg =
         '<div class="journey">' +
           '<div class="journey-map">' +
+            /* The tint is overridden on a paired ride for the same reason the
+               header text is: a student who has learned that blue is Compare
+               reads half the Platform Check's answer off the colour of a map
+               fragment, with no words involved. The GEOMETRY still belongs to
+               `p.line` and that residual tell is real but weak — recognising a
+               zoomed fragment of one line's curve — and is stated here rather
+               than claimed away, exactly as it is for percent. */
             Scenery.legMap(Selector.availableLines(), this.p.line, this.legIndex,
                            this.legProgress || 0, this.legIndex,
-                           onPercentRoute ? 'var(--line-percent)' : null) +
+                           paired ? 'var(--ink)' : onPercentRoute ? 'var(--line-percent)' : null) +
           '</div>' +
           '<div class="journey-bar">' +
             '<span class="eyebrow">Stop ' + (this.legIndex + 1) + ' of ' + this.legTotal + '</span>' +

@@ -63,9 +63,33 @@
     desc: 'Not a sixth situation. Percent is a way of writing a number, and it can sit on top of any of the five — so every stop here is hiding one of them.'
   };
 
-  /** Describe a ride: one line, the mixed tour, or the percent route. */
+  /* CHALLENGE IS A ROUTE TOO, and kept out of `LINES` for the third time and
+     the same reason. Everything that iterates that object would gain a sixth
+     phantom schema: the map, the Ticket Booth's five line options and its
+     distractor coverage, `PLATFORM`, the Platform Check's answer arrays and
+     the validator's "unknown line" rule. A problem on this route has no single
+     line at all — it has `pair` — which would make a sixth entry not merely
+     redundant but false.
+
+     Unlike MIXED and PERCENT it does not pool problems by a flag. Crossover
+     Island is a place with five named stops, so the route key exists to open
+     the ISLAND, and the island's own map is what chooses a problem. */
+  var CHALLENGE = 'challenge';
+  var CHALLENGE_INFO = {
+    name: 'The Challenge Line', marker: '✦',
+    form: 'Two situations, joined',
+    desc: 'Not a sixth situation, and not one of the five either. Every stop on Crossover Island is two of them, one after the other, with a number handed between them.'
+  };
+
+  /** Every problem carrying a `pair` — the Crossover Island bank. */
+  function pairedProblems() {
+    return publishedProblems().filter(function (p) { return !!p.pair; });
+  }
+
+  /** Describe a ride: one line, the mixed tour, the percent route, the island. */
   function rideInfo(k) {
-    return k === MIXED ? MIXED_INFO : k === PERCENT ? PERCENT_INFO : LINES[k];
+    return k === MIXED ? MIXED_INFO : k === PERCENT ? PERCENT_INFO
+         : k === CHALLENGE ? CHALLENGE_INFO : LINES[k];
   }
 
   /** Every published problem wearing the percent surface. */
@@ -1594,6 +1618,8 @@
     LINES: LINES,
     MIXED: MIXED,
     PERCENT: PERCENT,
+    CHALLENGE: CHALLENGE,
+    pairedProblems: pairedProblems,
     percentProblems: percentProblems,
     rideInfo: rideInfo,
     materialize: materialize,
