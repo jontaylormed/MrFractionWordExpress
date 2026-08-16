@@ -99,10 +99,17 @@ MF.registerProblem({
        into seventy thin strings across seven problems. The correct replies
        cannot be derived, because they are about this story. */
     crossoverSentence: 4,
-    crossoverWhy: "Everything before it is two journey times set against each other. From here on the story stops comparing anything and starts telling you how the express keeps going — so many miles for so many minutes. Same train, different kind of question.",
-    firstWhy: "Two amounts side by side and the space between them left unsaid. Nothing is changing, nothing repeats, and there is no total either of them is part of.",
-    secondWhy: "Miles measured against minutes, and the relationship holds at any size — half the minutes would be half the miles. That is what makes it a rate rather than the same thing happening over and over.",
-    readWhy: "One story, two situations: amounts side by side first, and a rate after. They are joined at the sentence you found, and the first one hands the second one a number. That number is the next thing to look for."
+    /* NO NUMBER WORDS IN ANY OF THESE. They render on the Crossover Read,
+       which is numberless, and the first draft of all four broke it — "two
+       journey times", "Two amounts", "half the minutes", "One story". The
+       validator did not catch it until the rule was extended to cover this
+       block, which is how they shipped. Watch for "half" especially: "the
+       first half hands the second half a number" is the natural sentence here
+       and it is refused. */
+    crossoverWhy: "Everything before it is the journey times set against each other. From here on the story stops comparing anything and starts telling you how the express keeps going — so many miles for so many minutes. Same train, different kind of question.",
+    firstWhy: "Amounts set side by side and the space between them left unsaid. Nothing is changing, nothing repeats, and there is no total either of them is part of.",
+    secondWhy: "Miles measured against minutes, and the relationship holds at any size — scale the minutes down and the miles come down with them. That is what makes it a rate rather than the same thing happening over and over.",
+    readWhy: "A single story doing separate jobs: amounts side by side first, and a rate after. They are joined at the sentence you found, and the earlier part hands the later part a number. That number is the next thing to look for."
   },
 
   unknownCar: "difference",

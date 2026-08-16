@@ -488,10 +488,50 @@
            there would give the second half nothing but the question. */
         if (pr.crossoverSentence === (p.problem || {}).questionSentenceIndex)
           err.push('pair.crossoverSentence is the question sentence — the second half would be the question alone');
+        /* THE CROSSOVER READ IS A NUMBERLESS SCREEN AND ITS OWN COPY WAS NOT
+           BEING CHECKED FOR NUMBERS. `platformCheck.why`, `.kinds` and the
+           `questions` overrides are all refused a digit or a number word
+           because read1 is numberless. Then a numberless phase was ADDED — the
+           Crossover Read — with four authored strings of its own, and the rule
+           did not follow it there.
+
+           Found while authoring the second island problem: `pair.firstWhy` read
+           "Two amounts side by side ... and one of the amounts left out", which
+           is exactly what the rule forbids two fields away, and validated
+           clean. That is the shape of the defect this project has seven files
+           of — a new surface exempt by accident of nobody having added it to a
+           list. Same NUMWORD, same message, so the two cannot drift. */
         ['crossoverWhy', 'firstWhy', 'secondWhy', 'readWhy'].forEach(function (k) {
-          if (!pr[k] || String(pr[k]).length < 20)
+          if (!pr[k] || String(pr[k]).length < 20) {
             err.push('pair.' + k + ' is missing or too short — the Crossover Read renders it and would show a blank');
+            return;
+          }
+          if (/\d/.test(pr[k]))
+            err.push('pair.' + k + ' has a digit — the Crossover Read is a numberless phase');
+          else if (NUMWORD.test(pr[k]))
+            err.push('pair.' + k + ' spells out a number ("' + pr[k].match(NUMWORD)[0] +
+                     '") — the Crossover Read is numberless; say the shape, not the count');
         });
+
+        /* The crossover slot's own copy renders on the Plan phase, which is not
+           numberless — but it must never carry a VALUE, because the transfer is
+           step 1's answer and the slot names quantities rather than stating
+           them. A digit in any of it is the Plan phase handing over the Engine
+           Room's work, which is the defect Cycle 6 removed from the Model Yard. */
+        var xo2 = (p.signalBox || {}).crossover;
+        if (xo2) {
+          var xoStrings = [['heading', xo2.heading], ['prompt', xo2.prompt],
+                           ['settledSay', xo2.settledSay], ['cellLabel', xo2.cellLabel],
+                           ['second.waiting', (xo2.second || {}).waiting]];
+          (xo2.options || []).forEach(function (o, i) {
+            xoStrings.push(['options[' + i + '].text', o.text]);
+            xoStrings.push(['options[' + i + '].why', o.why]);
+          });
+          xoStrings.forEach(function (s) {
+            if (s[1] && /\d/.test(s[1]))
+              err.push('signalBox.crossover.' + s[0] + ' has a digit — the crossover slot names the transfer, it never states it');
+          });
+        }
 
         /* A PAIR WITH NO CROSSOVER BLOCK DRAWS HALF A PICTURE. `PairModel`
            declines such a problem, so the Plan phase falls through to whatever

@@ -1260,8 +1260,8 @@
          This read "Compare, then a rate" and was the same leak as the marker
          colours in English — see `pairStop`. */
       name: 'Thorne Bridge',  note: 'Open — the join is taught here' },
-    { id: null, at: [788, 286], kind: 'staffed', pair: ['compare', 'partwhole'],
-      name: 'Kelder Sands',   note: 'Track being laid' },
+    { id: 'cl-season-tickets', at: [788, 286], kind: 'staffed', pair: ['compare', 'partwhole'],
+      name: 'Kelder Sands',   note: 'Open — the join is taught here' },
     { id: null, at: [648, 508], kind: 'staffed', pair: ['partwhole', 'groups'],
       name: 'Fell Crossing',  note: 'Track being laid' },
     { id: null, at: [330, 494], kind: 'halt',    pair: ['change', 'compare'],
