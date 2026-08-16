@@ -335,6 +335,38 @@
     limited: { name: 'Limited', desc: 'Runs direct. Least support, quickest to the hub.' }
   };
 
+  /* THE BOOTH IS A SECTION NOW, NOT A FLOAT — and it is built in ONE place.
+
+     It used to be an absolutely-positioned image, and out of the flow it never
+     once stood beside the thing it illustrates. Measured on the rendered page:
+     at 1280 the booth sat at x1123–1280, hard against the right edge of the
+     SHELL rather than the content column, 89px clear of the choices list and
+     centred on the viewport rather than on the buttons; at 390 it ran from
+     x312 to x406 — 16px past the window, giving the page a horizontal scroll —
+     and lay across both the "pick your own number of stops" summary and the
+     Back to the map button. Both are what "out of the flow" buys you: the
+     layout cannot see the art, so nothing can make room for it, and every
+     attempt to place it is a guess at a height that changes with the number of
+     routes on offer. Three such guesses are in this file's history.
+
+     In the flow it needs no guess. `.route-window` puts the booth beside the
+     buttons where there is room for two columns and above them where there is
+     not, and the grid measures both.
+
+     ONE STRING, TWO EXITS. The float was pasted into both returns below, and
+     for a while only into one — so a line thin enough to fall back to a short
+     run, which is every new line on the day it opens, showed the choice with no
+     booth beside it. A wrapper cannot be half-applied. */
+  function ticketWindow(inner) {
+    return '<div class="route-window">' +
+      '<figure class="route-booth">' +
+        '<img src="assets/art/Mr_Fraction_Ticket_Booth.png" alt="" aria-hidden="true" ' +
+        'loading="lazy" decoding="async">' +
+      '</figure>' +
+      inner +
+    '</div>';
+  }
+
   function routeChoices(cap) {
     var fits = ['local', 'express', 'limited'].filter(function (r) {
       return Selector.ROUTE_STOPS[r] <= cap;
@@ -344,34 +376,27 @@
       /* A line too thin for even the shortest named route. Say so plainly —
          a student who is told the track is still being laid is not being let
          down; a student promised five stops and given two is. */
-      /* The booth belongs on BOTH branches. It was added only to the named-route
-         return below, so a line thin enough to fall back to a short run — which
-         is every new line on the day it opens — showed the choice with no booth
-         beside it. One placement, two exits. */
-      return '<img class="art-float art-float-booth" src="assets/art/Mr_Fraction_Ticket_Booth.png" ' +
-             'alt="" aria-hidden="true" loading="lazy" decoding="async">' +
-        '<ul class="choices">' +
+      return ticketWindow('<ul class="choices">' +
         '<li><button class="choice" type="button" data-route="' + cap + '" ' +
           'aria-label="A short run, ' + cap + ' stops. This is everything the line can fill so far."><span>' +
           '<strong>A short run &mdash; ' + cap + ' stop' + (cap === 1 ? '' : 's') + '</strong>' +
           '<small>This line is still being built, so a ride fills ' + cap + ' stop' + (cap === 1 ? '' : 's') +
           ' and then runs to the Terminus Hub. Every stop is the real thing.</small>' +
           '</span></button></li>' +
-      '</ul>';
+      '</ul>');
     }
 
-    /* The booth floats beside the stops choice, because this is the moment the
-       student is at the window deciding what to buy. It is `aria-hidden` and
-       out of the flow, so it never delays the choice it illustrates. */
-    return '<img class="art-float art-float-booth" src="assets/art/Mr_Fraction_Ticket_Booth.png" ' +
-           'alt="" aria-hidden="true" loading="lazy" decoding="async">' +
-           '<ul class="choices">' + fits.map(function (r) {
+    /* This is the moment the student is at the window deciding what to buy, so
+       the booth belongs on the screen — but as scenery beside the choice, never
+       as something the choice has to be worked around. `aria-hidden`, so it
+       adds nothing to what a screen reader has to hear before choosing. */
+    return ticketWindow('<ul class="choices">' + fits.map(function (r) {
       var n = Selector.ROUTE_STOPS[r], c = ROUTE_COPY[r];
       return '<li><button class="choice" type="button" data-route="' + r + '" ' +
         'aria-label="' + esc(c.name) + ', ' + n + ' stops. ' + esc(c.desc) + '"><span>' +
         '<strong>' + esc(c.name) + ' &mdash; ' + n + ' stops</strong><small>' + esc(c.desc) + '</small>' +
         '</span></button></li>';
-    }).join('') + '</ul>';
+    }).join('') + '</ul>');
   }
 
   function chooseRoute(line) {

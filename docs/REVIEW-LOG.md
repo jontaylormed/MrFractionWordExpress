@@ -1562,6 +1562,50 @@ The lesson, and it is the sharpest one here: **a contrast threshold is a claim a
 
 ---
 
+## Cycle 29 — 2026-08-15 — The ticket window
+
+> **On the number.** There are two Cycle 27s above and a Cycle 28 sitting between them, so the sequence in this file is already out of order. This is the next unused number rather than the next one in the list.
+
+**Trigger:** the user, on the Ticket Booth art on the Choose-your-route screen — *"doesn't look good in mobile view and barely looks good in regular view… a section that is not the top right corner, but manageable in the mobile view."*
+
+**Scope:** `assets/js/app.js` (`routeChoices`), `assets/css/app.css`. No content touched.
+
+### What was actually wrong, measured on the rendered page
+
+The booth was an absolutely-positioned float, and the comments above it record **four** attempts to place it: pinned to the top (roof cropped), anchored below the top of a list whose height changes with the number of routes, centred by a transform that computed to the identity matrix, and finally centred by auto margins. The fourth worked — against the wrong box.
+
+| | |
+|---|---|
+| **1280px** | Booth at **x1123–1280**, hard against the right edge of the **shell**, not the 788px content column. **89px clear** of the choices list, and vertically centred on the **viewport** rather than on the buttons it illustrates. |
+| **390px** | Booth at **x312–406** against a 390px window: `scrollWidth` **406**, so the page had a **horizontal scroll**, the booth's right edge was **cropped**, and it lay across both the *"pick your own number of stops"* summary and the *Back to the map* button. |
+
+**The containing block it was written against never applied.** `.choices { position: relative }` was added to hold the float — but the `<img>` is a **sibling** of that list, not a child, so its offset parent was the shell the whole time. Every offset in that rule was being measured from a box nobody intended.
+
+### The class, not the instance
+
+`@media (min-width: 900px) { .choices { padding-right: 150px } }` reserved a gutter for the booth on **every choices list on the site** — Read 2, Read 3, the Ticket Booth's own car options, the Platform Check, the hidden-line question. Measured with a probe list appended to the shell: **150px**, everywhere, for art that appears on one screen. Every option button on the site was inset for a booth that was not there. Both that rule and `position: relative` are gone with the float.
+
+### What it is now
+
+`.route-window` — a grid, in the flow. Two columns beside the buttons at ≥760px, one column above them below that, bounded to `var(--measure)` so the booth stands at the end of the same reading column everything else on the screen is set to. Built in **one** helper (`ticketWindow`), because the float was pasted into both returns of `routeChoices` and for a while into only one, leaving every new line without a booth on the day it opened.
+
+**An auto margin cancels stretch, and that cost the buttons 55px.** `.choices` carries `margin: 0 auto`; as a grid item that sizes it to fit-content and centres it, so the route buttons came out **311.51px inside a 366px track** on a phone — narrower than the same buttons anywhere else. `justify-self: stretch` changed nothing, because stretch is what the auto margin had turned off. `width: 100%; margin: 0` inside the window.
+
+### Verification
+
+**Geometry, not appearance — the look is the user's call.** Route screen driven at **320 / 360 / 390 / 700 / 759 / 760 / 1280**, on both branches of `routeChoices` (named routes, and the short-run fallback forced by stubbing `Selector.capacityFor`):
+
+- `scrollWidth === innerWidth` at every width. No horizontal scroll anywhere.
+- Booth fully inside the viewport at every width; no overlap with the choices list, the summary or the Back button at any of them.
+- 1280: booth **x714–858**, gap to the buttons **24px**, vertical centres within **1px** of each other — which is what all four float attempts were reaching for.
+- Stacked: booth centred on the column to within 1px at 320/360/390/700/759.
+- `MF.validate()` — 30 problems, **0 errors**, 28 pre-existing warnings, unchanged.
+- `SWEEP.report()` — **1196 screens, every count 0**, matching the recorded baseline.
+
+**One instrument note.** The in-app browser pane does not fetch `loading="lazy"` images, and `Scenery.art()` marks every piece of art lazy. First measurement of the booth returned **0×0 with `currentSrc` empty**, which reads exactly like an image that never loads. It was the pane, not the site. Every measurement above was taken after forcing `loading = 'eager'` and re-assigning `src`.
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.

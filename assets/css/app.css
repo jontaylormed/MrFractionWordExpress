@@ -1550,40 +1550,87 @@ select {
 .sign-mark { width: 58px; height: auto; display: block; flex: 0 0 auto; }
 @media (max-width: 620px) { .sign-mark { width: 42px; } }
 
-/* ---------- Art that floats ----------
-   Out of the document flow, so none of it can push the work down the page or
-   change where a control sits. `pointer-events: none` throughout — decoration
-   must never eat a tap meant for a button underneath it. */
-.art-float { position: absolute; pointer-events: none; z-index: 1; }
-/* SITS LOWER, so the whole booth is visible. It was pulled 6 units ABOVE its
-   container, which put the roof and the TICKETS sign outside the area — the
-   most recognisable part of the image was the part being cut off. Anchored to
-   the top of the choices list now with a small positive offset, so the finial
-   and the sign are inside the frame and the booth reads as standing beside the
-   buttons rather than rising out of them. */
-/* BESIDE THE BUTTONS, NOT ABOVE THEM.
-   Anchoring it by `top` kept pinning it to the corner however far down it was
-   pushed — a fixed offset from the top of a list whose height changes with the
-   number of routes is never going to sit beside anything reliably. It is
-   centred against the list now, so it stands level with the buttons whether the
-   line offers one route or three, and lives in the gutter reserved to its
-   right. */
-/* Centred by AUTO MARGINS, not by a transform. `top: 50%; translateY(-50%)`
-   computed to the identity matrix here — something else in the cascade was
-   resetting `transform` — so the booth stayed pinned to the top while the CSS
-   claimed otherwise. Pinning both edges and letting the block margins resolve
-   to auto centres it with no transform involved and nothing to override. */
-.art-float-booth {
-  right: 0; top: 0; bottom: 0;
-  margin-top: auto; margin-bottom: auto;
-  max-height: 250px; width: auto; height: auto; opacity: .97;
+/* ---------- The ticket window ----------
+   The booth on the route-choice screen, and the whole reason this section is
+   no longer called "art that floats".
+
+   FOUR ATTEMPTS TO PLACE IT BY ABSOLUTE POSITIONING, AND THE FOURTH WAS STILL
+   WRONG. It was pinned to the top and cut the roof off; anchored below the top
+   of a list whose height changes with the number of routes; centred by a
+   transform that computed to the identity matrix; and finally centred by auto
+   margins — which worked, against the wrong box. Measured on the rendered page
+   before this rewrite:
+
+     1280px — booth x1123–1280, hard against the right edge of the SHELL, not
+              the 788px content column. 89px clear of the choices list, and
+              vertically centred on the VIEWPORT rather than on the buttons it
+              illustrates. The `.choices` containing block it was written
+              against never applied: the <img> is a SIBLING of that list, so
+              its offset parent was the shell all along.
+     390px  — booth x312–406 against a 390px window. The page acquired a
+              horizontal scroll (scrollWidth 406), the booth's right edge was
+              cropped off, and it lay across both the "pick your own number of
+              stops" summary and the Back to the map button.
+
+   None of that is a positioning bug to be fixed with better offsets. It is
+   what taking the art out of the flow costs: the layout cannot see it, so
+   nothing can make room for it, and every placement is a guess at a height
+   that is not knowable from the stylesheet.
+
+   In the flow, no guess is needed. Two columns beside the buttons where there
+   is room for two, one column above them where there is not, and the grid
+   measures both. `align-items: center` is what all four attempts were reaching
+   for and it costs one line here. */
+.route-window {
+  display: grid;
+  align-items: center;
+  gap: calc(var(--su) * 2);
+  margin: 0 0 calc(var(--su) * 3);
+  /* The window is the reading column, not the whole shell. Without this the
+     booth column takes its place at the far end of a 1140px row while the
+     buttons stop at their 788px measure — measured, a 208px hole between the
+     two, and the booth back out in the page margin looking like scenery that
+     belongs to nothing. Bounded, the booth stands at the end of the same line
+     of text everything else on this screen is set to. */
+  max-width: var(--measure);
+}
+/* AN AUTO MARGIN CANCELS STRETCH, and `.choices` carries `margin: 0 auto` for
+   the reading-measure reason noted where it is defined. A grid item with an
+   auto margin in an axis is sized to fit-content in that axis and then centred
+   by the margin — so the route buttons came out 311px wide inside a 366px
+   column on a phone, narrower here than the same buttons anywhere else on the
+   site, and `justify-self: stretch` did nothing about it because stretch is
+   the thing the auto margin turned off. Measured, not reasoned: 311.51px
+   against a 366px track. The margin is what has to go, not the alignment. */
+.route-window .choices { width: 100%; margin: 0; }
+/* Centred in its own column on a phone; `justify-self` rather than a margin so
+   it behaves the same in both layouts — and see above for why an auto margin
+   is the wrong tool inside this grid. */
+.route-booth { margin: 0; justify-self: center; line-height: 0; }
+.route-booth img {
+  display: block; width: auto; height: auto;
+  /* Stacked, the booth grows with the screen it is standing on: 140px on a
+     phone — the same cap `.art-band-booth` uses there, so the booth is one
+     size at the route window and at the Ticket Booth station — up to 200px on
+     a wide tablet, where a fixed phone size reads as a stamp lost in the
+     middle of a 719px column. Height only; the width follows the art, so this
+     cannot push anything sideways. */
+  max-height: clamp(140px, 26vw, 200px);
   filter: var(--art-tone) drop-shadow(0 6px 14px rgba(44,34,20,.28));
 }
-/* The buttons keep clear of it, or a long route name runs under the booth. */
-@media (min-width: 900px) { .choices { padding-right: 150px; } }
-/* The float needs a positioned ancestor, and the choices list is the thing it
-   belongs to. Padding keeps the buttons clear of it at narrow widths. */
-.choices { position: relative; }
+
+/* 760px is where the content column is wide enough that taking ~145px for the
+   booth still leaves the route buttons a comfortable line. Below it the booth
+   stands over the choice instead of beside it. */
+@media (min-width: 760px) {
+  .route-window { grid-template-columns: minmax(0, 1fr) auto; gap: calc(var(--su) * 3); }
+  /* Explicit placement, because the booth comes FIRST in the source (so that
+     the phone layout puts it above the buttons with no reordering) and must
+     come second on the wide one. */
+  .route-window .choices { grid-column: 1; grid-row: 1; }
+  .route-booth          { grid-column: 2; grid-row: 1; }
+  .route-booth img { max-height: 230px; }
+}
 
 /* The station hero floats gently, as if idling at the platform. */
 .art-hero .art { animation: art-hover 5.5s ease-in-out infinite; }
@@ -1710,7 +1757,11 @@ select {
 @media (prefers-reduced-motion: reduce) { .hub-mf { animation: none; } }
 
 @media (max-width: 620px) {
-  .art-float-booth { max-height: 150px; right: calc(var(--su) * -2); opacity: .9; }
+  /* The booth's phone size is no longer set here. It is the base size in the
+     `.route-window` rule and the WIDE layout is the override — a decoration
+     that has to be walked back at every breakpoint is a decoration whose
+     default is wrong. This rule used to pull it 2 units PAST the right edge,
+     which is how it came to hang 16px outside a 390px window. */
   .map-lines .line-card { column-gap: var(--su); }
   .line-ticket { width: 58px; }
   .hub-conductor { width: 64px; }
