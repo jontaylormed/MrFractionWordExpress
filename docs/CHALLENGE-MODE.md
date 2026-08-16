@@ -166,6 +166,25 @@ Seven so a second visit to the island differs, the same reason every problem car
 
 **Coverage:** compare ×2, ratio/rate ×3, part–whole ×3, equal groups ×2, change ×3, percent ×1. Every situation appears at least twice, on both sides of a crossover, so no schema is only ever the first half.
 
+### ▶ FIVE BUILT, AND THE ISLAND HAS FIVE STOPS — an open question, 2026-08-16
+
+| Stop | Problem | Pair |
+|---|---|---|
+| Thorne Bridge · staffed | `cl-signal-delay` | Compare → Rate |
+| Kelder Sands · staffed | `cl-season-tickets` | Compare → Part–Whole |
+| Fell Crossing · staffed | `cl-platform-planters` | Part–Whole → Equal Groups |
+| Cold Halt · **unstaffed** | `cl-lost-umbrellas` | Change → Compare |
+| Marsh Halt · **unstaffed** | `cl-buffet-crates` | Ratio → Part–Whole |
+
+**The circuit is complete and problems 6 and 7 have nowhere to sit.** This section says *"seven so a second visit to the island differs"*, which assumed a pool per stop — but `Selector.buildIslandStop` names its problem, and each stop on the map declares exactly one id. So as built, the island is five stops and five problems, and a second visit differs only by number set (four each, the site-wide mechanism).
+
+Coverage as built: compare 3, part–whole 3, ratio 2, change 1, equal groups 1. **Change and Equal Groups appear once each, and only on one side of a crossover** — which is the property §5.2 was written to guarantee and no longer holds at five.
+
+Three ways out, and it is a scope call rather than a defect:
+1. **Leave it at five.** Honest, complete, and the coverage gap is real but small.
+2. **Build 6 and 7 and pool two stops** — a stop draws from two problems, which is what "seven built, five ridden" originally meant and needs `buildIslandStop` to choose rather than name.
+3. **Build 6 and 7 as two more stops**, making a seven-stop island. The circuit has room; the fade ladder does not obviously extend.
+
 **`cl-signal-delay` first**, because the user named it and because it is the sharpest case: the compare produces a *difference*, and the difference is not the answer — it is a **rate**. A student who does not see the crossover reads the whole thing as one comparison and answers with the gap. That is the mode's thesis in one problem.
 
 ### 5.3 Misconceptions — the same three on all seven

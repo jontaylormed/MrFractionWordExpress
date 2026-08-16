@@ -1266,8 +1266,14 @@
       name: 'Fell Crossing',  note: 'Open — the join is taught here' },
     { id: 'cl-lost-umbrellas', at: [330, 494], kind: 'halt', pair: ['change', 'compare'],
       name: 'Cold Halt',      note: 'Open — nobody on the platform' },
-    { id: null, at: [252, 350], kind: 'halt',    pair: ['ratio', 'change'],
-      name: 'Marsh Halt',     note: 'Track being laid' }
+    /* The pair here read ['ratio','change'] until the problem behind it was
+       written. The marker pairs were sketched when the island was drawn and
+       before any of the seven problems existed, so where one disagreed with
+       `CHALLENGE-MODE.md` §5.2 the PLAN won and the map was corrected — a map
+       marked with a pairing no problem has is a map telling the student
+       something untrue about what is waiting. */
+    { id: 'cl-buffet-crates', at: [252, 350], kind: 'halt', pair: ['ratio', 'partwhole'],
+      name: 'Marsh Halt',     note: 'Open — nobody on the platform' }
   ];
 
   var ISL_TERMINUS = [762, 210];
