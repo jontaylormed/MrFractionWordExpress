@@ -71,6 +71,7 @@ MF.registerHub({
 
     {
       short: "The five questions",
+      art: "checkfive",
       eyebrow: "The checklist, properly",
       heading: "What each question is actually asking",
       body:
@@ -104,7 +105,7 @@ MF.registerHub({
 
     {
       short: "A stretch, not a problem",
-      art: "crossover",
+      art: "checktwice",
       eyebrow: "The idea that unlocks the rest",
       heading: "The checklist classifies a stretch of story",
       body:
@@ -135,6 +136,7 @@ MF.registerHub({
 
     {
       short: "Where it changes",
+      art: "seam",
       eyebrow: "Finding the join",
       heading: "The seam, and how to find it",
       body:
@@ -175,7 +177,7 @@ MF.registerHub({
 
     {
       short: "The transfer",
-      art: "crossover",
+      art: "transfer",
       eyebrow: "What crosses",
       heading: "One number, carried",
       body:
@@ -209,6 +211,7 @@ MF.registerHub({
 
     {
       short: "When it answers twice",
+      art: "twotrue",
       eyebrow: "Reading the signal",
       heading: "Two right answers means something",
       body:

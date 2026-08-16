@@ -47,11 +47,33 @@
      reduced-motion poses, already contrast-checked. */
   var INK = '#241B10', CREAM = '#FDF8F0', MID = '#EFE4D0';
 
-  function svg(inner, label) {
+  /* `vb` is optional and defaults to the shape every diagram used before the
+     Lighthouse needed taller ones. `.hub-art svg` is `width: 100%; height:
+     auto`, so a different aspect ratio simply makes a taller picture rather
+     than a squashed one — but the DEFAULT stays exactly what it was, because
+     changing the frame of eleven existing diagrams to make room for a new one
+     is how you break ten things to build one. */
+  function svg(inner, label, vb) {
     return '<div class="hub-art" role="img" aria-label="' + esc(label) + '">' +
-             '<svg viewBox="0 0 260 92" xmlns="http://www.w3.org/2000/svg" class="rsc-svg" aria-hidden="true">' +
+             '<svg viewBox="' + (vb || '0 0 260 92') + '" xmlns="http://www.w3.org/2000/svg" class="rsc-svg" aria-hidden="true">' +
                inner +
              '</svg></div>';
+  }
+
+  /* The five questions, in the order the checklist asks them. Named once here
+     because three of the diagrams below draw the same list, and three copies
+     of it would drift the moment the checklist is reworded. */
+  var FIVE = ['kinds', 'moments', 'things', 'shape', 'question'];
+
+  /* A tick, drawn inside a box at (x, y). `i` staggers it down the list and
+     `ph` offsets the whole pass, which is what lets one checklist finish
+     before the next begins. */
+  function tickBox(x, y, colour, i, ph) {
+    return '<rect x="' + x + '" y="' + (y - 9) + '" width="15" height="15" rx="3" fill="var(--cream-light)" stroke="' +
+             colour + '" stroke-width="2"/>' +
+           '<path class="rsc-tick" style="--i:' + i + (ph ? ';--ph:' + ph : '') + '" d="M' + (x + 3.5) + ' ' + (y - 1) +
+             ' l3 3.4 l5 -7.4" fill="none" stroke="' + colour +
+             '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
   }
 
   var ART = {
@@ -67,9 +89,16 @@
        same reason it is a question mark on the Plan phase: at the point this
        picture describes, nobody has worked it out yet. */
     crossover: function () {
+      var A = 'var(--xo-a)', B = 'var(--xo-b)';
       return svg(
-        '<rect x="8" y="24" width="92" height="30" rx="4" fill="none" stroke="' + INK + '" stroke-width="2.6"/>' +
-        '<text x="54" y="44" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">one kind</text>' +
+        /* The halves light in turn, which is what makes the arrow mean "then"
+           rather than "and". A picture where both boxes sit lit at once shows
+           two situations; it does not show one handing to the other. */
+        '<rect class="rsc-glow" x="8" y="24" width="92" height="30" rx="4" fill="' + A + '"/>' +
+        '<rect class="rsc-glow" style="--ph:2.8s" x="156" y="24" width="96" height="30" rx="4" fill="' + B + '"/>' +
+        '<rect x="8" y="24" width="92" height="30" rx="4" fill="' + A + '" opacity=".12"/>' +
+        '<rect x="8" y="24" width="92" height="30" rx="4" fill="none" stroke="' + A + '" stroke-width="2.6"/>' +
+        '<text x="54" y="44" font-size="11" fill="' + A + '" font-family="inherit" text-anchor="middle" font-weight="700">one kind</text>' +
         '<text x="54" y="72" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">first part</text>' +
         /* The arrow carries something, which is the whole point — an empty
            arrow between two boxes would read as "and then", not as "hands it
@@ -81,13 +110,180 @@
           '<text x="128" y="26" font-size="12" font-weight="700" fill="' + INK +
             '" font-family="inherit" text-anchor="middle">?</text>' +
         '</g>' +
-        '<rect x="156" y="24" width="96" height="30" rx="4" fill="none" stroke="' + INK +
+        '<rect x="156" y="24" width="96" height="30" rx="4" fill="' + B + '" opacity=".12"/>' +
+        '<rect x="156" y="24" width="96" height="30" rx="4" fill="none" stroke="' + B +
           '" stroke-width="2.6" stroke-dasharray="5 4"/>' +
-        '<text x="204" y="44" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">a different kind</text>' +
+        '<text x="204" y="44" font-size="11" fill="' + B + '" font-family="inherit" text-anchor="middle" font-weight="700">a different kind</text>' +
         '<text x="204" y="72" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">the rest</text>',
-        'Two boxes side by side. The first is solid and labelled "one kind", the second dashed and ' +
-        'labelled "a different kind". An arrow runs from the first to the second carrying a circled ' +
-        'question mark — the number the first part works out and the second part needs.');
+        'Two boxes side by side in two different colours. The first is solid and labelled "one kind", ' +
+        'the second dashed and labelled "a different kind". An arrow runs from the first to the second ' +
+        'carrying a circled question mark — the number the first part works out and the second part needs.');
+    },
+
+    /* ---------- The Lighthouse's own diagrams ----------
+       Built 2026-08-16 on the user's instruction: the hub's pictures repeated
+       and did not show what was happening. `crossover` was on three of the
+       seven pages and four pages had no picture at all, so the same still
+       diagram was carrying "a problem has a middle", "the checklist runs
+       twice" and "one number is carried" — three different ideas, one image.
+
+       Each of these draws ONE idea, and the ones about the checklist ANIMATE
+       IT BEING RUN, because on this hub the order of the questions and the
+       fact of running them twice is the whole content. A static row of ticks
+       shows a finished list; it does not show a list being worked down. */
+
+    /* The five questions, ticked in order. Neutral ink ON PURPOSE — no half
+       exists yet on this page, and colouring it here would spend the two role
+       colours before the page that needs them. */
+    checkfive: function () {
+      var s = '<rect x="6" y="6" width="248" height="120" rx="6" fill="var(--cream-light)" stroke="' + INK +
+                '" stroke-width="2" opacity=".55"/>';
+      FIVE.forEach(function (name, i) {
+        var y = 26 + i * 21;
+        if (i) s += '<path d="M16 ' + (y - 13) + ' H244" stroke="' + MID + '" stroke-width="1.4"/>';
+        s += tickBox(18, y, INK, i) +
+             '<text x="44" y="' + (y + 4) + '" font-size="12" fill="' + INK + '" font-family="inherit">' + name + '</text>';
+      });
+      return svg(s, 'The five checklist questions in a list — kinds, moments, things, shape, question — ' +
+                    'each with a box beside it that is ticked in turn, top to bottom.', '0 0 260 132');
+    },
+
+    /* THE CENTREPIECE: the same five questions, run twice, one half at a time.
+       The label column is drawn ONCE and both tick columns sit beside it,
+       because "the same five questions" is the claim and two separate lists
+       side by side would quietly show two different checklists. The passes are
+       offset rather than simultaneous — a student needs to see one finish
+       before the other starts, or it reads as ten questions instead of five
+       asked twice. */
+    checktwice: function () {
+      var A = 'var(--xo-a)', B = 'var(--xo-b)', s = '';
+      s += '<rect class="rsc-glow" x="130" y="30" width="32" height="100" rx="5" fill="' + A + '"/>' +
+           '<rect class="rsc-glow" style="--ph:2.8s" x="200" y="30" width="32" height="100" rx="5" fill="' + B + '"/>' +
+           '<text x="146" y="22" font-size="10.5" fill="' + A + '" font-family="inherit" text-anchor="middle" font-weight="700">first part</text>' +
+           '<text x="216" y="22" font-size="10.5" fill="' + B + '" font-family="inherit" text-anchor="middle" font-weight="700">the rest</text>' +
+           /* The seam, standing between the two passes. */
+           '<path class="rsc-pulse" d="M181 14 V130" stroke="' + INK + '" stroke-width="1.8" stroke-dasharray="4 4"/>';
+      FIVE.forEach(function (name, i) {
+        var y = 40 + i * 20;
+        s += '<text x="120" y="' + (y + 4) + '" font-size="11" fill="' + INK +
+               '" font-family="inherit" text-anchor="end">' + name + '</text>' +
+             tickBox(138, y, A, i) +
+             tickBox(208, y, B, i, '2.8s');
+      });
+      return svg(s, 'One list of the five questions with two columns of tick boxes beside it. The first ' +
+                    'column, in one colour and headed "first part", is ticked down the list; then the ' +
+                    'second column, in a different colour and headed "the rest", is ticked down the same ' +
+                    'five. A dashed line stands between the two columns.', '0 0 260 132');
+    },
+
+    /* Where the story stops doing one job and starts another. The scenery
+       sentence is drawn belonging to NEITHER half, because "do not count
+       sentences and take the middle one" is the trap this page names and a
+       diagram with a tidy midpoint would teach it. */
+    seam: function () {
+      var A = 'var(--xo-a)', B = 'var(--xo-b)';
+      /* The two halves light in turn, BEHIND the bars, so the picture shows the
+         story doing one job and then a different one — which is what a seam
+         is. The scenery row is inside neither band on purpose. */
+      var s = '<rect class="rsc-glow" x="24" y="6" width="182" height="62" rx="5" fill="' + A + '"/>' +
+              '<rect class="rsc-glow" style="--ph:2.8s" x="24" y="88" width="182" height="42" rx="5" fill="' + B + '"/>';
+      var rows = [
+        { fill: A, kind: 'a' }, { fill: A, kind: 'a' }, { fill: A, kind: 'a' },
+        { fill: null, kind: 'scenery' },
+        { fill: B, kind: 'b' }, { fill: B, kind: 'q' }
+      ];
+      rows.forEach(function (r, i) {
+        var y = 10 + i * 20;
+        if (r.kind === 'scenery') {
+          s += '<rect x="30" y="' + y + '" width="170" height="13" rx="3" fill="none" stroke="' + MID +
+                 '" stroke-width="2" stroke-dasharray="4 4"/>' +
+               '<text x="208" y="' + (y + 11) + '" font-size="10" fill="' + INK + '" font-family="inherit" opacity=".7">scenery</text>';
+        } else {
+          s += '<rect x="30" y="' + y + '" width="' + (r.kind === 'q' ? 120 : 170) + '" height="13" rx="3" fill="' +
+                 r.fill + '" opacity=".45"/>' +
+               '<rect x="30" y="' + y + '" width="' + (r.kind === 'q' ? 120 : 170) + '" height="13" rx="3" fill="none" stroke="' +
+                 r.fill + '" stroke-width="1.8"/>';
+          if (r.kind === 'q') {
+            s += '<text x="158" y="' + (y + 11) + '" font-size="10" fill="' + INK + '" font-family="inherit">the question</text>';
+          }
+        }
+        s += '<text x="16" y="' + (y + 11) + '" font-size="9" fill="' + INK + '" font-family="inherit" opacity=".65">' + (i + 1) + '</text>';
+      });
+      /* Between rows 4 and 5, which is NOT the middle of six. */
+      s += '<path class="rsc-pulse" d="M12 87 H248" stroke="' + INK + '" stroke-width="2.2" stroke-dasharray="6 5"/>' +
+           '<text x="248" y="83" font-size="9.5" fill="' + INK + '" font-family="inherit" text-anchor="end" font-weight="700">the seam</text>';
+      return svg(s, 'Six sentences drawn as stacked bars. The first three are one colour, one is dashed ' +
+                    'and marked scenery, and the last two are a different colour. A dashed line marked ' +
+                    '"the seam" runs between them — and it is not at the midpoint.', '0 0 260 132');
+    },
+
+    /* One number, leaving the half that works it out and arriving in the half
+       that needs it. The slot it lands in is drawn EMPTY and dashed until it
+       arrives, because the second half genuinely cannot start without it —
+       which is the page's argument for why the order is forced. */
+    transfer: function () {
+      var A = 'var(--xo-a)', B = 'var(--xo-b)';
+      return svg(
+        /* First half lights, works it out, hands it over; then the second half
+           lights — with the token already in its slot. The ORDER is the page's
+           argument for why you cannot start at the second half. */
+        '<rect class="rsc-glow" x="8" y="18" width="92" height="34" rx="4" fill="' + A + '"/>' +
+        '<rect class="rsc-glow" style="--ph:2.8s" x="160" y="18" width="92" height="34" rx="4" fill="' + B + '"/>' +
+        '<rect x="8" y="18" width="92" height="34" rx="4" fill="' + A + '" opacity=".12"/>' +
+        '<rect x="8" y="18" width="92" height="34" rx="4" fill="none" stroke="' + A + '" stroke-width="2.6"/>' +
+        '<text x="54" y="39" font-size="11" fill="' + A + '" font-family="inherit" text-anchor="middle" font-weight="700">first part</text>' +
+        '<text x="54" y="68" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">works it out</text>' +
+        '<path d="M104 35 H154 M146 29 L154 35 L146 41" fill="none" stroke="' + INK +
+          '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>' +
+        '<rect x="160" y="18" width="92" height="34" rx="4" fill="' + B + '" opacity=".12"/>' +
+        '<rect x="160" y="18" width="92" height="34" rx="4" fill="none" stroke="' + B +
+          '" stroke-width="2.6" stroke-dasharray="5 4"/>' +
+        '<rect x="169" y="26" width="26" height="18" rx="3" fill="var(--cream-light)" stroke="' + B +
+          '" stroke-width="1.8" stroke-dasharray="3 3"/>' +
+        '<text x="224" y="39" font-size="11" fill="' + B + '" font-family="inherit" text-anchor="middle" font-weight="700">the rest</text>' +
+        /* "waits for it" rather than "cannot start without it": the longer
+           sentence forced a 9.5px label, which on a 375px screen renders at
+           about nine actual pixels on a site built for students who find
+           reading hard. The short phrase says the same thing at a size that
+           survives the phone. */
+        '<text x="206" y="68" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">waits for it</text>' +
+        '<g class="rsc-token">' +
+          '<circle cx="118" cy="35" r="11" fill="var(--cream-light)" stroke="' + INK + '" stroke-width="2.2"/>' +
+          '<text x="118" y="39" font-size="12" font-weight="700" fill="' + INK +
+            '" font-family="inherit" text-anchor="middle">?</text>' +
+        '</g>',
+        'A solid box labelled "first part, works it out" and a dashed box labelled "the rest, waits ' +
+        'for it", with an empty dashed slot inside it. A circled question mark travels from the first ' +
+        'box into that slot.');
+    },
+
+    /* Two true answers to one question. Both ticks appear TOGETHER and stay
+       together, because the page's claim is that neither reading is a mistake
+       — showing one win and the other lose would teach the opposite. */
+    twotrue: function () {
+      var A = 'var(--xo-a)', B = 'var(--xo-b)';
+      return svg(
+        /* BOTH bands share a phase — they light TOGETHER, unlike every other
+           diagram here. That is the page's whole claim: neither reading wins,
+           so nothing in the picture may go first. */
+        '<rect class="rsc-glow" x="14" y="46" width="106" height="36" rx="4" fill="' + A + '"/>' +
+        '<rect class="rsc-glow" x="140" y="46" width="106" height="36" rx="4" fill="' + B + '"/>' +
+        '<rect x="30" y="8" width="200" height="22" rx="4" fill="var(--cream-mid)" stroke="' + INK + '" stroke-width="2"/>' +
+        '<text x="130" y="23" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">one question, asked once</text>' +
+        '<path d="M92 32 V44 M168 32 V44" stroke="' + INK + '" stroke-width="1.8" opacity=".5"/>' +
+        '<rect x="14" y="46" width="106" height="36" rx="4" fill="' + A + '" opacity=".12"/>' +
+        '<rect x="14" y="46" width="106" height="36" rx="4" fill="none" stroke="' + A + '" stroke-width="2.4"/>' +
+        '<text x="82" y="62" font-size="10.5" fill="' + A + '" font-family="inherit" text-anchor="middle" font-weight="700">first part</text>' +
+        '<text x="82" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">true</text>' +
+        tickBox(22, 66, A, 0) +
+        '<rect x="140" y="46" width="106" height="36" rx="4" fill="' + B + '" opacity=".12"/>' +
+        '<rect x="140" y="46" width="106" height="36" rx="4" fill="none" stroke="' + B +
+          '" stroke-width="2.4" stroke-dasharray="5 4"/>' +
+        '<text x="208" y="62" font-size="10.5" fill="' + B + '" font-family="inherit" text-anchor="middle" font-weight="700">the rest</text>' +
+        '<text x="208" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">also true</text>' +
+        tickBox(148, 66, B, 1),
+        'One question at the top, branching to two answer boxes in different colours. Both are ticked: ' +
+        'one marked "first part, true" and the other "the rest, also true".');
     },
     /* One amount, at two moments, with the event between them. */
     change: function () {

@@ -1123,10 +1123,77 @@ select {
 .rsc-sway { transform-origin: 50% 100%; animation: rsc-sway 3.6s ease-in-out infinite; animation-delay: calc(var(--i) * .45s); }
 @keyframes rsc-sway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
 
+/* ---------- The Lighthouse: colour-coding the two halves ----------
+   TWO ROLE COLOURS, AND THEY ARE DELIBERATELY NONE OF THE SIX LINE COLOURS.
+   `--xo-a` and `--xo-b` mean FIRST HALF and SECOND HALF. They do not mean
+   Compare, or Ratio, or any other situation, and that distinction is the whole
+   reason they are new values rather than two `--line-*` tokens.
+
+   Colouring a generic crossover diagram in, say, compare-blue and ratio-teal
+   would teach that a crossover IS those two — a rule of the form "see this,
+   go there", which is the tier-3 lie this site exists to break, and it would
+   be wrong on five of the seven island problems. `lighthouse.js` says in its
+   own header that the diagrams never name which two situations are joined.
+
+   They are also off the line palette so that neither can be read as a schema a
+   student already knows: the six hues in use are green, blue, orange, teal,
+   red and violet, and these two are a slate and a plum. Nothing here touches
+   `--line-*`, so the open palette decision in ROADMAP §5b is untouched.
+
+   COLOUR IS NEVER THE ONLY SIGNAL. Every half in every diagram below also
+   carries a word ("first part", "the rest") and a shape difference (solid
+   versus dashed), because a diagram that only works in colour does not work.
+   WCAG 1.4.1, and the same discipline `[data-half]` already follows. */
+.hub-art { --xo-a: #3D5A73; --xo-b: #7B3F63; }
+
+/* A CHECKLIST BEING TICKED — and the reason it is a whole animation rather
+   than five static ticks is that the ORDER is the lesson: you run the five
+   questions down the list, and then you run them again on the other half.
+   `--i` staggers the rows; `--ph` offsets the second pass, so one list
+   finishes before the other starts and the two are never both mid-run. */
+.rsc-tick {
+  opacity: 1; transform-origin: 50% 50%;
+  animation: rsc-tick 5.6s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * .24s + var(--ph, 0s));
+}
+@keyframes rsc-tick {
+  0%, 2%    { opacity: 0; transform: scale(.5); }
+  8%        { opacity: 1; transform: scale(1.18); }
+  12%, 44%  { opacity: 1; transform: scale(1); }
+  50%, 100% { opacity: 0; transform: scale(.5); }
+}
+
+/* The band behind whichever half is being read right now. Low opacity on
+   purpose: it marks which column is live without competing with the ticks. */
+.rsc-glow { opacity: .16; animation: rsc-glow 5.6s ease-in-out infinite; animation-delay: var(--ph, 0s); }
+@keyframes rsc-glow { 0%, 2% { opacity: 0; } 8%, 44% { opacity: .16; } 50%, 100% { opacity: 0; } }
+
+/* The transfer crossing the seam. It leaves the first half only after that
+   half has been read, which is why it starts at 8% and not at 0. */
+.rsc-token { animation: rsc-token 5.6s ease-in-out infinite; }
+@keyframes rsc-token {
+  0%, 8%    { transform: translateX(0); opacity: 0; }
+  14%       { transform: translateX(14px); opacity: 1; }
+  46%, 100% { transform: translateX(64px); opacity: 1; }
+}
+
+.rsc-pulse { animation: rsc-pulse 2.6s ease-in-out infinite; }
+@keyframes rsc-pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+
 @media (prefers-reduced-motion: reduce) {
   /* Frozen, not emptied. Everything is placed where it reads as a finished
      picture: sheets out of the slot, streams mid-air, contents in the urn. */
   .rsc-svg [class*="rsc-"] { animation: none !important; }
+  /* A frozen checklist is simply RUN — every box ticked, on both halves. That
+     is the true still of "the same five questions, answered twice"; a
+     half-ticked list would be a picture of an interrupted read. Both bands
+     show, because with no motion there is no "current" column to mark. */
+  .rsc-tick { opacity: 1; transform: none; }
+  .rsc-glow { opacity: .16; }
+  /* The transfer frozen has ARRIVED. Caught mid-flight it would show a number
+     belonging to neither half, which is the one thing this picture denies. */
+  .rsc-token { transform: translateX(64px); opacity: 1; }
+  .rsc-pulse { opacity: 1; }
   .rsc-sheet { opacity: 1; }
   .rsc-sheet:nth-of-type(1) { transform: translateX(0); }
   .rsc-drop  { opacity: 1; transform: translateY(10px); }
@@ -2682,13 +2749,83 @@ select {
    afterthought rather than a peer. An explicit column count cannot do that:
    two abreast by default (four hubs make a clean 2x2), all in a single row on a
    wide screen, one per row on a phone. */
+/* AND THEN A FIFTH HUB ARRIVED AND DID EXACTLY THAT ANYWAY — 2026-08-16.
+   `repeat(4, 1fr)` was written when there were four hubs, so The Lighthouse
+   rendered FOUR ACROSS AND ONE ORPHANED, left-aligned under the first card:
+   measured at 1280px, four cards at y2757 and one at y2959, x239. The rule
+   above says in its own words that this is the thing it exists to prevent. A
+   fixed column count does not prevent a stray, it just picks which count of
+   items produces one — the defect class this project files under
+   "discovered, not listed".
+
+   SO IT IS THE SIX-TRACK GRID THE LINE CARDS ALREADY USE, and the selectors
+   below are self-limiting for the reason that one is: they name a shape by a
+   property only that shape has, so a list of a different length does not match
+   and falls back to a clean row rather than being mis-laid-out.
+
+   It also puts the hub cards on the SAME six tracks, the same 920px column and
+   the same 900px breakpoint as `.map-lines-five` above them, so on the map the
+   two groups' card edges line up down the page instead of being two grids that
+   happen to sit near each other. */
+/* FOUR TRACKS, CARDS SPANNING TWO — so "two abreast" and "a centred odd one"
+   are both expressible. A plain `repeat(2, 1fr)` cannot centre anything,
+   because there is no half-column to offset by; that is why five hubs came out
+   2 + 2 + 1-hard-left in the 620–899 band. */
 .hub-list {
   list-style: none; padding: 0; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(2, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   align-items: stretch; gap: calc(var(--su) * 1.5);
 }
-@media (min-width: 1040px) { .hub-list { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 620px)  { .hub-list { grid-template-columns: 1fr; } }
+.hub-list > li { grid-column: span 2; }
+
+/* THE MIDDLE BAND, and it is scoped to the band on purpose. `:nth-child(odd)`
+   combined with `:last-child` is true of the final card only when the count is
+   odd — five hubs, or the island's one — and false for an even count, which
+   stays a clean 2×N. Confining it between the two breakpoints keeps it from
+   fighting the six-track rules below, where item five must be allowed to flow
+   to column four rather than being pinned to column two. */
+@media (min-width: 621px) and (max-width: 899px) {
+  .hub-list > li:nth-child(odd):last-child { grid-column: 2 / span 2; }
+}
+
+@media (min-width: 900px) {
+  .hub-list {
+    grid-template-columns: repeat(6, 1fr);
+    width: min(920px, 100%);
+    margin-inline: auto;
+  }
+  .hub-list > li { grid-column: span 2; }
+
+  /* THREE THEN TWO, CENTRED. `:nth-child(4):nth-last-child(2)` matches the
+     fourth item only when it is also second from last — true of a five-item
+     list and of nothing else. Five hubs today; a sixth makes a clean 3+3 and
+     this rule simply stops applying. */
+  .hub-list > li:nth-child(4):nth-last-child(2) { grid-column: 2 / span 2; }
+
+  /* A TRAILING SINGLE CARD IS CENTRED RATHER THAN LEFT IN COLUMN ONE.
+     `:nth-child(4):last-child` is the four-hub case (3 + 1). Without it, going
+     back to four hubs would reinstate the very orphan described above. */
+  .hub-list > li:nth-child(4):last-child { grid-column: 3 / span 2; }
+
+  /* THE ISLAND'S HUB LIST HOLDS EXACTLY ONE CARD — The Lighthouse — and it was
+     landing in column one of a four-column grid, hard left under a centred
+     heading. `:first-child:last-child` is true only of a one-item list, so this
+     centres that card and can never touch a longer one. */
+  .hub-list > li:first-child:last-child { grid-column: 3 / span 2; }
+}
+/* ONE PER ROW ON A PHONE — and the span has to be UNDONE, not just the track
+   count changed. A `grid-column: span 2` left in place against a single-track
+   grid makes the browser generate an implicit second column to satisfy the
+   span, which is a silent horizontal overflow on the narrowest screen there
+   is. */
+@media (max-width: 620px) {
+  .hub-list { grid-template-columns: 1fr; }
+  .hub-list > li,
+  .hub-list > li:nth-child(odd):last-child,
+  .hub-list > li:nth-child(4):nth-last-child(2),
+  .hub-list > li:nth-child(4):last-child,
+  .hub-list > li:first-child:last-child { grid-column: auto; }
+}
 .hub-list > li { display: flex; }
 .hub-list .hub-card { height: 100%; }
 .hub-card {
