@@ -15,8 +15,18 @@
        ChangeModel claim the problem and draw half of it while reporting
        success.
 
-   WHAT DOES NOT FADE, and this is not a style choice: the ESTIMATE and the
-   HINT LADDER. `HANDOFF` §H-2 records that Look Back on a wrong answer is only
+   THE THREE READS STAY, AND THAT IS A RULING RATHER THAN AN OVERSIGHT.
+   `CHALLENGE-MODE.md` §4 originally said a halt drops "the guided Three Reads,
+   the Plan model and the Test Track". It drops the last two. The user ruled on
+   2026-08-16, with this problem built so the choice could be looked at instead
+   of imagined: `read1` is the checklist and is the aid a halt keeps by
+   definition, and `read3` is where the student identifies the question — on an
+   island whose entire trap is answering the wrong one, cutting that would
+   remove the last thing standing between a student and handing in the
+   transfer. Problem 5 inherits this; do not re-open it.
+
+   WHAT DOES NOT FADE, and this is not a style choice either: the ESTIMATE and
+   the HINT LADDER. `HANDOFF` §H-2 records that Look Back on a wrong answer is only
    safe because every step's ladder ends by stating that step's answer,
    re-measured across 164 steps. Strip the ladder here and that guarantee
    breaks for the whole site, not just this stop. The estimate stays for the

@@ -119,6 +119,20 @@ Open island, so these are not a sequence — they are five stops whose support d
 
 **One thing fades per stop.** Three stops, three removals — the same discipline as the existing `fadeLevel`, which every problem on the site already carries.
 
+### What an unstaffed halt actually drops — SETTLED 2026-08-16
+
+An earlier draft of this section said a halt drops *"the guided Three Reads, the Plan model and the Test Track"*. **It drops two of those three, and the Three Reads stay** — the user's ruling, taken after `cl-lost-umbrellas` was built and the choice could be looked at rather than imagined.
+
+| | |
+|---|---|
+| **Gone** | The Crossover Read — nobody walks the student to the seam. `phRead1` forks three ways and sends a paired problem at `fadeLevel: "independent"` straight to the second read. |
+| **Gone** | The Plan picture — no crossover slot, no two-model diagram, no first-half model. The Plan phase fades to the estimate alone. |
+| **Gone** | The Test Track, which no island problem has anyway. |
+| **Stays** | **The Three Reads.** `read1` is the checklist and is the aid a halt keeps by definition. `read2` and `read3` are guidance and were the arguable ones — they stay because `read3` is where the student identifies the question, and this island's whole trap is answering the wrong one. Cutting it would remove the last thing standing between a student and handing in the transfer. |
+| **Stays** | The estimate and the hint ladder, for the reason below, which is not a preference. |
+
+**The engine enforces the two removals as a matched pair.** Dropping the crossover block is what fades the Plan phase — but a first-half model left behind would be claimed by `CompareModel` or the Model Yard, drawing half the problem and reporting success. `data.js` therefore refuses a paired problem at `independent` that carries *either* a crossover block or any first-half model, and refuses one at any other fade level that lacks a crossover block.
+
 **The floor never fades, and this is not a style preference.** `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe because **every step's hint ladder ends by stating that step's answer** — re-measured at 30 problems, 164 steps. Strip the ladder at the unstaffed halts and that guarantee breaks for the whole site, not just this island. The estimate stays for the same reason: it is what Look Back compares against, and it is the only thing that catches an answer of the wrong *size* — which on a two-line problem is the exact shape of the stopping-at-the-transfer error.
 
 **The checklist at an unstaffed halt is the existing five-situations hub content, rendered as a pull-out.** Not a second copy. A second copy is how two documents drift, and this project has a file of examples.
