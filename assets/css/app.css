@@ -1168,6 +1168,26 @@ select {
   box-shadow: 0 2px 6px var(--shadow);
   margin: calc(var(--su) * 3) 0;
 }
+/* ---------- The Crossover Read ----------
+   The half being asked about is spotlit and the other half steps back. Not
+   hidden: a student has to be able to see WHERE the half sits in the story, and
+   cutting the other half off the screen would turn "which kind is this part"
+   into a question about a fragment with no context.
+
+   Opacity is the only difference, and it is deliberately mild — this is
+   emphasis, never state. What half you are on is carried by the heading above
+   the options ("the FIRST part", "the SECOND part"), so nothing here depends on
+   a student seeing a contrast at all. */
+[data-half="off"] { opacity: .42; }
+[data-half="on"]  { background: var(--cream-mid); border-radius: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-half] { transition: opacity .25s ease; }
+}
+/* The sentence the student picked as the seam keeps its mark once found, the
+   way the Platform Check keeps its evidence on screen. */
+#xr-story [data-result="right"] { box-shadow: inset 0 -3px 0 var(--go); }
+#xr-story [data-result="wrong"] { box-shadow: inset 0 -3px 0 var(--stop); }
+
 /* ---------- Crossover Island ----------
    The island map sits in the same frame the mainland map does, so the two read
    as the same kind of object — `.map-figure` already carries the framing, the

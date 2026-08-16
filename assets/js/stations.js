@@ -371,9 +371,13 @@
 
   Station.prototype.masked = function () {
     if (A11y.state.revealNumbers) return false;
-    // Both screens of the first read are numberless — the Platform Check is
-    // about the shape of the story, and a visible number invites arithmetic.
-    return this.phase === 'read1' || this.phase === 'platform';
+    /* Every screen of the first read is numberless — the Platform Check and the
+       Crossover Read are both about the shape of the story, and a visible
+       number invites arithmetic. On the island that matters more, not less: a
+       student who can see the numbers will find the seam by spotting where the
+       arithmetic changes, which is the one route to the answer that teaches
+       nothing about reading. */
+    return this.phase === 'read1' || this.phase === 'platform' || this.phase === 'crossover';
   };
 
   /**
@@ -546,6 +550,11 @@
   Station.prototype.renderPhase = function () {
     var f = {
       read1: this.phRead1, platform: this.phPlatform,
+      /* The paired stand-in for `platform`. A phase missing from THIS map
+         renders nothing and raises nothing — the station simply goes blank —
+         which is the same silent-omission failure `model.js` records across
+         its three dispatches. */
+      crossover: this.phCrossover,
       read2: this.phRead2, read3: this.phRead3,
       ticket: this.phTicket, plan: this.phPlan, demo: this.phDemo,
       solve: this.phSolve, check: this.phCheck
@@ -692,7 +701,12 @@
         A11y.announce('Answer all of them first.');
         return;
       }
-      self.go('platform');
+      /* The second screen of the first read forks by problem, not by route: a
+         paired problem goes to the Crossover Read, everything else to the
+         Platform Check. One branch, stated once, so the two screens can never
+         both run — the Crossover Read is the Platform Check's replacement, not
+         an extra stop after it. */
+      self.go(self.p.pair ? 'crossover' : 'platform');
     });
 
     if (this.expandAll) {
@@ -713,6 +727,218 @@
      Change problem shows its shape across the before and the after, and a
      two-stall ratio states its pairing twice. Toggle-then-check is the Read 2
      idiom (see phRead2), reused rather than reinvented. */
+  /* ---------- THE CROSSOVER READ ----------
+     `CHALLENGE-MODE.md` §3, and the user's own amendment to the plan: a new
+     reading protocol that runs the EXISTING five-situations checklist twice,
+     once on each half of the story.
+
+     IT REPLACES THE PLATFORM CHECK RATHER THAN FOLLOWING IT, and that is the
+     whole design decision in this file.
+
+     The Platform Check's job is "prove from the text which line this is". On a
+     two-line problem that job is not harder, it is DIFFERENT — the answer is
+     two lines and an order, and the screen that asks for one would be asking a
+     question with no true answer. Worse, it already had a leak waiting: its
+     closing line reads "That is why this problem is on {the line}", built from
+     `p.line`, which on a paired problem says "The Compare Line" — naming half
+     the answer on the screen before the student has been asked for either
+     half. So this stands in its place.
+
+     It also keeps the screen COUNT the same as the mainland's. Five passes were
+     specified; three of them live here, pass 1 is `read1` as it already was,
+     and pass 5 — name the transfer without computing it — is the crossover
+     slot in the Plan phase, which was built with the two-model picture. Adding
+     two more screens would have made the island longer than every other line,
+     on a phone, for a student who is already doing the hardest problem here.
+
+     THREE STAGES, IN THIS ORDER, AND THE ORDER IS THE LESSON:
+       1. WHERE does the story stop being one kind of thing? Tap that sentence.
+       2. What kind is the part BEFORE it?
+       3. What kind is the part AFTER it?
+
+     Stage 1 first because it is a reading move, not a classifying one: you
+     cannot run the checklist on a half until you know where the halves are.
+     Stages 2 and 3 are the SAME five options asked twice, deliberately
+     identical in wording, because the point a student has to leave with is
+     that the checklist did not change — the stretch of story it was pointed at
+     did. That is the reframing §3 asks for: the checklist classifies a stretch
+     of text, not a problem.
+
+     NUMBERLESS THROUGHOUT. `masked()` includes this phase for the same reason
+     it includes read1 and platform — a student looking at numbers will find
+     the seam by arithmetic and learn nothing about reading. */
+  Station.prototype.phCrossover = function () {
+    var self = this, p = this.p, pr = p.pair;
+    if (!pr) { this.go('read2'); return; }
+
+    /* The five, in a stable shuffled order, built from `MF.LINES` so a sixth
+       schema would appear here automatically — and so the Challenge route,
+       which is deliberately not in that object, cannot appear as an answer to
+       itself. Salt measured below. */
+    /* THE SALT WAS MEASURED, AND THE FIRST ONE WAS DEGENERATE ACROSS THE TWO
+       HALVES. `|xo-half-N|` put the correct option at position 3 of 5 on BOTH
+       questions — "tap the middle one, twice" scoring 100% against 4% by
+       chance, on the sixth choice surface this project has built and the sixth
+       time this defect has been in the first draft of one.
+
+       Six salts measured, as [half 1, half 2]: |xo-half-N| [3,3],
+       |half-N| [3,2], |side-N| [1,2], |part-N| [4,5], |xr-N| [3,1],
+       |read-N| [4,2]. `|read-N|` is used: the two differ, and neither sits
+       first or last.
+
+       ▸ THAT IS ALL THAT CAN HONESTLY BE CLAIMED FROM ONE PROBLEM. Two data
+         points cannot show a spread, and "never first, never last" is the same
+         tell inverted (VERIFICATION.md §21) if it is ever applied as a rule
+         rather than as this problem's measurement. RE-MEASURE ACROSS ALL SEVEN
+         ISLAND PROBLEMS once they exist; the target is a flat-ish spread over
+         five positions, not two comfortable numbers. */
+    function lineOpts(stage) {
+      return MF.seededShuffle(Object.keys(MF.LINES), p.id + '|read-' + stage + '|')
+        .map(function (k) {
+          var L = MF.LINES[k];
+          return '<li><button class="choice" type="button" data-k="' + esc(k) + '"' +
+            ' aria-label="' + esc(L.name + '. ' + L.form) + '">' +
+            '<span class="marker" aria-hidden="true">' + L.marker + '</span>' +
+            '<span><strong>' + esc(L.name) + '</strong><small>' + esc(L.form) + '</small></span>' +
+            '</button></li>';
+        }).join('');
+    }
+
+    this.host().innerHTML =
+      MrFraction.aside('steady',
+        '<p><strong>Still the first read, and this story needs a different one.</strong> ' +
+        'On the five lines you read a problem once and asked what kind it is. This one is not a single ' +
+        'kind, so asking that gets you two answers and neither of them is wrong.</p>' +
+        '<p>So read it in two goes. First find the place it changes &mdash; then ask the same five ' +
+        'questions on each side of that place.</p>') +
+      '<div id="xr-story">' + this.problemHTML(false, true) + '</div>' +
+
+      '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; where it changes</span>' +
+        '<h3>Tap the sentence where the story stops doing one thing and starts doing another.</h3>' +
+        '<div class="rule"></div></div>' +
+      '<p class="hint-text">Not where the numbers are. Where the <em>kind of thing happening</em> changes.</p>' +
+      '<div class="feedback" role="status" id="xr-fb1"></div>' +
+
+      '<div id="xr-half1" hidden>' +
+        '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; before the crossover</span>' +
+          '<h3>Run the checklist on the FIRST part. What kind of situation is it?</h3>' +
+          '<div class="rule"></div></div>' +
+        '<ul class="choices" id="xr-opts1">' + lineOpts(1) + '</ul>' +
+        '<div class="feedback" role="status" id="xr-fb2"></div>' +
+      '</div>' +
+
+      '<div id="xr-half2" hidden>' +
+        '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; after the crossover</span>' +
+          '<h3>Now the same five questions, on the SECOND part.</h3>' +
+          '<div class="rule"></div></div>' +
+        '<p class="hint-text">The same checklist. A different stretch of the story.</p>' +
+        '<ul class="choices" id="xr-opts2">' + lineOpts(2) + '</ul>' +
+        '<div class="feedback" role="status" id="xr-fb3"></div>' +
+      '</div>' +
+
+      '<div id="xr-done" hidden>' +
+        '<div class="msg msg-go"><span class="ico" aria-hidden="true">&#10003;</span><p>' +
+        '<strong>That is the shape of it.</strong> ' + esc(pr.readWhy || '') + '</p></div>' +
+        '<div class="btn-row"><button class="btn" id="xr-go" type="button">Second read &rarr;</button></div>' +
+      '</div>';
+
+    var host = this.host(), stage = 1;
+
+    /* Which sentences belong to which half, decided by the crossover index and
+       used to dim the half that is not being asked about. Derived, never
+       authored twice: the manifest gives the index and everything else follows
+       from it, so a story that gains a sentence cannot leave the highlight
+       pointing at the wrong stretch. */
+    function spotlight(from, to) {
+      [].forEach.call(host.querySelectorAll('#xr-story [data-sent]'), function (b) {
+        var i = +b.getAttribute('data-sent');
+        b.setAttribute('data-half', (i >= from && i < to) ? 'on' : 'off');
+      });
+    }
+
+    function pickSentence(b) {
+      if (!b || stage !== 1) return;
+      var i = +b.getAttribute('data-sent');
+      var fb = host.querySelector('#xr-fb1');
+      if (i !== pr.crossoverSentence) {
+        b.setAttribute('data-result', 'wrong');
+        fb.innerHTML = msg('caution', '&rarr;',
+          '<strong>Not that one.</strong> Read it again and look for the sentence that stops describing ' +
+          'the same kind of thing as the ones before it. Everything up to the crossover is doing one job; ' +
+          'everything after it is doing another.');
+        A11y.announce('Not that one.');
+        return;
+      }
+      stage = 2;
+      b.setAttribute('data-picked', 'yes');
+      b.setAttribute('data-result', 'right');
+      [].forEach.call(host.querySelectorAll('#xr-story [data-sent]'), function (x) {
+        x.setAttribute('aria-disabled', 'true');
+        x.removeAttribute('tabindex'); x.removeAttribute('role'); x.removeAttribute('aria-pressed');
+      });
+      fb.innerHTML = msg('go', '&#10003;', '<strong>That is the crossover.</strong> ' + esc(pr.crossoverWhy || ''));
+      spotlight(0, pr.crossoverSentence);
+      host.querySelector('#xr-half1').hidden = false;
+      focusFeedback(host.querySelector('#xr-half1 h3'));
+      A11y.announce('That is the crossover. Now the first part.');
+    }
+
+    host.querySelector('#xr-story').addEventListener('click', function (e) {
+      pickSentence(e.target.closest('[data-sent]'));
+    });
+    host.querySelector('#xr-story').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      var b = e.target.closest('[data-sent]');
+      if (!b) return;
+      e.preventDefault();
+      pickSentence(b);
+    });
+
+    /* A WRONG LINE IS ANSWERED WITH THAT LINE'S OWN SHAPE, not with a shrug.
+       Authoring ten bespoke replies — five options across two halves, per
+       problem — is what would actually happen: seven problems is seventy
+       strings, and strings nobody wants to write get written thin. The line's
+       own `form` is the honest thing to say back, and it is the same sentence
+       the student saw on the map and at the Ticket Booth, so it teaches the
+       schema rather than the problem. The CORRECT reply is authored per half,
+       because that one is about this story and cannot be derived. */
+    function wireHalf(n, want, why, next) {
+      var wrap = host.querySelector('#xr-opts' + n);
+      wrap.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-k]');
+        if (!b || b.disabled) return;
+        var k = b.getAttribute('data-k'), fb = host.querySelector('#xr-fb' + (n + 1));
+        if (k !== want) {
+          b.setAttribute('data-result', 'wrong');
+          fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' +
+            esc(MF.LINES[k].name) + ' is ' + esc(MF.LINES[k].form) + ' &mdash; ' +
+            esc(MF.LINES[k].desc.charAt(0).toLowerCase() + MF.LINES[k].desc.slice(1)) +
+            ' Read that part of the story again and ask whether that is what it is doing.');
+          A11y.announce('Not that one.');
+          return;
+        }
+        [].forEach.call(wrap.querySelectorAll('[data-k]'), function (x) { x.disabled = true; });
+        b.setAttribute('data-result', 'right');
+        fb.innerHTML = msg('go', '&#10003;', '<strong>Yes.</strong> ' + esc(why || ''));
+        next();
+      });
+    }
+
+    wireHalf(1, pr.first, pr.firstWhy, function () {
+      stage = 3;
+      spotlight(pr.crossoverSentence, p.problem.sentences.length);
+      host.querySelector('#xr-half2').hidden = false;
+      focusFeedback(host.querySelector('#xr-half2 h3'));
+      A11y.announce('Now the second part.');
+    });
+    wireHalf(2, pr.second, pr.secondWhy, function () {
+      spotlight(0, p.problem.sentences.length);
+      host.querySelector('#xr-done').hidden = false;
+      host.querySelector('#xr-go').addEventListener('click', function () { self.go('read2'); });
+      focusFeedback(host.querySelector('#xr-done .msg'));
+    });
+  };
+
   Station.prototype.phPlatform = function () {
     var self = this, p = this.p;
     var pc = (p.threeReads.read1 || {}).platformCheck;

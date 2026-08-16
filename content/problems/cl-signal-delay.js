@@ -86,7 +86,23 @@ MF.registerProblem({
     first: "compare",
     second: "ratio",
     transfer: "the gap in minutes between the two trains",
-    crossoverSentence: 4
+
+    /* THE CROSSOVER READ'S ANSWER KEY. `crossoverSentence` is the index of the
+       sentence where the story stops doing one kind of thing and starts doing
+       another — sentence 4, where it leaves the two journey times behind and
+       states a rate. Sentence 3 (the carriages) sits across the seam on
+       purpose, so the crossover cannot be found by counting.
+
+       The three `why` strings are the only replies authored here. A WRONG line
+       is answered from that line's own `form` and `desc`, which is honest, is
+       the same sentence the student has seen on the map, and does not turn
+       into seventy thin strings across seven problems. The correct replies
+       cannot be derived, because they are about this story. */
+    crossoverSentence: 4,
+    crossoverWhy: "Everything before it is two journey times set against each other. From here on the story stops comparing anything and starts telling you how the express keeps going — so many miles for so many minutes. Same train, different kind of question.",
+    firstWhy: "Two amounts side by side and the space between them left unsaid. Nothing is changing, nothing repeats, and there is no total either of them is part of.",
+    secondWhy: "Miles measured against minutes, and the relationship holds at any size — half the minutes would be half the miles. That is what makes it a rate rather than the same thing happening over and over.",
+    readWhy: "One story, two situations: amounts side by side first, and a rate after. They are joined at the sentence you found, and the first one hands the second one a number. That number is the next thing to look for."
   },
 
   unknownCar: "difference",

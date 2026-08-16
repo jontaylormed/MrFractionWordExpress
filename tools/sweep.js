@@ -146,7 +146,11 @@
      pre-solve. A check encodes the question its author was asking that day
      (VERIFICATION.md §28); this one has to ask the newer question too. */
   var PRE_SOLVE = { read1: 1, platform: 1, read2: 1, read3: 1, ticket: 1, plan: 1, demo: 1,
-                    solve: 1, 'check-unsure': 1, 'ticket-hidden': 1 };
+                    solve: 1, 'check-unsure': 1, 'ticket-hidden': 1,
+                    /* The Crossover Read. It renders four authored strings and
+                       the whole story, before anything has been computed, so it
+                       is exactly the kind of screen this scan exists for. */
+                    crossover: 1 };
 
   /* CHALLENGE PROBLEMS ADD PHASES THAT CANNOT BE LISTED, so this is a function
      and not another key in the map above. `solve@2`, `solve@3` … are the Engine
@@ -167,7 +171,13 @@
       var base = MF.problems[id], n = MF.setCount(base);
       for (var i = 0; i < n; i++) {
         var p = MF.materialize(base, i);
-        var phases = ['read1', 'platform', 'read2', 'read3', 'ticket', 'plan'];
+        /* A paired problem does not visit `platform`; the Crossover Read stands
+           in its place, and `phRead1` forks to one or the other. Rendering both
+           would scan a screen no student can reach and — worse — would report
+           the Platform Check's line-naming leak on a problem that never shows
+           it. Visit a phase only if the real app would, which is this file's
+           own standing rule. */
+        var phases = ['read1', isPaired(p) ? 'crossover' : 'platform', 'read2', 'read3', 'ticket', 'plan'];
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         phases = phases.concat(['solve', 'check']);
@@ -360,7 +370,11 @@
   function numberlessBreaks(rows) {
     var out = [];
     rows.forEach(function (r) {
-      if (r.err || (r.phase !== 'read1' && r.phase !== 'platform')) return;
+      /* `crossover` is the paired stand-in for `platform` and is numberless for
+         the same reason, so it is scanned by the same rule. A phase absent from
+         this test is a numberless screen nothing is checking — and this list
+         has already been the place where a whole screen went unscanned once. */
+      if (r.err || (r.phase !== 'read1' && r.phase !== 'platform' && r.phase !== 'crossover')) return;
       /* `text` is innerText, and innerText DOES NOT INCLUDE aria-label. This
          check was written to catch the quilt's picture leaking its fractions,
          reported 0, and was believed — while four other scenes were reading

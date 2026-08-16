@@ -469,6 +469,30 @@
           err.push('pair.first and pair.second are both "' + pr.first + '" — that is one situation taking two steps, not a Challenge problem');
         if (!pr.transfer) err.push('pair has no transfer named');
 
+        /* THE CROSSOVER READ'S ANSWER KEY, checked here because every one of
+           these failures is silent on the screen rather than loud.
+
+           An out-of-range `crossoverSentence` makes a seam the student can
+           never tap, so stage 1 cannot be passed and the phase hangs — no
+           error, just a screen that will not advance. Index 0 is its own trap:
+           it means "the story changes kind at its first sentence", which
+           leaves an empty first half for the checklist to be run on. */
+        var nSent = ((p.problem || {}).sentences || []).length;
+        if (typeof pr.crossoverSentence !== 'number')
+          err.push('pair.crossoverSentence is missing — the Crossover Read cannot ask where the story changes');
+        else if (pr.crossoverSentence < 1 || pr.crossoverSentence >= nSent)
+          err.push('pair.crossoverSentence ' + pr.crossoverSentence + ' is out of range for ' + nSent +
+                   ' sentences, or is 0 — the first half would be empty and stage 1 could never be passed');
+        /* The question sentence is the LAST thing in the story and belongs to
+           neither half's description of what is happening. A crossover placed
+           there would give the second half nothing but the question. */
+        if (pr.crossoverSentence === (p.problem || {}).questionSentenceIndex)
+          err.push('pair.crossoverSentence is the question sentence — the second half would be the question alone');
+        ['crossoverWhy', 'firstWhy', 'secondWhy', 'readWhy'].forEach(function (k) {
+          if (!pr[k] || String(pr[k]).length < 20)
+            err.push('pair.' + k + ' is missing or too short — the Crossover Read renders it and would show a blank');
+        });
+
         /* A PAIR WITH NO CROSSOVER BLOCK DRAWS HALF A PICTURE. `PairModel`
            declines such a problem, so the Plan phase falls through to whatever
            model the FIRST half's signalBox key claims — CompareModel here —
