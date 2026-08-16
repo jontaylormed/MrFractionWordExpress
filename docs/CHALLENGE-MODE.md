@@ -233,6 +233,13 @@ Also needs adding, and both are discovered-not-listed hazards:
 
 ## 9. Where to start
 
+> ### ▶ DONE 2026-08-16: §6.5, §6.2, and `cl-signal-delay` itself.
+> The leak rule, the `stacked` answer key and the first problem are built. **31 problems · 124 materialisations · 1236 screens · every count 0**, and the coverage line now reads *"CHALLENGE (paired) problems examined: 1 · screens 40 · of them second-half 4"*. The problem is `status: "draft"` — `Selector` pools published problems only, so it cannot be dealt into a Compare Line ride before the island exists.
+>
+> **Still unbuilt, and this is what "end to end" does NOT yet mean:** the Crossover Read (§3), the two-model Plan phase with the transfer slot (§6.1), the island map (§6.4), and a Test Track kind that demonstrates a crossover. What runs today is the content through the ordinary station, which proves the engine and the checkers hold.
+>
+> **Two checker defects fell out of writing the content**, both recorded in `REVIEW-LOG.md`: the numberless scan never looked at the shared `CHECK` table rendering beside the copy it did scan, and its word list was about to be duplicated. Both fixed; the scan immediately found two pre-existing violations in live copy.
+
 **Not with a problem.** With §6.5 and §6.2 — the checker that will judge every problem, and the answer key that has to invert. Then one problem, `cl-signal-delay`, end to end through all five passes and both models, at 390px and 1280px, before the other six exist.
 
 One problem that runs proves the engine. Seven that validate prove nothing.

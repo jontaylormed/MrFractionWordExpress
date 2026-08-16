@@ -374,12 +374,56 @@
   function validate() {
     var report = [];
 
+    /* THE CHECK SCANNED THE AUTHORED COPY AND NOT THE COPY BESIDE IT.
+       `platformCheck.questions` overrides are refused a digit or a number word
+       because read1 is the numberless phase. The SHARED `CHECK` table in
+       stations.js renders on that same screen, for every problem, and nothing
+       looked at it — so a number word written into a shared reply was
+       numberless-illegal on 31 problems at once and validated perfectly clean.
+
+       Not hypothetical. Found 2026-08-16 while authoring `cl-signal-delay`:
+       the per-problem copy was refused for saying "two", and the shared reply
+       I had written the day before said "Two kinds of situation, one after the
+       other, ... turned one hard problem into two" and was not. The instrument
+       was pointed at the author's file rather than at the student's screen,
+       which is this project's most-repeated instrument error.
+
+       Reported ONCE per run rather than per problem: it is one defect in one
+       table, and printing it 31 times over is how a real hit gets skimmed. */
+    /* ONE word list, used by both the per-problem scan and the shared-table
+       scan below. Read1 is numberless, so a spelled-out number leaks structure
+       exactly as a digit does. */
+    var NUMWORD = /\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|half|quarter|third|twice|double)\b/i;
+
+    var sharedDone = false;
+    function sharedCheckErrors() {
+      var out = [];
+      ((global.Stations && Stations.CHECK) || []).forEach(function (q) {
+        var strings = [[q.id + '.ask', q.ask]];
+        (q.options || []).forEach(function (o) {
+          ['text', 'yes', 'no'].forEach(function (f) {
+            if (o[f]) strings.push([q.id + '.' + o.id + '.' + f, o[f]]);
+          });
+        });
+        strings.forEach(function (s) {
+          if (!s[1]) return;
+          if (/\d/.test(s[1]))
+            out.push('SHARED CHECK table: ' + s[0] + ' has a digit — read1 is the numberless phase');
+          else if (NUMWORD.test(s[1]))
+            out.push('SHARED CHECK table: ' + s[0] + ' spells out a number ("' +
+                     s[1].match(NUMWORD)[0] + '") — say the shape, not the count');
+        });
+      });
+      return out;
+    }
+
     /* Every check below runs against a MATERIALISED problem, so a problem with
        four number sets is validated four times over. A set whose answer, hint
        ladder or estimate bracket disagrees with its own numbers is exactly the
        defect this feature invites, and it would otherwise surface only for the
        student unlucky enough to draw that set. */
     function checkProblem(id, p, err, warn) {
+      if (!sharedDone) { sharedDone = true; sharedCheckErrors().forEach(function (e) { err.push(e); }); }
       if (p.id !== id) err.push('id mismatch');
       if (!/^[a-z0-9-]+$/.test(p.id)) err.push('id must be kebab-case');
       /* A CHALLENGE PROBLEM IS TWO SITUATIONS AND HAS NO SINGLE LINE.
@@ -512,7 +556,10 @@
              answering 1 or 2, and a cleared-noise line is how a real leak gets
              skimmed past. Say the shape instead of counting it. */
       var pc = ((p.threeReads || {}).read1 || {}).platformCheck;
-      var NUMWORD = /\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|half|quarter|third|twice|double)\b/i;
+      /* NUMWORD moved up to validate() scope so the shared CHECK table is
+         judged by the SAME list this is. A second copy of the word list here
+         would be two lists, and the day one of them gains "fifteen" the other
+         will not — which is the drift class this project has seven files of. */
       if (!pc) err.push('read1.platformCheck is missing — Read 1 renders it (Pedagogy §3.7)');
       else {
         var nSent = (pb.sentences || []).length;

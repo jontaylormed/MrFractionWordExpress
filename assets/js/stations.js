@@ -221,8 +221,22 @@
              Good reading … Not here." — three negations in two lines, and it
              was only visible on the rendered screen. Look at `stacked.no`: it
              opens by AGREEING, and the prefix does the disagreeing. */
-          no: 'Good reading, and nearly everywhere else it would be the right answer. Here, though, the story stops being one kind of thing partway through and starts being another &mdash; and the second half cannot start until the first half is finished. Read it again and find the place where it changes.' },
-        { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, one after another', lines: [], pairs: true,
+          /* NO NUMBER WORDS. This renders on read1, which is numberless, and
+             "one", "two" and "half" are all refused there — a spelled-out
+             number leaks structure exactly as a digit does. The first draft
+             said "one kind of thing" and "the second half cannot start until
+             the first half is finished" and would have been refused on all
+             three. The site already had the vocabulary: `ask` says "a single
+             kind", `onekind` says "the same kind all the way through". */
+          no: 'Good reading, and nearly everywhere else it would be the right answer. Here, though, the story stops being a single kind of thing partway through and starts being another &mdash; and the later part cannot start until the earlier part is finished. Read it again and find the place where it changes.' },
+        /* "one after another" and "This one does" — both pre-existing, both
+           refused the moment the shared table came under the numberless scan
+           (2026-08-16), and both are the word "one" doing a pronoun's job
+           rather than counting anything. The regex cannot tell the difference
+           and must not be taught to: the exemption on this rule is a data tag,
+           never a reading of intent. So the copy moves instead, which costs a
+           word and keeps the rule blunt enough to trust. */
+        { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, in turn', lines: [], pairs: true,
           /* The only reply on this question a student reads as a correct
              answer on the island. It confirms, names the structure without
              naming the two situations, and states the payoff — which is the
@@ -232,11 +246,11 @@
              the first draft rendered as "Yes. Yes — and that is what makes…".
              None of the other replies here opens with the verdict; they all
              start straight into the reason. */
-          yes: 'That is what makes this one a challenge. Two kinds of situation, one after the other, joined at the point where the story changes. Find that point and you have turned one hard problem into two you already know how to do.',
+          yes: 'That is what makes this a challenge. A kind of situation, and then a different kind, joined at the point where the story changes. Find that point and a hard problem turns into problems you already know how to do.',
           no: 'Worth asking every time, and often the right answer &mdash; plenty of problems do stack different kinds of situation. This story stays inside a single kind the whole way, even where the working takes more than a single step. Steps and situations are not the same thing.' },
         { id: 'nofit', text: 'None of them really fits', lines: [], pairs: false,
           yes: '',
-          no: 'That is a real answer and you should keep it in your pocket &mdash; not every problem you meet fits these lines. This one does, though. Look at the shape you just described.' }
+          no: 'That is a real answer and you should keep it in your pocket &mdash; not every problem you meet fits these lines. This story does, though. Look at the shape you just described.' }
       ]
     }
   ];
