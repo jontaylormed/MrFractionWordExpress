@@ -1733,7 +1733,18 @@
     var lead = 34 + (1 - Math.max(0, Math.min(1, progress))) * 78;
     var dEngine = dStop - lead;
 
-    var s = islandBody({}, { trainAt: ((dEngine % total) + total) % total / total });
+    /* REAL COUNTS, NOT `{}`. This passed an empty published-map, so
+       `stopIsOpen` was false for every stop and the zoomed panel labelled all
+       five "track being laid" — on a station screen, inside a ride the student
+       is currently taking, at a stop that is plainly open because they are
+       standing on it. Found by riding it; nothing in the sweep looks at label
+       text on the journey panel. The wide map was always right because
+       `renderIsland` hands it the real thing. */
+    var counts = {};
+    if (global.MF && MF.pairedProblems) {
+      MF.pairedProblems().forEach(function (p) { counts[p.id] = true; });
+    }
+    var s = islandBody(counts, { trainAt: ((dEngine % total) + total) % total / total });
     // Ring the stop being ridden, the way legMap rings its destination.
     s += '<circle cx="' + here.at[0] + '" cy="' + here.at[1] + '" r="17" fill="none" ' +
          'stroke="var(--ink)" stroke-width="3.5" opacity=".85"/>';

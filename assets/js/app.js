@@ -712,13 +712,32 @@
       /* 'pleased', not 'go'. The moods are `steady`, `thinking`, `pleased` and
          `curious` — `MrFraction.moods` is the list — and 'go' is a MESSAGE
          kind from `msg()`, not an expression. The two vocabularies sit next to
-         each other in this file and the first draft crossed them. */
+         each other in this file and the first draft crossed them.
+
+         AND THE SCREEN HAS TO STAND UP WITHOUT HIM. The first version put
+         everything in the aside and nothing in the view — and Mr Fraction is a
+         FLOATING COMPANION, so `#view` came out holding a single button on an
+         otherwise empty page. Ridden end to end, that is what a student meets
+         after finishing the hardest problem on the site: a blank area, one
+         button, and the words off in a bubble in the corner.
+
+         That is this project's most-repeated failure and it is in my own
+         memory as such — remove the thing that was wrong and leave the surface
+         empty. The words belong in the view; the companion may echo the voice,
+         but it may not BE the content. */
       var one = html('<div>' +
         MrFraction.aside('pleased',
-          '<p><strong>That is the stop done.</strong> ' +
-          (isle ? 'Two situations, joined &mdash; and you took them apart.' : 'Nicely worked.') + '</p>' +
-          '<p>No trip report for this one: a report is about a journey, and this was a single stop. ' +
-          'Ride a few and I will have something worth telling you.</p>') +
+          isle ? '<p>Two situations, joined &mdash; and you took them apart.</p>'
+               : '<p>Nicely worked.</p>') +
+        '<div class="section-head"><span class="eyebrow">' +
+          (isle ? 'Crossover Island' : 'End of the ride') + '</span>' +
+          '<h2>That is the stop done.</h2><div class="rule"></div></div>' +
+        '<p>' + (isle
+          ? 'You took a story that was two situations and pulled it apart at the join.'
+          : 'Nicely worked.') + '</p>' +
+        '<p style="color:var(--ink-mid)"><strong>There is no trip report for this one</strong>, ' +
+        'and that is not something going wrong: a report is about a journey, and this was a single ' +
+        'stop. Ride a few and there will be something worth telling you about how you went.</p>' +
         '<div class="btn-row">' +
           '<button class="btn" id="again" type="button">' +
             (isle ? 'Back to Crossover Island &rarr;' : 'Back to the map &rarr;') + '</button>' +
