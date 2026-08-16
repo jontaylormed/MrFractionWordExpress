@@ -178,6 +178,10 @@
 <script src="assets/js/compare-model.js"></script>
 <script src="assets/js/groups-model.js"></script>
 <script src="assets/js/percent-model.js"></script>
+<!-- Last, and it must stay last: PairModel composes the models above it and
+     asks each of them `applies()`. Loaded before them, `firstModel()` would
+     find none of them defined and every two-line problem would draw nothing. -->
+<script src="assets/js/pair-model.js"></script>
 <script src="assets/js/testtrack.js"></script>
 <script src="assets/js/scene.js"></script>
 <script src="assets/js/ratio-scenes.js"></script>

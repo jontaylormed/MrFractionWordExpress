@@ -69,6 +69,12 @@
        schema — a percent Compare problem would otherwise be caught by
        CompareModel below and draw the compare bars, and the surface would have
        no picture of its own. */
+    /* THE CROSSOVER IS ASKED BEFORE EVERYTHING, INCLUDING PERCENT. A two-line
+       problem carries its first half's own signalBox key — cl-signal-delay has
+       `compareBars` — so any model below would claim it, draw half the problem
+       and report success. Half a picture is worse than none: it is a screen
+       that looks finished and is not. */
+    if (global.PairModel && PairModel.applies(p)) return PairModel.html(p);
     if (global.PercentModel && PercentModel.applies(p)) return PercentModel.html(p);
     if (global.ChangeModel && ChangeModel.applies(p)) return ChangeModel.html(p);
     if (global.RatioModel && RatioModel.applies(p)) return RatioModel.html(p);
@@ -239,6 +245,7 @@
      (2026-08-04). VERIFICATION.md §24: the first content of a new shape tests
      the engine, and the defect is in the code that predates it. */
   function applies(p) {
+    if (global.PairModel && PairModel.applies(p)) return true;
     if (global.PercentModel && PercentModel.applies(p)) return true;
     if (global.ChangeModel && ChangeModel.applies(p)) return true;
     if (global.RatioModel && RatioModel.applies(p)) return true;
@@ -249,6 +256,7 @@
 
   function wire(root, p, onDone) {
     // Paired with the dispatch in html() — see the note there.
+    if (global.PairModel && PairModel.applies(p)) return PairModel.wire(root, p, onDone);
     if (global.PercentModel && PercentModel.applies(p)) return PercentModel.wire(root, p, onDone);
     if (global.ChangeModel && ChangeModel.applies(p)) return ChangeModel.wire(root, p, onDone);
     if (global.RatioModel && RatioModel.applies(p)) return RatioModel.wire(root, p, onDone);

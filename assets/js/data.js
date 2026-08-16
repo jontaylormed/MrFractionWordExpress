@@ -445,6 +445,35 @@
           err.push('pair.first and pair.second are both "' + pr.first + '" — that is one situation taking two steps, not a Challenge problem');
         if (!pr.transfer) err.push('pair has no transfer named');
 
+        /* A PAIR WITH NO CROSSOVER BLOCK DRAWS HALF A PICTURE. `PairModel`
+           declines such a problem, so the Plan phase falls through to whatever
+           model the FIRST half's signalBox key claims — CompareModel here —
+           and the student gets a finished-looking screen showing one situation
+           of two, with nothing anywhere reporting it. Half a picture is worse
+           than none, so it is refused before it can be authored.
+
+           The options are checked too: a crossover with no correct answer is a
+           question that can never be settled, and `PairModel` gates the second
+           picture behind settling it — so the phase would simply never
+           complete. That is a hang, not a wrong answer. */
+        var xo = (p.signalBox || {}).crossover;
+        if (!xo) {
+          err.push('a problem with a `pair` needs signalBox.crossover — without it the Plan phase draws the first half only and reports success');
+        } else {
+          var xopts = xo.options || [];
+          if (xopts.length < 3)
+            err.push('signalBox.crossover needs at least three options — the crossover has three real misreadings and a choice of two teaches position');
+          if (!xopts.filter(function (o) { return o.correct; }).length)
+            err.push('signalBox.crossover has no correct option — the Plan phase gates the second picture behind settling it, so it could never complete');
+          if (xopts.filter(function (o) { return o.correct; }).length > 1)
+            err.push('signalBox.crossover has more than one correct option — exactly one quantity crosses');
+          xopts.forEach(function (o, i) {
+            if (!o.why) err.push('signalBox.crossover option ' + i + ' has no `why` — every option on this site answers back');
+          });
+          if (!((xo.second || {}).rows || []).filter(function (r) { return r.key === 'transfer'; }).length)
+            err.push('signalBox.crossover.second needs a row with key "transfer" — that is the cell the named quantity is written into');
+        }
+
         /* AN UNWRITTEN REPLY CANNOT SHIP. `CHECK.fit` inverts on a paired
            problem: `stacked` becomes correct and `onekind` becomes the
            distractor, so two replies that no mainland problem can reach

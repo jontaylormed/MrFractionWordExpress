@@ -286,6 +286,47 @@ MF.registerProblem({
       a11yDescription: "Two bars on the same scale, one for each train's journey time. The express bar is the shorter. The local bar runs further, and the space between the two ends is marked with a question mark rather than a number. Nothing beyond that gap is drawn, because what happens after it is a different picture.",
       settledSay: "The gap between the two bars is not the answer here. It is the number the rest of the story needs."
     },
+    /* THE CROSSOVER. `pair-model.js` renders the compare bars above, then this,
+       then the second picture — and the second picture is drawn WAITING,
+       because neither of its cells can be filled until the Engine Room has run.
+       That is the point of the screen rather than a shortcoming of it.
+
+       NOTHING HERE MAY CARRY A NUMBER. The options name quantities, the cell
+       label names a quantity, and the transfer's value stays a question mark
+       on this phase exactly as the ratio table's unknown does. The three wrong
+       options are the three real ways to misread the crossover: taking a given
+       instead of a derived value, taking the final answer, and taking the
+       rate — which is a pair of numbers rather than the single one that
+       crosses. */
+    crossover: {
+      heading: "What crosses over?",
+      prompt: "The first picture is finished, and the story is not. Something from that picture is the number the rest of this problem needs. Which one?",
+      cellLabel: "the gap",
+      options: [
+        { text: "The gap between the two bars", correct: true,
+          why: "The space between the bars is how long the express is running on alone, and that is the only thing the first picture produced that the rest of the story can use. You cannot work it out from the second picture — it has to come from the first." },
+        { text: "The local's journey time",
+          why: "That was given to you in the story, so the first picture did not produce it. What crosses over is something the first picture worked out, not something you were handed." },
+        { text: "The miles the express covers every few minutes",
+          why: "That belongs to the second half already — it is printed in the story and it is waiting in the table below. The crossover is what the FIRST half hands over." },
+        { text: "How far past Kelder the express has got",
+          why: "That is the answer to the whole problem, and it is what you are travelling towards. Nothing hands it to you; it is what the second picture is for." }
+      ],
+      settledSay: "That is the join. The first picture ends where the second one starts, and the gap is the number passed between them.",
+      second: {
+        title: "The second picture",
+        heading: "A rate, waiting for a number",
+        givenHeading: "What you were told",
+        targetHeading: "What you need",
+        rows: [
+          { label: "Minutes", key: "transfer", given: "{{n3}}" },
+          { label: "Miles",   key: "answer",   given: "{{n4}}" }
+        ],
+        waiting: "Both cells on this side are question marks, and that is not a mistake. This picture cannot start until the gap is an actual number — which is the next stop. That is what makes this problem different from every one on the five lines: it has a middle, and you have just found it.",
+        a11yDescription: "A table of two rows, minutes and miles. The left column holds the rate the story states. The right column is empty on both rows: the minutes cell is labelled as the gap once you have named it, and the miles cell stays a question mark. Nothing in this picture is calculated, because nothing in it can be until the gap is worked out."
+      }
+    },
+
     estimate: {
       prompt: "Before calculating — roughly how far past Kelder do you think the express has got, in miles?",
       reasonableMin: 5,

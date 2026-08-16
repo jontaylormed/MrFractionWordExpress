@@ -1168,6 +1168,45 @@ select {
   box-shadow: 0 2px 6px var(--shadow);
   margin: calc(var(--su) * 3) 0;
 }
+/* ---------- The Crossover ----------
+   The Plan phase of a two-line problem: first picture, the slot, second
+   picture. The slot is the only new furniture; both pictures are the existing
+   models and the existing `.rtab` frame, deliberately, so a student meets
+   two familiar things and one new one rather than three new ones.
+
+   THE SECOND PICTURE IS DELIBERATELY QUIETER THAN THE FIRST. It is not
+   disabled — nothing in it was ever interactive — it is WAITING, and it has to
+   read that way at a glance or it looks like a bug. Dashed rather than solid,
+   and the frame is the cream the page uses for things not yet in play. Colour
+   is never the only signal: the cells say "?" and `.xo-waiting` says why in
+   words, so the state survives a greyscale screen and a screen reader. */
+.xo-slot {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--cream-mid);
+  padding: calc(var(--su) * 2.5);
+  margin: calc(var(--su) * 3) 0;
+}
+/* The join, drawn. A short vertical rule from the first picture down into the
+   slot — the one piece of ornament here, and it is doing a job: the two halves
+   are a sequence, not a list, and nothing else on the screen says so. */
+.xo-arrow {
+  width: 0; height: calc(var(--su) * 3);
+  margin: calc(var(--su) * -4) auto calc(var(--su) * 2);
+  border-left: 3px dotted var(--orange-deep);
+}
+.xo-second { border-style: dashed; background: var(--cream-mid); }
+.xo-waiting {
+  margin: calc(var(--su) * 1.5) 0 0;
+  color: var(--ink-mid);
+  border-left: 3px solid var(--orange-deep);
+  padding-left: calc(var(--su) * 1.5);
+}
+/* Once named, the transfer cell holds a WORD and not a number, and it is set
+   in the body face rather than the figure face for exactly that reason — a
+   quantity's name should not be dressed as a value. */
+.xo-second [data-cell="transfer"] { font-family: var(--font-body); font-size: .92em; }
+
 .rt-wrap { overflow-x: auto; }          /* wide tables scroll themselves, never the page */
 .rt-grid { border-collapse: collapse; width: 100%; min-width: 380px; margin: calc(var(--su) * 2) 0; }
 .rt-grid th, .rt-grid td {
