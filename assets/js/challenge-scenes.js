@@ -83,6 +83,23 @@
            '<path d="M0 ' + (y + 6) + ' H320" stroke="' + SHADE + '" stroke-width="2"/>';
   }
 
+  /* A carriage-wash brush: an upright core with bristles along its length,
+     swaying as it works. Outer group places it, inner group moves — the rule
+     this file follows everywhere, and the reason `rsc-sway` is on a child
+     rather than on the placed element. */
+  function brush(x, y, h) {
+    var b = '';
+    for (var i = 0; i < 9; i++) {
+      var by = (i / 8) * h, len = 9 + (i % 2) * 4;
+      b += '<path d="M' + (-len) + ' ' + by + ' H' + len + '" stroke="' + TONE +
+           '" stroke-width="3" stroke-linecap="round"/>';
+    }
+    return '<g transform="translate(' + x + ',' + y + ')"><g class="rsc-sway">' +
+      b +
+      '<rect x="-4" y="-4" width="8" height="' + (h + 8) + '" rx="4" fill="' + INK + '"/>' +
+      '</g></g>';
+  }
+
   var ART = {
 
     /* ---- signalbox · cl-signal-delay ----
@@ -180,23 +197,64 @@
     },
 
     /* ---- umbrellas · cl-lost-umbrellas ----
-       A lost property shelf with umbrellas hanging from a rail. Umbrellas ARE
-       the counted quantity, so the rail runs off both edges and they overlap
-       at different heights. They swing, which is the only motion — a shelf
-       where things arrive and leave. */
+       A STAND, NOT A RAIL, and the difference is the whole point of the
+       redraw. The first version was a rail of umbrellas hanging and swinging,
+       which is `lostproperty` in change-scenes.js almost line for line — same
+       rail, same hanging canopies, same swing. Two scenes that look alike on a
+       site where the picture is meant to say which situation you are in is
+       worse than no picture, and it was user-found.
+
+       So this is the other end of the same office: a stand on the counter with
+       umbrellas jammed in at angles. A BARREL HIDES ITS COUNT BY
+       CONSTRUCTION — you cannot see how many are in it — which does the
+       uncountability job better than a rail ever did, because a rail displays
+       exactly what a stand conceals.
+
+       And the motion is REMOVAL. The mainland scene shows one arriving; this
+       shows one being lifted out, which is the half of the day that scene does
+       not draw. Rain on the window says umbrella weather without counting
+       anything. */
     umbrellas: function () {
       var s = '';
-      s += '<rect x="0" y="14" width="320" height="96" rx="4" fill="' + MID + '" stroke="' + INK + '" stroke-width="2.4"/>';
-      s += '<path d="M0 34 H320" stroke="' + INK + '" stroke-width="3"/>';
-      for (var i = -1; i < 11; i++) {
-        var x = -10 + i * 30, drop = 34 + (i % 3) * 7;
-        s += '<g transform="translate(' + x + ',' + drop + ')">' +
-          '<g class="rsc-swing" style="animation-delay:' + ((i % 5) * 0.35).toFixed(2) + 's">' +
-            '<path d="M0 0 V34" stroke="' + INK + '" stroke-width="2.2"/>' +
-            '<path d="M0 34 q6 6 11 0" fill="none" stroke="' + INK + '" stroke-width="2.2"/>' +
-            '<path d="M-16 2 A16 14 0 0 1 16 2 Z" fill="' + (i % 2 ? TONE : TONE2) + '" stroke="' + INK + '" stroke-width="2"/>' +
-          '</g></g>';
+      s += '<rect x="0" y="0" width="320" height="130" fill="none"/>';
+
+      // the window, rain running down it
+      s += '<rect x="14" y="14" width="86" height="62" rx="3" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<path d="M57 14 V76 M14 45 H100" stroke="' + INK + '" stroke-width="1.8" opacity=".5"/>';
+      for (var r = 0; r < 5; r++) {
+        s += '<g transform="translate(' + (26 + r * 17) + ',22)"><g class="rsc-drop"' +
+             (r % 2 ? ' style="animation-delay:.7s"' : '') + '>' +
+             '<path d="M0 0 V12" stroke="' + SHADE + '" stroke-width="2" stroke-linecap="round" opacity=".7"/>' +
+             '</g></g>';
       }
+
+      // the counter
+      s += '<path d="M0 96 H320" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<rect x="0" y="96" width="320" height="34" fill="' + MID + '"/>';
+
+      /* The stand. Umbrellas go in at angles and overlap, and the rim cuts
+         every shaft, so nothing in here can be counted off the picture. */
+      var ANG = [-26, -14, -5, 4, 13, 24, -19, 8];
+      for (var i = 0; i < ANG.length; i++) {
+        var lean = ANG[i], up = 30 + (i % 3) * 8;
+        s += '<g transform="translate(' + (176 + (i - 3) * 7) + ',96) rotate(' + lean + ')">' +
+          '<path d="M0 0 V' + (-up - 26) + '" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>' +
+          '<path d="M-15 ' + (-up - 24) + ' q15 -17 30 0 Z" fill="' + (i % 2 ? TONE : TONE2) +
+            '" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+          '</g>';
+      }
+      // the barrel in front, cutting the shafts off
+      s += '<path d="M146 96 L152 44 H206 L212 96 Z" fill="' + TONE + '" stroke="' + INK +
+           '" stroke-width="2.6" stroke-linejoin="round"/>';
+      s += '<path d="M150 60 H208 M148 78 H210" stroke="' + INK + '" stroke-width="2" opacity=".55"/>';
+
+      /* The one being claimed, on its way out. Outer group places, inner lifts
+         — the rule this file follows everywhere. */
+      s += '<g transform="translate(266,72)"><g class="rsc-lift">' +
+        '<path d="M0 0 V34" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>' +
+        '<path d="M0 34 q0 7 7 7 q5 0 5 -5" fill="none" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>' +
+        '<path d="M-16 0 q16 -18 32 0 Z" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+        '</g></g>';
       return s;
     },
 
@@ -206,40 +264,61 @@
        both ends. The head drips and the belt scrolls: a plant working, with no
        total implied anywhere. */
     bottling: function () {
+      /* THE MECHANICS HAVE TO LINE UP WITH THE BOTTLES, and in the first draft
+         they did not — user-found. The filling head sat at x=150 and the
+         bottles were pitched from x=-12, so no neck was ever under the nozzle
+         and the drips fell into the gap between two bottles. Worse, the belt
+         scrolled underneath bottles that never moved, which is a conveyor
+         running with its load stuck to the floor.
+
+         Both come from the same mistake: the parts were placed independently
+         and then expected to agree. So the geometry is DERIVED from one number
+         now. `FILL_X` is where the nozzle is, the bottle pitch is measured back
+         from it, and the bottle under the nozzle is filling — its level rises,
+         and the drips land in its neck because the neck is at FILL_X by
+         construction rather than by luck.
+
+         And the belt no longer scrolls. A filling line INDEXES: it moves, stops
+         to fill, moves again. Stopped is the honest frame to draw, and it also
+         retired the two scroll-geometry faults the sweep caught here. The
+         motion that remains is the machine doing its job — rollers turning,
+         liquid falling, a level rising. */
+      var FILL_X = 150, PITCH = 28, BW = 16;
       var s = '';
       s += ground(112);
-      // the belt
+
+      // the belt, still, with its rollers turning at the ends
       s += '<rect x="-4" y="88" width="328" height="14" rx="3" fill="' + SHADE + '" stroke="' + INK + '" stroke-width="2.2"/>';
-      /* TWO GEOMETRY FAULTS THE SWEEP CAUGHT HERE, both worth keeping written
-         down because a scrolling strip looks fine in a still frame and neither
-         is visible without measuring.
+      s += '<g transform="translate(16,95)"><g class="rsc-roller">' +
+        '<circle r="9" fill="' + MID + '" stroke="' + INK + '" stroke-width="2"/>' +
+        '<path d="M0 -9 V9 M-9 0 H9" stroke="' + INK + '" stroke-width="1.6" opacity=".55"/></g></g>';
+      s += '<g transform="translate(304,95)"><g class="rsc-roller rsc-roller-b">' +
+        '<circle r="9" fill="' + MID + '" stroke="' + INK + '" stroke-width="2"/>' +
+        '<path d="M0 -9 V9 M-9 0 H9" stroke="' + INK + '" stroke-width="1.6" opacity=".55"/></g></g>';
 
-         This was `H320` with `stroke-dasharray="10 14"`. The dash pattern
-         repeats every 24 units and the default travel is 320, and 320 mod 24 =
-         8 — so every loop the belt jumped eight units sideways. And the strip
-         spanned exactly the frame, so at full travel it had slid entirely off
-         the left and uncovered the right-hand end.
-
-         Both fixed by construction rather than by nudging: the repeat is now
-         20, which divides 320 exactly, and the strip runs to 660 so that after
-         a 320 travel it still spans -320..340 and covers the frame at both
-         ends. Same reasoning as the road dashes in `ratio-scenes.js`. */
-      s += '<g class="rsc-scroll">' +
-        '<path d="M0 95 H660" stroke="' + CREAM + '" stroke-width="2" stroke-dasharray="10 10" opacity=".7"/></g>';
-      // bottles, running past both edges
-      for (var i = -1; i < 12; i++) {
-        var x = -12 + i * 28;
+      /* Bottles pitched OUT FROM the nozzle in both directions, so one of them
+         is exactly under it and the row still runs off both edges. */
+      for (var k = -6; k <= 6; k++) {
+        var cx = FILL_X + k * PITCH, x = cx - BW / 2;
+        var filling = (k === 0);
         s += '<g transform="translate(' + x + ',56)">' +
-          '<rect x="0" y="8" width="16" height="24" rx="3" fill="' + (i % 3 ? CREAM : TONE2) + '" stroke="' + INK + '" stroke-width="2"/>' +
-          '<rect x="5" y="0" width="6" height="10" rx="2" fill="' + INK + '" opacity=".8"/>' +
+          '<rect x="0" y="8" width="' + BW + '" height="24" rx="3" fill="' + CREAM +
+            '" stroke="' + INK + '" stroke-width="2"/>' +
+          // what is already in it: full ones on one side, empties on the other
+          (k < 0 ? '<rect x="2" y="16" width="' + (BW - 4) + '" height="14" rx="2" fill="' + TONE2 + '"/>' : '') +
+          (filling ? '<g class="rsc-fill-rise"><rect x="2" y="16" width="' + (BW - 4) +
+                     '" height="14" rx="2" fill="' + TONE2 + '"/></g>' : '') +
+          '<rect x="' + (BW / 2 - 3) + '" y="0" width="6" height="10" rx="2" fill="' + INK + '" opacity=".8"/>' +
           '</g>';
       }
-      // the filling head
-      s += '<g transform="translate(150,10)">' +
-        '<rect x="-34" y="0" width="68" height="26" rx="4" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2.4"/>' +
-        '<rect x="-6" y="26" width="12" height="10" fill="' + INK + '"/>' +
-        '<g class="rsc-drop"><circle cx="0" cy="42" r="4" fill="' + TONE2 + '"/></g>' +
-        '<g class="rsc-drop-b"><circle cx="0" cy="42" r="3" fill="' + TONE2 + '"/></g>' +
+
+      // the filling head, directly over the neck at FILL_X
+      s += '<g transform="translate(' + FILL_X + ',10)">' +
+        '<rect x="-36" y="0" width="72" height="26" rx="4" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2.4"/>' +
+        '<rect x="-5" y="26" width="10" height="14" fill="' + INK + '"/>' +
+        // the stream lands at y=56+0..10, which is the neck of the bottle below
+        '<g class="rsc-drop"><circle cx="0" cy="44" r="3.6" fill="' + TONE2 + '"/></g>' +
+        '<g class="rsc-drop-b"><circle cx="0" cy="44" r="3" fill="' + TONE2 + '"/></g>' +
         '</g>';
       return s;
     },
@@ -251,27 +330,69 @@
        hut sits beside the line. The only motion is a lifted sleeper swinging
        on the crane — one thing happening, no total. */
     sleepers: function () {
-      var s = '';
-      // sleepers first, in perspective, off both edges
+      /* THE FIRST DRAFT WAS A STILL LIFE AND THE USER SAID SO. It drew a row of
+         sleepers, a hut and a crane, and the only thing that moved was one
+         sleeper swinging in a corner — a picture of a worksite where no work is
+         happening, on a problem whose second half is entirely about work
+         happening.
+
+         The story is sleepers coming OUT and new ones going IN, and the redraw
+         puts exactly that in the frame: a GAP where one has been lifted, the
+         old sleeper swinging away on the crane, a pale new one descending into
+         the gap, and dust where it has been disturbed. The absence is the part
+         that makes it read — a row with a hole in it is obviously mid-job in a
+         way that a complete row never is.
+
+         The sleepers still run off both edges and vary in width, because they
+         ARE the counted quantity and must stay uncountable. The gap does not
+         change that: you cannot count what a hole is worth. */
+      var GAP_I = 8, s = '';
+
+      // ballast under everything
+      s += '<rect x="0" y="76" width="320" height="34" fill="' + MID + '"/>';
+
+      // sleepers, off both edges, with one missing
       for (var i = -1; i < 14; i++) {
+        if (i === GAP_I) continue;
         var x = -20 + i * 26, w = 22 - (i % 4);
         s += '<rect x="' + x + '" y="78" width="' + w + '" height="30" rx="2" fill="' + TONE2 +
              '" stroke="' + INK + '" stroke-width="1.8"/>';
       }
+      // the hole itself, darker so it reads as absence rather than as ballast
+      s += '<rect x="' + (-20 + GAP_I * 26) + '" y="78" width="22" height="30" rx="2" fill="' + SHADE +
+           '" stroke="' + INK + '" stroke-width="1.8" stroke-dasharray="4 3" opacity=".85"/>';
+
       s += rails(84);
       s += rails(100);
+
+      /* The new sleeper coming down into the gap. Pale, because it is concrete
+         and the others are not — and it lands where the hole is, not near it. */
+      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 11) + ',52)"><g class="rsc-stacktop">' +
+        '<rect x="-13" y="0" width="26" height="10" rx="2" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.2"/>' +
+        '</g></g>';
+
+      // dust kicked up at the gap
+      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 2) + ',96)"><g class="rsc-puff">' +
+        '<circle r="6" fill="' + SHADE + '" opacity=".5"/></g></g>';
+      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 24) + ',98)"><g class="rsc-puff rsc-drop-b">' +
+        '<circle r="5" fill="' + SHADE + '" opacity=".4"/></g></g>';
+
       // the hut
-      s += '<g transform="translate(46,32)">' +
+      s += '<g transform="translate(42,30)">' +
         '<rect x="-26" y="0" width="52" height="40" rx="3" fill="' + MID + '" stroke="' + INK + '" stroke-width="2.4"/>' +
         '<path d="M-30 0 L0 -16 L30 0 Z" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>' +
         '<rect x="-8" y="16" width="16" height="24" rx="2" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="1.8"/>' +
         '</g>';
-      // the crane, one sleeper swinging
-      s += '<g transform="translate(232,12)">' +
-        '<path d="M0 0 V44 M0 6 H44" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' +
-        '<path d="M44 6 V20" stroke="' + INK + '" stroke-width="2"/>' +
-        '<g transform="translate(44,20)"><g class="rsc-swing">' +
-          '<rect x="-16" y="0" width="32" height="9" rx="2" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2"/>' +
+
+      /* The crane, carrying the OLD sleeper away — dark, matching the row it
+         came out of, so the two sleepers in the air read as one leaving and one
+         arriving rather than as decoration. */
+      s += '<g transform="translate(236,8)">' +
+        '<path d="M0 4 V52 M0 6 H50" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M50 6 V22" stroke="' + INK + '" stroke-width="2"/>' +
+        '<g transform="translate(50,22)"><g class="rsc-swing">' +
+          '<path d="M0 0 V12" stroke="' + INK + '" stroke-width="1.8"/>' +
+          '<rect x="-15" y="12" width="30" height="10" rx="2" fill="' + TONE2 + '" stroke="' + INK + '" stroke-width="2.2"/>' +
         '</g></g></g>';
       return s;
     },
@@ -298,14 +419,25 @@
         '<rect x="158" y="10" width="34" height="20" rx="3" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="1.8"/>' +
         '<circle cx="42" cy="58" r="6" fill="' + INK + '"/><circle cx="164" cy="58" r="6" fill="' + INK + '"/>' +
         '</g>';
-      // brushes
-      s += '<g transform="translate(96,36)"><g class="rsc-roller">' +
-        '<circle r="18" fill="none" stroke="' + TONE + '" stroke-width="7" stroke-dasharray="6 7"/></g></g>';
-      s += '<g transform="translate(214,36)"><g class="rsc-roller rsc-roller-b">' +
-        '<circle r="18" fill="none" stroke="' + TONE + '" stroke-width="7" stroke-dasharray="6 7"/></g></g>';
-      // water
-      s += '<g transform="translate(150,20)"><g class="rsc-drop"><circle r="3.4" fill="' + SHADE + '"/></g></g>';
-      s += '<g transform="translate(178,20)"><g class="rsc-drop-b"><circle r="3" fill="' + SHADE + '"/></g></g>';
+      /* BRUSHES, NOT SPINNERS. The first draft drew each brush as a dashed
+         circle rotating — which is the universal loading spinner, and that is
+         exactly what the user saw. A dashed ring turning says "waiting"; it
+         cannot say "bristles".
+
+         A carriage wash brush is a tall vertical roller, so this draws one:
+         an upright core with bristles standing out along its whole length,
+         swaying as it works. Bristles at alternating lengths give the ragged
+         edge that reads as a brush from any distance, and the sway is what a
+         column of bristles does against a carriage side — the rotation itself
+         is not drawable side-on, and faking it with a spin was the mistake. */
+      s += brush(88, 42, 54);
+      s += brush(232, 42, 54);
+
+      // spray coming off the brushes, and water running down the carriage
+      s += '<g transform="translate(112,34)"><g class="rsc-puff"><circle r="5" fill="' + CREAM + '" opacity=".75"/></g></g>';
+      s += '<g transform="translate(210,38)"><g class="rsc-puff rsc-drop-b"><circle r="4" fill="' + CREAM + '" opacity=".65"/></g></g>';
+      s += '<g transform="translate(150,88)"><g class="rsc-drop"><circle r="3.4" fill="' + SHADE + '"/></g></g>';
+      s += '<g transform="translate(178,88)"><g class="rsc-drop-b"><circle r="3" fill="' + SHADE + '"/></g></g>';
       return s;
     }
   };
