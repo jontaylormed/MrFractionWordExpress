@@ -1484,7 +1484,9 @@ select {
    loading dots rebuilt in this site's own furniture. They run on the LINE
    colours rather than one accent, so the thing a student sees first is the
    palette of the five lines they are about to choose between. */
-.load-dots { display: flex; justify-content: center; gap: 12px; margin: 0 0 calc(var(--su) * 3); }
+/* The lamps sit UNDER the title now, matching the sister site's order. The
+   bottom margin that used to hold them off the train is gone with it. */
+.load-dots { display: flex; justify-content: center; gap: 12px; margin: calc(var(--su) * 2) 0 0; }
 .load-dots span {
   width: 15px; height: 15px; border-radius: 50%;
   border: 2px solid var(--ink); background: var(--cream-mid);
@@ -1502,9 +1504,45 @@ select {
 }
 
 .load-sub { animation: load-breathe 3.6s ease-in-out infinite; }
-@keyframes load-breathe { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
-.load-title { font-family: var(--font-display, inherit); font-size: 1.15rem; font-weight: 700; margin: calc(var(--su) * 2) 0 calc(var(--su) * .5); }
-.load-sub { color: var(--ink-mid); margin: 0; }
+/* THE FLOOR IS .8, NOT .55, AND IT IS A CONTRAST FIX RATHER THAN A TASTE ONE.
+   `--ink-mid` on `--cream` is 8.39:1 at full opacity. Faded to .55 it composites
+   to 2.75:1 — below AA for normal text, for roughly a third of every cycle, on
+   the first screen anybody sees. Measured across the range: .75 gives 4.39 and
+   .80 gives 4.98, so the lowest value that holds AA throughout is .76 and .8 is
+   the round number above it. The breath is still clearly visible; it just no
+   longer dips under the line. */
+@keyframes load-breathe { 0%,100% { opacity: .8; } 50% { opacity: 1; } }
+
+/* ---------- The welcome, borrowed in shape from Mr. Fraction's Factory ----------
+   Its loader runs a small tracked-out "Welcome to" over a display-face title
+   with one accent word, and the two sites are meant to read as one family. The
+   proportions are matched to the Factory's (12px / 0.2em tracking over a 42px
+   display title at 0.06em) rather than invented, then expressed in this site's
+   own tokens so the type scale and the palette stay this site's. */
+.load-welcome {
+  font-family: var(--font-body);
+  font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-muted); margin: 0 0 calc(var(--su) * .75);
+}
+.load-title {
+  font-family: var(--font-display, inherit);
+  /* Fluid rather than the Factory's fixed 42px/34px pair: this title is three
+     words longer than "MR. FRACTION'S FACTORY" and a hard size wraps badly in
+     the band between phone and desktop. Clamped so it never outgrows the train
+     underneath it. */
+  font-size: clamp(1.6rem, 5.2vw, 2.6rem);
+  font-weight: 400; letter-spacing: .04em; line-height: 1.05;
+  color: var(--ink);
+  margin: 0 0 calc(var(--su) * 2);
+  text-wrap: balance;
+}
+/* One accent word, as the Factory colours FACTORY. `--orange-deep` rather than
+   `--orange`, and the numbers are measured on `--cream` rather than guessed:
+   4.58:1 against 3.25:1. At this size only 3:1 is required, so both would pass
+   the letter of AA — the deeper one is chosen because a title is the thing a
+   low-vision reader is most likely to be leaning in to read. */
+.load-title span { color: var(--orange-deep); }
+.load-sub { color: var(--ink-mid); margin: calc(var(--su) * 2) 0 0; }
 
 /* ---------- The top-bar portrait ----------
    Was inline SVG; it is the painted Conductor now, set in the HTML so it is
