@@ -1401,6 +1401,83 @@
     /* --- the circuit itself --- */
     s += trackPath(circuit.d, '#5A3E28', true);
 
+    /* --- THE TRAIN, ON THE RAILS ---
+
+       `consistOnPath` is the leg view's own train, and using it rather than the
+       mainland's static `locomotive()` is deliberate: this one is placed by
+       DISTANCE along the circuit and each vehicle is rotated to the heading at
+       its own point, so the consist bends through the island's curves instead
+       of cutting across them as one rigid block. On a loop this irregular that
+       is the difference between a train on the track and a train near it.
+
+       WHERE IT SITS WAS CHOSEN BY MEASUREMENT — AND THE FIRST CHOICE WAS
+       CHOSEN BY EYE AND WAS WRONG. I put it at 0.62 "on the long southern run",
+       wrote a comment saying that stretch was the only one long enough to hold
+       four vehicles clear of a marker, and measured afterwards: the engine
+       landed at [646.8, 508.5] against Fell Crossing at [648, 508]. It was
+       parked ON the stop, with 0.5 units of clearance. The sentence justifying
+       the position was written before anything had been measured, which is the
+       whole of how it happened.
+
+       Swept the loop instead. Clearance is the closest any of the four
+       vehicles comes to any stop or the lighthouse, sampled every 5 units over
+       the ~70 units the consist occupies: 0.62 scores 0.5, and the best is
+       0.215 at 152.8 — the NORTHERN run, x 544 to 606 along the top of the
+       island, measured after the move rather than described before it.
+       Neighbouring positions score 130 to 151, so this is a broad plateau
+       rather than a knife-edge that the next nudge to a stop would ruin.
+       `islandMap.trainClear` reports it on every render; it reads 150 here. */
+
+    /* IT DOES NOT DRIVE ROUND THE ISLAND, and that is a real limit rather than
+       an oversight. Every vehicle here is positioned and rotated individually,
+       so a CSS motion path on the group would add its offset on top of each
+       car's own placement and scatter the consist — the same collision the leg
+       view records, where a CSS transform on `.leg-car` "wiped each car's
+       position and dumped the whole consist at the origin". Genuine motion
+       needs the consist recomputed frame by frame, which is a timer redrawing
+       SVG on a page that is otherwise still. The mainland's map train is static
+       too, so a still train is the house style rather than a shortfall.
+
+       What it does have is life on arrival: `.leg-car` carries a one-shot
+       entrance animation, already reduced-motion safe, so the train pulls in
+       when the map opens. The plume reuses `.mf-smoke` and `.mf-smoke-still`
+       exactly as `locomotive()` does — freezing the animated puffs would land
+       them all at opacity 0 and put the chimney out, which is why the still
+       pair exists. */
+    var cum = arcTable(circuit.pts);
+    var dTrain = cum[cum.length - 1] * 0.215;
+    var engineAt = atDist(circuit.pts, cum, dTrain);
+    var smoke = '';
+    for (var pf = 0; pf < 6; pf++) {
+      smoke += '<g class="mf-smoke" fill="#9E8E76" style="animation-delay:' + (pf * 0.55).toFixed(2) + 's">' +
+        '<circle cx="0" cy="0" r="4.4"/><circle cx="3.4" cy="-1.6" r="3.4"/>' +
+        '<circle cx="-3.2" cy="-1" r="3.2"/><circle cx="0.4" cy="-4" r="3.4"/>' +
+        '</g>';
+    }
+    s += '<g>' +
+         '<g transform="translate(' + (engineAt.x + 6).toFixed(1) + ',' + (engineAt.y - 16).toFixed(1) + ')">' +
+           smoke +
+           '<g class="mf-smoke-still" fill="#9E8E76" opacity=".34">' +
+             '<circle cx="2" cy="-2" r="5"/><circle cx="8" cy="-8" r="4.2"/>' +
+             '<circle cx="15" cy="-15" r="5.4"/><circle cx="23" cy="-21" r="4.4"/>' +
+           '</g>' +
+         '</g>' +
+         consistOnPath(circuit.pts, cum, dTrain, '#3A3A44', 3) +
+         '</g>';
+
+    /* Reported so the placement above is checkable rather than asserted. */
+    islandMap.trainClear = (function () {
+      var worst = 1e9;
+      [dTrain, consistOnPath.tailDist, (dTrain + consistOnPath.tailDist) / 2].forEach(function (d) {
+        var q = atDist(circuit.pts, cum, d);
+        ISL_STOPS.concat([{ at: ISL_TERMINUS }]).forEach(function (st) {
+          var dx = q.x - st.at[0], dy = q.y - st.at[1];
+          worst = Math.min(worst, Math.sqrt(dx * dx + dy * dy));
+        });
+      });
+      return Math.round(worst);
+    })();
+
     /* --- stops --- */
     ISL_STOPS.forEach(function (st) {
       var open = !!counts[st.id];
@@ -1447,6 +1524,7 @@
       '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="' + NS + '" role="img" aria-label="' +
       'Illustrated map of Crossover Island: a single island with a coast, mountains, forest, three rivers and a lake, ' +
       'ringed by one irregular circuit of railway that crosses the rivers on ' + spans.length + ' bridges. ' +
+      'A steam train of an engine and three carriages stands on the circuit along the north of the island. ' +
       'Five stops sit round the loop and each one is marked in two colours, for the two situations that ' +
       'problem joins together. Three are staffed platforms, drawn as filled discs, where the crossover is taught; ' +
       'two are unstaffed halts, drawn as open discs with a signpost, where you work it out yourself. ' +
