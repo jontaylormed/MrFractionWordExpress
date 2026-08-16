@@ -1264,8 +1264,8 @@
       name: 'Kelder Sands',   note: 'Open — the join is taught here' },
     { id: 'cl-platform-planters', at: [648, 508], kind: 'staffed', pair: ['partwhole', 'groups'],
       name: 'Fell Crossing',  note: 'Open — the join is taught here' },
-    { id: null, at: [330, 494], kind: 'halt',    pair: ['change', 'compare'],
-      name: 'Cold Halt',      note: 'Track being laid' },
+    { id: 'cl-lost-umbrellas', at: [330, 494], kind: 'halt', pair: ['change', 'compare'],
+      name: 'Cold Halt',      note: 'Open — nobody on the platform' },
     { id: null, at: [252, 350], kind: 'halt',    pair: ['ratio', 'change'],
       name: 'Marsh Halt',     note: 'Track being laid' }
   ];

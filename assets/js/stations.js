@@ -735,12 +735,27 @@
         A11y.announce('Answer all of them first.');
         return;
       }
-      /* The second screen of the first read forks by problem, not by route: a
-         paired problem goes to the Crossover Read, everything else to the
-         Platform Check. One branch, stated once, so the two screens can never
-         both run — the Crossover Read is the Platform Check's replacement, not
-         an extra stop after it. */
-      self.go(self.p.pair ? 'crossover' : 'platform');
+      /* THREE DESTINATIONS, AND THE THIRD IS AN UNSTAFFED HALT.
+
+         A paired problem goes to the Crossover Read and everything else to the
+         Platform Check — the Crossover Read is the Platform Check's
+         replacement, not an extra stop after it, so the two can never both run.
+
+         And a paired problem at `fadeLevel: "independent"` goes to NEITHER.
+         That is Crossover Island's unstaffed halt (`CHALLENGE-MODE.md` §4): no
+         one on the platform, so nobody walks the student to the seam. They
+         have just run the checklist on this screen — which is the one aid an
+         unstaffed halt keeps — and finding where the story changes is now
+         their own job.
+
+         `fadeLevel` is the mechanism rather than a new flag because it is the
+         mechanism this site already has for exactly this, and `ROADMAP` §6
+         said so before any of it was built: the teaching stops and the unaided
+         ones differ by how much scaffolding they give, not by whether they are
+         unlocked. Nothing here is gated. */
+      self.go(!self.p.pair ? 'platform'
+            : self.p.fadeLevel === 'independent' ? 'read2'
+            : 'crossover');
     });
 
     if (this.expandAll) {

@@ -62,6 +62,10 @@
      failure this file exists to prevent — so it declines the problem outright
      and the Plan phase falls through to whatever else claims it. `MF.validate()`
      refuses that combination, so it cannot reach a student either way. */
+  /* `cfg(p)` is absent on an unstaffed halt by design — see the matched rules
+     in `data.js`. That makes this false there, which is what fades the Plan
+     phase to the estimate alone, and the validator guarantees no first-half
+     model is left behind to be claimed by something else. */
   function applies(p) {
     return !!(p && p.pair && cfg(p) && global.Model && Model.applies(firstView(p)));
   }

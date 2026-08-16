@@ -177,7 +177,16 @@
            the Platform Check's line-naming leak on a problem that never shows
            it. Visit a phase only if the real app would, which is this file's
            own standing rule. */
-        var phases = ['read1', isPaired(p) ? 'crossover' : 'platform', 'read2', 'read3', 'ticket', 'plan'];
+        /* Three cases, matching `phRead1`'s own fork exactly: an ordinary
+           problem visits `platform`, a paired teaching stop visits `crossover`
+           instead, and a paired UNSTAFFED halt visits neither — nobody walks
+           that student to the seam. Rendering a screen the app would not is
+           this file's oldest rule; here it would also scan copy that problem
+           does not author. */
+        var second = !isPaired(p) ? 'platform'
+                   : p.fadeLevel === 'independent' ? null
+                   : 'crossover';
+        var phases = ['read1'].concat(second ? [second] : []).concat(['read2', 'read3', 'ticket', 'plan']);
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         phases = phases.concat(['solve', 'check']);

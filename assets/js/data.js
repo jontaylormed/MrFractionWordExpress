@@ -544,10 +544,34 @@
            question that can never be settled, and `PairModel` gates the second
            picture behind settling it — so the phase would simply never
            complete. That is a hang, not a wrong answer. */
+        /* AN UNSTAFFED HALT IS THE ONE PAIRED PROBLEM WITH NO CROSSOVER BLOCK,
+           and the two rules below are a matched pair rather than an exemption.
+
+           At `fadeLevel: "independent"` the Plan phase is meant to fade to the
+           estimate alone — no crossover slot, no two-model picture. Fine. But
+           the first half's own model block must go with it: leave
+           `compareBars` or `barModel` in place and `PairModel` declines while
+           `CompareModel` or the Model Yard happily claims the problem, so the
+           Plan phase draws the FIRST HALF ONLY and reports success. That is
+           the same half-a-picture failure the crossover requirement exists to
+           stop, arriving through the other door.
+
+           So: a teaching stop must have a crossover block; an unstaffed halt
+           must have neither it nor a first-half model. */
         var xo = (p.signalBox || {}).crossover;
-        if (!xo) {
+        var unstaffed = p.fadeLevel === 'independent';
+        if (unstaffed) {
+          if (xo)
+            err.push('a paired problem at fadeLevel "independent" is an unstaffed halt and must NOT carry signalBox.crossover — the Plan phase fades to the estimate there');
+          ['compareBars', 'barModel', 'ratioTable', 'ratioTables', 'changeTrain'].forEach(function (k) {
+            if ((p.signalBox || {})[k])
+              err.push('a paired problem at fadeLevel "independent" must not carry signalBox.' + k +
+                       ' — PairModel declines at that fade level, so this would draw the first half alone and look finished');
+          });
+        } else if (!xo) {
           err.push('a problem with a `pair` needs signalBox.crossover — without it the Plan phase draws the first half only and reports success');
-        } else {
+        }
+        if (xo) {
           var xopts = xo.options || [];
           if (xopts.length < 3)
             err.push('signalBox.crossover needs at least three options — the crossover has three real misreadings and a choice of two teaches position');
