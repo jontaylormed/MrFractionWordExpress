@@ -401,13 +401,15 @@
           err.push('pair.first and pair.second are both "' + pr.first + '" — that is one situation taking two steps, not a Challenge problem');
         if (!pr.transfer) err.push('pair has no transfer named');
 
-        /* THE UNWRITTEN REPLY CANNOT SHIP. `CHECK.fit` inverts on a paired
+        /* AN UNWRITTEN REPLY CANNOT SHIP. `CHECK.fit` inverts on a paired
            problem: `stacked` becomes correct and `onekind` becomes the
-           distractor, and both of those replies are still TODO pending a
-           decision with the user. Without this gate the first Challenge
-           problem reaches a student with a blank where its most important
-           correction goes — a phase rendering an empty string is this
-           project's most-repeated shipping failure. */
+           distractor, so two replies that no mainland problem can reach
+           become the two that matter most. Both were written 2026-08-16 and
+           this gate passes today — it is kept because the gate is what makes
+           that a fact rather than an intention, and because the next option
+           added to this question will arrive with the same hole. A phase
+           rendering an empty string is this project's most-repeated shipping
+           failure. */
         var fit = (global.Stations && Stations.CHECK || []).filter(function (q) { return q.id === 'fit'; })[0];
         (fit ? fit.options : []).forEach(function (o) {
           if (o.yes === 'TODO' || o.no === 'TODO')

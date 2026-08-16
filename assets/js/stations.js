@@ -185,19 +185,54 @@
            rather than left off: an option here that is silent about pairing is
            an option nobody decided about, and `optionTrue` would fall through
            to the either-half rule and quietly call it correct. */
+        /* EACH OF THESE FOUR STRINGS HAS EXACTLY ONE AUDIENCE, which is why
+           none of them has to hedge. `onekind` is true on all five lines and
+           false on every paired problem, so its `yes` is only ever read on the
+           mainland and its `no` is only ever read on the island — and the
+           reverse for `stacked`. Check that before editing either: the moment
+           an option is true in both places, both replies acquire a second
+           reader and stop being able to say anything definite. */
         { id: 'onekind', text: 'Yes &mdash; the same kind of situation all the way through', lines: ['change', 'compare', 'groups', 'partwhole', 'ratio'], pairs: false,
           yes: 'Everything the question needs is the same kind of situation &mdash; even where it takes more than a single move to get there.',
-          /* THE PAIRED REPLY IS DELIBERATELY UNWRITTEN AND THE VALIDATOR STOPS
-             IT SHIPPING. `data.js` refuses to publish a problem carrying a
-             `pair` while this reads TODO — so a Challenge problem cannot reach
-             a student with a blank where its most important correction goes.
-             Open with the user (2026-08-16): this reply has to tell a student
-             who chose "one kind" that they are wrong WITHOUT implying they read
-             badly, on a site whose other 30 problems have trained them that
-             "one kind" is nearly always right. */
-          no: 'TODO' },
+          /* WRITTEN 2026-08-16, and the hard part is not the correction.
+             A student who says "one kind" here has read carefully and applied
+             a rule that is right nearly everywhere on this site. Telling them
+             flatly that they are wrong teaches them to distrust the reading,
+             which is the one thing that must survive. So it opens by agreeing
+             with the reasoning and then says where the reasoning runs out.
+
+             THREE THINGS IT DELIBERATELY DOES NOT DO:
+             - It does not name the two situations. This screen is numberless
+               and comes BEFORE the passes that ask which two — naming them
+               here would answer the next three questions (VERIFICATION.md §3).
+             - It does not claim anything about what the student has ridden.
+               The island is open: they may have arrived here first, so "on
+               every trip you have taken" would be a lie to some readers.
+             - It gives no word to look for. It points at STRUCTURE — the
+               place the story changes — because a word here would be a tier-3
+               keyword rule arriving on the one screen built to refute them
+               (PEDAGOGY.md §2.2).
+
+             And it ends by handing over the next move rather than the answer:
+             the pass that follows this one is "find the crossover". */
+          /* THE RENDERER SUPPLIES THE NEGATION. Every one of these strings is
+             printed after a bold "Not this time." — so a reply that also opens
+             by saying no says it twice. The first draft read "Not this time.
+             Good reading … Not here." — three negations in two lines, and it
+             was only visible on the rendered screen. Look at `stacked.no`: it
+             opens by AGREEING, and the prefix does the disagreeing. */
+          no: 'Good reading, and nearly everywhere else it would be the right answer. Here, though, the story stops being one kind of thing partway through and starts being another &mdash; and the second half cannot start until the first half is finished. Read it again and find the place where it changes.' },
         { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, one after another', lines: [], pairs: true,
-          yes: 'TODO',
+          /* The only reply on this question a student reads as a correct
+             answer on the island. It confirms, names the structure without
+             naming the two situations, and states the payoff — which is the
+             whole argument for Challenge Mode: two lines together is not a
+             harder kind of problem, it is two problems you can already do. */
+          /* Does not open with "Yes" — the renderer already printed one, and
+             the first draft rendered as "Yes. Yes — and that is what makes…".
+             None of the other replies here opens with the verdict; they all
+             start straight into the reason. */
+          yes: 'That is what makes this one a challenge. Two kinds of situation, one after the other, joined at the point where the story changes. Find that point and you have turned one hard problem into two you already know how to do.',
           no: 'Worth asking every time, and often the right answer &mdash; plenty of problems do stack different kinds of situation. This story stays inside a single kind the whole way, even where the working takes more than a single step. Steps and situations are not the same thing.' },
         { id: 'nofit', text: 'None of them really fits', lines: [], pairs: false,
           yes: '',
