@@ -1481,6 +1481,43 @@
     var cum = arcTable(circuit.pts);
     var dTrain = cum[cum.length - 1] * (typeof opts.trainAt === 'number' ? opts.trainAt : 0.215);
     var engineAt = atDist(circuit.pts, cum, dTrain);
+    /* SMOKE TRAILS BACKWARD, AND ON A LOOP "BACKWARD" IS NOT A CONSTANT.
+       User-found, and the reasoning is worth keeping because the first version
+       looked right in the one place I checked.
+
+       `@keyframes mf-smoke-rise` drifts a FIXED `translate(42px, -58px)` —
+       right and up. That is correct on the mainland map, whose comment says
+       so: the locomotive art faces LEFT, so drifting right is drifting
+       backward, and "drifting it forward would read as the train going
+       backwards". One map, one direction, no problem.
+
+       The island train runs round a closed circuit, so its heading is whatever
+       the track is doing where it stands — and the zoomed station view moves it
+       to a different stop with a different heading on every ride.
+
+       I FIRST WROTE HERE THAT THE WIDE MAP WAS FINE AND ONLY THE ZOOMED VIEW
+       WAS WRONG. It was not: measured, the engine on the wide map stands at
+       [606,176] with its carriages trailing back to the WEST, so that train is
+       travelling east and the fixed rightward drift was blowing smoke out
+       ahead of the chimney there too — which is the view the user was looking
+       at. My reasoning had the direction backwards because `consistOnPath`
+       paints the carriages first and the engine last, so the engine is the
+       LAST element a document-order query returns, not the first. Two guesses
+       in a row about which end of a list is which; the fix is measured from
+       the geometry now and reported on every render.
+
+       Fixed the way this file already fixes the locomotive facing the wrong
+       way: a horizontal mirror, not a rotation. `scale(-1,1)` flips the drift
+       to trail left while leaving "up" as up — smoke rises whichever way the
+       train is pointed, and only the trailing direction depends on travel.
+       Rotating the plume to the heading would have tipped the rise with it and
+       laid the smoke sideways on a steep stretch.
+
+       `upright()` already answers the same question for the engine body, so
+       the plume asks it rather than working out its own answer — one place
+       decides which way this train is facing. */
+    var heading = upright(engineAt.a);
+    var trailsLeft = !heading.back;   // travelling rightward, so smoke goes left
     var smoke = '';
     for (var pf = 0; pf < 6; pf++) {
       smoke += '<g class="mf-smoke" fill="#9E8E76" style="animation-delay:' + (pf * 0.55).toFixed(2) + 's">' +
@@ -1489,7 +1526,10 @@
         '</g>';
     }
     s += '<g>' +
-         '<g transform="translate(' + (engineAt.x + 6).toFixed(1) + ',' + (engineAt.y - 16).toFixed(1) + ')">' +
+         /* The chimney offset flips with the mirror too: the plume starts just
+            BEHIND the engine, and behind changes sides with the direction. */
+         '<g transform="translate(' + (engineAt.x + (trailsLeft ? -6 : 6)).toFixed(1) + ',' +
+           (engineAt.y - 16).toFixed(1) + ')' + (trailsLeft ? ' scale(-1,1)' : '') + '">' +
            smoke +
            '<g class="mf-smoke-still" fill="#9E8E76" opacity=".34">' +
              '<circle cx="2" cy="-2" r="5"/><circle cx="8" cy="-8" r="4.2"/>' +
@@ -1498,6 +1538,14 @@
          '</g>' +
          consistOnPath(circuit.pts, cum, dTrain, '#3A3A44', 3) +
          '</g>';
+
+    /* Reported so the direction is checkable rather than asserted — it is the
+       thing that was wrong, and it changes with where the train stands. */
+    /* Reported on `islandMap`, where `treeCount`, `bridgeCount` and
+       `trainClear` already live. Two places to look for this map's diagnostics
+       is one too many. */
+    islandMap.smokeTrails = trailsLeft ? 'left' : 'right';
+    islandMap.engineHeading = Math.round(engineAt.a);
 
     /* Reported so the placement above is checkable rather than asserted. */
     islandMap.trainClear = (function () {
