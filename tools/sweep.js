@@ -148,6 +148,19 @@
   var PRE_SOLVE = { read1: 1, platform: 1, read2: 1, read3: 1, ticket: 1, plan: 1, demo: 1,
                     solve: 1, 'check-unsure': 1, 'ticket-hidden': 1 };
 
+  /* CHALLENGE PROBLEMS ADD PHASES THAT CANNOT BE LISTED, so this is a function
+     and not another key in the map above. `solve@2`, `solve@3` … are the Engine
+     Room at a later step, one per step the problem has, and how many that is
+     depends on the problem. A literal list would exempt step 4 the day someone
+     writes a problem with four steps — which is this project's most expensive
+     recorded defect class, seven files and counting. */
+  function preSolve(phase) { return !!PRE_SOLVE[phase] || /^solve@\d+$/.test(phase); }
+
+  /* A Challenge problem is one carrying a `pair`. Nothing else on the site has
+     one, which is what keeps every change below OFF the existing 30 — see the
+     scoping note on `visibleAnswers`. */
+  function isPaired(p) { return !!(p && p.pair); }
+
   function render(ids) {
     var res = [];
     (ids || Object.keys(MF.problems)).forEach(function (id) {
@@ -175,6 +188,30 @@
            whole screen is built to keep the line unsaid. Percent problems only;
            on anything else the branch cannot fire. */
         if (p.surface === 'percent') phases.push('ticket-hidden');
+
+        /* THE SECOND HALF OF A CHALLENGE PROBLEM IS NOT RENDERED BY ANYTHING
+           ABOVE, AND THAT IS THE REAL GAP.
+
+           This sweep renders the Engine Room in its INITIAL state — step 1 —
+           and only step 1. On the existing 30 that is the right screen to
+           scan and the later steps are a student's own working. On a
+           Challenge problem it means the ENTIRE SECOND SITUATION is never
+           rendered and never scanned: the half that legitimately names the
+           transfer, and the half where a leak of the final answer would hide.
+
+           So the exemption in `visibleAnswers` is not the whole job and would
+           be actively dangerous alone — it would relax a rule over screens
+           this file has never looked at, which is `0 faults` and `0 subjects`
+           printing identically all over again.
+
+           Paired problems only. The existing 30 are rendered exactly as they
+           were, on exactly the phases they were, so their baseline cannot
+           move. Extending this to the six two-step problems on the mainland is
+           a separate decision with its own re-measurement. */
+        if (isPaired(p)) {
+          var stepN = ((p.engineRoom || {}).steps || []).length;
+          for (var sN = 2; sN <= stepN; sN++) phases.push('solve@' + sN);
+        }
 
         var st = new Stations.Station(p, (p.stationRoles && p.stationRoles[0]) || 'reading', {}, function () {});
         st.legIndex = 0; st.legTotal = 3;
@@ -237,7 +274,13 @@
               r2.remove();
               return;
             }
-            st.estimate = 1; st.solved = 1; st.stepIndex = 0;
+            /* `solve@N` is the Engine Room at step N. The station reads
+               `stepIndex` when it renders, so this is the whole mechanism —
+               but it must be set BEFORE renderPhase, and it must be reset for
+               every other phase, because one station object is reused across
+               all of them. */
+            var atStep = /^solve@(\d+)$/.exec(ph);
+            st.estimate = 1; st.solved = 1; st.stepIndex = atStep ? (+atStep[1] - 1) : 0;
             /* The unsure board prints the student's OWN two numbers, so the
                values injected here land on the screen and would be read by the
                leak scan as though the content had put them there. They are
@@ -256,7 +299,8 @@
                other phase of this same station object. */
             st.rideLine = (ph === 'ticket-hidden') ? MF.PERCENT : null;
             st.phase = (ph === 'ticket-hidden') ? 'ticket'
-                     : (ph === 'check-unsure')  ? 'check' : ph;
+                     : (ph === 'check-unsure')  ? 'check'
+                     : atStep                   ? 'solve' : ph;
             st.renderPhase();
             /* MR FRACTION IS NO LONGER INSIDE THE STATION.
                He used to render inline, so `st.host()` contained everything he
@@ -337,10 +381,44 @@
     return out;
   }
 
+  /* WHICH STEP ANSWERS ARE STILL SECRETS ON THIS SCREEN.
+
+     One function, because there are now three answers to that question and
+     they were about to be three conditions inline.
+
+     1. Everywhere on the existing 30 — all of them. The student is upstream of
+        every step.
+     2. `check-unsure` — the last step only. That board is reachable only FROM
+        the last step, so every earlier value on it is one the student produced
+        by their own hand. Measured, not assumed: turning the scan on there
+        reported eight hits and all eight were `arrivals.questionCheck` naming
+        a value the student had already computed.
+     3. `solve@N` on a PAIRED problem — steps N onward. Same argument as (2),
+        and it is the argument the whole island rests on: the transfer is an
+        answer on one side of the crossover and a GIVEN on the other, so once
+        the student has crossed it, naming it is not a leak. It is the thing
+        they are working with.
+
+     THE SCOPING IS THE POINT, AND IT IS THE USER'S INSTRUCTION (2026-08-16):
+     this relaxation applies to problems carrying a `pair` and to nothing else.
+     `solve@N` phases are only ever generated for paired problems, so on the
+     existing 30 this function returns exactly what the old expression
+     returned, on exactly the phases it returned it for. Their baseline is not
+     merely expected to hold — it cannot move, because no input to it changed.
+
+     What is NEVER exempt, on any screen here: the FINAL answer. That is added
+     by the caller and no branch above touches it. */
+  function visibleAnswers(p, phase, steps) {
+    if (phase === 'check-unsure') return steps.slice(-1);
+    var at = /^solve@(\d+)$/.exec(phase);
+    if (at && isPaired(p)) return steps.slice(+at[1] - 1);
+    return steps;
+  }
+
   function leaks(rows) {
     var out = [];
     rows.forEach(function (r) {
-      if (r.err || !PRE_SOLVE[r.phase]) return;
+      if (r.err || !preSolve(r.phase)) return;
       var p = r.p, given = {};
       Object.keys(p.problem.numbers).forEach(function (k) {
         given[parseFloat(p.problem.numbers[k].value)] = 1;
@@ -368,7 +446,7 @@
          written and this project has five files' worth of that already. The
          final answer is still a leak here, and that is the one that matters. */
       var steps = (p.engineRoom || {}).steps || [];
-      var visible = r.phase === 'check-unsure' ? steps.slice(-1) : steps;
+      var visible = visibleAnswers(p, r.phase, steps);
       var ans = [];
       visible.forEach(function (s) {
         var v = MF.parseAnswer((s.answer || {}).exact);
@@ -690,6 +768,92 @@
     return out;
   }
 
+  /* SAY WHEN THE CHECK EXAMINED NOTHING, RATHER THAN SAYING NOTHING.
+
+     `0 faults` and `0 subjects` print identically, and this project has lost
+     whole cycles to that — a scene library shipped unchecked while the sweep
+     printed a clean run, and `check-contrast.ps1` reported "39 pairs, 0
+     failing" against a palette it had never read. `VERIFICATION.md` §36 was
+     written for exactly this and it says a checker must refuse to report a
+     clean run on an empty subject set.
+
+     Today the subject set IS empty — no problem carries a `pair` yet — so this
+     line will read "examined nothing" until the island has content. That is
+     the honest output, and it is loud on purpose: the day the first Challenge
+     problem lands, this line changing is the confirmation that the rule found
+     it. `SWEEP.selfTestChallenge()` is what proves the rule works meanwhile. */
+  function challengeCoverage(rows) {
+    var paired = {}, screens = 0, stepScreens = 0;
+    rows.forEach(function (r) {
+      if (!r.p || !isPaired(r.p)) return;
+      paired[r.id] = 1; screens++;
+      if (/^solve@\d+$/.test(r.phase)) stepScreens++;
+    });
+    var n = Object.keys(paired).length;
+    if (!n) {
+      return 'CHALLENGE (paired) problems examined: 0 — THIS CHECK EXAMINED NOTHING. ' +
+             'No problem carries a `pair`, so the transfer rule above ran over no subject. ' +
+             'Run SWEEP.selfTestChallenge() — that is what currently proves the rule fires and clears.';
+    }
+    if (!stepScreens) {
+      return 'CHALLENGE (paired) problems examined: ' + n + ' — but 0 second-half screens rendered. ' +
+             'A paired problem with one Engine Room step is a paired problem whose second situation ' +
+             'is never scanned. Check its engineRoom.steps.';
+    }
+    return 'CHALLENGE (paired) problems examined: ' + n + ' · screens ' + screens +
+           ' · of them second-half (solve@N) ' + stepScreens;
+  }
+
+  /* PROVING A RULE THAT HAS NO CONTENT TO RUN ON.
+
+     "A rule that has never fired is not known to work" (CLAUDE.md). The
+     transfer exemption cannot be exercised by any problem on the site, and it
+     will not be until the island is built — so it is exercised here instead,
+     on rows fabricated for the purpose. `leaks()` takes rows, which is what
+     makes this possible without inventing a whole manifest.
+
+     Four cases, and the FOURTH is the one the user asked for by name: the
+     relaxation must not reach a problem that is not paired.
+
+     Returns a list of failures. An empty list is a pass — and unlike the run
+     above, this one cannot pass vacuously, because a rule that never fires
+     fails cases 2, 3 and 4. */
+  function selfTestChallenge() {
+    function fake(paired) {
+      return {
+        id: paired ? 'zz-selftest-paired' : 'zz-selftest-plain',
+        line: 'ratio',
+        pair: paired ? { first: 'compare', second: 'ratio', transfer: 'minutes per stop' } : null,
+        problem: { numbers: { n1: { value: 4 } } },   // 4 is GIVEN; 7 and 21 are not
+        engineRoom: { steps: [ { id: 1, answer: { exact: '7' } },
+                               { id: 2, answer: { exact: '21' } } ] },
+        arrivals: { answer: { exact: '21' } }
+      };
+    }
+    function run(paired, phase, text) {
+      return leaks([{ id: 'zz', set: 1, phase: phase, p: fake(paired), text: text, all: text, labels: '' }]).length;
+    }
+
+    var fails = [];
+    function want(cond, what) { if (!cond) fails.push(what); }
+
+    /* Guard first: if `solve@2` is not treated as a pre-solve phase at all,
+       every case below passes for the wrong reason. Say what the instrument is
+       looking at before trusting what it says (VERIFICATION.md §25). */
+    want(preSolve('solve@2'), 'preSolve("solve@2") is false — the scan is not looking at second-half screens at all, and every case below would pass vacuously');
+
+    want(run(true,  'solve@2', 'You found 7 minutes a stop. Now scale it up.') === 0,
+         'CASE 1 FAILED: the transfer (step 1 = 7) still reads as a leak on the second half of a paired problem. The exemption is not applied.');
+    want(run(true,  'solve@2', 'The whole journey works out at 21 minutes.') > 0,
+         'CASE 2 FAILED: the FINAL answer (21) was exempted on a paired problem. Nothing may exempt the final answer.');
+    want(run(true,  'plan',    'It comes to 7 minutes a stop.') > 0,
+         'CASE 3 FAILED: the transfer (7) was exempted BEFORE the crossover. It is only not-a-leak once the student has computed it.');
+    want(run(false, 'solve@2', 'You found 7 minutes a stop. Now scale it up.') > 0,
+         'CASE 4 FAILED — THE SCOPING IS BROKEN: an UNPAIRED problem got the transfer exemption. The relaxation must reach paired problems and nothing else.');
+
+    return fails;
+  }
+
   function report(ids) {
     var rows = render(ids);
     var errs = rows.filter(function (x) { return x.err; });
@@ -730,7 +894,8 @@
         (part.fresh.length ? '\n  ' + part.fresh.map(function (h) { return h.line; }).join('\n  ') : ' (none)'),
       'previously read and cleared: ' + part.clearedCount +
         (part.stale.length ? '\n  STALE CLEARANCE — no longer matches, the content moved:\n    ' +
-          part.stale.map(function (c) { return c.id + ' ' + c.kind + ' ' + c.val; }).join('\n    ') : '')
+          part.stale.map(function (c) { return c.id + ' ' + c.kind + ' ' + c.val; }).join('\n    ') : ''),
+      challengeCoverage(rows)
     ].join('\n');
   }
 
@@ -741,5 +906,9 @@
                       SWEEP.WORDS[31], and it answers for every whole number
                       rather than for the ones somebody typed in. */
                    report: report, show: show, word: numberWord, geometry: sceneGeometry,
-                   CLEARED: CLEARED, partitionLeaks: partitionLeaks };
+                   CLEARED: CLEARED, partitionLeaks: partitionLeaks,
+                   /* The transfer rule and its proof. `report()` prints the
+                      coverage line; this is what makes the rule knowable while
+                      the island has no content. */
+                   selfTestChallenge: selfTestChallenge, visibleAnswers: visibleAnswers };
 })(window);

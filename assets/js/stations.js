@@ -180,13 +180,26 @@
       id: 'fit', label: 'Question',
       ask: 'Does a single kind of situation cover this whole story?',
       options: [
-        { id: 'onekind', text: 'Yes &mdash; the same kind of situation all the way through', lines: ['change', 'compare', 'groups', 'partwhole', 'ratio'],
+        /* `pairs` is the answer key for THIS question and it inverts the whole
+           thing on a Challenge problem. See `optionTrue`. `false` is stated
+           rather than left off: an option here that is silent about pairing is
+           an option nobody decided about, and `optionTrue` would fall through
+           to the either-half rule and quietly call it correct. */
+        { id: 'onekind', text: 'Yes &mdash; the same kind of situation all the way through', lines: ['change', 'compare', 'groups', 'partwhole', 'ratio'], pairs: false,
           yes: 'Everything the question needs is the same kind of situation &mdash; even where it takes more than a single move to get there.',
-          no: '' },
-        { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, one after another', lines: [],
-          yes: '',
+          /* THE PAIRED REPLY IS DELIBERATELY UNWRITTEN AND THE VALIDATOR STOPS
+             IT SHIPPING. `data.js` refuses to publish a problem carrying a
+             `pair` while this reads TODO — so a Challenge problem cannot reach
+             a student with a blank where its most important correction goes.
+             Open with the user (2026-08-16): this reply has to tell a student
+             who chose "one kind" that they are wrong WITHOUT implying they read
+             badly, on a site whose other 30 problems have trained them that
+             "one kind" is nearly always right. */
+          no: 'TODO' },
+        { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, one after another', lines: [], pairs: true,
+          yes: 'TODO',
           no: 'Worth asking every time, and often the right answer &mdash; plenty of problems do stack different kinds of situation. This story stays inside a single kind the whole way, even where the working takes more than a single step. Steps and situations are not the same thing.' },
-        { id: 'nofit', text: 'None of them really fits', lines: [],
+        { id: 'nofit', text: 'None of them really fits', lines: [], pairs: false,
           yes: '',
           no: 'That is a real answer and you should keep it in your pocket &mdash; not every problem you meet fits these lines. This one does, though. Look at the shape you just described.' }
       ]
@@ -227,10 +240,53 @@
       options: q.options.map(function (o) {
         var ov = over.options && over.options[o.id];
         if (!ov) return o;
-        return { id: o.id, lines: o.lines,
+        /* `pairs` is copied for the same reason `lines` is: this function
+           REBUILDS the option rather than extending it, so a field it does not
+           name is silently dropped on any problem that carries an override.
+           That is not hypothetical — it is the shape of the defect in
+           `data.js` that let `signalFailure` reach a student as four literal
+           braces. Adding a key to a CHECK option means adding it here. */
+        return { id: o.id, lines: o.lines, pairs: o.pairs,
                  text: ov.text || o.text, yes: ov.yes || o.yes, no: ov.no || o.no };
       })
     };
+  }
+
+  /* ---------- THE ANSWER KEY, IN ONE PLACE ----------
+
+     `o.lines.indexOf(p.line) >= 0` was the whole key, written in two places,
+     and it cannot express a problem that is two situations. A Challenge
+     problem has no single `line` — it has `pair.first` and `pair.second` — so
+     the key has to be asked a different question about it.
+
+     TWO SHAPES, AND WHICH ONE APPLIES IS DECIDED BY THE PROBLEM:
+
+     - An option that declares `pairs` is answering the question ABOUT pairing
+       (`fit`: does this stay one kind of situation, or stack two?). On a
+       paired problem its own declaration is the answer and `lines` is not
+       consulted — which is what INVERTS `stacked` from never-correct to
+       correct, and `onekind` from correct to distractor.
+     - Every other option on a paired problem is true if it is true of EITHER
+       HALF. Both halves are in the story, so both halves' answers are honest
+       readings of it.
+
+     THE SECOND RULE HAS A CONSEQUENCE THAT IS NOT YET SETTLED, AND IT IS
+     WRITTEN HERE RATHER THAN DISCOVERED LATER: on a paired problem the four
+     non-`fit` questions can have TWO true options — a Change→Compare problem
+     genuinely has two moments in its first half and one in its second. The UI
+     copes (the first correct tap closes the question), but every `yes:` reply
+     on those options was written on the assumption that one situation is in
+     play, so it will say "Yes." and then explain only half the story. That is
+     a copy decision across five questions and it is open. It cannot bite
+     today because nothing carries a `pair`.
+
+     Declared as data on the option, never as `if (challenge)` at the call
+     site: a renderer branch is an exemption, and this project has seven files
+     of what hand-kept exemptions do. */
+  function optionTrue(o, p) {
+    if (!p || !p.pair) return o.lines.indexOf(p && p.line) >= 0;
+    if (typeof o.pairs === 'boolean') return o.pairs;
+    return o.lines.indexOf(p.pair.first) >= 0 || o.lines.indexOf(p.pair.second) >= 0;
   }
 
   function focusFeedback(node) {
@@ -440,7 +496,10 @@
      the second makes you prove it, and only the second one needs reading. */
   Station.prototype.phRead1 = function () {
     var self = this, p = this.p;
-    var line = p.line;
+    /* `var line = p.line` used to live here and both call sites keyed off it.
+       Deleted rather than left unused: a problem's line is no longer the whole
+       answer key (see `optionTrue`), and a local called `line` sitting beside
+       a key that no longer consults it is the next person's wrong turn. */
 
     /* SHUFFLE. Source order shipped unshuffled and "tap the first option every
        time" scored 57.5% against a 40% baseline — 4 of 5 on Part–Whole, which
@@ -508,7 +567,7 @@
       if (!b || b.disabled) return;
       var qi = +b.getAttribute('data-q'), oi = +b.getAttribute('data-o');
       var q = CHECKS[qi], o = q.options[oi];
-      var ok = o.lines.indexOf(line) >= 0;
+      var ok = optionTrue(o, self.p);
       b.setAttribute('data-result', ok ? 'right' : 'wrong');
       b.querySelector('.marker').innerHTML = '&#9724;';
       host.querySelector('#cf' + qi).innerHTML = ok
@@ -554,7 +613,7 @@
          revealed state. See phPlatform and VERIFICATION.md §2. */
       CHECKS.forEach(function (q, qi) {
         var oi = 0;
-        q.options.forEach(function (o, i) { if (o.lines.indexOf(line) >= 0) oi = i; });
+        q.options.forEach(function (o, i) { if (optionTrue(o, self.p)) oi = i; });
         var b = host.querySelector('[data-q="' + qi + '"][data-o="' + oi + '"]');
         if (b) b.click();
       });
@@ -1572,5 +1631,11 @@
     return '<div class="msg ' + cls + '"><span class="ico" aria-hidden="true">' + ico + '</span><p>' + html + '</p></div>';
   }
 
-  global.Stations = { Station: Station, msg: msg, esc: esc, el: el };
+  /* CHECK and optionTrue are exported for the CHECKERS, not for the app —
+     `data.js` gates a paired problem on the `fit` replies being written, and
+     the sweep needs to ask the same answer-key question the student's screen
+     asks. A checker that reimplements the key is a checker that can disagree
+     with the thing it is checking (VERIFICATION.md §33). */
+  global.Stations = { Station: Station, msg: msg, esc: esc, el: el,
+                      CHECK: CHECK, optionTrue: optionTrue };
 })(window);

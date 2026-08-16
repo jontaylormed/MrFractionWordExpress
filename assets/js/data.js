@@ -382,7 +382,40 @@
     function checkProblem(id, p, err, warn) {
       if (p.id !== id) err.push('id mismatch');
       if (!/^[a-z0-9-]+$/.test(p.id)) err.push('id must be kebab-case');
-      if (!LINES[p.line]) err.push('unknown line "' + p.line + '"');
+      /* A CHALLENGE PROBLEM IS TWO SITUATIONS AND HAS NO SINGLE LINE.
+         `p.pair` is what marks one. Nothing on the site carries one yet, so
+         every check in this block is inert today by design — it is here first
+         so that the first Challenge problem written is checked by something
+         that already knows what one is, rather than by rules retrofitted after
+         the content exists (CHALLENGE-MODE.md §9). */
+      if (p.pair) {
+        var pr = p.pair;
+        if (!LINES[pr.first])  err.push('pair.first "' + pr.first + '" is not one of the five');
+        if (!LINES[pr.second]) err.push('pair.second "' + pr.second + '" is not one of the five');
+        /* The rule that decides whether a problem belongs on the island at all
+           (CHALLENGE-MODE.md §5.1). A→A is a multi-step problem inside ONE
+           situation, and `CHECK.fit`'s own reply teaches that steps and
+           situations are not the same thing — content that blurs it makes that
+           reply a lie. */
+        if (pr.first === pr.second)
+          err.push('pair.first and pair.second are both "' + pr.first + '" — that is one situation taking two steps, not a Challenge problem');
+        if (!pr.transfer) err.push('pair has no transfer named');
+
+        /* THE UNWRITTEN REPLY CANNOT SHIP. `CHECK.fit` inverts on a paired
+           problem: `stacked` becomes correct and `onekind` becomes the
+           distractor, and both of those replies are still TODO pending a
+           decision with the user. Without this gate the first Challenge
+           problem reaches a student with a blank where its most important
+           correction goes — a phase rendering an empty string is this
+           project's most-repeated shipping failure. */
+        var fit = (global.Stations && Stations.CHECK || []).filter(function (q) { return q.id === 'fit'; })[0];
+        (fit ? fit.options : []).forEach(function (o) {
+          if (o.yes === 'TODO' || o.no === 'TODO')
+            err.push('CHECK.fit option "' + o.id + '" still has a TODO reply — it is on the answer key for a paired problem and would render blank');
+        });
+      } else if (!LINES[p.line]) {
+        err.push('unknown line "' + p.line + '"');
+      }
 
       // 3. tokens in text <-> numbers
       var pb = p.problem || {};
