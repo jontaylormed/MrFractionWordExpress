@@ -2393,95 +2393,62 @@ select {
 @media (min-width: 620px) { .map-lines { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 900px) { .map-lines { grid-template-columns: repeat(3, 1fr); } }
 
-/* ---------- the five, on one row ----------
-   THE GROUPING IS THE TEACHING, so the layout has to hold it. Five situations
-   means five cards side by side; the moment they wrap to 3+2 the row stops
-   saying "these are the set" and starts saying "here are some cards".
+/* ---------- the five, three then two centred ----------
+   THREE AND TWO, NOT FIVE ACROSS, AND THE TICKET IS THE REASON.
 
-   IT HAS TO BREAK OUT OF THE READING MEASURE TO DO IT. `.map-lines` inherits
-   the 64ch column the prose uses, which is about 788px — five cards in that is
-   ~140px each, narrower than the ticket that sits inside them. A grid of
-   controls is not prose and does not want a reading measure, so this one spans
-   the full width and centres.
+   The first version put all five on one row. It held the grouping — five cards
+   side by side plainly reads as "these are the set" — but it cost 218px cards,
+   and at that width the ticket is wider than the text beside it. So the ticket
+   and the description were both hidden, and the blue ticket that every card is
+   supposed to carry survived only on mobile, where the card goes full width
+   again. The card had been made simpler to fit a layout, rather than the layout
+   chosen to fit the card.
 
-   AND THE CARD GETS SIMPLER AT THIS SIZE, not just smaller. The ticket image
-   and the one-line description both go: at a fifth of the width the ticket is
-   bigger than the text beside it, and squeezing three bands into 200px makes
-   five unreadable cards rather than five clear ones. What is left is what a
-   student chooses on — marker, name, the form of the equation, and the pill
-   saying whether it is running. */
-/* 1000px, NOT the 900 the other map rules break at, and the number came from
-   measuring rather than from matching the neighbours. At 900 the five cards
-   come out 163px wide and the line names wrap to THREE lines — and to a
-   different number of lines each, so the row reads as ragged text rather than
-   as a set. At 1000 they are ~185px and every name fits in two. Below that the
-   list falls back to the ordinary responsive grid above and wraps; one row is a
-   desktop shape, and forcing it onto a phone would mean five cards too narrow
-   to read the thing you choose on. */
-@media (min-width: 1000px) {
-  /* WIDTH 100%, NOT A FIXED 1180. The first version asked for
-     `min(1180px, 96vw)` to escape the 64ch reading measure a <ul> inherits —
-     and overshot the column it lives in. Measured at a 1280 viewport: `#view`
-     and every section heading run 62 to 1202, and both rows ran 62 to 1242.
-     Forty pixels past the page on the right and flush on the left, which a
-     `margin: 0 auto` cannot centre because the box is wider than its parent.
-     It did not read as a deliberate full-bleed; it read as lopsided, and the
-     last card in the specials finished 38px from the edge of the window.
-     Filling the parent gets the same escape from the reading measure and lines
-     the rows up with the headings above them, which is what aligned should
-     mean. */
-  .map-lines-five {
-    grid-template-columns: repeat(5, 1fr);
-    width: 100%;
-    max-width: none;
-    gap: calc(var(--su) * 1.5);
-  }
-  /* PADDING BACK ON THE RIGHT. `.map-lines .line-card` zeroes it, because in
-     the two-column layout the ticket column needs the room and the pill's own
-     right margin substitutes for it. This layout has no ticket and centres its
-     text, so with the margin zeroed below there was nothing holding the pill
-     off the border at all — measured, it sat 30px in on the left and 1px in on
-     the right. Symmetric padding, symmetric pill. */
-  .map-lines-five .line-card {
-    grid-template-columns: 1fr; text-align: center;
-    /* + 8.5px IS THE LEFT STRIPE PAID BACK, and it is the base rule's own
-       compensation rather than a new invention: the card wears a 10px coloured
-       border on the left and 1.5px on the right, so equal padding still leaves
-       the contents sitting left of the card's visible middle. Measured with a
-       plain 2.5su: the pill sat 30px inside on the left and 21px on the right.
-       With the difference (10 − 1.5) added back, both come out 30. */
-    padding-right: calc(var(--su) * 2.5 + 8.5px);
-  }
-  .map-lines-five .line-card .line-ticket { display: none; }
-  .map-lines-five .line-card .line-desc { display: none; }
-  .map-lines-five .line-card .line-name { font-size: 1.02rem; line-height: 1.25; }
-  .map-lines-five .line-card .line-form { font-size: 13px; }
-  .map-lines-five .line-card .badge,
-  .map-lines-five .line-card .soon { margin-right: 0; margin-left: 0; }
-}
+   Three then two keeps the grouping — a block of five, obviously five, obviously
+   apart from the specials underneath — and buys ~299px per card, which is the
+   width the specials already use to carry a ticket and a description
+   comfortably. Nothing is hidden at any width now.
 
-/* The specials sit three across at the same width, so the two groups line up
-   as one block rather than reading as two unrelated widths. Same breakpoint as
-   the five, so the two lists always change shape together — at different
-   breakpoints there is a band of widths where one group is full-bleed and the
-   other is not, and the block stops looking like one thing. */
-@media (min-width: 1000px) {
+   SAME WIDTH AS THE SPECIALS, deliberately: both groups sit in a 920px column,
+   so their card edges line up down the page and the two blocks read as one
+   system rather than as two grids that happen to be near each other. */
+/* 900px — the SAME breakpoint the base `.map-lines` grid uses to go to three
+   columns, and matching it is the point. An earlier version broke at 1000,
+   which left a 900–999 band where the base grid had already gone to three
+   columns but this rule had not: the five still wrapped 3+2, but uncentred and
+   inside the 64ch reading measure, so the cards came out 252px against 299
+   either side of the band. A layout that is right above and below a range and
+   wrong inside it is worse than one that is simply coarse.
+   Below 900 the base grid takes over — two columns, then one on a phone. */
+@media (min-width: 900px) {
+  .map-lines-five,
   .map-lines-special {
-    grid-template-columns: repeat(3, 1fr);
-    /* CAPPED AND CENTRED, so three cards do not inflate to fill a row built for
-       five. At the full column width these came out 385px each against the
-       five's 217 — nearly twice the size for the group that matters less, which
-       is the emphasis backwards. Capped, they land near 290px: still roomier
-       than the five, because they carry a ticket and a description the five do
-       not, but visibly a smaller sub-group sitting inside the page rather than
-       spanning it. `min()` so it simply fills the column on anything narrower
-       and never causes the overflow this rule exists to prevent. */
+    /* Six tracks so a card can span two and the odd row can be offset by one,
+       which is what centres the last pair. */
+    grid-template-columns: repeat(6, 1fr);
     width: min(920px, 100%);
     max-width: none;
     margin-inline: auto;
     gap: calc(var(--su) * 1.5);
   }
+  .map-lines-five > li,
+  .map-lines-special > li { grid-column: span 2; }
+
+  /* CENTRE THE LAST TWO — and the selector is self-limiting on purpose.
+     `:nth-child(4):nth-last-child(2)` matches the fourth item only when it is
+     also second from last, which is true of a five-item list and of nothing
+     else. Add a sixth line one day and this rule simply stops applying, leaving
+     a clean 3+3; it cannot silently mis-lay-out a list it was not written for.
+     Hardcoding `li:nth-child(4)` would have done exactly that. */
+  .map-lines-five > li:nth-child(4):nth-last-child(2) { grid-column: 2 / span 2; }
 }
+
+/* The specials are laid out with the five above, in the one rule, because they
+   now share a grid: same six tracks, same 920px column, same breakpoint. They
+   were a separate `repeat(3, 1fr)` block here, which after the five moved to
+   six tracks would have silently overridden the shared rule and put the two
+   groups back on different grids — the exact "two grids that happen to be near
+   each other" this was meant to stop. One rule, both lists. */
 
 /* An announced-but-unbuilt line. UNHIGHLIGHTED is the whole brief: no line
    colour, no coloured stripe, and the card sits back rather than inviting a

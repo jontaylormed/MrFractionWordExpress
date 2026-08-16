@@ -242,6 +242,10 @@
       // most readable type on the page.
       '<div class="card">' +
         '<span class="eyebrow">How this railway works</span>' +
+        /* NOT "The Five Situations" — that is the heading over the line cards
+           further down, and setting both to the same words put the identical
+           <h2> on the page twice, a screen apart. This one introduces the idea;
+           that one labels the buttons. */
         '<h2>Five situations</h2>' +
         '<p>Word problems look like there are thousands of different ones. There aren&rsquo;t. ' +
         'Nearly all of them describe one of <strong>five situations</strong> &mdash; five things that ' +
@@ -259,7 +263,7 @@
       '<div class="map-hero" id="map-hero"></div>' +
 
       '<div class="section-head"><span class="eyebrow">Choose your route</span>' +
-        '<h2>The five situations</h2><div class="rule"></div></div>' +
+        '<h2>The Five Situations</h2><div class="rule"></div></div>' +
       '<p style="color:var(--ink-mid)">One line each. Nearly every word problem you will meet is one of ' +
       'these five &mdash; work out which, and you already know most of what to do about it.</p>' +
       /* `map-lines-five` is the row. The modifier is on the LIST rather than on
