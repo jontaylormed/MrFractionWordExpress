@@ -1702,11 +1702,15 @@ select {
 .route-booth img {
   display: block; width: auto; height: auto;
   /* Stacked, the booth grows with the screen it is standing on: 140px on a
-     phone — the same cap `.art-band-booth` uses there, so the booth is one
-     size at the route window and at the Ticket Booth station — up to 200px on
-     a wide tablet, where a fixed phone size reads as a stamp lost in the
-     middle of a 719px column. Height only; the width follows the art, so this
-     cannot push anything sideways. */
+     phone, up to 200px on a wide tablet, where a fixed phone size reads as a
+     stamp lost in the middle of a 719px column. Height only; the width follows
+     the art, so this cannot push anything sideways.
+
+     This used to justify the 140px by matching `.art-band-booth`'s phone cap,
+     "so the booth is one size at the route window and at the Ticket Booth
+     station". That band is gone and the route window is now the only place the
+     booth appears, so the number stands on its own. A comment that cites a
+     rule which no longer exists is worse than one that cites nothing. */
   max-height: clamp(140px, 26vw, 200px);
   filter: var(--art-tone) drop-shadow(0 6px 14px rgba(44,34,20,.28));
 }
@@ -1906,23 +1910,20 @@ select {
 .art-band { display: flex; align-items: flex-end; justify-content: center; gap: calc(var(--su) * 2);
   margin: calc(var(--su) * 2) 0 calc(var(--su) * 3); }
 .art-band .art { width: auto; }
-.art-band-booth .art-booth  { max-height: 200px; }
-/* The ticket is tilted the way a ticket lands on a counter — and it is the one
-   piece with words on it, so it sits smaller than the booth beside it rather
-   than competing with the question. */
-.art-band-booth .art-ticket { max-height: 120px; transform: rotate(-4deg); align-self: center; }
+/* `.art-band-booth` and its `.art-booth` / `.art-ticket` rules lived here and
+   went with the figure they styled — the booth-and-ticket band on the Ticket
+   Booth phase, removed on the user's call 2026-08-16 (stations.js, phTicket).
+   Nothing emits that class now, and a rule styling an element the site never
+   renders is a rule the next person has to disprove before they can trust the
+   sheet. The art files themselves are still in use: the booth at the route
+   window, the ticket on every line card. */
 .art-band-end .art-caboose  { max-height: 240px; }
 .art-band-loco .art-loco    { max-height: 250px; }
 
 @media (max-width: 620px) {
   .art-hero .art { max-height: 170px; }
   .art-band { gap: calc(var(--su)); }
-  .art-band-booth .art-booth { max-height: 140px; }
-  .art-band-booth .art-ticket { max-height: 84px; }
   .art-band-end .art-caboose, .art-band-loco .art-loco { max-height: 165px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .art-band-booth .art-ticket { transform: none; }
 }
 
 /* ---------- Mr Fraction, floating ----------

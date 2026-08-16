@@ -1328,13 +1328,29 @@
           'so before we go anywhere, which one?</p>'
         : '<p><strong>You know which line you&rsquo;re on. So here&rsquo;s the harder question.</strong> ' +
           'A train on this line always has the same cars &mdash; and one of them is missing.</p>') +
-      /* The booth itself. This phase IS the Ticket Booth, so the art names the
-         place rather than decorating it — the student is standing at a window
-         being asked what they want before the train will take them. */
-      '<figure class="art-band art-band-booth">' +
-        Scenery.art('Mr_Fraction_Ticket_Booth.png', 'art-booth') +
-        Scenery.art('Mr_Fraction_Train_Ticket.png', 'art-ticket') +
-      '</figure>' +
+      /* THE BOOTH AND TICKET ART USED TO SIT HERE AND WAS REMOVED ON THE
+         USER'S CALL (2026-08-16). The argument for it was that this phase IS
+         the Ticket Booth, so the art named the place rather than decorating
+         it. What that argument left out is where the art SAT: between Mr
+         Fraction's aside and the problem text, so every ride pushed the story
+         — and the question about it — down behind 200px of picture on a
+         screen the student has already met at the route window, where the same
+         booth is drawn beside the choice it illustrates.
+
+         Whether it looked right was never mine to decide; that the screen now
+         starts on the story is the point of removing it.
+
+         WHAT REMAINS ON THIS SCREEN, measured rather than assumed, because
+         emptying a surface by deleting what was on it is this project's most
+         repeated way of "fixing" something. First element is the problem text
+         itself — Mr Fraction is a floating companion and was never a child of
+         this host — then the line box naming the line and its form, the "which
+         car is missing" question, its three options and the feedback panel.
+         On the percent route the hidden-line question comes first with all of
+         that behind it, eight options across the two. Checked on an ordinary
+         problem, a percent ride and an island problem: no art band on any of
+         them and every other part still present. Nothing depended on the
+         figure, and no rule, gate or announcement referred to it. */
       this.problemHTML(false) +
       (hidden
         ? '<h3>Which of the five situations is hiding under the per cent?</h3>' +
