@@ -346,7 +346,11 @@
          The sleepers still run off both edges and vary in width, because they
          ARE the counted quantity and must stay uncountable. The gap does not
          change that: you cannot count what a hole is worth. */
-      var GAP_I = 8, s = '';
+      /* GAP_X is computed once and everything that has to agree with the hole —
+         the dust, the crane's jib, the chain, the load — is placed from it. The
+         first draft repeated the arithmetic at each use, which is how a load
+         ends up hanging next to a hole instead of over it. */
+      var GAP_I = 8, GAP_X = -20 + GAP_I * 26, s = '';
 
       // ballast under everything
       s += '<rect x="0" y="76" width="320" height="34" fill="' + MID + '"/>';
@@ -359,41 +363,80 @@
              '" stroke="' + INK + '" stroke-width="1.8"/>';
       }
       // the hole itself, darker so it reads as absence rather than as ballast
-      s += '<rect x="' + (-20 + GAP_I * 26) + '" y="78" width="22" height="30" rx="2" fill="' + SHADE +
+      s += '<rect x="' + GAP_X + '" y="78" width="22" height="30" rx="2" fill="' + SHADE +
            '" stroke="' + INK + '" stroke-width="1.8" stroke-dasharray="4 3" opacity=".85"/>';
 
       s += rails(84);
       s += rails(100);
 
-      /* The new sleeper coming down into the gap. Pale, because it is concrete
-         and the others are not — and it lands where the hole is, not near it. */
-      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 11) + ',52)"><g class="rsc-stacktop">' +
-        '<rect x="-13" y="0" width="26" height="10" rx="2" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.2"/>' +
-        '</g></g>';
-
       // dust kicked up at the gap
-      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 2) + ',96)"><g class="rsc-puff">' +
+      s += '<g transform="translate(' + (GAP_X + 2) + ',96)"><g class="rsc-puff">' +
         '<circle r="6" fill="' + SHADE + '" opacity=".5"/></g></g>';
-      s += '<g transform="translate(' + (-20 + GAP_I * 26 + 24) + ',98)"><g class="rsc-puff rsc-drop-b">' +
+      s += '<g transform="translate(' + (GAP_X + 24) + ',98)"><g class="rsc-puff rsc-drop-b">' +
         '<circle r="5" fill="' + SHADE + '" opacity=".4"/></g></g>';
 
-      // the hut
-      s += '<g transform="translate(42,30)">' +
-        '<rect x="-26" y="0" width="52" height="40" rx="3" fill="' + MID + '" stroke="' + INK + '" stroke-width="2.4"/>' +
-        '<path d="M-30 0 L0 -16 L30 0 Z" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>' +
-        '<rect x="-8" y="16" width="16" height="24" rx="2" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="1.8"/>' +
+      /* THE OLD ONE, ALREADY OUT AND LYING ON THE CESS. It used to be the thing
+         on the crane, which left the NEW one arriving from nowhere. Putting the
+         old one on the ground instead frees the hook for the sleeper that is
+         actually going somewhere, and a sleeper lying askew beside the track is
+         unmistakably one that has been taken up. */
+      s += '<g transform="translate(112,62) rotate(-7)">' +
+        '<rect x="-24" y="0" width="48" height="10" rx="2" fill="' + TONE2 +
+          '" stroke="' + INK + '" stroke-width="2.2"/></g>';
+
+      /* THE LINESIDE HUT, and the first version of it was a square with a
+         triangle on top — a child's house, drawn on a railway. User-found, and
+         fair: nothing about it said permanent way.
+
+         This one is the real thing: a curved corrugated roof, a stovepipe with
+         the fire lit, and the gang's tools leaning where they were dropped. The
+         smoke is the point — a hut with a fire going says somebody is out here
+         working, which is what the whole scene is about, and it costs one
+         animated element. */
+      s += '<g transform="translate(40,32)">' +
+        '<rect x="-22" y="0" width="44" height="34" rx="2" fill="' + MID + '" stroke="' + INK + '" stroke-width="2.4"/>' +
+        // corrugated barrel roof
+        '<path d="M-26 2 Q0 -20 26 2" fill="' + TONE + '" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+        '<path d="M-17 -3 Q0 -16 17 -3 M-9 -7 Q0 -13 9 -7" fill="none" stroke="' + INK +
+          '" stroke-width="1.4" opacity=".45"/>' +
+        // stovepipe, and the fire lit
+        '<rect x="10" y="-22" width="8" height="14" rx="1.5" fill="' + INK + '"/>' +
+        '<g transform="translate(14,-24)"><g class="rsc-puff">' +
+          '<circle r="5" fill="' + SHADE + '" opacity=".55"/></g></g>' +
+        // door and window
+        '<rect x="-14" y="12" width="14" height="22" rx="1.5" fill="' + TONE + '" stroke="' + INK + '" stroke-width="1.8"/>' +
+        '<rect x="4" y="10" width="12" height="10" rx="1.5" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="1.8"/>' +
+        // tools leaning against the end wall
+        '<path d="M24 34 L30 8" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<path d="M30 8 q4 -3 6 1" fill="none" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<path d="M28 34 L36 12" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<path d="M32 12 H40" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>' +
         '</g>';
 
-      /* The crane, carrying the OLD sleeper away — dark, matching the row it
-         came out of, so the two sleepers in the air read as one leaving and one
-         arriving rather than as decoration. */
-      s += '<g transform="translate(236,8)">' +
-        '<path d="M0 4 V52 M0 6 H50" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' +
-        '<path d="M50 6 V22" stroke="' + INK + '" stroke-width="2"/>' +
-        '<g transform="translate(50,22)"><g class="rsc-swing">' +
-          '<path d="M0 0 V12" stroke="' + INK + '" stroke-width="1.8"/>' +
-          '<rect x="-15" y="12" width="30" height="10" rx="2" fill="' + TONE2 + '" stroke="' + INK + '" stroke-width="2.2"/>' +
-        '</g></g></g>';
+      /* THE CRANE NOW STANDS OVER THE GAP, and the new sleeper hangs from its
+         hook on a visible chain. The first draft had a pale box appear in
+         mid-air near the hole with nothing holding it and nothing above it —
+         "the drop box doesn't make much sense", and it did not: a thing falling
+         from nowhere is not a thing being fitted.
+
+         The jib reaches LEFT to the gap's own centre, computed from the same
+         number the gap is, so the load hangs over the hole rather than beside
+         it. Chain, hook, load: the eye can follow where it came from and where
+         it is going. */
+      s += '<g transform="translate(252,6)">' +
+        '<path d="M0 4 V70" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/>' +
+        '<path d="M0 8 H' + (GAP_X + 11 - 252) + '" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M0 20 L' + (GAP_X + 40 - 252) + ' 8" stroke="' + INK + '" stroke-width="1.8" opacity=".6"/>' +
+        '</g>';
+      s += '<g transform="translate(' + (GAP_X + 11) + ',14)"><g class="rsc-swing">' +
+        // the chain
+        '<path d="M0 0 V34" stroke="' + INK + '" stroke-width="1.8" stroke-dasharray="3 3"/>' +
+        // the hook
+        '<path d="M0 34 q0 6 5 6 q4 0 4 -4" fill="none" stroke="' + INK + '" stroke-width="2"/>' +
+        // the new concrete sleeper, pale against the creosoted row below
+        '<rect x="-15" y="40" width="30" height="11" rx="2" fill="' + CREAM + '" stroke="' + INK + '" stroke-width="2.2"/>' +
+        '<path d="M-9 45 H9" stroke="' + SHADE + '" stroke-width="1.6"/>' +
+        '</g></g>';
       return s;
     },
 
