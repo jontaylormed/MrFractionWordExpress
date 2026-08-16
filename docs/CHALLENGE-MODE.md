@@ -224,10 +224,11 @@ Also needs adding, and both are discovered-not-listed hazards:
 
 ## 8. Still open, and needing the user
 
-1. **Island name.** *Crossover Island* is used throughout this document because the mode needed a name to be written about. It is a proposal.
-2. **Does the terminus hub on the island differ from the four mainland hubs?** A hub that teaches the crossover itself is arguably the sixth Learning Hub, and hubs are never gated — which would put the Crossover Read on the mainland too.
-3. **Whether passes 3 and 4 share a screen.** §3, and it should be measured before it is decided.
-4. **Whether the mainland Platform Check changes.** Once stacked problems exist, `onekind`'s reply on all 30 existing problems is describing something the student can now go and ride. That is an improvement, and it is 30 problems of copy.
+1. ~~**Island name.**~~ **Settled** — the user approved *Crossover Island* 2026-08-16.
+2. **Does the terminus hub on the island differ from the four mainland hubs?** The user has agreed a new hub is needed; what it teaches is not settled. A hub that teaches the crossover itself is arguably the sixth Learning Hub, and hubs are never gated — which would put the Crossover Read on the mainland too. **Next up.**
+3. ~~**Whether passes 3 and 4 share a screen.**~~ **Settled by building it** — they do not share a screen and they do not need their own either. The Crossover Read is one phase with three stages: find the seam, then name each half, with the half in question spotlit and the other stepped back. That gives the side-by-side comparison the plan wanted without two checklists stacked on a 390px screen, and it replaces the Platform Check rather than adding to it, so the island is the same length as every other line.
+4. ~~**Two true options on the non-`fit` questions.**~~ **Settled 2026-08-16, and it needed no new copy.** Measured on `cl-signal-delay`: `kinds` accepts both *same* and *different*, `things` accepts both *separate* and *paired*, each reply correct about one half. That was written up as five questions' worth of rewriting and it was the wrong frame — **a story that answers the checklist two ways IS a story made of two situations**, which is what the fifth question on that same screen goes on to ask. `phRead1` now names the other true answer and says why both hold. Derived from the option set, so a future pair whose halves collide on `shape` gets the same treatment with nothing authored.
+5. **Whether the mainland Platform Check changes.** Once stacked problems exist, `onekind`'s reply on all 30 existing problems is describing something the student can now go and ride. That is an improvement, and it is 30 problems of copy.
 
 ---
 

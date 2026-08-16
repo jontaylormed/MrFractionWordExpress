@@ -319,15 +319,16 @@
        HALF. Both halves are in the story, so both halves' answers are honest
        readings of it.
 
-     THE SECOND RULE HAS A CONSEQUENCE THAT IS NOT YET SETTLED, AND IT IS
-     WRITTEN HERE RATHER THAN DISCOVERED LATER: on a paired problem the four
-     non-`fit` questions can have TWO true options — a Change→Compare problem
-     genuinely has two moments in its first half and one in its second. The UI
-     copes (the first correct tap closes the question), but every `yes:` reply
-     on those options was written on the assumption that one situation is in
-     play, so it will say "Yes." and then explain only half the story. That is
-     a copy decision across five questions and it is open. It cannot bite
-     today because nothing carries a `pair`.
+     THE SECOND RULE MEANS A QUESTION CAN HAVE TWO TRUE ANSWERS — SETTLED
+     2026-08-16, and it needed no new copy at all. Measured on
+     `cl-signal-delay`: `kinds` accepts both "same" and "different" and
+     `things` accepts both "separate" and "paired", each reply correct about
+     one half of the story. That was written up here as an open decision across
+     five questions and it was the wrong frame. A story that answers this
+     checklist two ways IS a story made of two situations, which is what the
+     fifth question on the same screen goes on to ask — so `phRead1` names the
+     other true answer and says why both hold, and the apparent inconsistency
+     becomes the reason for the next question.
 
      Declared as data on the option, never as `if (challenge)` at the call
      site: a renderer branch is an exemption, and this project has seven files
@@ -664,10 +665,43 @@
       var qi = +b.getAttribute('data-q'), oi = +b.getAttribute('data-o');
       var q = CHECKS[qi], o = q.options[oi];
       var ok = optionTrue(o, self.p);
+
+      /* TWO TRUE ANSWERS IS NOT A BUG HERE, IT IS THE EVIDENCE.
+
+         On a paired problem `optionTrue` accepts an option that is true of
+         EITHER half, so a question can have two right answers. Measured on
+         `cl-signal-delay`: `kinds` accepts both "same" and "different", and
+         `things` accepts both "separate" and "paired". Both replies are
+         correct — "everything is measured in the same stuff" is true of the
+         compare half, "change either and the other follows" is true of the
+         rate half. Neither is wrong; each describes one end of the story.
+
+         This was recorded as an open copy decision across five questions, on
+         the assumption it would need five rewritten replies per problem. It
+         does not. A story that answers this checklist two ways IS a story made
+         of two situations, and the fifth question on this very screen asks
+         exactly that. So the screen says so, and the note turns an apparent
+         inconsistency into the reason for the next question.
+
+         Derived from the option set, never authored: it fires wherever a
+         question genuinely has more than one true answer, so a new pair whose
+         halves collide on `shape` gets the same treatment with nothing added.
+         It cannot fire on the mainland — all 30 problems there were measured
+         at exactly one true option per question. */
+      var alsoTrue = self.p.pair
+        ? q.options.filter(function (x) { return x !== o && optionTrue(x, self.p); })
+        : [];
+      var both = (ok && alsoTrue.length)
+        ? '<br><br><strong>And so is &ldquo;' + alsoTrue[0].text + '&rdquo;.</strong> ' +
+          'Both are true, because this story is doing two different things &mdash; one of them fits ' +
+          'the first part and one fits the rest. That is worth holding on to: the last question ' +
+          'down there asks about exactly that.'
+        : '';
+
       b.setAttribute('data-result', ok ? 'right' : 'wrong');
       b.querySelector('.marker').innerHTML = '&#9724;';
       host.querySelector('#cf' + qi).innerHTML = ok
-        ? msg('go', '&#10003;', '<strong>Yes.</strong> ' + o.yes)
+        ? msg('go', '&#10003;', '<strong>Yes.</strong> ' + o.yes + both)
         : msg('caution', '&rarr;', '<strong>Not this time.</strong> ' + o.no);
       if (ok) {
         got[qi] = 1;
