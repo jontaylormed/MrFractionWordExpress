@@ -656,7 +656,53 @@
 
   /* ---------- Terminus Hub ---------- */
 
+  /* A TRIP REPORT IS A REPORT ON A TRIP, AND ONE STOP IS NOT ONE.
+
+     User-found. Crossover Island rides are a single stop — you pick a stop off
+     the map and go — so finishing one used to fall straight into
+     `renderHubAssessment`, which said "End of the line. I'd normally hand you
+     one more problem here… I haven't got a fresh one for you today" and then
+     offered a trip report. Both halves were wrong on the island. The apology
+     names a shortage that does not exist: the island is not out of problems,
+     it never promised a second one. And a report that draws conclusions about
+     estimates, hint use and misconception patterns across a journey is
+     drawing them from a single station.
+
+     The rule is the one the mainland already runs on: a named route is 2 to 5
+     stops, so `Selector.MIN_STOPS` is the threshold, read rather than
+     hardcoded. Below it there is no journey to report on and the student goes
+     back to the island to pick another stop.
+
+     NOT A CONSOLATION SCREEN. It says what they did and offers the obvious
+     next thing, because a student who has just finished the hardest problem
+     on the site should not be handed a page explaining what they did not get.
+     The Arrivals Board they have just come through is where the work was
+     checked; this is a door, not a verdict. */
   function renderHubAssessment() {
+    if (trip.stations.length < Selector.MIN_STOPS) {
+      var isle = trip.line === MF.CHALLENGE;
+      /* 'pleased', not 'go'. The moods are `steady`, `thinking`, `pleased` and
+         `curious` — `MrFraction.moods` is the list — and 'go' is a MESSAGE
+         kind from `msg()`, not an expression. The two vocabularies sit next to
+         each other in this file and the first draft crossed them. */
+      var one = html('<div>' +
+        MrFraction.aside('pleased',
+          '<p><strong>That is the stop done.</strong> ' +
+          (isle ? 'Two situations, joined &mdash; and you took them apart.' : 'Nicely worked.') + '</p>' +
+          '<p>No trip report for this one: a report is about a journey, and this was a single stop. ' +
+          'Ride a few and I will have something worth telling you.</p>') +
+        '<div class="btn-row">' +
+          '<button class="btn" id="again" type="button">' +
+            (isle ? 'Back to Crossover Island &rarr;' : 'Back to the map &rarr;') + '</button>' +
+        '</div>' +
+        '</div>');
+      tripDone = true;
+      one.querySelector('#again').addEventListener('click', function () {
+        if (isle) renderIsland(); else renderMap();
+      });
+      setView(one);
+      return;
+    }
     if (!trip.hub) {
       // Non-negotiable #10: never fake a transfer assessment.
       var n = html('<div>' +
