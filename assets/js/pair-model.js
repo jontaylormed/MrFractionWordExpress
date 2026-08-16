@@ -62,21 +62,38 @@
      failure this file exists to prevent — so it declines the problem outright
      and the Plan phase falls through to whatever else claims it. `MF.validate()`
      refuses that combination, so it cannot reach a student either way. */
-  function applies(p) { return !!(p && p.pair && cfg(p) && global.CompareModel); }
+  function applies(p) {
+    return !!(p && p.pair && cfg(p) && global.Model && Model.applies(firstView(p)));
+  }
 
-  /* THE FIRST PICTURE IS WHICHEVER MODEL THE FIRST HALF'S SCHEMA WANTS, asked
-     in the same order model.js asks it. It is not hardcoded to CompareModel:
-     the second island problem is Compare→Part-Whole and the third is
-     Part-Whole→Equal Groups, so the first half will not stay a comparison.
-     Kept as a list rather than a chain of ifs, because model.js's own chain is
-     the thing this has to agree with, and a list is easier to check against. */
-  var FIRST_MODELS = ['ChangeModel', 'RatioModel', 'CompareModel', 'GroupsModel'];
-  function firstModel(p) {
-    for (var i = 0; i < FIRST_MODELS.length; i++) {
-      var M = global[FIRST_MODELS[i]];
-      if (M && M.applies(p)) return M;
-    }
-    return null;
+  /* THE FIRST PICTURE IS WHICHEVER MODEL THE FIRST HALF WANTS — ASKED BY
+     ASKING `Model` ITSELF, not by keeping a list of models here.
+
+     This WAS a list: `['ChangeModel','RatioModel','CompareModel','GroupsModel']`,
+     copied out of `model.js`'s dispatch order. It worked for the first two
+     island problems and would have failed silently on the third. The Model
+     Yard — the fallback that draws Part–Whole — is not one of those four; it is
+     the `else` at the bottom of `model.js`. So `cl-platform-planters`, whose
+     first half is Part–Whole, would have found no first model, made
+     `applies()` false, and dropped through to the Model Yard, which would have
+     drawn the first half alone and reported success. Half a picture that looks
+     finished, from a hardcoded list that did not know about the fifth thing —
+     the defect class this project has seven files of, in the file I wrote to
+     avoid it.
+
+     Asking `Model` instead means this cannot happen again and a sixth model
+     needs no change here. The trick is the proxy: a problem with `pair`
+     removed, so `Model`'s own chain skips PairModel and lands on whatever the
+     first half actually needs, Model Yard included. `Object.create` keeps every
+     other field by prototype, so nothing is copied and nothing can go stale.
+
+     The recursion terminates at depth two by construction: `Model.applies` asks
+     `PairModel.applies`, which asks `Model.applies` with a proxy that has no
+     `pair`, so the second call declines immediately. */
+  function firstView(p) {
+    var q = Object.create(p);
+    q.pair = null;
+    return q;
   }
 
   /* The second picture. Static by design — see the header. Every cell that
@@ -120,8 +137,8 @@
   }
 
   function html(p) {
-    var c = cfg(p), M = firstModel(p);
-    if (!c || !M) return '';
+    var c = cfg(p), first = firstView(p);
+    if (!c || !global.Model || !Model.applies(first)) return '';
 
     /* Options are SHUFFLED and seeded, AND THE SALT WAS MEASURED RATHER THAN
        PICKED — which is the only reason this surface is not shipping with the
@@ -152,7 +169,7 @@
 
     return '' +
       '<div class="xo" data-stage="first">' +
-        '<div class="xo-half xo-first">' + M.html(p) + '</div>' +
+        '<div class="xo-half xo-first">' + Model.html(first) + '</div>' +
 
         /* The slot is HIDDEN until the first picture settles. Shown from the
            start it would say "which number does the first picture hand over"
@@ -176,8 +193,8 @@
   }
 
   function wire(root, p, onDone) {
-    var c = cfg(p), M = firstModel(p);
-    if (!c || !M) return;
+    var c = cfg(p), first = firstView(p);
+    if (!c || !global.Model || !Model.applies(first)) return;
     var xo = root.querySelector('.xo');
     if (!xo) return;
 
@@ -194,7 +211,7 @@
        picture is done; it is done when the crossover has been named. Passing
        `onDone` straight through here would have unlocked the station a whole
        screen early, with the second picture never seen. */
-    M.wire(root, p, function () {
+    Model.wire(root, first, function () {
       if (slot.hidden === false) return;
       slot.hidden = false;
       xo.setAttribute('data-stage', 'crossing');
