@@ -1,5 +1,5 @@
-# Roadmap — the next seven pieces of work
-### Written 2026-08-08. **Six of the seven are done; item 6, Challenge Mode, is all that is left.**
+# Roadmap — the next eight pieces of work
+### Written 2026-08-08 as seven. **Six of those seven are done; item 6, Challenge Mode, is planned in [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md) and not yet built. Item 8 was added 2026-08-15 on the user's idea and is the only new work on the list.**
 
 > # 🚂 THE SITE IS LIVE
 > ## **https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/**
@@ -523,6 +523,63 @@ The authority is `PEDAGOGY.md` §2.2 and its three tiers: **tier 1 names the ope
 **The trap, and it is documented:** new copy has to quote tier-3 rules in order to refute them, so it will trip the keyword greps. The exemption is a **data tag** — `tier: "lies"` on the section — never a reading of intent. `VERIFICATION.md` §30. Widening the exemption is the failure; tagging or rewriting the copy is the fix.
 
 **Should extend `content/hubs/five-situations.js` or sit beside it as a third hub.** Hubs are never gated and never framed as remedial — a locked decision.
+
+---
+
+## 8. Estimating should not feel like answering — **added 2026-08-15 on the user's idea**
+
+**The user's words:**
+
+> *"For all word problems, when a student is estimating an answer, they should be able to manually write through touch screen or drag the mouse around, but type it in when it's an actual calculation. The main idea to make estimation input interact differently than calculating for a final answer. The input fields need to vary as much as possible, with notes written or drawn for estimation and typing, but different looking input than as it currently is."*
+
+### Why this is a pedagogical change and not a decoration
+
+Today both inputs are the same control. The estimate is `<input type="text" id="estv" inputmode="decimal">` in a `.field`; the Engine Room's answer is the same box in the same box-shape. **The screen therefore tells the student that estimating and answering are the same kind of act, and they are not.** An estimate is meant to be rough, fast and provisional; a typed number box asks for something exact and final, and gets it — which is how you end up with students who "estimate" by doing the calculation first and typing the answer twice.
+
+The copy already fights this on its own: *"It doesn't have to be good. It has to exist."* The input contradicts the sentence sitting above it. **Making the modality match the mode of thinking is the fix** — the hand for a guess, the keyboard for a result.
+
+It also lands inside the metaphor without straining it: **a pencil on the platform, a dial in the Engine Room.**
+
+### The hard constraint, and the design that survives it
+
+**The estimate cannot be ink alone — it has to yield a number.** Two places consume it and neither can take a drawing:
+
+- The **Arrivals Board** compares estimate against answer and passes anything within a factor of two (`stations.js` ~1351), and shows the student `estimateRaw` — what they actually entered — because showing the parsed value once made a student compare `7/20` against `0.35`.
+- `m.estimates` feeds the trip metrics.
+
+**Handwriting recognition is not the answer.** Zero-dependency, offline, `file://`, and reliable digit recognition is a research project, not a feature.
+
+**The design that gives the gesture AND the number: estimate by sweeping a range on a number line.** The student drags along a scaled line and leaves a *band*, not a point. That is:
+
+- **a gesture** — touch, stylus or mouse, which is exactly what was asked for;
+- **a number** — the band's centre commits as the value, so nothing downstream changes;
+- **and pedagogically more honest than the box it replaces**, because an estimate genuinely is a region. "Somewhere between 40 and 60" is a better estimate than "50" and the current control cannot express it. The Arrivals Board's factor-of-two forgiveness becomes visible: the student can *see* whether their answer landed inside their own band.
+
+**Free ink beside it, never parsed.** A scratch area that keeps the marks and grades nothing — jottings, a crossed-out first guess, a quick bar sketch. It is not an input; it is thinking made visible. Committing the estimate must never depend on it.
+
+### Two surfaces, made to look nothing alike
+
+| | Estimate | Calculate |
+|---|---|---|
+| **Where** | Plan phase | Engine Room, Test Track, hub checks |
+| **Input** | Sweep a band on a number line + free ink pad | Typed field |
+| **Feel** | Paper, pencil stroke, no box — soft edges, hand-drawn rule | Machine — a keyed, brass-gauge field that reads as an instrument |
+| **Says** | *roughly, provisionally* | *exactly, finally* |
+
+The typed field wants redesigning too — the user asked for it to look **different than as it currently is**, not merely different from the estimate. The Engine Room is a room full of machinery and its input looks like a web form.
+
+### What has to be true before this ships
+
+1. **A keyboard path that is equal, not lesser.** WCAG 2.1 AA: 2.1.1 (keyboard), and 2.5.1 (any multipoint or path-based gesture needs a single-pointer alternative). Arrow keys must move and widen the band, and a typed entry must remain available and unembarrassed — some students cannot drag, and on this site the estimate is a **gate**: the Engine Room does not unlock without one. **An inaccessible estimate control locks a student out of the whole problem.** This is the single largest risk in the item.
+2. **Pointer Events, hand-rolled.** One code path for mouse, touch and stylus; `touch-action: none` on the surface only, or the page stops scrolling on a phone.
+3. **`MF.parseAnswer` still owns the typed path**, fractions included. A number line has to be given a sensible scale per problem — probably derived from the answer's magnitude, and *never authored*, or it is right for number set 1 and wrong for the other three, which is a mistake this project has made three times on picture geometry alone.
+4. **The band must not leak the answer.** A line scaled tightly around the true answer hands it over; too generous and the estimate means nothing. **The scale is a pre-solve surface and the sweep must scan it.**
+5. **Nothing persists.** No `localStorage` — a locked decision. Ink dies with the phase, as everything else here does.
+6. **It changes every problem on the site**, 30 of them plus whatever Challenge Mode adds. It is engine work, not content work, which is what makes it affordable.
+
+### Where it sits
+
+**After Challenge Mode.** It touches the Plan phase of every problem, and doing that while a new mode is being built means two moving parts under one another. Challenge Mode will add its own estimate screens, and they should inherit this rather than be retrofitted — **so if this is built first, build it first properly; otherwise finish the island.**
 
 ---
 
