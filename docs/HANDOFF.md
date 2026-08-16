@@ -23,26 +23,33 @@
 
 ## 0-NEW. Read this first — the state changed substantially on 2026-08-16
 
-**Challenge Mode is largely BUILT.** Everything in §0 below describes the site before it existed and is now history rather than a brief. The current plan and the next session's work are in **[`CHALLENGE-MODE.md`](CHALLENGE-MODE.md)**.
+**Challenge Mode is BUILT and ridden.** Everything in §0 below describes the site before it existed and is now history rather than a brief. The plan, what got built, and what is left are in **[`CHALLENGE-MODE.md`](CHALLENGE-MODE.md)** — its §10 is the outstanding list.
 
-**35 problems, 140 materialisations, 1388 rendered screens, every sweep count 0.**
+**The roadmap is now empty of unbuilt items except [`ROADMAP.md`](ROADMAP.md) §8**, the estimate-input idea (drawing an estimate, typing an answer), which is planned and not started.
+
+**What would most improve this site is no longer code.** Every island `review` block is `provisional` because author and reviewer are the same person, and **no real student has used any of it** — least of all the two unstaffed halts, where the fade is most likely to be a wall rather than a challenge. That is the missing check, and it has been the missing check since long before the island.
+
+**37 problems, 148 materialisations, 1,468 rendered screens, every sweep count 0.** Ridden end to end 2026-08-16.
 
 What exists that did not before:
 
 | | |
 |---|---|
 | **Crossover Island** | Its own map — coast, mountains, forest, three rivers, a lake, one irregular circuit, a train on the rails, a lighthouse. Reached from the Challenge Line card, which is live. Five stops, all open. |
-| **Five two-line problems** | `cl-signal-delay`, `cl-season-tickets`, `cl-platform-planters`, `cl-lost-umbrellas`, `cl-buffet-crates`. Each is two situations joined by a **transfer** — a number that is an answer on one side and a given on the other. |
+| **Seven two-line problems** | `cl-signal-delay`, `cl-season-tickets`, `cl-platform-planters`, `cl-lost-umbrellas`, `cl-buffet-crates`, `cl-track-sleepers`, `cl-carriage-clean`. Four number sets each. Every one is two situations joined by a **transfer** — a number that is an answer on one side and a given on the other. |
+| **Pooling** | Thorne Bridge and Fell Crossing hold **two problems each**, drawn at random. A stop is a place, not a problem; `data-stop` carries the stop. |
 | **The Crossover Read** | A new numberless phase that REPLACES the Platform Check on a paired problem. Three stages: find the seam, then run the same five-question checklist on each half. |
 | **The two-model Plan phase** | `pair-model.js`. First picture, a crossover slot naming what crosses, then a second picture drawn *waiting* — because on a two-line problem nothing in it can be known yet. |
 | **The Lighthouse** | A fifth Learning Hub, seven pages, on both maps. Teaches the crossover, the checklist and the five situations in depth. |
-| **Engine and checker changes** | `MF.CHALLENGE` route key; `pair` on a problem; `optionTrue` (the answer key can no longer be just `p.line`); `stacked` inverted on the Platform Check; the sweep's transfer rule and `solve@N` second-half screens; a numberless rule over the Crossover Read's own copy; `buildTrip` excluding paired problems from every mainland ride. |
+| **`challenge-scenes.js`** | Seven scenes, one per problem, neutral ink. Found by `Scene.libs()` with no registration; dispatch is by art name, not by line. |
+| **Engine and checker changes** | `MF.CHALLENGE` route key; `pair` on a problem; `optionTrue` (the answer key can no longer be just `p.line`); `stacked` inverted on the Platform Check; the sweep's transfer rule and `solve@N` second-half screens; a numberless rule over the Crossover Read's own copy; `buildTrip` excluding paired problems from every mainland ride; a trip report only above `Selector.MIN_STOPS`. |
 
-**Three things a new session should know before touching any of it:**
+**Four things a new session should know before touching any of it:**
 
-1. **An island answer may not be 1, 2 or 5**, and no authored island copy may contain a number word. The station header says *"Two situations, joined"* on every island screen and *"five"* is everywhere the checklist is — the leak scan reads spelled-out answers, and it has already caught one.
+1. **An island answer may not be 1, 2 or 5**, and no authored island copy may contain a number word. The station header says *"Two situations, joined"* on every island screen and *"five"* is everywhere the checklist is — the leak scan reads spelled-out answers, and it has already caught one. **Watch for "half"**: *"the first half hands the second half a number"* is the natural sentence and it is refused.
 2. **`fadeLevel: "independent"` is the unstaffed-halt switch**, not a label. It skips the Crossover Read and fades the Plan phase to the estimate alone. The Three Reads, the estimate and the hint ladder stay — settled by the user, do not re-open.
 3. **`SWEEP.report()` ends with a Challenge coverage line.** If it says *examined: 0*, the check ran over nothing and the run is not a pass. `SWEEP.selfTestChallenge()` proves the transfer rule independently of content.
+4. **No checker on this project can see the journey panel or the end-of-trip screen.** Both defects found in the verification ride lived there — the panel told the student every island stop was *"track being laid"*, and the end screen was one button on a blank page with its words off in the floating companion. **Ride a stop after changing anything in `app.js` or `scenery.js`.**
 
 ---
 

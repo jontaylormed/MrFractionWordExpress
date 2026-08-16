@@ -1,6 +1,28 @@
-# Challenge Mode — the plan
+# Challenge Mode — the plan, and what got built
 
-### Written 2026-08-15. This is the document `ROADMAP.md` §6 asks for before anyone builds. Nothing here is built yet.
+### Written 2026-08-15 as a plan. **Built 2026-08-15/16. Read this section, then ride it — everything below is the reasoning, kept because it explains why the thing is shaped as it is.**
+
+> ## ▶ CROSSOVER ISLAND IS BUILT AND RIDEABLE
+>
+> **37 problems · 148 materialisations · 1,468 rendered screens · every sweep count 0.**
+>
+> | | |
+> |---|---|
+> | **The island** | Its own map — coast, mountains, forest, three rivers, a lake, one irregular circuit, a train on the rails, a lighthouse. Reached from the Challenge Line card. Five stops, all open. |
+> | **Seven problems** | `cl-signal-delay`, `cl-season-tickets`, `cl-platform-planters`, `cl-lost-umbrellas`, `cl-buffet-crates`, `cl-track-sleepers`, `cl-carriage-clean`. Four number sets each. |
+> | **Pooling** | Thorne Bridge and Fell Crossing hold **two problems each**, drawn at random, so a second visit differs by problem and not only by numbers. |
+> | **The Crossover Read** | A numberless phase replacing the Platform Check on paired problems: find the seam, then run the same five-question checklist on each half. |
+> | **The Plan phase** | First picture → a slot naming what crosses → a second picture drawn *waiting*, because nothing in it can be known yet. |
+> | **The Lighthouse** | A fifth Learning Hub, seven pages, on both maps. |
+> | **The art** | `challenge-scenes.js` — seven scenes, neutral ink, subjects drawn uncountable. |
+>
+> **The fade is settled and is driven by `fadeLevel: "independent"`**, which marks the two unstaffed halts. It removes the Crossover Read and the Plan picture. The Three Reads, the estimate and the hint ladder all stay — see §4.
+>
+> ### The three rules a new session must know before touching any of it
+>
+> 1. **An island answer may not be 1, 2 or 5**, and no authored island copy may contain a number word. The station header says *"Two situations, joined"* on every island screen and *"five"* is everywhere the checklist is; the leak scan reads spelled-out answers and has already caught one. **Watch for "half"** — *"the first half hands the second half a number"* is the natural sentence and it is refused.
+> 2. **`SWEEP.report()` ends with a Challenge coverage line.** If it reads *examined: 0*, the check ran over nothing and the run is not a pass. `SWEEP.selfTestChallenge()` proves the transfer rule independently of content.
+> 3. **The checkers cannot see the journey panel or the end-of-trip screen.** Both defects found in the 2026-08-16 verification ride lived there. Ride a stop after changing anything in `app.js` or `scenery.js`.
 
 > **Read `PEDAGOGY.md` §2.2 and §3.7 before this file.** Challenge Mode does not introduce a sixth situation. It introduces the case the site has been promising since the home page — *"Harder problems join two lines together. They are still built out of these five."* This is where that sentence has to become true.
 
@@ -180,13 +202,15 @@ Seven so a second visit to the island differs, the same reason every problem car
 
 Coverage as built: compare 3, part–whole 3, ratio 2, change 1, equal groups 1. **Change and Equal Groups appear once each, and only on one side of a crossover** — which is the property §5.2 was written to guarantee and no longer holds at five.
 
-### ▶ DECIDED BY THE USER 2026-08-16: **option 2 — build 6 and 7, and pool two stops.**
+### ~~▶ DECIDED BY THE USER 2026-08-16: option 2 — build 6 and 7, and pool two stops.~~ **DONE.**
 
-The island stays five stops with the fade ladder as approved. Two of those stops draw from a pool of two problems, so a second visit differs by problem and not only by number set — which is what "seven built, five ridden" meant in the first place.
+Both problems are built and both pools are live. Coverage, measured across all seven: **change 3, compare 3, groups 2, ratio 3, part–whole 3 — every situation at least twice, and every one on both sides of a crossover**, which is the property this section was written to guarantee and which did not hold at five.
 
-**This is the next session's work. It was not started, on the user's instruction, with the 5-hour budget at 91% — a two-manifest build left half-finished is worse than one not begun.**
+**One thing in the brief below was wrong and the build corrected it.** It put `cl-carriage-clean` at Marsh Halt. Marsh Halt is an *unstaffed halt*, and the fade is driven by the **problem's** `fadeLevel`, not the stop — so staffed content pooled there would make that stop staffed half the time while the map draws it with a signpost and nobody on the platform. Both pool problems are staffed content, so both went to staffed platforms: `cl-carriage-clean` to Thorne Bridge (ratio in common), `cl-track-sleepers` to Fell Crossing (groups in common).
 
-#### The brief, so nothing has to be re-derived
+**The marker-colour question the brief raised had already been answered.** It asked whether a pooled stop's two colours should take the honest common one or drop to neutral. They were already neutral — that was the fix for the read1 leak, where showing the real pair told a student which two situations were waiting before the Crossover Read asked. So `pair` was **deleted** from the stop list rather than generalised: unused, and never right for a stop holding two pairings. If `reveal` is ever built it must take the pair from the problem actually ridden.
+
+#### The brief as written — kept for the reasoning
 
 **Which two problems.** From §5.2, the two unbuilt pairs are `cl-track-sleepers` (Equal Groups → Change) and `cl-carriage-clean` (Rate → Change, percent). Between them they carry **change ×2 and equal groups ×1**, which is exactly the coverage hole: as built, change and equal groups each appear once and on one side of a crossover only.
 
@@ -286,7 +310,21 @@ Also needs adding, and both are discovered-not-listed hazards:
 
 ---
 
-## 9. Where to start
+## 10. What is left — 2026-08-16
+
+The island is built. §9 below is the order it was built in and every step of it is done; these are what remain.
+
+| | |
+|---|---|
+| **No student has ridden it** | The largest gap and the one nothing here can close. The unstaffed halts are where the fade is most likely to be a wall rather than a challenge, and no amount of authoring settles that. |
+| **`onekind`'s reply across the 30 mainland problems** | Now that stacked problems are rideable, that reply describes something a student can go and do. An improvement, and 30 problems of copy. |
+| **The second Plan picture never goes live** | Once the Engine Room has produced the transfer there is a case for returning and finishing that table. Nothing supports it today. |
+| **Three scenes unreviewed by eye** | `signalbox`, `seasonrack` and `planters` were drawn once and not revisited. The other four were redrawn on the user's notes. |
+| **Every island `review` block is `provisional`** | Author and reviewer are the same person on all seven (`VERIFICATION.md` §16). |
+
+---
+
+## 9. Where it started
 
 > ### ▶ DONE 2026-08-16: §6.5, §6.2, and `cl-signal-delay` itself.
 > The leak rule, the `stacked` answer key and the first problem are built. **31 problems · 124 materialisations · 1236 screens · every count 0**, and the coverage line now reads *"CHALLENGE (paired) problems examined: 1 · screens 40 · of them second-half 4"*. The problem is `status: "draft"` — `Selector` pools published problems only, so it cannot be dealt into a Compare Line ride before the island exists.
