@@ -1256,7 +1256,10 @@
      map a student can read before arriving: what two situations are waiting. */
   var ISL_STOPS = [
     { id: 'cl-signal-delay',  at: [386, 168], kind: 'staffed', pair: ['compare', 'ratio'],
-      name: 'Thorne Bridge',  note: 'Compare, then a rate' },
+      /* `note` says what the stop IS, never which two situations it joins.
+         This read "Compare, then a rate" and was the same leak as the marker
+         colours in English — see `pairStop`. */
+      name: 'Thorne Bridge',  note: 'Open — the join is taught here' },
     { id: null, at: [788, 286], kind: 'staffed', pair: ['compare', 'partwhole'],
       name: 'Kelder Sands',   note: 'Track being laid' },
     { id: null, at: [648, 508], kind: 'staffed', pair: ['partwhole', 'groups'],
@@ -1269,27 +1272,49 @@
 
   var ISL_TERMINUS = [762, 210];
 
-  /* A stop belonging to TWO lines. The mainland's `stop()` takes one colour
-     because a mainland stop is on one line; this one is split down the middle,
-     which is the only honest way to draw a problem that is two situations.
+  /* A stop belonging to TWO situations. The mainland's `stop()` takes one
+     colour because a mainland stop is on one line; this one is split down the
+     middle, which is the only honest way to draw a problem that is two.
 
-     Colour is never the only signal. A staffed platform is a filled disc with a
-     ring; a halt is an open disc with a post and a crossbar — different SHAPES,
-     so the difference survives a greyscale print and a colour-blind reader,
-     and the button list below the map says which is which in words. */
-  function pairStop(x, y, c1, c2, staffed) {
+     THE TWO HALVES ARE NOT PAINTED IN THE PAIR'S LINE COLOURS, AND THAT IS A
+     CHANGE FROM THE PLAN. `CHALLENGE-MODE.md` §2 said each stop should carry
+     the two `--line-*` colours of its pair, so "the map states the pedagogy".
+     Building the zoomed station view is what showed what that costs: the
+     journey panel sits at the top of EVERY phase, Platform Check included, so
+     a student who has learned that blue is Compare and orange is Ratio reads
+     both halves of the answer off a marker, with no words involved and three
+     screens before they are asked. The stop's caption said it outright too —
+     "Compare, then a rate" — which is the same leak in English.
+
+     This is the site's oldest rule and it outranks the visual idea: no answer
+     may reach a student before it is asked. What survives is the part that
+     leaks nothing, because it is true of EVERY stop on the island: the disc is
+     still split, so the map still says "each of these is two situations
+     joined". It just no longer says which two.
+
+     `reveal` paints the real pair colours, and nothing passes it yet. It is
+     the hook for showing a pair AFTER it has been ridden — the "you can see
+     which pairs you rode" half of the original idea, which was always the
+     defensible half.
+
+     Colour is never the only signal either way. A staffed platform is a filled
+     disc; a halt is an open disc with a post and crossbar — different SHAPES,
+     so the difference survives greyscale and a screen reader, and the button
+     list below the map says which is which in words. */
+  function pairStop(x, y, staffed, reveal, c1, c2) {
     var r = staffed ? 11 : 9;
+    var a = reveal ? 'var(--line-' + c1 + ')' : '#6B5138';
+    var b = reveal ? 'var(--line-' + c2 + ')' : '#8F7F63';
     var s = '<circle cx="' + x + '" cy="' + y + '" r="' + (r + 2.5) + '" fill="#FDF8F0" stroke="#2C2214" stroke-width="2.4"/>';
     if (staffed) {
-      // Two half-discs, split vertically: the first half of the problem on the
-      // left, the second on the right, which is the order they are read in.
-      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + ' Z" fill="var(--line-' + c1 + ')"/>';
-      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + ' Z" fill="var(--line-' + c2 + ')"/>';
+      // Split vertically: the first situation on the left, the second on the
+      // right, which is the order they are read in.
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + ' Z" fill="' + a + '"/>';
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + ' Z" fill="' + b + '"/>';
       s += '<line x1="' + x + '" y1="' + (y - r) + '" x2="' + x + '" y2="' + (y + r) + '" stroke="#FDF8F0" stroke-width="1.6"/>';
     } else {
-      // An unstaffed halt: the two colours as an open ring, and a signpost.
-      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + '" fill="none" stroke="var(--line-' + c1 + ')" stroke-width="3.4"/>';
-      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + '" fill="none" stroke="var(--line-' + c2 + ')" stroke-width="3.4"/>';
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 0 ' + x + ' ' + (y + r) + '" fill="none" stroke="' + a + '" stroke-width="3.4"/>';
+      s += '<path d="M ' + x + ' ' + (y - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + r) + '" fill="none" stroke="' + b + '" stroke-width="3.4"/>';
       s += '<line x1="' + x + '" y1="' + (y - r - 3) + '" x2="' + x + '" y2="' + (y - r - 15) + '" stroke="#5A3E28" stroke-width="2.2"/>';
       s += '<line x1="' + (x - 7) + '" y1="' + (y - r - 15) + '" x2="' + (x + 7) + '" y2="' + (y - r - 15) + '" stroke="#5A3E28" stroke-width="2.6" stroke-linecap="round"/>';
     }
@@ -1321,8 +1346,17 @@
    *                         a map that hardcodes what is built is a map that
    *                         lies the day something opens.
    */
-  function islandMap(counts) {
-    counts = counts || {};
+  /* THE ISLAND'S WORLD, EXTRACTED — same reason `mapBody` is extracted from
+     `railMap`: the zoomed view has to reuse EXACTLY this geometry and change
+     only the viewBox, or the coastline, rivers, bridges and forests around a
+     stop are re-derived by a second renderer and free to drift from the first.
+
+     `opts.trainAt` is the fraction round the loop the consist stands at, so the
+     zoomed view can bring the train to the stop being ridden without a second
+     copy of the train code. `opts.reveal` is the answer-leak switch — see
+     `pairStop`. */
+  function islandBody(counts, opts) {
+    counts = counts || {}; opts = opts || {};
     var W = ISL_W, H = ISL_H, s = '';
     var land = closedSpline(ISLAND, 9);
     var lake = closedSpline(ISL_LAKE, 8);
@@ -1445,7 +1479,7 @@
        them all at opacity 0 and put the chimney out, which is why the still
        pair exists. */
     var cum = arcTable(circuit.pts);
-    var dTrain = cum[cum.length - 1] * 0.215;
+    var dTrain = cum[cum.length - 1] * (typeof opts.trainAt === 'number' ? opts.trainAt : 0.215);
     var engineAt = atDist(circuit.pts, cum, dTrain);
     var smoke = '';
     for (var pf = 0; pf < 6; pf++) {
@@ -1478,11 +1512,14 @@
       return Math.round(worst);
     })();
 
-    /* --- stops --- */
+    /* --- stops ---
+       `st.note` is what the stop is FOR, never which two situations it joins.
+       See the note on `pairStop`: naming the pair here answers the Platform
+       Check before the student has read the story. */
     ISL_STOPS.forEach(function (st) {
       var open = !!counts[st.id];
       s += '<g' + (open ? ' data-stop="' + st.id + '" class="map-hit"' : ' opacity=".72"') + '>' +
-           pairStop(st.at[0], st.at[1], st.pair[0], st.pair[1], st.kind === 'staffed') +
+           pairStop(st.at[0], st.at[1], st.kind === 'staffed', !!opts.reveal && open) +
            '</g>';
       var below = st.at[1] > 400;
       s += '<text x="' + st.at[0] + '" y="' + (st.at[1] + (below ? 34 : -26)) + '" text-anchor="middle" ' +
@@ -1497,7 +1534,26 @@
     s += '<text x="' + ISL_TERMINUS[0] + '" y="' + (ISL_TERMINUS[1] + 20) + '" text-anchor="middle" font-family="' + BODY +
          '" font-size="10" font-weight="700" letter-spacing="1.4" fill="#5A3E28">LIGHTHOUSE HUB</text>';
 
-    /* --- furniture, in the mainland's own positions-relative style --- */
+    /* FURNITURE IS NOT DRAWN HERE, and the mainland's split is the reason.
+       `mapBody` holds the world and `railMap` adds the title, compass and key
+       on top, precisely so the zoomed leg view inherits the world without the
+       chrome. The island's first draft kept its title and compass inside this
+       function; they happened to fall outside the frame for the one stop I
+       tested, which is luck rather than design — a stop near the top-left
+       would have put "Crossover Island" across the middle of a station's
+       journey panel. Moved to `islandMap`, where it belongs. */
+
+    islandBody.circuit = circuit;
+    islandBody.cum = cum;
+    islandBody.bridges = spans.length;
+    return s;
+  }
+
+  function islandMap(counts) {
+    counts = counts || {};
+    var s = islandBody(counts, {});
+
+    /* --- furniture, on top of the world and only on the wide map --- */
     s += compassRose(946, 610, 30);
     s += '<text x="52" y="60" font-family="' + DISPLAY + '" font-size="21" letter-spacing="1.5" fill="#2C2214" opacity=".8">' +
          'Crossover Island</text>';
@@ -1521,17 +1577,98 @@
     fig.className = 'map-figure';
     fig.style.margin = '0';
     fig.innerHTML =
-      '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="' + NS + '" role="img" aria-label="' +
+      '<svg viewBox="0 0 ' + ISL_W + ' ' + ISL_H + '" xmlns="' + NS + '" role="img" aria-label="' +
       'Illustrated map of Crossover Island: a single island with a coast, mountains, forest, three rivers and a lake, ' +
-      'ringed by one irregular circuit of railway that crosses the rivers on ' + spans.length + ' bridges. ' +
+      'ringed by one irregular circuit of railway that crosses the rivers on ' + islandBody.bridges + ' bridges. ' +
       'A steam train of an engine and three carriages stands on the circuit along the north of the island. ' +
-      'Five stops sit round the loop and each one is marked in two colours, for the two situations that ' +
-      'problem joins together. Three are staffed platforms, drawn as filled discs, where the crossover is taught; ' +
-      'two are unstaffed halts, drawn as open discs with a signpost, where you work it out yourself. ' +
+      /* No longer "marked in two colours for the two situations": the marker
+         does not say which two any more, and a description claiming it does
+         would be the leak surviving in the one place nobody looks at it. */
+      'Five stops sit round the loop, each drawn as a disc split down the middle because every problem here ' +
+      'joins two situations. Three are staffed platforms, drawn filled, where the join is taught; ' +
+      'two are unstaffed halts, drawn open with a signpost, where you work it out yourself. ' +
       'A lighthouse on the north-east headland is the hub. ' + openSay +
       ' The same stops are listed as buttons below.">' +
       s + '</svg>';
     return fig;
+  }
+
+  /* ---------- The island leg view: a zoom on the stop you are riding ----------
+
+     Not a second island. The SAME world with a tighter viewBox, exactly as
+     `legMap` is the same mainland — so the coast, rivers, bridges and forest
+     around this stop are the ones already drawn and verified, not a fresh set
+     re-derived by a second renderer.
+
+     WHY THE ISLAND NEEDED ITS OWN. Until now a paired problem's journey panel
+     called `legMap` with `p.line`, so a student standing on Crossover Island
+     was shown a zoomed fragment of the MAINLAND Compare Line. Wrong place, and
+     the fragment's own geometry was the residual tell recorded in stations.js:
+     the shape of that curve is the first half of the answer to anyone who has
+     ridden the line before.
+
+     The train is brought to the stop rather than left where the wide map puts
+     it, because the panel's job is "where am I" — and `progress` walks it in
+     as the student moves through the phases, which is what `legMap` does with
+     its own leg. */
+  function islandLeg(stopId, progress, cars) {
+    /* MATCH ON A REAL ID, NEVER ON A NULL ONE. Four of the five stops carry
+       `id: null` until their problem is written, so `st.id === stopId` matched
+       every one of them for any unbuilt stop and the last match won — four
+       different stops framing the same corner of the island, one of them not
+       even inside its own frame. That could not reach a student, because an
+       unbuilt stop has no button to press; it reached ME, as four identical
+       viewBoxes in a test I nearly read as a framing bug.
+
+       Falling back to stop 0 on no match would put the panel somewhere
+       plausible and wrong, which is the failure that hides. A caller asking
+       for a stop this map does not have is a programming error, so it says so
+       and draws nothing. */
+    var here = null;
+    ISL_STOPS.forEach(function (st) { if (st.id && st.id === stopId) here = st; });
+    if (!here) return '';
+
+    /* Draw the world once to get the circuit and its arc table, then find how
+       far round the loop this stop sits. Measured off the geometry rather than
+       authored beside it: a stop that moves takes its own frame with it. */
+    islandBody({}, {});
+    var pts = islandBody.circuit.pts, cum = islandBody.cum;
+    var total = cum[cum.length - 1];
+    var dStop = 0, best = 1e9;
+    for (var d = 0; d <= total; d += 3) {
+      var q = atDist(pts, cum, d);
+      var dx = q.x - here.at[0], dy = q.y - here.at[1], m = dx * dx + dy * dy;
+      if (m < best) { best = m; dStop = d; }
+    }
+
+    /* The train approaches the platform and stops short of it. Arriving ON the
+       marker hides the thing the panel exists to point at — which is exactly
+       how the wide map's first train ended up parked on Fell Crossing. */
+    var lead = 34 + (1 - Math.max(0, Math.min(1, progress))) * 78;
+    var dEngine = dStop - lead;
+
+    var s = islandBody({}, { trainAt: ((dEngine % total) + total) % total / total });
+    // Ring the stop being ridden, the way legMap rings its destination.
+    s += '<circle cx="' + here.at[0] + '" cy="' + here.at[1] + '" r="17" fill="none" ' +
+         'stroke="var(--ink)" stroke-width="3.5" opacity=".85"/>';
+
+    var tail = atDist(pts, cum, consistOnPath.tailDist);
+    var xs = [here.at[0], tail.x, atDist(pts, cum, dEngine).x];
+    var ys = [here.at[1], tail.y, atDist(pts, cum, dEngine).y];
+    var padX = 86, padY = 68;
+    var x1 = Math.min.apply(null, xs) - padX, x2 = Math.max.apply(null, xs) + padX;
+    var y1 = Math.min.apply(null, ys) - padY, y2 = Math.max.apply(null, ys) + padY;
+    var vw = x2 - x1, vh = y2 - y1;
+    // The same letterbox the mainland leg uses, so the two panels are one shape.
+    if (vw / vh < 2.6) { var need = vh * 2.6; x1 -= (need - vw) / 2; vw = need; }
+    else { var needH = vw / 2.6; y1 -= (needH - vh) / 2; vh = needH; }
+    // And kept inside the world, or the frame shows sea where the island ends.
+    vw = Math.min(vw, ISL_W); vh = Math.min(vh, ISL_H);
+    x1 = Math.max(0, Math.min(ISL_W - vw, x1));
+    y1 = Math.max(0, Math.min(ISL_H - vh, y1));
+
+    return '<svg class="leg-svg" viewBox="' + x1.toFixed(0) + ' ' + y1.toFixed(0) + ' ' +
+           vw.toFixed(0) + ' ' + vh.toFixed(0) + '" xmlns="' + NS + '" aria-hidden="true">' + s + '</svg>';
   }
 
   global.Scenery = {
@@ -1539,6 +1676,7 @@
     ambient: ambient,
     railMap: railMap,
     islandMap: islandMap,
+    islandLeg: islandLeg,
     /* Exported so the view can build its button list from the SAME array the
        map draws. Two copies of the stop list is how the map and the buttons
        below it come to disagree about what exists. */

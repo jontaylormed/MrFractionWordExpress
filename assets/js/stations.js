@@ -498,16 +498,20 @@
       leg =
         '<div class="journey">' +
           '<div class="journey-map">' +
-            /* The tint is overridden on a paired ride for the same reason the
-               header text is: a student who has learned that blue is Compare
-               reads half the Platform Check's answer off the colour of a map
-               fragment, with no words involved. The GEOMETRY still belongs to
-               `p.line` and that residual tell is real but weak — recognising a
-               zoomed fragment of one line's curve — and is stated here rather
-               than claimed away, exactly as it is for percent. */
-            Scenery.legMap(Selector.availableLines(), this.p.line, this.legIndex,
-                           this.legProgress || 0, this.legIndex,
-                           paired ? 'var(--ink)' : onPercentRoute ? 'var(--line-percent)' : null) +
+            /* A PAIRED RIDE IS ON A DIFFERENT ISLAND, SO IT GETS A DIFFERENT
+               MAP. This used to hand `p.line` to `legMap` and tint it neutral,
+               which put a student standing on Crossover Island in front of a
+               zoomed fragment of the MAINLAND Compare Line. The tint hid the
+               colour; it could not hide the coastline, and the note here
+               admitted as much — "the residual tell is the geometry, and it is
+               real but weak". On the island there is no reason to carry it at
+               all: `islandLeg` frames the actual stop, so the panel shows where
+               the student actually is and the tell goes with it. */
+            (paired
+              ? Scenery.islandLeg(this.p.id, this.legProgress || 0, this.legIndex)
+              : Scenery.legMap(Selector.availableLines(), this.p.line, this.legIndex,
+                               this.legProgress || 0, this.legIndex,
+                               onPercentRoute ? 'var(--line-percent)' : null)) +
           '</div>' +
           '<div class="journey-bar">' +
             '<span class="eyebrow">Stop ' + (this.legIndex + 1) + ' of ' + this.legTotal + '</span>' +
