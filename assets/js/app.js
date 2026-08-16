@@ -197,7 +197,17 @@
        Counted, never claimed. `MF.pairedProblems()` is the same source the
        island map draws from, so the card cannot advertise stops the island
        does not have. With one problem built it says so. */
-    var isle = MF.pairedProblems().length, isleTotal = Scenery.islandStops().length;
+    /* COUNT OPEN STOPS, NOT PAIRED PROBLEMS. This read
+       `MF.pairedProblems().length` against the number of stops, which was the
+       same number until pool content existed — and then problems 6 and 7 were
+       written with no stop pointing at them and the card said "7 of 5 stops
+       open". A count of one thing measured against a total of another is only
+       ever right by coincidence. A stop is open when it names a problem that
+       is published, which is the same test the island map itself uses. */
+    var open = {};
+    MF.pairedProblems().forEach(function (p) { open[p.id] = true; });
+    var isleTotal = Scenery.islandStops().length;
+    var isle = Scenery.islandStops().filter(function (s) { return !!open[s.id]; }).length;
     special += '<li><button class="line-card line-card-challenge" type="button" data-island="1" ' +
       'aria-label="The Challenge Line, on Crossover Island. ' +
       'Every stop joins two of the five situations together. ' +
