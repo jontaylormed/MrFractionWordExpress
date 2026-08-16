@@ -18,8 +18,21 @@
 
 [CmdletBinding()]
 param(
-    [string]$OutFile = (Join-Path $PSScriptRoot '..\docs\contrast-report.md')
+    [string]$OutFile
 )
+
+# $PSScriptRoot IS EMPTY UNDER SOME INVOCATION PATHS — notably `-File` with a
+# relative path, or when called from a non-PowerShell shell. It was used
+# directly in the parameter default, so `Join-Path` got an empty Path and the
+# script died before doing anything, with an error naming Join-Path rather than
+# the real cause. `serve.ps1` already carries this exact guard and a comment
+# explaining it; this file predates that fix and never got it.
+if (-not $OutFile) {
+    $here = $PSScriptRoot
+    if (-not $here) { $here = Split-Path -Parent $MyInvocation.MyCommand.Definition }
+    if (-not $here) { $here = (Get-Location).Path }
+    $OutFile = Join-Path $here '..\docs\contrast-report.md'
+}
 
 # ---------- WCAG math ----------
 
@@ -70,13 +83,55 @@ $Tokens = [ordered]@{
     'red-deep'       = '#A32E22'
     'border'         = '#C8B89A'   # DECORATIVE edges only - see note in report
     'border-strong'  = '#8F7F63'   # edges of interactive controls (WCAG 1.4.11)
-    # lines
-    'line-change'    = '#45742B'
-    'line-compare'   = '#2A5FA0'
-    'line-groups'    = '#A85413'
-    'line-ratio'     = '#2B7166'
-    'line-partwhole' = '#A32E22'
+    # lines — see the note below: these are DISCOVERED from app.css, not listed
 }
+
+# ---------- the line colours, READ FROM THE STYLESHEET ----------
+#
+# TWO DEFECTS IN ONE, BOTH THE PROJECT'S SIGNATURE KIND, AND BOTH FOUND BY THE
+# TOOL REPORTING "0 failing" ON A PALETTE IT HAD NEVER SEEN.
+#
+# 1. The five line colours were hardcoded here as hex COPIES of what app.css
+#    declares. An authored duplicate of a derivable fact is drift with a delay
+#    on it (VERIFICATION.md §33): change a colour in the CSS and this script
+#    goes on cheerfully checking the old one.
+# 2. There were exactly five of them, listed by hand. `--line-percent` was added
+#    on 2026-08-10 and this script could not see it — while printing "39 pairs
+#    checked, 0 failing", which reads as complete coverage rather than as a
+#    colour that was never examined. "0 faults" and "0 subjects" print
+#    identically; that is now five files and two checkers on this project.
+#
+# Both go away by asking the stylesheet. Every `--line-*: #hex;` in `:root`
+# becomes a swatch, so a sixth line is covered the day it is declared and
+# nobody has to remember this file exists.
+# NO EM-DASHES INSIDE DOUBLE-QUOTED STRINGS IN THIS FILE. It is UTF-8 with no
+# BOM, and PowerShell 5.1 decodes a BOM-less script as ANSI: the em-dash's
+# bytes E2 80 94 become three CP1252 characters, the last of which is U+201D,
+# a curly closing quote — which PowerShell honours as a string delimiter. The
+# string ends early, the rest of the line becomes garbage, and the parser
+# reports "Missing closing '}'" pointing at a brace several lines away that is
+# perfectly balanced. Comments and single-quoted strings are unaffected, which
+# is why the rest of this file has used em-dashes for months without trouble.
+# Plain hyphens in double-quoted output.
+$CssPath = Join-Path (Split-Path -Parent $OutFile) '..\assets\css\app.css'
+if (-not (Test-Path -LiteralPath $CssPath)) {
+    Write-Host "Cannot find app.css at $CssPath - the line colours cannot be checked." -ForegroundColor Red
+    exit 1
+}
+$cssText = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $CssPath))
+$lineTokens = @()
+foreach ($m in [regex]::Matches($cssText, '--(?<n>line-[a-z]+)\s*:\s*(?<v>#[0-9A-Fa-f]{6})\s*;')) {
+    $n = $m.Groups['n'].Value
+    # NB the palette variable is $Tokens, not $Palette. Writing to the wrong
+    # name here would have added the colours to nothing and left every
+    # generated pair looking up an empty hex.
+    if (-not $Tokens.Contains($n)) { $Tokens[$n] = $m.Groups['v'].Value; $lineTokens += $n }
+}
+if ($lineTokens.Count -eq 0) {
+    Write-Host "Read app.css but found no --line-* colours. Refusing to report a clean run on nothing." -ForegroundColor Red
+    exit 1
+}
+Write-Host ("Line colours discovered in app.css: {0}" -f ($lineTokens -join ', ')) -ForegroundColor Cyan
 
 # 'text' -> 4.5:1 | 'large' -> 3.0:1 (>=24px or >=19px bold) | 'ui' -> 3.0:1
 $Pairs = @(
@@ -107,22 +162,43 @@ $Pairs = @(
     @{ Fg='red-deep';       Bg='cream';       Need='text';  Use='Error text' }
     @{ Fg='red-deep';       Bg='cream-light'; Need='text';  Use='Error text on card' }
 
-    @{ Fg='line-change';    Bg='cream';       Need='text';  Use='Change Line label' }
-    @{ Fg='line-compare';   Bg='cream';       Need='text';  Use='Compare Line label' }
-    @{ Fg='line-groups';    Bg='cream';       Need='text';  Use='Equal Groups label' }
-    @{ Fg='line-ratio';     Bg='cream';       Need='text';  Use='Ratio & Rate label' }
-    @{ Fg='line-partwhole'; Bg='cream';       Need='text';  Use='Part-Whole label' }
-    @{ Fg='line-change';    Bg='cream-light'; Need='ui';    Use='Change Line marker on card' }
-    @{ Fg='line-compare';   Bg='cream-light'; Need='ui';    Use='Compare Line marker on card' }
-    @{ Fg='line-groups';    Bg='cream-light'; Need='ui';    Use='Equal Groups marker on card' }
-    @{ Fg='line-ratio';     Bg='cream-light'; Need='ui';    Use='Ratio & Rate marker on card' }
-    @{ Fg='line-partwhole'; Bg='cream-light'; Need='ui';    Use='Part-Whole marker on card' }
-    @{ Fg='cream-light';    Bg='line-change';    Need='text'; Use='Text on Change fill' }
-    @{ Fg='cream-light';    Bg='line-compare';   Need='text'; Use='Text on Compare fill' }
-    @{ Fg='cream-light';    Bg='line-groups';    Need='text'; Use='Text on Equal Groups fill' }
-    @{ Fg='cream-light';    Bg='line-ratio';     Need='text'; Use='Text on Ratio fill' }
-    @{ Fg='cream-light';    Bg='line-partwhole'; Need='text'; Use='Text on Part-Whole fill' }
+    # the per-line pairs are appended below, one set per colour discovered
 )
+
+# THREE PAIRS PER LINE COLOUR, GENERATED RATHER THAN TYPED. The same fifteen
+# rows were written out by hand for five lines; a sixth line meant remembering
+# to add three more, and nobody did when `--line-percent` arrived. Generated
+# from whatever the stylesheet declares, the coverage cannot fall behind the
+# palette.
+#
+# `cream-mid` is in here and was not in the hand-written set: the Platform
+# Check's "you are here" row puts a line-coloured label on that background.
+#
+# IT IS 'large', NOT 'text', AND GETTING THAT WRONG INVENTED THREE FAILURES.
+# The first version of this pair asked for 4.5:1, and change/groups/ratio came
+# back at 4.26/4.09/4.41 - three AA failures that were about to be written up
+# as real. Measured on the rendered element instead: that label is 19.7px at
+# font-weight 700, which is WCAG large text (>=18.66px bold), so the threshold
+# is 3.0:1 and all six clear it comfortably.
+#
+# The lesson is the project's own and it nearly went the wrong way: a threshold
+# is a claim about how something RENDERS, not about what token it uses. Check
+# the computed size and weight before choosing one.
+foreach ($t in $lineTokens) {
+    # THE EXTRA PARENTHESES ARE LOAD-BEARING. Written as
+    #   ToTitleCase(($t -replace '^line-','') -replace '-',' ')
+    # PowerShell reads the comma inside the method call as an ARGUMENT
+    # separator, not as part of the -replace operator, and calls ToTitleCase
+    # with two arguments. There is no such overload, it throws, and $label ends
+    # up empty - which showed as rows reading " label on the you-are-here row"
+    # with no colour named. Wrap the whole expression so it is one argument.
+    $bare  = (($t -replace '^line-', '') -replace '-', ' ')
+    $label = (Get-Culture).TextInfo.ToTitleCase($bare)
+    $Pairs += @{ Fg=$t;           Bg='cream';       Need='text'; Use="$label label" }
+    $Pairs += @{ Fg=$t;           Bg='cream-light'; Need='ui';   Use="$label marker on card" }
+    $Pairs += @{ Fg=$t;           Bg='cream-mid';   Need='large'; Use="$label label on the you-are-here row (19.7px bold)" }
+    $Pairs += @{ Fg='cream-light'; Bg=$t;           Need='text'; Use="Text on $label fill" }
+}
 
 $Thresholds = @{ text = 4.5; large = 3.0; ui = 3.0 }
 

@@ -1509,6 +1509,59 @@ Only the third part — three line colours missing AA as normal text on `--cream
 
 ---
 
+## Cycle 27 — 2026-08-10 — Shipped, and the checkers checked
+
+The site went live on GitHub Pages this cycle, and most of what was learned came from that rather than from the content.
+
+### The home page
+
+**The loader borrows the sister site's welcome** — a small tracked-out "Welcome to" over a display-face title with one accent word, then the moving parts underneath. The title lands at 41.6px against the Factory's 42px, fluid rather than fixed because this title is three words longer. The dots stay the five signal lamps, one per line: the Factory's are plain circles, and a row of five means something here.
+
+**The line cards went from five-across to three-and-two, centred — and that was a correction, not a preference.** Five across cost 218px cards, narrower than the ticket each one carries, so the ticket and the description had both been hidden to make them fit. The blue ticket survived only on mobile. **The card had been made simpler to fit a layout instead of the layout being chosen to fit the card.** At three across they are 299px, the width the specials already use, and nothing is hidden at any width.
+
+Both groups now share one grid — same six tracks, same 920px column, same breakpoint — so their card edges line up down the page. The centring selector is `:nth-child(4):nth-last-child(2)`, which matches only in a five-item list; a sixth line leaves a clean 3+3 rather than a mis-centred row.
+
+### Three checkers were wrong, and two of them said everything was fine
+
+This is the cycle's real content.
+
+- **`tools/check-contrast.ps1` reported "39 pairs checked, 0 failing" against a palette it had never seen.** It hardcoded the five line colours as hex COPIES of app.css (§33 drift with a delay on it) and listed its pairs by hand, so `--line-percent` — added earlier the same day — was invisible. It now reads the colours out of the stylesheet and generates the per-line pairs, and **refuses to report a clean run if it finds none**. Coverage went 39 → 48 pairs, six colours discovered instead of five.
+- **It also could not START.** `$PSScriptRoot` is empty under `-File` invocation, so its `$OutFile` default threw in the parameter block and the script died naming `Join-Path` rather than the cause. `serve.ps1` carries a guard for exactly this with a comment explaining it; this file predates the fix and never got it.
+- **`tools/serve.ps1` died on any HEAD request.** It set `Content-Length` then wrote a body anyway, which throws, and the write sat outside any try/catch so the exception ended the whole session. A link check killed it twice, and the symptom was ten art files reporting FAILED — indistinguishable from the case-sensitivity disaster the check was looking for. HEAD now sends headers only, and one bad request can no longer end the session.
+
+### And the checks I ran on them were wrong too
+
+Four instrument errors in one cycle, all of the same shape: **the check and the subject were not the same object.**
+
+- A contrast probe measured every colour against `rgba(0,0,0,0)` because I renamed the probe's `id` — and the `id` is the selector that sets the background.
+- A live-deployment check reported three changes as deployed that were not. Two matched pre-existing text elsewhere in the file; the third used PowerShell `-match`, **which is case-insensitive by default, to test a capitalisation change.** The check could not have failed.
+- A README diff reported the first line as corrupt (`ðŸš‚`). That was `Get-Content` reading a UTF-8 file in the ANSI codepage.
+- A PowerShell link checker reported all 67 paths broken on a run where they were fine: `+` bound before `-join`, mangling every URL.
+
+**The rule that would have caught all four:** say out loud what the instrument is looking at, and probe it against a known-good case before trusting a result. Two of these now print their probe.
+
+### A PowerShell hazard worth knowing about, because it will recur
+
+Adding a comment with an em-dash inside a **double-quoted** string broke `check-contrast.ps1` with `Missing closing '}'` pointing at a brace several lines away that was perfectly balanced.
+
+These `.ps1` files are UTF-8 **with no BOM**, and PowerShell 5.1 decodes a BOM-less script as ANSI. The em-dash's bytes `E2 80 94` become three CP1252 characters, the last of which is **U+201D, a curly closing quote — which PowerShell honours as a string delimiter.** The string ends early and the rest of the line becomes garbage. Comments and single-quoted strings are unaffected, which is why every other em-dash in these files has been harmless for months. **Plain hyphens inside double-quoted strings in `.ps1`.**
+
+### And the fifth instrument error nearly went into this log as a finding
+
+With the pairs generated rather than listed, a background the hand-written set never tested came into scope: the Platform Check's "you are here" row, which puts a line-coloured label on `--cream-mid`. It came back with **three AA failures** — Change 4.26:1, Equal Groups 4.09:1, Ratio & Rate 4.41:1 against 4.5:1 — and they were written into this log and into `HANDOFF` as real defects before being checked.
+
+**They are not failures.** `ROADMAP` §5b already recorded that this surface was patched by bolding the label, and the claim held: measured on the rendered element, it is **19.7px at font-weight 700**, which is WCAG large text, so the threshold is **3:1** and all six colours clear it. The generated pair asked for `text` (4.5) when the surface is `large` (3.0).
+
+Both entries were corrected. **48 pairs, 0 failing.**
+
+The lesson, and it is the sharpest one here: **a contrast threshold is a claim about how something RENDERS, not about which token it uses.** Read the computed size and weight before choosing one. And the near-miss is its own warning — the doc that would have caught this said so plainly, and I wrote the finding up without checking it against the doc first.
+
+### Verification
+
+**30 problems · 120 materialisations · 1196 screens** — 0 validate errors, 0 render errors, 0 unfilled tokens, 0 misconception collisions, 0 numbers on a numberless screen, 0 scene geometry faults, 0 new leaks. Home page checked at 1280/1000/999/900/375: shape holds, last two stay centred, all five tickets visible, nothing overflows, no horizontal scroll. Live deployment driven end to end: every line and both specials route, the Challenge card is inert, all four hubs open.
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.

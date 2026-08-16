@@ -45,9 +45,27 @@
 
 **The first upload shipped broken**, and the failure is worth knowing because it will recur with any new folder: `index.html` and the ten images were uploaded but **`assets/` and `content/` were not**, and the images landed at the repository root rather than in `assets/art/`. GitHub's drag-and-drop uploader flattens silently when files are selected instead of a directory being dragged. Every local check had passed — they verified the local folder was internally consistent, which was true and useless.
 
-**This folder IS a git repository now — initialised 2026-08-10**, branch `main`, one commit, 105 files tracked. Identity is set **locally on this repo only**; nothing global was touched. `.gitignore` excludes the duplicated `Mr Fraction Word Express Art/` (an exact copy of `assets/art/`, verified name-for-name and byte-length), and `.gitattributes` normalises line endings so a Windows working copy and a Linux Pages deploy stop disagreeing about every file.
+**This folder IS a git repository now — initialised 2026-08-10**, branch `main`, **four commits**, 105 files tracked. Identity is set **locally on this repo only**; nothing global was touched. `.gitignore` excludes the duplicated `Mr Fraction Word Express Art/` (an exact copy of `assets/art/`, verified name-for-name and byte-length), and `.gitattributes` normalises line endings so a Windows working copy and a Linux Pages deploy stop disagreeing about every file.
 
-**No remote is configured and nothing has been pushed.** The live site was uploaded by hand and its history is unrelated to this one, so a first push needs `--force` and is the user's call, not an agent's:
+### ⚠ LOCAL AND LIVE HAVE DIVERGED, AND THAT IS THE FIRST THING TO KNOW
+
+The live site is uploaded **by hand**. It is working, but it is behind this working copy. Verified against the deployed files on 2026-08-10:
+
+| | live | local |
+|---|---|---|
+| `LICENSE` | ✅ present | ✅ |
+| `.nojekyll`, `.gitignore`, `.gitattributes` | ❌ absent | ✅ |
+| Loader "Welcome to" | ❌ | ✅ |
+| Line cards three-and-two with tickets | ❌ still five-across | ✅ |
+| Heading "The Five Situations" | ❌ still lower case | ✅ |
+| Contrast floor on the loader status | ❌ | ✅ |
+| `docs/`, `tools/`, `.claude/` | ❌ absent by choice | ✅ |
+
+**Nothing is broken live** — it is simply an older build. Before claiming any change is "shipped", check the deployed file, not this folder (§34).
+
+**And check it case-sensitively.** A check that reported three of those as already-deployed was wrong on all three: two matched pre-existing text elsewhere in the file, and one used PowerShell `-match` — **case-insensitive by default** — to test a capitalisation change. It could not have failed.
+
+**No remote is configured and nothing has been pushed.** The live site's history is unrelated to this one, so a first push needs `--force` and is the user's call, not an agent's. Note that it would also publish `docs/`, `tools/` and `.claude/`, which the user has deliberately kept off the public repo:
 
 ```
 git remote add origin https://github.com/jtaylor-cloud/MrFractionWordProblemExpress.git
@@ -66,9 +84,20 @@ Asked on 2026-08-10 whether the site should be a single HTML file like the siste
 
 1. **Registries must be DISCOVERED, not listed.** On 2026-08-08/09 a hardcoded array of three scene libraries silently exempted a fourth in **three separate files**, one of them `tools/sweep.js`'s own geometry check — so every art in `groups-scenes.js` shipped unchecked while the sweep printed "0 faults". `0 faults` and `0 subjects` print identically. After adding a library, model or kind, **grep for the existing ones by name**; every hit is a list that does not know about the new one.
 
-   **Two more instances found 2026-08-10, both in `data.js`, both naming the same six fields.** `materialize()` filled tokens in a listed set of top-level fields, and `validate()`'s unfilled-token scan read the *same* list — so a field absent from both was unfilled **and** unchecked, with the checker sharing the exact blind spot it existed to catch. That is what `signalFailure` was: authored on nine problems, top-level on `pw-quilt-colors`, and its `{{trapFrac}}` would have reached a student as four literal braces. Both now derive from one shared `UNFILLED_BY_DESIGN` constant (`['problem','numberSets']`), so they cannot drift and a new field is covered without anyone remembering. **The count for this defect class is now five files.**
+   **Two more instances found 2026-08-10, both in `data.js`, both naming the same six fields.** `materialize()` filled tokens in a listed set of top-level fields, and `validate()`'s unfilled-token scan read the *same* list — so a field absent from both was unfilled **and** unchecked, with the checker sharing the exact blind spot it existed to catch. That is what `signalFailure` was: authored on nine problems, top-level on `pw-quilt-colors`, and its `{{trapFrac}}` would have reached a student as four literal braces. Both now derive from one shared `UNFILLED_BY_DESIGN` constant (`['problem','numberSets']`), so they cannot drift and a new field is covered without anyone remembering.
+
+   **Two more on 2026-08-10, and the count is now SEVEN FILES, THREE OF THEM CHECKERS.** `tools/preview-scenes.html` discovered scene libraries but hardcoded which *scripts to load* — discovery cannot find what was never loaded, so it could not see the fifth library or four new problems. And `tools/check-contrast.ps1` reported **"39 pairs checked, 0 failing"** against a palette that did not contain `--line-percent`, holding the five line colours as hex copies of `app.css`. Both now read from the source of truth, and both **refuse to report a clean run on an empty subject set** — see `VERIFICATION.md` §36, written for this.
 2. **`model.js` has THREE dispatches** — `html()`, `wire()` and `applies()`. A model missing from `applies()` renders no picture and raises nothing.
 3. **The picture may never draw as many groups as the answer**, when the count is the answer. `groups-model.js` branches on which quantity is missing for exactly this reason, and `compare-model.js` has the same stopping rule at the gap.
+
+4. **`.ps1` files here are UTF-8 with no BOM, so an em-dash inside a double-quoted string becomes a curly quote and ends the string.** PowerShell 5.1 decodes a BOM-less script as ANSI; `E2 80 94` lands as CP1252 characters ending in U+201D, which PowerShell treats as a delimiter. The symptom is `Missing closing '}'` pointing at balanced punctuation. **Plain hyphens in double-quoted strings**; comments and single-quoted strings are fine. `VERIFICATION.md` §37.
+
+### 0.2 Open, and waiting on the user
+
+- **Contrast is clean — 48 pairs, 0 failing.** A first run of the rebuilt tool reported three AA failures on the Platform Check's "you are here" row and they were briefly written up here as real. They were not: that label renders **19.7px bold**, which is WCAG large text at a 3:1 threshold, and all six line colours clear it. The generated pair had asked for 4.5. Corrected. **The habit worth taking from it: a threshold is a claim about how something renders, not about which token it uses.**
+- **Still genuinely open, and unchanged:** three line colours sit between 4.09 and 4.41 on `--cream-mid`, which is fine everywhere it is used today because that surface is bold — but it leaves no headroom if a normal-weight label is ever put on that background. Darkening them is a design call. `ROADMAP` §5b item 3.
+- **The near-duplicate heading on the home page.** "Five situations" (the explainer card) sits a screen above "The Five Situations" (the label over the cards). Pre-existing; capitalising the second made it more visible. Rewording the explainer's heading is the fix if it bothers anyone.
+- **Whether to push this repo to GitHub**, which would publish `docs/`, `tools/` and `.claude/`. See the divergence table in §0.0b.
 
 ---
 

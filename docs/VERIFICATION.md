@@ -1,7 +1,7 @@
 # The Verification Standard
 ### Mr Fraction's Word Problem Express
 **Applies to:** every agent, **and to anyone working without one** — see `../CLAUDE.md`.
-**Owner:** Oversight. **Last updated:** 2026-08-10. **36 rules.**
+**Owner:** Oversight. **Last updated:** 2026-08-10. **38 rules.**
 
 Every rule here was written after a specific failure on this project. The evidence is kept with each rule, because a rule without its scar gets softened away.
 
@@ -372,3 +372,29 @@ Rule 2 says a surprising result indicts the instrument. This is the harder versi
 **Two habits, both cheap.** Before trusting a sweep, probe ONE known-good subject and print what the instrument actually built — the URL, the selector, the path. And when a check reports catastrophic, uniform failure, suspect that the check broke the subject before concluding the subject was broken: real defects are usually patchy, and *everything failed at once* is far more often a dead harness.
 
 `serve.ps1` now answers HEAD with headers only, and one bad request can no longer end the session.
+
+## 36. A checker that hardcodes what to check will pass a thing it has never seen
+
+The "discovered, not listed" defect has now been found in **seven files on this project, three of them checkers** — and a checker is the worst place for it, because its output is the thing you use to decide there is nothing to look at.
+
+> **Evidence (2026-08-10).** `tools/check-contrast.ps1` reported **"39 pairs checked, 0 failing"** on a palette that did not include `--line-percent`. The colour had shipped that morning. The script held the five line colours as hex COPIES of what `app.css` declares — so it was also checking values that were free to drift from the stylesheet — and enumerated its pairs by hand, fifteen rows for five lines. Nothing errored. Nothing was missing. It simply never looked, and *0 failing* reads exactly like coverage.
+>
+> Rebuilt to read `--line-*` out of the stylesheet and generate the pairs, it went to **48 pairs across six colours and found three real AA failures** that had been on the site for as long as the Platform Check has had a "you are here" row.
+
+The three habits that make this class survivable, all cheap:
+
+1. **Ask the world what exists**, do not remember it. A registry, a stylesheet, `Object.keys(global)` — anything the code itself must already be right about.
+2. **Never hold a second copy of a derivable fact** (§33). A hardcoded hex is a claim about another file that nothing re-checks.
+3. **Refuse to report a clean run on an empty subject set.** `check-contrast.ps1` now exits non-zero if it finds no colours; `preview-scenes.html` turns its banner red; the sweep prints how many screens it rendered. *"0 faults" and "0 subjects" print identically* — so make the tool say which one it means.
+
+## 37. In a BOM-less `.ps1`, a curly quote can appear where you typed an em-dash
+
+Narrow, but it cost a genuinely confusing half-hour and it will recur, because every file in `tools/` is UTF-8 without a BOM and every comment in this project is full of em-dashes.
+
+> **Evidence (2026-08-10).** Adding one line to `check-contrast.ps1` produced `Missing closing '}' in statement block`, pointing at a brace several lines away that was perfectly balanced. Brace-depth counting said the file was fine. Parsing the same text with `ParseInput` said it was fine. Only `ParseFile` — reading the bytes — failed.
+>
+> **PowerShell 5.1 decodes a BOM-less script as ANSI.** The em-dash's UTF-8 bytes `E2 80 94` become three CP1252 characters, the last of which is **U+201D — a curly closing quote, which PowerShell honours as a string delimiter.** The string ended early and the rest of the line became garbage that swallowed the brace.
+
+**The rule: plain hyphens inside double-quoted strings in `.ps1` files.** Comments and single-quoted strings are unaffected, which is exactly why this hid for months — every other em-dash in `tools/` sits in one of those and has never caused trouble.
+
+And the diagnostic worth keeping: when a syntax error points at balanced punctuation, **suspect the encoding, and compare `ParseFile` against `ParseInput` on the same text.** If they disagree, the problem is in the bytes rather than in the code.
