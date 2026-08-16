@@ -367,6 +367,28 @@
       '<div class="section-head"><span class="eyebrow">Crossover Island</span>' +
         '<h2>Pick a stop</h2><div class="rule"></div></div>' +
       '<ul class="choices">' + stops + '</ul>' +
+      /* THE LIGHTHOUSE IS ON THE MAP, SO IT HAS TO BE PRESSABLE FROM IT.
+         It is drawn on the island as the hub and labelled LIGHTHOUSE HUB;
+         without this it was a picture of a door. Rendered as a hub card, the
+         same control the mainland map uses, so it is the same kind of thing in
+         the same clothes — and it is listed among the stops rather than below
+         them because on this map it IS one of the places you can go.
+
+         Not gated and never framed as remedial: a locked decision, and worth
+         restating here because a hub sitting on the island's own map is the
+         easiest place on the site to accidentally imply "go here if the stops
+         were too hard". The copy says what it teaches, not who should read
+         it. */
+      (MF.hubs['lighthouse']
+        ? '<div class="section-head"><span class="eyebrow">All change</span>' +
+            '<h2>The Lighthouse</h2><div class="rule"></div></div>' +
+          '<p style="color:var(--ink-mid)">The island&rsquo;s hub, and it is open to anyone at any time &mdash; ' +
+          'before a stop, during one, or instead of one.</p>' +
+          '<ul class="hub-list"><li><button class="hub-card" type="button" data-hub="lighthouse" ' +
+            'aria-label="' + esc(MF.hubs['lighthouse'].name + '. ' + MF.hubs['lighthouse'].blurb) + '">' +
+            '<strong>' + esc(MF.hubs['lighthouse'].name) + '</strong>' +
+            '<small>' + esc(MF.hubs['lighthouse'].blurb) + '</small></button></li></ul>'
+        : '') +
       (built < Scenery.islandStops().length
         ? '<div class="msg msg-caution"><span class="ico" aria-hidden="true">&#9888;</span><p>' +
           '<strong>The island is still being built.</strong> ' + built + ' of ' +
@@ -380,6 +402,8 @@
 
     node.addEventListener('click', function (e) {
       if (e.target.closest('[data-back]')) { renderMap(); return; }
+      var hb = e.target.closest('[data-hub]');
+      if (hb) { renderHub(hb.getAttribute('data-hub')); return; }
       var s = e.target.closest('[data-stop]');
       if (s && !s.disabled) startIslandStop(s.getAttribute('data-stop'));
     });

@@ -55,6 +55,40 @@
   }
 
   var ART = {
+    /* TWO SITUATIONS AND THE NUMBER PASSED BETWEEN THEM.
+       The one diagram Crossover Island needs and the five do not have, because
+       none of them is about a problem having a middle.
+
+       Deliberately UNLABELLED as to which two. Every other diagram here names
+       its own line and is coloured with it; this one is drawn in ink and says
+       only "one kind" and "a different kind", because which two it is changes
+       with the problem and because the hub must not hand over an answer the
+       island is about to ask for. The carried number is a question mark for the
+       same reason it is a question mark on the Plan phase: at the point this
+       picture describes, nobody has worked it out yet. */
+    crossover: function () {
+      return svg(
+        '<rect x="8" y="24" width="92" height="30" rx="4" fill="none" stroke="' + INK + '" stroke-width="2.6"/>' +
+        '<text x="54" y="44" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">one kind</text>' +
+        '<text x="54" y="72" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">first part</text>' +
+        /* The arrow carries something, which is the whole point — an empty
+           arrow between two boxes would read as "and then", not as "hands it
+           this". The token rides on the arrow rather than sitting beside it. */
+        '<g class="rsc-bounce">' +
+          '<path d="M104 39 H152 M143 32 L152 39 L143 46" fill="none" stroke="' + INK +
+            '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<circle cx="128" cy="22" r="10" fill="var(--cream-light)" stroke="' + INK + '" stroke-width="2.2"/>' +
+          '<text x="128" y="26" font-size="12" font-weight="700" fill="' + INK +
+            '" font-family="inherit" text-anchor="middle">?</text>' +
+        '</g>' +
+        '<rect x="156" y="24" width="96" height="30" rx="4" fill="none" stroke="' + INK +
+          '" stroke-width="2.6" stroke-dasharray="5 4"/>' +
+        '<text x="204" y="44" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">a different kind</text>' +
+        '<text x="204" y="72" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">the rest</text>',
+        'Two boxes side by side. The first is solid and labelled "one kind", the second dashed and ' +
+        'labelled "a different kind". An arrow runs from the first to the second carrying a circled ' +
+        'question mark — the number the first part works out and the second part needs.');
+    },
     /* One amount, at two moments, with the event between them. */
     change: function () {
       var c = 'var(--line-change)';
