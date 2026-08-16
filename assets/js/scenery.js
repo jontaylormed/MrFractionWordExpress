@@ -1252,29 +1252,58 @@
      not steps 1 to 5. `kind` is what the map has to say instead: staffed
      platforms teach, unstaffed halts do not.
 
-     `pair` gives each stop its two line colours. That is the one thing on this
-     map a student can read before arriving: what two situations are waiting. */
+     A STOP HOLDS A POOL, NOT A PROBLEM. `ids` is a list, and two of these five
+     hold two problems each — so a second visit differs by PROBLEM and not only
+     by number set, which is what "seven built, five ridden" meant in the plan.
+     `key` is the stop's own identity and is what `data-stop` carries; a problem
+     id cannot serve as that any more, because a stop can hold two.
+
+     WHICH TWO POOL, AND THE CONSTRAINT THAT DECIDED IT. The fade is driven by
+     the PROBLEM's `fadeLevel`, not by the stop — so a staffed-content problem
+     pooled at an unstaffed halt would make that stop staffed half the time
+     while the map draws it with a signpost and no one on the platform. Both
+     pool problems are staffed content, so both go to staffed platforms:
+     `cl-carriage-clean` (Ratio → Change) joins Thorne Bridge, which already
+     holds a problem with ratio in it, and `cl-track-sleepers` (Equal Groups →
+     Change) joins Fell Crossing, which already holds one with groups.
+
+     `pair` IS GONE, and its absence is the point. It used to give each stop two
+     line colours, and it could never be right for a pooled stop — two problems,
+     two different pairings, one marker. It was already unused: `pairStop` draws
+     both halves in neutral ink because showing the real colours told a student
+     which two situations were waiting before the Crossover Read asked. If the
+     `reveal` path is ever built, it must take the pair from the problem
+     ACTUALLY RIDDEN, which is known only after the ride and lives on the
+     problem rather than on the stop. */
   var ISL_STOPS = [
-    { id: 'cl-signal-delay',  at: [386, 168], kind: 'staffed', pair: ['compare', 'ratio'],
+    { key: 'thorne', at: [386, 168], kind: 'staffed',
+      ids: ['cl-signal-delay', 'cl-carriage-clean'],
       /* `note` says what the stop IS, never which two situations it joins.
          This read "Compare, then a rate" and was the same leak as the marker
          colours in English — see `pairStop`. */
       name: 'Thorne Bridge',  note: 'Open — the join is taught here' },
-    { id: 'cl-season-tickets', at: [788, 286], kind: 'staffed', pair: ['compare', 'partwhole'],
+    { key: 'kelder', at: [788, 286], kind: 'staffed',
+      ids: ['cl-season-tickets'],
       name: 'Kelder Sands',   note: 'Open — the join is taught here' },
-    { id: 'cl-platform-planters', at: [648, 508], kind: 'staffed', pair: ['partwhole', 'groups'],
+    { key: 'fell',   at: [648, 508], kind: 'staffed',
+      ids: ['cl-platform-planters', 'cl-track-sleepers'],
       name: 'Fell Crossing',  note: 'Open — the join is taught here' },
-    { id: 'cl-lost-umbrellas', at: [330, 494], kind: 'halt', pair: ['change', 'compare'],
+    { key: 'cold',   at: [330, 494], kind: 'halt',
+      ids: ['cl-lost-umbrellas'],
       name: 'Cold Halt',      note: 'Open — nobody on the platform' },
-    /* The pair here read ['ratio','change'] until the problem behind it was
-       written. The marker pairs were sketched when the island was drawn and
-       before any of the seven problems existed, so where one disagreed with
-       `CHALLENGE-MODE.md` §5.2 the PLAN won and the map was corrected — a map
-       marked with a pairing no problem has is a map telling the student
-       something untrue about what is waiting. */
-    { id: 'cl-buffet-crates', at: [252, 350], kind: 'halt', pair: ['ratio', 'partwhole'],
+    { key: 'marsh',  at: [252, 350], kind: 'halt',
+      ids: ['cl-buffet-crates'],
       name: 'Marsh Halt',     note: 'Open — nobody on the platform' }
   ];
+
+  /* A stop is open when ANY problem in its pool is published. Derived here so
+     the map, the button list and the line card cannot disagree about it — they
+     each used to test `counts[st.id]` in their own words, which is three places
+     to update the day a stop gains a second problem. */
+  function stopIsOpen(st, published) {
+    for (var i = 0; i < st.ids.length; i++) if (published[st.ids[i]]) return true;
+    return false;
+  }
 
   var ISL_TERMINUS = [762, 210];
 
@@ -1571,8 +1600,10 @@
        See the note on `pairStop`: naming the pair here answers the Platform
        Check before the student has read the story. */
     ISL_STOPS.forEach(function (st) {
-      var open = !!counts[st.id];
-      s += '<g' + (open ? ' data-stop="' + st.id + '" class="map-hit"' : ' opacity=".72"') + '>' +
+      var open = stopIsOpen(st, counts);
+      /* `data-stop` carries the STOP now, not a problem — a pooled stop has two
+         and the map cannot know which one a student will get. */
+      s += '<g' + (open ? ' data-stop="' + st.key + '" class="map-hit"' : ' opacity=".72"') + '>' +
            pairStop(st.at[0], st.at[1], st.kind === 'staffed', !!opts.reveal && open) +
            '</g>';
       var below = st.at[1] > 400;
@@ -1614,7 +1645,7 @@
     s += '<text x="52" y="82" font-family="' + BODY + '" font-size="11.5" font-weight="700" letter-spacing="2.6" fill="#A85413">' +
          'MR FRACTION&rsquo;S EXPRESS &middot; THE CHALLENGE LINE</text>';
 
-    var openCount = ISL_STOPS.filter(function (st) { return !!counts[st.id]; }).length;
+    var openCount = ISL_STOPS.filter(function (st) { return stopIsOpen(st, counts); }).length;
 
     /* The built/being-laid sentence is DERIVED, exactly as the mainland's is.
        That one used to be a hardcoded string and silently became a lie to
@@ -1666,20 +1697,21 @@
      as the student moves through the phases, which is what `legMap` does with
      its own leg. */
   function islandLeg(stopId, progress, cars) {
-    /* MATCH ON A REAL ID, NEVER ON A NULL ONE. Four of the five stops carry
-       `id: null` until their problem is written, so `st.id === stopId` matched
-       every one of them for any unbuilt stop and the last match won — four
-       different stops framing the same corner of the island, one of them not
-       even inside its own frame. That could not reach a student, because an
-       unbuilt stop has no button to press; it reached ME, as four identical
-       viewBoxes in a test I nearly read as a framing bug.
+    /* MATCHED ON A STOP KEY, and it takes either a stop key or a problem id so
+       that a caller holding one of a pooled stop's problems still frames the
+       right place. Problem ids were the only handle before stops could hold
+       two; the station knows its problem, not its stop.
 
        Falling back to stop 0 on no match would put the panel somewhere
-       plausible and wrong, which is the failure that hides. A caller asking
-       for a stop this map does not have is a programming error, so it says so
-       and draws nothing. */
+       plausible and wrong, which is the failure that hides. A caller asking for
+       a stop this map does not have is a programming error, so it says so and
+       draws nothing. (This rule was earned: while every unbuilt stop carried a
+       null id, `st.id === stopId` matched all of them at once and four stops
+       framed the same corner of the island.) */
     var here = null;
-    ISL_STOPS.forEach(function (st) { if (st.id && st.id === stopId) here = st; });
+    ISL_STOPS.forEach(function (st) {
+      if (st.key === stopId || st.ids.indexOf(stopId) >= 0) here = st;
+    });
     if (!here) return '';
 
     /* Draw the world once to get the circuit and its arc table, then find how

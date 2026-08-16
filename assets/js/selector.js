@@ -362,11 +362,41 @@
      The number set is still drawn at random, so meeting the same stop twice
      does not give the same numbers — the one part of the mainland's behaviour
      that does apply. */
-  function buildIslandStop(id) {
-    var base = MF.problems[id];
-    if (!base || !base.pair) return null;
+  /**
+   * @param {string} stopKey  a Crossover Island stop, not a problem.
+   *
+   * A STOP HOLDS A POOL NOW, so this CHOOSES rather than names. Two of the five
+   * stops hold two problems, and which one a student meets is drawn here — so
+   * a second visit to the same stop can be a different problem rather than the
+   * same one with different numbers.
+   *
+   * It still is not `buildTrip`. There are no roles to fill, no no-repeat
+   * constraints and no journey: the student pointed at a place on a map and
+   * this hands back what is waiting there. What it takes from `buildTrip` is
+   * the SHAPE of the return, which several other functions read and which must
+   * not drift.
+   *
+   * PUBLISHED PROBLEMS ONLY, and that is what lets pool content be written
+   * before the art or the stop exists: an unpublished problem in a pool is
+   * simply not drawn, and a stop whose whole pool is unpublished hands back
+   * null rather than a broken ride.
+   */
+  function buildIslandStop(stopKey) {
+    var stop = null;
+    (global.Scenery ? Scenery.islandStops() : []).forEach(function (s) {
+      if (s.key === stopKey) stop = s;
+    });
+    if (!stop) return null;
+
+    var pool = stop.ids.filter(function (id) {
+      var p = MF.problems[id];
+      return p && p.pair && p.status === 'published';
+    });
+    if (!pool.length) return null;
+
     var seed = Math.floor(Math.random() * 1e9);
     var rng = makeRng(seed);
+    var base = MF.problems[pool[Math.floor(rng() * pool.length)]];
     return {
       line: MF.CHALLENGE,
       route: 1,

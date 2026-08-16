@@ -207,7 +207,12 @@
     var open = {};
     MF.pairedProblems().forEach(function (p) { open[p.id] = true; });
     var isleTotal = Scenery.islandStops().length;
-    var isle = Scenery.islandStops().filter(function (s) { return !!open[s.id]; }).length;
+    /* A stop is open when ANY problem in its pool is published — the same test
+       the map uses, restated here rather than shared only because this file
+       cannot see `stopIsOpen`. If a third place ever needs it, export it. */
+    var isle = Scenery.islandStops().filter(function (s) {
+      return s.ids.some(function (id) { return !!open[id]; });
+    }).length;
     special += '<li><button class="line-card line-card-challenge" type="button" data-island="1" ' +
       'aria-label="The Challenge Line, on Crossover Island. ' +
       'Every stop joins two of the five situations together. ' +
@@ -345,18 +350,28 @@
        disagree about what exists or about which stops are staffed. This is the
        list the map's aria-label promises is "below". */
     var stops = Scenery.islandStops().map(function (st) {
-      var isOpen = !!open[st.id];
+      var pool = st.ids.filter(function (id) { return !!open[id]; });
+      var isOpen = pool.length > 0;
       var kindWord = st.kind === 'staffed' ? 'Staffed platform' : 'Unstaffed halt';
       var kindNote = st.kind === 'staffed'
         ? 'The crossover is taught here.'
         : 'No one on the platform. The five-situations checklist is the only thing to hand.';
+      /* SAID OUT LOUD WHEN A STOP HOLDS MORE THAN ONE, because a student who
+         rides Thorne Bridge twice and gets a different story deserves to know
+         that is the stop working rather than the site being inconsistent. It
+         does not say WHICH problems — that is the pairing, and naming it here
+         would answer the Crossover Read before the student arrives. */
+      var poolNote = pool.length > 1
+        ? ' More than one problem stops here, so this is not the same ride twice.'
+        : '';
       return '<li><button class="choice" type="button"' +
-        (isOpen ? ' data-stop="' + esc(st.id) + '"' : ' disabled') +
-        ' aria-label="' + esc(st.name + '. ' + kindWord + '. ' + kindNote +
+        (isOpen ? ' data-stop="' + esc(st.key) + '"' : ' disabled') +
+        ' aria-label="' + esc(st.name + '. ' + kindWord + '. ' + kindNote + poolNote +
           (isOpen ? ' Open.' : ' Track still being laid.')) + '">' +
         '<span class="marker" aria-hidden="true">' + (st.kind === 'staffed' ? '&#9679;' : '&#9675;') + '</span>' +
         '<span><strong>' + esc(st.name) + '</strong>' +
         '<small>' + esc(kindWord + ' &mdash; ' + kindNote).replace('&amp;mdash;', '&mdash;') + '</small>' +
+        (poolNote ? '<small>' + esc(poolNote.trim()) + '</small>' : '') +
         (isOpen ? '' : '<small>Track still being laid.</small>') +
         '</span></button></li>';
     }).join('');
@@ -592,14 +607,17 @@
      the island has neither — the label has to name the STOP, because that is
      what the student chose off the map and what the top bar has to say when
      they come back to it from the map (`resumeTrip` reads `rideLabel`). */
-  function startIslandStop(id) {
-    var t = Selector.buildIslandStop(id);
+  function startIslandStop(stopKey) {
+    var t = Selector.buildIslandStop(stopKey);
     if (!t) return;
     trip = t;
     stationIdx = 0;
     metrics = newMetrics();
     tripDone = false;
-    var stops = Scenery.islandStops().filter(function (s) { return s.id === id; });
+    /* The label names the STOP, not the problem — the student chose a place off
+       a map, and on a pooled stop naming the problem would announce which of
+       the two they drew before they have read a word of it. */
+    var stops = Scenery.islandStops().filter(function (s) { return s.key === stopKey; });
     trip.rideLabel = 'Crossover Island · ' + (stops.length ? stops[0].name : 'one stop');
     document.getElementById('sign-sub').textContent = trip.rideLabel;
     drawRoute();
