@@ -124,9 +124,15 @@ MF.registerProblem({
     context: { setting: "railway carriage cleaning shed", requiresCulturalKnowledge: false }
   },
 
-  /* No `scene` — see the note on `cl-track-sleepers`. The island gets its own
-     library in one pass; borrowing a mainland art puts the first half's own
-     line's picture on read1, where the checklist is being run. */
+  /* The island's own library. The counted quantity here is carriages PER HOUR,
+     which is a rate rather than a heap — so the carriage may be drawn whole,
+     except that it is deliberately cut by the shed at both ends. There is no
+     complete carriage to count and no queue implied; what moves is the
+     machinery, which is what a speed looks like. */
+  scene: {
+    mode: "anim", art: "washshed",
+    caption: "A carriage part way through a wash shed, brushes turning against its side and water falling."
+  },
 
   threeReads: {
     read1: {

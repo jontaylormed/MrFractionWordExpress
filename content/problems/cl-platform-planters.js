@@ -136,13 +136,15 @@ MF.registerProblem({
     context: { setting: "railway station forecourt", requiresCulturalKnowledge: false }
   },
 
-  /* NO `scene`. `partwhole-scenes.js` claims exactly one art — `seats` — and a
-     planter delivery is not a trainful of seats. The validator refuses an art
-     name no library claims, so inventing one here would error rather than
-     blank; naming `seats` would render the wrong picture, which is worse. A
-     scene for this problem is real work (planters are countable, so it would
-     have to be drawn so they cannot be counted off the frame) and it is not
-     done rather than faked. */
+  /* This shipped with NO picture, because `partwhole-scenes.js` claims exactly
+     one art — `seats` — and a planter delivery is not a trainful of seats. The
+     island has its own library now. The planters run past both edges of the
+     frame and overlap, which is the constraint the note here predicted: they
+     ARE the counted quantity, so they must not be countable off the picture. */
+  scene: {
+    mode: "anim", art: "planters",
+    caption: "Planters along a platform edge, running away past both ends, their flowers moving in the wind."
+  },
 
   threeReads: {
     read1: {

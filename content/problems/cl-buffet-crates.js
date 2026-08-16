@@ -132,9 +132,12 @@ MF.registerProblem({
     context: { setting: "railway buffet car and bottling plant", requiresCulturalKnowledge: false }
   },
 
+  /* Its own art now — this carried `urn` from the Ratio & Rate Rail, which is
+     this problem's own first half. The belt runs off both edges so the bottles
+     cannot be counted off the picture. */
   scene: {
-    mode: "anim", art: "urn",
-    caption: "The buffet counter with its drinks, restocked from the plant along the coast."
+    mode: "anim", art: "bottling",
+    caption: "A filling head over a belt of bottles running past both ends of the frame."
   },
 
   threeReads: {

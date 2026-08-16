@@ -140,9 +140,12 @@ MF.registerProblem({
      rule this line's art obeys, because the objects ARE the quantities. The
      second half has no art for the same reason `cl-signal-delay`'s does not: a
      picture of the parts would have to draw a whole derived from step 1. */
+  /* Its own art now — this carried `queues` from the Compare Line, which is
+     this problem's own first half. The wallets run off both edges because
+     season tickets ARE the counted quantity here. */
   scene: {
-    mode: "anim", art: "queues",
-    caption: "Two booking office windows with people waiting at both, one queue longer than the other."
+    mode: "anim", art: "seasonrack",
+    caption: "A booking office window with a rack of season ticket wallets behind it, and a stamp coming down."
   },
 
   threeReads: {

@@ -148,9 +148,12 @@ MF.registerProblem({
     context: { setting: "railway lost property office", requiresCulturalKnowledge: false }
   },
 
+  /* Its own art now — this carried `lostproperty` from the Change Line, which
+     is this problem's own first half. Umbrellas ARE the counted quantity, so
+     the rail runs off both edges and they overlap at different heights. */
   scene: {
-    mode: "anim", art: "lostproperty",
-    caption: "A lost property shelf with umbrellas coming and going through the day."
+    mode: "anim", art: "umbrellas",
+    caption: "A lost property rail with umbrellas hanging from it, running past both ends of the shelf."
   },
 
   threeReads: {

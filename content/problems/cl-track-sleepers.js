@@ -122,13 +122,15 @@ MF.registerProblem({
     context: { setting: "railway permanent way", requiresCulturalKnowledge: false }
   },
 
-  /* NO `scene`. None of the five scene libraries has track art, and the island
-     is getting its own — `challenge-scenes.js`, one unique picture per problem,
-     drawn in a single pass once all seven exist. Borrowing a mainland art was
-     rejected: measured across the five built island problems, every borrowed
-     scene turned out to be the art of the problem's own FIRST-half line, and it
-     renders on read1 where the checklist is run. That is a picture whispering
-     half the answer to the question on the screen. */
+  /* The island's own library exists now. Sleepers ARE the counted quantity, so
+     they are drawn in perspective running off both edges and overlapping toward
+     the horizon — uncountable by construction rather than by luck. The only
+     motion is one sleeper swinging on the crane: a thing happening, never a
+     total accumulating. */
+  scene: {
+    mode: "anim", art: "sleepers",
+    caption: "Track running away past both ends of the frame on its sleepers, with a gang hut and a crane beside the line."
+  },
 
   threeReads: {
     read1: {

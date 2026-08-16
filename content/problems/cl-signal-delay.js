@@ -183,9 +183,12 @@ MF.registerProblem({
      scene; the second half has no art, because a picture of the rate would have
      to draw a distance derived from the gap, and that is the answer to step 1
      rendered as geometry. */
+  /* Its own art now. This carried `delays`, which is `cp-late-trains`'s picture
+     from the Compare Line — this problem's own first-half line — and it renders
+     on read1 where the checklist is being run. See `challenge-scenes.js`. */
   scene: {
-    mode: "anim", art: "delays",
-    caption: "Two trains away from Thorne Bridge together, one running ahead of the other up the line."
+    mode: "anim", art: "signalbox",
+    caption: "Two roads past a signal box, a train on each, one further along than the other."
   },
 
   threeReads: {
