@@ -478,6 +478,9 @@ The user's words: *"No session only scoring, challenges should be approachable a
 
 **Cost:** larger than a line. Realistically this is several sessions, and it should be planned in its own document once items 2 and 7 are done.
 
+> ### ▶ THAT DOCUMENT NOW EXISTS: [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md) (2026-08-15).
+> Four things were settled with the user while writing it: the island is **open** — any stop, any order, no route menu; the unaided stops **keep the estimate and the hint ladder**; the Plan phase draws **two models with a transfer slot between them**; and the mode needs **a new reading protocol running the existing five-situations checklist twice, once on each half of the problem**. That last one is the user's amendment and it is the heart of the build. Start at §9 of that file — the first work is the leak scan and the `stacked` answer key, not a problem.
+
 ## 7. The Learning Hubs — DONE 2026-08-09
 
 **All three are now paged journeys**, rendered by `assets/js/hub.js`. A hub with `pages[]` renders there; a hub with only `sections[]` still uses the original long-scroll renderer in `app.js`, which is a supported authoring shape rather than dead code — no hub uses it today, and removing it would silently break the next hub written from the older docs.

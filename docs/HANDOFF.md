@@ -15,7 +15,9 @@
 
 **Next session's work is §0.** Everything after it is the state you are picking up.
 
-> **[`ROADMAP.md`](ROADMAP.md) is the forward plan.** Everything on it is done **except item 6, Challenge Mode**, which is the only thing left and wants its own planning document before anyone starts.
+> **[`ROADMAP.md`](ROADMAP.md) is the forward plan.** Everything on it is done **except item 6, Challenge Mode**, which is the only thing left.
+>
+> **Its planning document is written: [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md) (2026-08-15).** Read it before `ROADMAP` §6. Five decisions are recorded there as made with the user, and the build order in its §9 is deliberate — **the leak scan and the `stacked` answer key come before the first problem is authored**, because both are instruments that will otherwise be judging content they were never taught about.
 
 ---
 

@@ -1,0 +1,238 @@
+# Challenge Mode — the plan
+
+### Written 2026-08-15. This is the document `ROADMAP.md` §6 asks for before anyone builds. Nothing here is built yet.
+
+> **Read `PEDAGOGY.md` §2.2 and §3.7 before this file.** Challenge Mode does not introduce a sixth situation. It introduces the case the site has been promising since the home page — *"Harder problems join two lines together. They are still built out of these five."* This is where that sentence has to become true.
+
+---
+
+## 0. Decided, and not to be reopened without new information
+
+| | |
+|---|---|
+| **No scoring, no gating** | User, 2026-08-08. Five problems always available. Nothing locked, nothing lost on reload. |
+| **Open island — any stop, any order** | User, 2026-08-15. There is no route menu here and no fixed sequence. The map is the route screen. |
+| **Estimate and hint ladder survive everywhere** | User, 2026-08-15. Including the unaided stops. See §5 for why this is not negotiable. |
+| **Plan draws two models with a transfer slot between them** | User, 2026-08-15. §6.1. |
+| **A new reading protocol, using the SAME checklist** | User, 2026-08-15: *"a new type of reading strategy… use the checklist correctly to identify two different strategies. We may need more than three Guided Reads. But it needs to be different and use the same checklist."* This is §3, and it is the heart of the build. |
+
+---
+
+## 1. The one new idea
+
+Every problem on this site is one situation. A Challenge problem is **two situations, one after the other**, and the second cannot start until the first has finished — because the first produces a number the second needs.
+
+That number is the whole thing. It gets a name:
+
+> **The transfer** — the one value the first situation hands to the second. It is an *answer* on one side of the problem and a *given* on the other.
+
+Two consequences, and they are the design:
+
+1. **The new skill is not arithmetic.** A student who can do all five situations already has every operation this mode needs. What they cannot yet do is *see that a problem contains two of them*, and find the seam. That is a **reading** skill, which is why the user's amendment is the right instinct and why §3 is the largest section here.
+2. **The classic error is stopping at the transfer.** The student computes the first half correctly, finds a number, and answers with it. It is not a careless error — it is the right answer to the wrong question, and it will be the primary distractor on all seven problems (§5.3).
+
+**Naming, and one name that is banned.** The crossing point is **the crossover** and the value is **the transfer**. It is *not* "the Junction" — `signalBox.secondRoute` / The Junction was deleted on the user's decision and `HANDOFF.md` §3 says do not reintroduce it. Different mechanism, and reusing the name will make the old one look alive.
+
+---
+
+## 2. Crossover Island — the visual
+
+The Challenge Line card already sits inert in *Special lines* on the map. Pressing it does not start a trip: it **crosses to a different map**.
+
+```
+          ~ ~ ~ ~ ~   the crossing   ~ ~ ~ ~ ~
+                                                    ╭──────────╮
+   [ mainland map ]  ══════ ferry ══════▶            │ ⬤ LAMP   │  terminus hub
+                                                     ╰────┬─────╯
+                              ╭──────────────────────────┴──────────╮
+                              │                                      │
+                   ╭──────────┴────────╮                  ╭──────────┴────────╮
+                   │  STAFFED PLATFORMS │                  │  UNSTAFFED HALTS  │
+                   │  1 ▮▮  2 ▮▮  3 ▮▮  │                  │   4 ▯    5 ▯      │
+                   │  lit · conductor   │                  │  sign only · no   │
+                   │  on the platform   │                  │  one on the       │
+                   ╰────────────────────╯                  │  platform         │
+                                                           ╰───────────────────╯
+```
+
+**The three teaching stops are staffed platforms; the two unaided stops are unstaffed halts.** That is a real British rail term for a small station with no staff — you work it yourself — and it does the job that the words *"assessment"* or *"on your own"* would do badly. An unstaffed halt is not a harder or a remedial place. It is the stop you are trusted with.
+
+**Mr Fraction is on the platform at 1–3 and waves from the train at 4–5.** One asset, two placements, and it tells the student what kind of stop this is before they read a word.
+
+**Two rails, braided, in two colours.** The Challenge route cannot take a single line colour, because it is not a line — same as the Percent Line. So each stop's marker carries **the two `--line-*` colours of that problem's pair**, and the track between stops is drawn as two rails in those colours converging at the crossover. The map therefore *states the pedagogy*: these are two-line problems, and after the ride you can see which pairs you rode.
+
+**No new palette.** All six line colours exist and the palette decision in `ROADMAP` §5b is still open — nothing here may pre-empt it.
+
+**Because the island is open, the map has to carry the difference.** A student may meet an unstaffed halt first. That is allowed and must not be gated, so the halt does the work instead: it opens with the checklist offered, not hidden, and a plain line saying the staffed platforms teach the move if they want it first. **A signpost, never a gate, and never worded as a demotion.**
+
+---
+
+## 3. The Crossover Read — the new reading protocol
+
+> This is the section to get right. Everything else is engineering.
+
+The Three Reads answer *what is this story, what is being asked, what shall I do*. They assume one situation. Run them on a two-line problem and they produce one verdict where two are true, which is exactly the failure the Platform Check's **stacked** option currently describes and does not teach.
+
+**The new protocol runs the same five-situations checklist twice — once on each half.** That is the pedagogical payoff and it is worth stating in the copy the student reads:
+
+> **The checklist does not classify a *problem*. It classifies a *stretch of the story*.** You have been running it on whole problems because, so far, whole problems were one situation. It works on halves too.
+
+That reframing is transferable well past this site, and it is the honest answer to a student who says *"but I ran the checklist and got two answers."*
+
+### The five passes
+
+| | Pass | What the student does | Numberless? |
+|---|---|---|---|
+| **1** | **Read the story** | As read1 today: what is happening, who and what, no numbers anywhere. | **Yes** |
+| **2** | **Read for the crossover** | **NEW.** Not *what kind is this* — **where does it stop being one kind?** Tap the sentence where the story changes what it is doing. | **Yes** |
+| **3** | **Run the checklist on the first half** | The same five questions, on the text before the crossover only. Verdict: one of the five. | **Yes** |
+| **4** | **Run the checklist on the second half** | The same five questions, same wording, on the text after. Verdict: one of the five, and it must be a different one. | **Yes** |
+| **5** | **Read for the transfer** | **NEW.** *What one number does the first half hand the second?* Name it — do not compute it. | No |
+
+Five passes rather than three, as the user anticipated. Passes 3 and 4 are the *same screen twice*, not two new screens — the checklist is one component rendered against a different half, which is what makes the point land visually: **the same five questions, side by side, giving different answers.**
+
+**Passes 1–4 are numberless.** Finding the seam is a reading move; a student who is looking at numbers will find the seam by arithmetic and learn nothing. Pass 5 is the first screen with digits on it.
+
+**Pass 5 names the transfer and does not compute it.** Same rule the Plan phase already lives by — the ratio table stops at the scale factor, the compare model stops at the gap. Naming a quantity you cannot yet compute is the move this whole site is built on.
+
+### What this fixes that is already broken
+
+`stations.js` `CHECK.fit` currently offers **stacked** with `lines: []` — true of no line — and its `no:` reply says *"plenty of problems do stack different kinds of situation… this story stays inside a single kind."* **The site tells the student that stacked problems exist and never shows them one.** Passes 2–4 are where that promise is paid. On a Challenge problem `stacked` becomes the correct answer and `onekind` becomes the distractor, which **inverts an existing answer key** — see §6.2, because that is an engine change and not a content one.
+
+### Compression, if five screens is too many on a phone
+
+Passes 3 and 4 could share one screen as two columns. Recommended only after it is measured on a 390px viewport — two checklists stacked vertically on a phone is a long screen, and the side-by-side comparison is the entire point. **Build five, measure, then decide.** Do not pre-optimise the thing being taught.
+
+---
+
+## 4. The five stops, and what fades
+
+Open island, so these are not a sequence — they are five stops whose support differs, and the map says which is which.
+
+| Stop | Kind | What is given | What the student does |
+|---|---|---|---|
+| **1** | Staffed | **Both lines named**, in order | Find the crossover and the transfer only. Learns what a two-line problem *is*. |
+| **2** | Staffed | **First line named** | Names the second, finds the crossover and the transfer. |
+| **3** | Staffed | **Nothing named** | Full Crossover Read with `stacked` live. Names both lines, their order, and the transfer. |
+| **4** | Unstaffed halt | Checklist available | The whole thing. Estimate and hint ladder stay. |
+| **5** | Unstaffed halt | Checklist available | The whole thing, different pair. |
+
+**One thing fades per stop.** Three stops, three removals — the same discipline as the existing `fadeLevel`, which every problem on the site already carries.
+
+**The floor never fades, and this is not a style preference.** `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe because **every step's hint ladder ends by stating that step's answer** — re-measured at 30 problems, 164 steps. Strip the ladder at the unstaffed halts and that guarantee breaks for the whole site, not just this island. The estimate stays for the same reason: it is what Look Back compares against, and it is the only thing that catches an answer of the wrong *size* — which on a two-line problem is the exact shape of the stopping-at-the-transfer error.
+
+**The checklist at an unstaffed halt is the existing five-situations hub content, rendered as a pull-out.** Not a second copy. A second copy is how two documents drift, and this project has a file of examples.
+
+---
+
+## 5. The seven problems
+
+### 5.1 The rule that decides whether a problem belongs here
+
+> **If the problem can be solved without doing the first situation, it is a one-line problem with extra words.**
+
+This is the authoring trap, and it is the same class as *"you will write the correct option first"* — it will happen, it will validate clean, and only re-solving the problem from the text will catch it. Two tests, both mechanical:
+
+1. **Is the transfer stated anywhere?** If the text gives both the transfer and the second half's other givens, the first half is decoration.
+2. **Do the two halves differ in kind?** A→A is not a Challenge problem however many steps it takes. `CHECK.fit`'s own copy makes this distinction — *steps and situations are not the same thing* — and content that blurs it makes that reply a lie.
+
+### 5.2 Seven pairs — five ridden, seven built
+
+Seven so a second visit to the island differs, the same reason every problem carries four number sets. Working ids, railway contexts, no collisions with the existing 30.
+
+| id | Pair | The transfer |
+|---|---|---|
+| `cl-signal-delay` | **Compare → Rate** *(the user's example)* | Minutes of gap per stop — the difference IS the rate |
+| `cl-season-tickets` | **Compare → Part–Whole** | The smaller station's sales |
+| `cl-platform-planters` | **Part–Whole → Equal Groups** | The planters left over after the named parts |
+| `cl-lost-umbrellas` | **Change → Compare** | The result at the end of the day |
+| `cl-buffet-crates` | **Ratio → Part–Whole** | Total bottles delivered |
+| `cl-track-sleepers` | **Equal Groups → Change** | Sleepers on the whole section |
+| `cl-carriage-clean` | **Rate → Change (percent)** | Carriages cleaned in a shift |
+
+**Coverage:** compare ×2, ratio/rate ×3, part–whole ×3, equal groups ×2, change ×3, percent ×1. Every situation appears at least twice, on both sides of a crossover, so no schema is only ever the first half.
+
+**`cl-signal-delay` first**, because the user named it and because it is the sharpest case: the compare produces a *difference*, and the difference is not the answer — it is a **rate**. A student who does not see the crossover reads the whole thing as one comparison and answers with the gap. That is the mode's thesis in one problem.
+
+### 5.3 Misconceptions — the same three on all seven
+
+| | Error | Why the feedback is delicate |
+|---|---|---|
+| **1** | **Stopping at the transfer** | They computed it correctly. The feedback must say so first — *"That is right, and it is the answer to the first half"* — or it teaches a student who did good work that they cannot do arithmetic. |
+| **2** | **Transferring the wrong quantity** | Carrying a stated given across instead of the derived value. Diagnoses a student who found the seam but not what crosses it. |
+| **3** | **Working the halves in the wrong order** | Attempting the second situation first. Impossible, and finding out *why* it is impossible is how the crossover becomes real. |
+
+Distractor 1 is the correct answer to a real question, which makes it the strongest distractor on the site and the one most likely to trip the option-length and position tells. **Seeded shuffle, position measured across all seven before publishing** — `VERIFICATION.md` §21, and the project has hit that defect four times including on a brand-new choice surface.
+
+---
+
+## 6. Engine work, in build order
+
+**Order matters: 6.5 comes before any problem is authored.** Authoring against a leak scan that has not been taught about transfers means authoring against an instrument that either screams on every problem or was silenced to stop it screaming.
+
+### 6.1 `model.js` — two models and a transfer slot *(the largest piece)*
+
+`model.js` dispatches **one** model per problem, through **three** dispatches — `html()`, `wire()` **and `applies()`**. A model missing from `applies()` renders no picture and raises nothing; that is how the Compare Plan phase shipped blank for a round.
+
+The Plan phase becomes: model A → **the transfer slot** → model B, where B's picture is built on the value the slot holds. The slot is the new UI and it is the whole idea made interactive — the student places a number into the gap between two pictures.
+
+Bar widths and table values in B are derived from the transfer, which is derived from the number set. **Nothing authored.** Authored geometry is right for set 1 and silently wrong for the other three — recorded three times on the compare model alone.
+
+### 6.2 The `stacked` verdict — a data change, not a renderer branch
+
+`CHECK.fit` keys each option by `lines: [...]`. A Challenge problem has two lines and belongs to neither as a route, so the key cannot express it today. The fix is a **predicate in the data** — the option declares it is true when the problem carries a pair — never `if (challenge)` in the renderer. A hand-kept exemption in a checker is the defect class this project already has seven files of.
+
+`onekind` inverts from correct to distractor here, so its `no:` reply must be written before the first problem ships. Its current `no:` text was written on the assumption that stacked problems are always elsewhere.
+
+### 6.3 The route key — and the seven-file trap
+
+`MF.CHALLENGE = 'challenge'`, alongside `MIXED` and `PERCENT` in `data.js`.
+
+**Before adding it, grep for `MF.MIXED` and `MF.PERCENT` by name and read every hit.** Every one is a list that will not know about the new key. Known today: `app.js` ×4, `selector.js` ×3, `stations.js` ×1, `sweep.js` ×3. That count is a starting point, not a checklist — the recorded failure is *seven files, three of them checkers*, and a checker that silently exempts the new thing prints `0 faults` in exactly the font it prints a real pass.
+
+**`MF.LINES` must NOT gain a sixth entry.** `LINES` is the five schemas. Percent is deliberately outside it, and the comment in `data.js` says why: the Ticket Booth builds its line options from `MF.LINES`, so a sixth key would let the route appear as an answer to itself.
+
+### 6.4 The island map — `scenery.js`
+
+`Scenery.railMap()` draws the mainland. The island is a second map, not a mode of the first: different geography, five stops, two-colour markers, staffed/unstaffed platform states. Discovered from published Challenge problems, not listed.
+
+### 6.5 `tools/sweep.js` — the leak scan must learn about transfers **(do this first)**
+
+**The transfer is an answer and a given, and the leak scan does not have a concept for that.** On a Challenge problem the second half's prompt legitimately names a value the first half computed. Every one of those is a leak by the current rule.
+
+The precedent exists and should be copied rather than reinvented: the `check-unsure` screen got the rule *on that screen only the last step's answer and the final answer count*, encoded **as a rule, not as a list of cleared hits**. The Challenge equivalent is *a value the student has already computed on this problem is not a leak* — which needs the sweep to know what has been asked so far, which it currently does not.
+
+Also needs adding, and both are discovered-not-listed hazards:
+- **The four new numberless screens** (passes 2–4 plus the existing read1). The digits scan reads a set of phase names; a phase absent from it is unscanned and prints the same zero.
+- **Spelled-out numbers.** Still unchecked site-wide (`HANDOFF` §H-2) and worse here — *"twice as many"* on a numberless crossover screen hands over the first half's structure.
+
+### 6.6 Schema and docs
+
+`PROBLEM-SCHEMA.md` gains a `pair` block — `{ first, second, transfer, crossoverSentence }` — and the validator must **refuse a pair whose halves are the same kind** (§5.1 test 2) and **refuse a problem whose text states its own transfer** (test 1) if that can be expressed mechanically. If test 1 cannot be mechanised, say so in the schema rather than implying it is checked.
+
+---
+
+## 7. What will go wrong here specifically
+
+1. **A pair that is really one line with extra sentences.** §5.1. Most likely on `cl-lost-umbrellas` and `cl-track-sleepers`, where the second half is small.
+2. **The transfer reaching the student before pass 5.** Two halves means twice the surfaces, and the crossover screens are numberless. This is the leak class this project has hit most often, arriving on four new screens at once.
+3. **`stacked` shipping as a renderer special-case** because the data change in 6.2 looks bigger than the `if`. It is bigger. It is also the difference between a rule and an exemption.
+4. **The unstaffed halts reading as a test.** The moment any copy there implies assessment, the mode has a score in it, which the user removed on purpose.
+5. **Five reads being three reads with two screens bolted on.** If passes 2–4 do not visibly run *the same checklist on two halves*, the new protocol is just more clicking.
+
+---
+
+## 8. Still open, and needing the user
+
+1. **Island name.** *Crossover Island* is used throughout this document because the mode needed a name to be written about. It is a proposal.
+2. **Does the terminus hub on the island differ from the four mainland hubs?** A hub that teaches the crossover itself is arguably the sixth Learning Hub, and hubs are never gated — which would put the Crossover Read on the mainland too.
+3. **Whether passes 3 and 4 share a screen.** §3, and it should be measured before it is decided.
+4. **Whether the mainland Platform Check changes.** Once stacked problems exist, `onekind`'s reply on all 30 existing problems is describing something the student can now go and ride. That is an improvement, and it is 30 problems of copy.
+
+---
+
+## 9. Where to start
+
+**Not with a problem.** With §6.5 and §6.2 — the checker that will judge every problem, and the answer key that has to invert. Then one problem, `cl-signal-delay`, end to end through all five passes and both models, at 390px and 1280px, before the other six exist.
+
+One problem that runs proves the engine. Seven that validate prove nothing.
