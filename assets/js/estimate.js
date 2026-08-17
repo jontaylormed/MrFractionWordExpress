@@ -156,14 +156,31 @@
      was NOT for and left a student to guess what it was. Naming notes,
      calculations and drawings gives all three permission, and saying the touch
      screen works is the one thing a student cannot discover by looking. */
-  var PAD_LABEL = 'Sketch Pad: For Notes, Calculations, and/or Drawings (Touch Screen Enabled)';
+  var PAD_LABEL = 'Sketch Pad: For Notes, Calculations, and/or Drawings';
 
+  /* THE TOUCH AFFORDANCE SITS IN THE BOX, NOT IN THE HEADING (user,
+     2026-08-16). It is a different KIND of thing from the label: the heading
+     says what this surface is for, and this says how you may use it. Inside the
+     frame, low and centred, it reads as a note on the paper rather than as more
+     title — and it is the one thing about the pad a student cannot discover by
+     looking at it.
+
+     It is an ELEMENT OVER the canvas rather than something drawn on it. Painted
+     into the canvas it would be wiped by Clear, buried under the first stroke,
+     and stretched by the backing-store scale. `pointer-events: none` so it
+     never eats a stroke that starts on top of it. */
   function padHTML(id, label) {
     return '' +
       '<div class="est-pad-wrap" aria-hidden="true">' +
-        '<div class="est-pad-head">' + (label || PAD_LABEL) +
-          '<button type="button" class="est-clear" data-clear="' + id + '" tabindex="-1">Clear</button></div>' +
-        '<canvas class="est-pad" id="' + id + '" width="600" height="520"></canvas>' +
+        '<div class="est-pad-head">' + (label || PAD_LABEL) + '</div>' +
+        /* The button is pinned to the wrapper's top-right OUTER corner, so it
+           stays there however the heading wraps. In the flex row it dropped
+           below the label the moment the column got narrow. */
+        '<button type="button" class="est-clear" data-clear="' + id + '" tabindex="-1">Clear</button>' +
+        '<div class="est-pad-box">' +
+          '<canvas class="est-pad" id="' + id + '" width="600" height="520"></canvas>' +
+          '<span class="est-pad-hint">Touch Screen Enabled</span>' +
+        '</div>' +
       '</div>';
   }
 
