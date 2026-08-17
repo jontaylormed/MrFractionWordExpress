@@ -1,7 +1,7 @@
 # The Verification Standard
 ### Mr Fraction's Word Problem Express
 **Applies to:** every agent, **and to anyone working without one** — see `../CLAUDE.md`.
-**Owner:** Oversight. **Last updated:** 2026-08-10. **38 rules.**
+**Owner:** Oversight. **Last updated:** 2026-08-16. **39 rules.**
 
 Every rule here was written after a specific failure on this project. The evidence is kept with each rule, because a rule without its scar gets softened away.
 
@@ -398,3 +398,30 @@ Narrow, but it cost a genuinely confusing half-hour and it will recur, because e
 **The rule: plain hyphens inside double-quoted strings in `.ps1` files.** Comments and single-quoted strings are unaffected, which is exactly why this hid for months — every other em-dash in `tools/` sits in one of those and has never caused trouble.
 
 And the diagnostic worth keeping: when a syntax error points at balanced punctuation, **suspect the encoding, and compare `ParseFile` against `ParseInput` on the same text.** If they disagree, the problem is in the bytes rather than in the code.
+
+## 38. A reference site is compared as a rendered page, in document order — never as a list of its parts
+
+When another site is named as the standard to match, **file two diffs.** An inventory diff finds what we got *wrong*. Only a composition walk finds what we do not *have*, and an inventory diff cannot substitute for it — it is structurally blind to absence.
+
+> **Evidence (2026-08-16).** Mr. Fraction Factory closes its home page with a `.stats-strip`: three boxes reading *5 STATIONS / ∞ FRACTIONS TO EXPLORE / 1 MR. FRACTION*. This site had nothing of the kind — its map ended on a list of hubs and stopped — and **the user had to point it out.**
+>
+> `ROADMAP.md` §5, *"Artwork matching the sister site"*, was marked **DONE 2026-08-09**; §5b, *"Palette reconciliation"*, **CLOSED 2026-08-10**. Both were honest work. §5 diffed the Factory's `:root` against ours row by row and listed its art files; §4 quoted its `.mr-companion` rules verbatim off the live site. The audit was thorough enough to extract another site's CSS by hand.
+>
+> **Every token the strip uses was already on that table, ticked.** `#FDF8F0`, `#C8B89A`, `#C96A1F`, Black Han Sans, Atkinson 700 uppercase — measured off the live Factory afterwards, and each one already recorded as *identical* or *adopted*. The component was invisible to the audit **because it matched.**
+
+> **The audit was blindest exactly where the two sites agreed most.** §5's conclusion — *"the two sites are already the same design system… mostly adoption, not redesign"* — was true, and it was taken as the finding rather than as the starting condition. Once every token reads *identical*, a component assembled entirely from those tokens produces **zero diff signal**.
+
+**The two diffs, and neither one is optional:**
+
+1. **Inventory** — `:root`, `@font-face`, art files, named component rules. Finds what we got wrong.
+2. **Composition** — load the reference, walk `document.body` **in document order**, and write its sections and ours as two ordered lists side by side. Every row carries a one-line judgement: *port / deliberately different / not applicable.* Finds what we do not have.
+
+Do the composition walk on the **rendered page**, not the stylesheet and not the source — this is `CLAUDE.md` #2 (*ask what the screen contains at this moment and render it; do not infer it from the source*) pointed at the reference instead of at the build, which is the one direction it had never been aimed. Record the date of the walk: the reference is a live site the same author edits, so a walk goes stale the moment it changes.
+
+**The generalisation, and it is why this rule is not just §36 again.** The token list *was* discovered — read off the live `:root` rather than hand-copied — and it still exempted everything that is not a token. **A discovered enumeration still hardcodes its axis.** §36 is about the *items* being listed; this is one level up, about the *dimension* being assumed, and it is invisible from inside because the list is genuinely complete along the dimension you chose.
+
+> **Before trusting any enumeration, name its axis out loud and name one real thing that could not appear on it.** Here: *"I am enumerating custom properties and asset files. A section of a page is neither."*
+
+**What the same walk found once it was run** — a loader with no progress indicator, no ticker on the loader, an uncaptioned hero image, and a licence and three bundled typefaces that appeared in no file a reader opens. Four more absences, none of which any token diff could ever have surfaced.
+
+*Two are closed since: the loader has a progress bar, and the typeface credits are in the README's License section rather than in a page footer — a colophon was built into `.rail-foot` first and taken out again on the user's call. The ticker and the hero caption remain open.*

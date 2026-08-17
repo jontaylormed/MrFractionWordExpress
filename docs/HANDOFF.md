@@ -286,7 +286,7 @@ Note that none of those is a word. They are all descriptions of **what the sente
 | | |
 |---|---|
 | [`../CLAUDE.md`](../CLAUDE.md) | How to work on this project, and why the rules live where they do. |
-| [`VERIFICATION.md`](VERIFICATION.md) | **34 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 is the exception and says so. |
+| [`VERIFICATION.md`](VERIFICATION.md) | **39 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 is the exception and says so. |
 | [`REVIEW-LOG.md`](REVIEW-LOG.md) | Cycle history. Read the cycle that touched what you are about to change. |
 
 **The single most useful habit on this project:** before building anything that resembles something already here — a choice UI, a picture, a gate, a phase — grep for how the existing one solved it and read the comment above it. The comments record the failures. They are the most valuable thing in the repo.

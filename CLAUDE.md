@@ -2,7 +2,7 @@
 
 **Starting a new session? Read [`docs/HANDOFF.md`](docs/HANDOFF.md) first.** It is the current state of the build, what is open and who owns it, and how to verify anything here.
 
-**Read [`docs/VERIFICATION.md`](docs/VERIFICATION.md) before authoring or reviewing anything.** Not only during a review cycle — before touching content, illustrations, or a station phase. It runs to 34 rules and every one but §30 was written after a real failure on this project. §30 is the single prediction, and it says so in its own text — which also makes it the one most likely to be argued away.
+**Read [`docs/VERIFICATION.md`](docs/VERIFICATION.md) before authoring or reviewing anything.** Not only during a review cycle — before touching content, illustrations, or a station phase. It runs to 39 rules and every one but §30 was written after a real failure on this project. §30 is the single prediction, and it says so in its own text — which also makes it the one most likely to be argued away.
 
 ## Why this file exists
 
