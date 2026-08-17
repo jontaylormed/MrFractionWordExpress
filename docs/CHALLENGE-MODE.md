@@ -141,9 +141,26 @@ Open island, so these are not a sequence — they are five stops whose support d
 
 **One thing fades per stop.** Three stops, three removals — the same discipline as the existing `fadeLevel`, which every problem on the site already carries.
 
-### What an unstaffed halt actually drops — SETTLED 2026-08-16
+### The fade ladder — NORMATIVE. `Stations.phaseChain` is the implementation.
 
-An earlier draft of this section said a halt drops *"the guided Three Reads, the Plan model and the Test Track"*. **It drops two of those three, and the Three Reads stay** — the user's ruling, taken after `cl-lost-umbrellas` was built and the choice could be looked at rather than imagined.
+> **Read this table before changing anything about a stop's scaffolding, and change the table and the code together.** The chain used to be written twice — once in `phRead1`'s fork, once in `tools/sweep.js`'s own list — and they agreed only while somebody remembered both. On 2026-08-16 nobody did, and the sweep spent a run scanning three screens no student could reach. It is now derived in one place and this table is the prose copy of it. **If they disagree, the code is right and this is stale.**
+
+| `fadeLevel` | Where | The chain, before `solve` and `check` |
+|---|---|---|
+| any, unpaired | the five mainland lines | `read1` · `platform` · `read2` · `read3` · `ticket` · `plan` |
+| `worked` / `partial` and paired | a staffed platform | `read1` · `crossover` · `read2` · `read3` · `ticket` · `plan` |
+| **`independent`** and paired | **an unstaffed halt** | **`read1`** — and then the Engine Room |
+
+**An unstaffed halt is the checklist and then the calculation.** No Crossover Read, no second or third read, no Ticket Booth, **no estimate**. The problem is presented plainly, the way the last problem of an ordinary line is. The user's framing, 2026-08-16: *a student who wants to go straight to hard and get the bare minimum.*
+
+**Two consequences that are not obvious and are easy to reintroduce as bugs:**
+
+- **The Arrivals Board drops its first question.** That check compares the answer against an estimate, and there is none — it used to render *"You estimated —"* above two buttons and hide the other three checks behind answering it. The board now opens on *"did you answer the question that was asked?"* and the numbering closes up. `phCheck` derives the numbers rather than authoring two sets.
+- **The "take it to the arrivals board" route out of the Engine Room cannot appear**, for the same reason: it exists to compare a wrong answer against an estimate. Nobody is stranded — every step's hint ladder still ends by stating that step's answer, and that guarantee never depended on the estimate.
+
+### What an unstaffed halt actually drops — the history, kept for the reasoning
+
+An earlier draft of this section said a halt drops *"the guided Three Reads, the Plan model and the Test Track"*. That was revised twice on 2026-08-16, both times after the user rode it rather than imagined it: first to keep the Three Reads, then to drop them along with the estimate. **The table above is what the build does; everything below is why.**
 
 | | |
 |---|---|
@@ -153,7 +170,15 @@ An earlier draft of this section said a halt drops *"the guided Three Reads, the
 | ~~**Stays**~~ **GONE — reversed 2026-08-16** | ~~**The Three Reads.**~~ `read1`, the checklist, is still the aid a halt keeps. **`read2`, `read3` and the Ticket Booth now go too**, on the user's ruling after riding it: *"they should be able to go to an unstaffed station, receive the checklist, and then be asked to calculate without any guidance."* A halt runs **checklist → estimate → Engine Room** and nothing else. |
 | **The argument that lost, kept because it was a good one** | `read3` is where a student names the question, and this island's trap is answering the wrong one — stopping at the transfer, a correct number for a question nobody asked. Cutting it removes the last screen between a student and exactly that. **What beat it:** a halt that still walks you through two reads and the Ticket Booth is not an unaided stop, it is a staffed one with less commentary. If *no assistance* is to mean anything, this is where it has to mean it. |
 | **Stays** | **The estimate**, and this is not a preference. `plan` is where the checklist now leads, because `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe while every step's hint ladder ends by stating that step's answer — and the estimate is what Look Back compares against. It is also the only thing that catches an answer of the wrong SIZE, which on a two-line problem is the exact shape of the stopping-at-the-transfer error. Its coaching line (*"One way to think about it…"*) is suppressed at a halt; the estimate itself is still required. |
-| **Stays** | The estimate and the hint ladder, for the reason below, which is not a preference. |
+| **Stays** | The hint ladder, for the reason below, which is not a preference. **The estimate no longer does** — see the ladder table above. |
+
+### How to write the next ruling so it survives — the convention this file now follows
+
+The question that produced this section was *"how do we improve the .md's inherent understanding when guiding?"*, and the answer turned out not to be better prose. Three rules, each earned here:
+
+1. **State the decided thing as a table, and name the code that implements it.** Prose describing a fork is a second implementation written in English, and it goes stale silently. The ladder table above says *`Stations.phaseChain` is the implementation* and *if they disagree, the code is right* — so a reader who finds a difference knows which one to fix.
+2. **Separate what the build DOES from why it does it.** Everything above the history heading is normative; everything below is reasoning kept because it explains the shape. This file lost a day to a section that read as current and described a design two rulings old.
+3. **Record the losing argument, not just the winner.** A ruling with its counter-argument attached can be reversed on purpose; one without it gets reversed by accident, and then reversed back. Both 2026-08-16 rulings are written that way.
 
 **The engine enforces the two removals as a matched pair.** Dropping the crossover block is what fades the Plan phase — but a first-half model left behind would be claimed by `CompareModel` or the Model Yard, drawing half the problem and reporting success. `data.js` therefore refuses a paired problem at `independent` that carries *either* a crossover block or any first-half model, and refuses one at any other fade level that lacks a crossover block.
 

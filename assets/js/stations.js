@@ -339,6 +339,50 @@
     return o.lines.indexOf(p.pair.first) >= 0 || o.lines.indexOf(p.pair.second) >= 0;
   }
 
+  /* ============================================================
+     THE FADE LADDER — the one place the phase chain is written.
+
+     WHY THIS EXISTS AS A FUNCTION AND NOT AS PROSE. This chain was written
+     twice: `phRead1` forked one way and `tools/sweep.js` rebuilt the same fork
+     in its own list. They agreed only as long as somebody remembered to change
+     both, and on 2026-08-16 they did not — the halt's route changed, the sweep
+     kept scanning three screens no student could reach, and it took a second
+     pass to notice. Two copies of a rule is one copy and one guess.
+
+     So the chain is DERIVED here and both consumers read it. A stop's
+     scaffolding is now a fact about the problem rather than a fact about
+     whichever file you happen to be reading, and `CHALLENGE-MODE.md` §4 states
+     the same table in words with this named as the implementation. If they ever
+     disagree, this one is right and the document is stale.
+
+     WHAT EACH RUNG MEANS, and the whole ladder is `fadeLevel` — the mechanism
+     the site already had, not a flag invented for the island:
+
+       mainland      read1 · platform · read2 · read3 · ticket · plan
+       staffed pair  read1 · crossover · read2 · read3 · ticket · plan
+       unstaffed     read1
+
+     The unstaffed halt runs the checklist and then goes to the Engine Room.
+     No Crossover Read, no second or third read, no Ticket Booth, AND NO
+     ESTIMATE — user, 2026-08-16: "a student who wants to go straight to hard
+     and get the bare minimum." The problem is presented plainly, the way the
+     last problem of an ordinary line is.
+
+     `solve` and `check` are appended by the caller rather than listed here,
+     because every route ends in them and a chain that could omit them would be
+     a chain that could strand a student. */
+  function phaseChain(p) {
+    if (!p || !p.pair) return ['read1', 'platform', 'read2', 'read3', 'ticket', 'plan'];
+    if (p.fadeLevel === 'independent') return ['read1'];
+    return ['read1', 'crossover', 'read2', 'read3', 'ticket', 'plan'];
+  }
+
+  /** The phase that follows `from`, or 'solve' when the chain runs out. */
+  function phaseAfter(p, from) {
+    var chain = phaseChain(p), i = chain.indexOf(from);
+    return (i >= 0 && chain[i + 1]) ? chain[i + 1] : 'solve';
+  }
+
   function focusFeedback(node) {
     if (!node) return;
     node.setAttribute('tabindex', '-1');
@@ -814,18 +858,23 @@
          unaided stop, it is a staffed one with less commentary. If "no
          assistance" is to mean anything, this is where it has to mean it.
 
-         WHAT DOES NOT GO: the estimate. `plan` is the destination rather than
-         `solve` because the estimate is a GATE and it is load-bearing far
-         beyond this island — `HANDOFF.md` §H-2 records that Look Back on a
-         wrong answer is only safe because every step's hint ladder ends by
-         stating that step's answer, and the estimate is what Look Back
-         compares against. It is also the only thing that catches an answer of
-         the wrong SIZE, which on a two-line problem is the exact shape of the
-         stopping-at-the-transfer error. Skipping it would break a guarantee
-         that belongs to the whole site, not to this stop. */
-      self.go(!self.p.pair ? 'platform'
-            : self.p.fadeLevel === 'independent' ? 'plan'
-            : 'crossover');
+         THE ESTIMATE GOES TOO — second ruling, same day, after riding it. The
+         first version of this kept `plan` because the estimate is a gate and
+         Look Back compares against it. The user's answer: that is still
+         scaffolding, and this stop is for "a student who wants to go straight
+         to hard and get the bare minimum".
+
+         What that costs, so nobody has to rediscover it: the Arrivals Board
+         drops its first question rather than asking about a dash, and the
+         "take it to the arrivals board" route out of the Engine Room cannot
+         appear, because it exists to compare a wrong answer against an
+         estimate that no longer exists. The hint ladder still ends every step
+         by stating that step's answer, so nobody is stranded — that guarantee
+         never depended on the estimate.
+
+         The destination is not written here. `phaseAfter` owns the ladder, so
+         this fork and the sweep's cannot drift again. */
+      self.go(phaseAfter(self.p, 'read1'));
     });
 
     if (this.expandAll) {
@@ -2001,6 +2050,13 @@
        a third of them. The prompt names the trap in prose instead. */
     var sf = this.p.signalFailure;
 
+    /* An unstaffed halt never sets an estimate, so this screen has one fewer
+       check and the headings renumber. `n()` keeps the numbering derived rather
+       than authored twice — the version of this that hardcoded 1..5 and then
+       1..4 in a second branch is exactly how a screen ends up with two "3"s. */
+    var hasEst = est !== null && est !== undefined;
+    function n(i) { return hasEst ? i + 1 : i; }
+
     this.host().innerHTML =
       MrFraction.aside('steady', '<p><strong>Arrivals board.</strong> ' +
         'This is the stop everyone skips. It&rsquo;s also the one that catches mistakes.</p>') +
@@ -2009,29 +2065,41 @@
       '<figure class="art-band art-band-end">' +
         Scenery.art('Mr_Fraction_Caboose.png', 'art-caboose') +
       '</figure>' +
-      '<h3>1. Does it match your estimate?</h3>' +
-      '<p>You estimated <strong>' + esc(est === null ? '—' : (this.estimateRaw || est)) + '</strong>. ' +
-        'The answer is <strong>' + esc(a.answer.exact) + ' ' + esc(a.answer.unit || '') + '</strong>.</p>' +
-      '<ul class="choices" id="estck">' +
-        '<li><button class="choice" type="button" data-v="yes" aria-label="Yes, my estimate was in the right area">' +
-          '<span><strong>Yes &mdash; my estimate was in the right area</strong></span></button></li>' +
-        '<li><button class="choice" type="button" data-v="no" aria-label="No, they do not match">' +
-          '<span><strong>No &mdash; they don&rsquo;t match</strong></span></button></li>' +
-      '</ul>' +
-      '<div class="feedback" role="status" id="ckfb"></div>' +
-      '<div id="rest" hidden>' +
-        '<h3>2. Did you answer the question that was asked?</h3>' +
+      /* NO ESTIMATE, NO ESTIMATE QUESTION. An unstaffed halt never sets one
+         (see the ladder in `phaseChain`), and this screen used to render "You
+         estimated —" above two buttons asking whether that matched, then hide
+         the other three checks behind answering it. A question about a value
+         that does not exist is not a check; it is a dead end with a dash in it.
+
+         So the board opens on "did you answer the question that was asked?"
+         instead, the rest is visible from the start, and the numbering closes
+         up. Everything else on the screen is identical — the estimate check is
+         the only part of Look Back that needed one. */
+      (hasEst
+        ? '<h3>1. Does it match your estimate?</h3>' +
+          '<p>You estimated <strong>' + esc(this.estimateRaw || est) + '</strong>. ' +
+            'The answer is <strong>' + esc(a.answer.exact) + ' ' + esc(a.answer.unit || '') + '</strong>.</p>' +
+          '<ul class="choices" id="estck">' +
+            '<li><button class="choice" type="button" data-v="yes" aria-label="Yes, my estimate was in the right area">' +
+              '<span><strong>Yes &mdash; my estimate was in the right area</strong></span></button></li>' +
+            '<li><button class="choice" type="button" data-v="no" aria-label="No, they do not match">' +
+              '<span><strong>No &mdash; they don&rsquo;t match</strong></span></button></li>' +
+          '</ul>' +
+          '<div class="feedback" role="status" id="ckfb"></div>'
+        : '<p>The answer is <strong>' + esc(a.answer.exact) + ' ' + esc(a.answer.unit || '') + '</strong>.</p>') +
+      '<div id="rest"' + (hasEst ? ' hidden' : '') + '>' +
+        '<h3>' + n(1) + '. Did you answer the question that was asked?</h3>' +
         '<p>' + esc(a.questionCheck) + '</p>' +
-        '<h3>3. Units</h3>' +
+        '<h3>' + n(2) + '. Units</h3>' +
         '<p>The answer is in <strong>' + esc(a.unitsCheck) + '</strong>. Did yours have that label?</p>' +
-        '<h3>4. Is it reasonable?</h3>' +
+        '<h3>' + n(3) + '. Is it reasonable?</h3>' +
         '<p>' + esc(a.reasonablenessCheck) + '</p>' +
         (a.reasonablenessFailExample ? '<p class="hint-text">' + esc(a.reasonablenessFailExample) + '</p>' : '') +
         /* The `why` stays behind a click on purpose. The prompt is a real
            question, and a student who reads the explanation off the same
            screen has not been asked anything — the same reason the Test
            Track's worked example hides behind "Show me". */
-        (sf ? '<h3>5. The signal that failed</h3>' +
+        (sf ? '<h3>' + n(4) + '. The signal that failed</h3>' +
               '<p>' + esc(sf.prompt) + '</p>' +
               '<div class="btn-row">' +
                 '<button class="btn" id="sfgo" type="button" aria-controls="sffb" aria-expanded="false">' +
@@ -2057,7 +2125,18 @@
       });
     }
 
-    this.host().querySelector('#estck').addEventListener('click', function (e) {
+    /* DONE IS BOUND WHERE IT IS ALWAYS REACHABLE. It used to be bound inside
+       the estimate-check handler, which was safe only while every route
+       through this screen had an estimate to check. Without one there is no
+       `#estck` to click, and the button that leaves the station would never
+       have acquired a listener — a dead end at the end of the ride, on the
+       stop built for the student least likely to ask for help. */
+    this.host().querySelector('#donebtn').addEventListener('click', function () {
+      self.m.stationsDone++;
+      self.onComplete();
+    });
+
+    if (hasEst) this.host().querySelector('#estck').addEventListener('click', function (e) {
       var b = e.target.closest('[data-v]'); if (!b) return;
       var said = b.getAttribute('data-v') === 'yes';
       var truth = inRange === null ? said : inRange;
@@ -2076,11 +2155,6 @@
       self.host().querySelector('#rest').hidden = false;
       A11y.announce(correct ? 'Checked.' : 'Have another look.');
       focusFeedback(self.host().querySelector('#ckfb'));
-
-      self.host().querySelector('#donebtn').addEventListener('click', function () {
-        self.m.stationsDone++;
-        self.onComplete();
-      });
     });
 
     if (this.expandAll) {
@@ -2115,5 +2189,9 @@
      asks. A checker that reimplements the key is a checker that can disagree
      with the thing it is checking (VERIFICATION.md §33). */
   global.Stations = { Station: Station, msg: msg, esc: esc, el: el,
-                      CHECK: CHECK, optionTrue: optionTrue };
+                      CHECK: CHECK, optionTrue: optionTrue,
+                      /* Exported so `tools/sweep.js` renders the phases a
+                         student can actually reach rather than keeping its own
+                         copy of the fork. See `phaseChain`. */
+                      phaseChain: phaseChain, phaseAfter: phaseAfter };
 })(window);

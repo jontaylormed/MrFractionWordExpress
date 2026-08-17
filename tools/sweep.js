@@ -183,21 +183,18 @@
            that student to the seam. Rendering a screen the app would not is
            this file's oldest rule; here it would also scan copy that problem
            does not author. */
-        /* AN UNSTAFFED HALT IS NOW READ1 THEN THE ESTIMATE, and this list has
-           to follow `phRead1`'s fork or it scans screens no student can reach.
-           Changed 2026-08-16 with the fork itself: a halt used to continue into
-           read2, read3 and the Ticket Booth, and it now goes straight from the
-           checklist to the calculation.
+        /* THE PHASE LIST IS NOT REBUILT HERE ANY MORE — it is asked for.
+           `Stations.phaseChain` is the one place the fade ladder is written,
+           and this file used to keep a second copy of the same fork. They
+           agreed only while somebody remembered to change both, and on
+           2026-08-16 nobody did: the halt's route changed and this list went on
+           scanning three screens no student could reach, reporting leaks and
+           numberless breaks on copy those problems author but never show.
 
-           Rendering the three it skips would not merely waste work — it is this
-           file's oldest rule, and here it would report leaks and numberless
-           breaks on copy those problems still author but never show, which is
-           a finding nobody can act on. */
+           A checker with its own idea of what the app does is not checking the
+           app. */
         var unaided = isPaired(p) && p.fadeLevel === 'independent';
-        var second = !isPaired(p) ? 'platform' : unaided ? null : 'crossover';
-        var phases = unaided
-          ? ['read1', 'plan']
-          : ['read1'].concat(second ? [second] : []).concat(['read2', 'read3', 'ticket', 'plan']);
+        var phases = Stations.phaseChain(p).slice();
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         phases = phases.concat(['solve', 'check']);
@@ -209,7 +206,12 @@
            exempt from every scan here, which is the sweep header's own standing
            lesson arriving for the third time. Not a real phase: `st.phase` stays
            'check' and the app never routes to a string called this. */
-        phases.push('check-unsure');
+        /* NOT ON AN UNSTAFFED HALT. This screen is reached by taking a wrong
+           answer to the board, and `phSolve` only offers that route when an
+           estimate exists — the whole screen compares the two. A halt sets no
+           estimate, so no student can arrive here, and rendering it would scan
+           a screen the app cannot produce. */
+        if (!unaided) phases.push('check-unsure');
         /* THE TICKET BOOTH ALSO HAS TWO FACES. On the percent route and the
            Grand Tour it asks which of the five is hiding under the per cent,
            and withholds the box naming the line until it is answered. Nothing
