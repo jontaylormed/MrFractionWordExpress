@@ -2792,6 +2792,14 @@ select {
   .hub-list {
     grid-template-columns: repeat(6, 1fr);
     width: min(920px, 100%);
+    /* `max-width: none` IS LOAD-BEARING, and without it this rule was a lie.
+       The global `ul, ol { max-width: var(--measure) }` caps every list at the
+       64ch reading measure — 788px — so `width: min(920px, 100%)` resolved to
+       788 and the hub cards sat 132px narrower than the line cards they were
+       supposed to line up with. Measured 2026-08-16: hub list 788 against the
+       card grids' 920. A reading measure is right for prose and wrong for a
+       row of buttons. */
+    max-width: none;
     margin-inline: auto;
   }
   .hub-list > li { grid-column: span 2; }
@@ -2841,6 +2849,46 @@ select {
 .hub-card strong { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: .03em; font-size: 1.08rem; }
 .hub-card small { color: var(--ink-muted); display: block; margin-top: 4px; }
 
+/* ---------- The map's hero, ported from the sister site ----------
+   The Factory opens its home page at 52px: a tracked eyebrow with a rule, a
+   two-tone display line, then a short intro. This site's map opened at 22.4px
+   — its largest type was a section heading — so the eye had nowhere to land,
+   and once the offer strip went in at the foot of the page the biggest thing
+   on the screen was the LAST thing on it.
+
+   THE PALETTE NEEDED NO TRANSLATION AGAIN. The Factory's heading is #2C2214
+   with a #C96A1F accent word over a #5A3E28 intro; those are `--ink`,
+   `--orange` and `--ink-mid` here, exactly.
+
+   WHAT IS NOT PORTED: the Factory floats a 280px gear behind this text,
+   spinning on a 35s loop. THEME §3.3 bans decorative animation near reading
+   content, and the exception carved for scenes that ARE the problem does not
+   cover a background gear. ROADMAP §5 already recorded that the gears were
+   never imported; this is the first place one would have been.
+
+   UPPERCASE IN CSS, NOT IN THE MARKUP. The Factory types its heading in
+   capitals in the source. Set that way, some screen readers spell a short
+   all-caps word letter by letter; `text-transform` leaves the accessible name
+   as ordinary sentence case and changes only what is drawn. */
+.home-hero { margin: 0 0 calc(var(--su) * 4); }
+.home-eyebrow {
+  display: flex; align-items: center; gap: calc(var(--su) * 1.5);
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--ink-muted);
+  margin: 0 0 calc(var(--su) * 1.5); max-width: none;
+}
+.home-eyebrow-line { display: block; width: 44px; height: 3px; flex: none; background: var(--orange); border-radius: 2px; }
+.home-heading {
+  font-family: var(--font-display); font-weight: 400;
+  /* Fluid rather than a breakpoint step: at a fixed 52px this line overflows
+     a 320px screen, and the wrap point matters more than the size does. */
+  font-size: clamp(28px, 5.2vw, 52px);
+  line-height: 1.04; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ink); margin: 0 0 calc(var(--su) * 2); max-width: none;
+}
+.home-heading-accent { color: var(--orange); }
+.home-intro { font-size: 1rem; color: var(--ink-mid); max-width: var(--measure); margin: 0; }
+
 /* ---------- The offer strip, ported from the sister site ----------
    Mr. Fraction Factory closes its home page with three boxes — 5 STATIONS,
    ∞ FRACTIONS TO EXPLORE, 1 MR. FRACTION — saying what the place holds in the
@@ -2872,12 +2920,27 @@ select {
   background: var(--cream-light);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  margin: calc(var(--su) * 5) 0 calc(var(--su) * 2);
+  /* CENTRED, AND ON THE SAME COLUMN AS EVERYTHING ABOVE IT. As first written
+     this had side margins of 0 and inherited the global `ul` reading-measure
+     cap, so it came out 788px wide and left-aligned inside a 1140px parent —
+     measured at centre 456 while the hero, the explainer, both card grids and
+     the hub list all sit at 633. It was the only block on the map that was not
+     centred, and being a bordered box made that obvious in a way a paragraph
+     would not have been. */
+  width: min(920px, 100%);
+  max-width: none;
+  margin: calc(var(--su) * 5) auto calc(var(--su) * 2);
 }
 .stat-item {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: calc(var(--su) * 2.5); text-align: center;
 }
+/* THREE SECTIONS, SPLIT. The Factory runs its three cells together with
+   nothing between them, which works there because they are one strip of
+   trivia. Here they are three separate claims about what the site holds, and
+   a rule between them says so. `+` rather than a border on every item, so the
+   outer edges stay the container's own 1px and do not double up. */
+.stat-item + .stat-item { border-left: 1px solid var(--border); }
 .stat-value {
   font-family: var(--font-display); font-weight: 400;
   font-size: 2rem; line-height: 1.05; letter-spacing: .01em;
@@ -2893,7 +2956,10 @@ select {
    moment they are in a column. */
 @media (max-width: 620px) {
   .stats-strip { grid-template-columns: 1fr; }
-  .stat-item + .stat-item { border-top: 1px solid var(--border); }
+  /* The divider has to TURN, not just appear. Left in place on a stacked
+     column it draws a 1px stub down the left edge of every box but the first,
+     which reads as a rendering fault rather than as a separator. */
+  .stat-item + .stat-item { border-left: 0; border-top: 1px solid var(--border); }
 }
 
 /* Section headings on the map */

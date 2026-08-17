@@ -263,6 +263,34 @@
 
     var node = html(
       '<div>' +
+      /* THE HERO — ported from the sister site's `.home-hero`, 2026-08-16.
+         The map screen had no display-scale type at all: its biggest text was
+         a 22.4px section heading, and once the offer strip landed at the foot
+         of the page the three 32px numerals became the largest thing on the
+         screen — the strongest focal point sitting at the very bottom, three
+         thousand pixels down. The Factory does not have that problem because
+         its home page OPENS at 52px. This is that opening.
+
+         IT IS A `<p>`, NOT A HEADING, AND THAT IS DELIBERATE. The top bar
+         already carries the site's `<h1>`, and this file records what happens
+         when the same words are set as a heading twice a screen apart. A
+         display-scale line repeating the page's identity is branding, not
+         structure: an `h1` would give the page two, and an `h2` would sit
+         above "The Five Situations" in the outline while saying less.
+
+         THE COPY COLLIDES WITH NOTHING, which took some doing on a page this
+         dense with short phrases — "Five situations", "The Five Situations",
+         "Choose your route", "All lines running" and every ticker line are
+         already on this screen. It asks the one question the map exists to
+         answer, and states the no-gating decision in the student's own terms
+         rather than as a policy. */
+      '<div class="home-hero">' +
+        '<p class="home-eyebrow"><span class="home-eyebrow-line"></span>Welcome aboard</p>' +
+        '<p class="home-heading">Where are you <span class="home-heading-accent">going?</span></p>' +
+        '<p class="home-intro">Five lines, one for each kind of word problem, and a few ways of ' +
+        'travelling across them. Start anywhere you like &mdash; nothing on this railway is locked.</p>' +
+      '</div>' +
+
       MrFraction.aside('steady',
         '<p>Afternoon &mdash; Mr Fraction, thirty years on these lines.</p>' +
         '<p>Tell me what&rsquo;s happening in a problem and I&rsquo;ll tell you which train to catch.</p>', 104) +
@@ -303,13 +331,13 @@
       '<ul class="map-lines map-lines-five">' + lines + '</ul>' +
 
       '<div class="section-head"><span class="eyebrow">Ways of travelling</span>' +
-        '<h2>Special lines</h2><div class="rule"></div></div>' +
+        '<h2>Special Lines</h2><div class="rule"></div></div>' +
       '<p style="color:var(--ink-mid)">Not situations of their own &mdash; each one is a way of travelling ' +
       'ACROSS the five above. Whatever you meet on these, it is still one of the five underneath.</p>' +
       '<ul class="map-lines map-lines-special">' + special + '</ul>' +
 
       '<div class="section-head"><span class="eyebrow">All change</span>' +
-        '<h2>Learning hubs</h2><div class="rule"></div></div>' +
+        '<h2>Learning Hubs</h2><div class="rule"></div></div>' +
       '<p style="color:var(--ink-mid)">Interchange stops. Drop in whenever you want a refresher on the ' +
       'basics behind a line &mdash; before a trip, during one, or just because.</p>' +
       '<ul class="hub-list">' + (hubs || '<li class="soon">Hubs opening soon.</li>') + '</ul>' +
