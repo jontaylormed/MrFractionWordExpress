@@ -1620,6 +1620,15 @@ select {
 }
 #loading-screen[data-done="yes"] { opacity: 0; pointer-events: none; }
 .load-inner { text-align: center; padding: calc(var(--su) * 2); }
+/* `text-align: center` CENTRES THE TEXT INSIDE A BOX; IT DOES NOT CENTRE THE
+   BOX. The global `p { max-width: var(--measure) }` caps every paragraph here
+   at the 64ch reading measure, and a capped block with no auto margins sits
+   hard left in a wider parent — so the words were centred within a box that
+   was itself off-centre. Measured at 1280: "Welcome to" 195px left of centre
+   and the status line 49px, while the title, the train, the lamps and the bar
+   were all exactly centred, which is what made it read as only *some* of the
+   screen being crooked. */
+.load-inner p { max-width: min(var(--measure), 100%); margin-inline: auto; }
 /* THE TRAIN FLOATS. It does not slide.
    The sideways rock read as the train skidding rather than travelling — there
    is no ground under it and nothing else on the screen moving past, so lateral
@@ -1645,7 +1654,11 @@ select {
    palette of the five lines they are about to choose between. */
 /* The lamps sit UNDER the title now, matching the sister site's order. The
    bottom margin that used to hold them off the train is gone with it. */
-.load-dots { display: flex; justify-content: center; gap: 12px; margin: calc(var(--su) * 2) 0 0; }
+/* Below the bar now, matching the sister site's order — see the note in
+   index.html. The margin is smaller than it was above it: the lamps and the bar
+   are one progress group and should read as such, rather than as two things
+   that happen to be stacked. */
+.load-dots { display: flex; justify-content: center; gap: 12px; margin: calc(var(--su) * 1.5) 0 0; }
 .load-dots span {
   width: 15px; height: 15px; border-radius: 50%;
   border: 2px solid var(--ink); background: var(--cream-mid);
@@ -3003,7 +3016,12 @@ select {
   grid-template-columns: 1fr;
   margin: calc(var(--su) * 2) 0 calc(var(--su) * 3);
 }
-@media (min-width: 760px) { .est-wrap { grid-template-columns: 1.15fr 1fr; align-items: start; } }
+/* THE LINE SITS LEVEL BETWEEN THE FIELD AND THE PAD (user, 2026-08-16). It was
+   `align-items: start`, which pinned the line to the top of a right-hand column
+   more than twice its height, so it read as floating above the pad rather than
+   as one of two things side by side. `center` is on the grid rather than on the
+   column, so the line stays centred against whatever that column grows to. */
+@media (min-width: 760px) { .est-wrap { grid-template-columns: 1.15fr 1fr; align-items: center; } }
 
 .est-lead { font-weight: 700; margin: 0 0 calc(var(--su) * 1.5); }
 
@@ -3061,7 +3079,10 @@ select {
    estimate must not depend on a single mark. It is `aria-hidden` in the markup
    and out of the tab order, because it carries nothing anybody downstream
    reads and a keyboard equivalent would draw nothing. */
-.est-pad-wrap { margin-top: calc(var(--su) * 2); }
+/* Tripled from `* 2` on the user's call, 2026-08-16 — the pad was crowding the
+   typed field, and the two are different acts: one commits a number, the other
+   is for working out what number to commit. */
+.est-pad-wrap { margin-top: calc(var(--su) * 6); }
 .est-pad-head {
   display: flex; align-items: center; justify-content: space-between; gap: var(--su);
   font-size: 12px; color: var(--ink-muted); margin-bottom: 4px;
@@ -3076,6 +3097,19 @@ select {
   background: var(--cream-light);
   border: 2px dashed var(--border-strong); border-radius: var(--radius-sm);
 }
+
+/* The Engine Room: the field you type into, and somewhere to work it out. Same
+   two-column shape as the estimate so the pad sits in the same place on both
+   screens — but no number line here, because nothing is being swept. */
+.solve-wrap {
+  display: grid; gap: calc(var(--su) * 3); grid-template-columns: 1fr;
+  align-items: start; margin-bottom: calc(var(--su) * 2);
+}
+@media (min-width: 760px) { .solve-wrap { grid-template-columns: 320px 1fr; } }
+.solve-wrap .field { max-width: 320px; margin: 0; }
+/* The pad is the second thing here rather than an afterthought below a field,
+   so it needs no extra top margin of its own on the wide layout. */
+@media (min-width: 760px) { .solve-wrap .est-pad-wrap { margin-top: 0; } }
 
 /* Section headings on the map */
 .section-head { margin: calc(var(--su) * 5) 0 calc(var(--su) * 2); }

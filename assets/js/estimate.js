@@ -26,6 +26,23 @@
 
   var NS = 'http://www.w3.org/2000/svg';
 
+  /* THE RAIL'S GEOMETRY, IN ONE PLACE, AND IT HAS TO STAY THERE.
+     `.est-rail` is inset from the track so the end thumbs have somewhere to sit
+     without hanging off the edge, which means the track's 0–100% and the
+     SCALE's 0–100% are two different coordinate systems.
+
+     They were written as loose numbers in two places — the ticks were laid out
+     at `6 + 88 × i/4` while the thumbs were positioned at a plain percentage of
+     the track. So every thumb sat up to six points away from the tick it was
+     meant to be pointing at, worst at the two ends, and a click on the left end
+     of the rail returned a value six per cent up the scale instead of the
+     minimum. The user reported it as the slider being "off"; it was two
+     coordinate systems wearing the same units.
+
+     Anything that converts between a value and a position uses these. If the
+     CSS inset changes, this changes with it and nothing else needs to know. */
+  var RAIL_LO = 6, RAIL_SPAN = 88;
+
   /* The live gate, or null between Plan phases. Module-level so that
      `Estimate.commit(v)` is reachable without a handle on the station — which
      is how `tools/sweep.js` and any agent drive it. */
@@ -122,6 +139,52 @@
     return Math.min(w.hi, Math.max(w.lo, +n.toFixed(6)));
   }
 
+  /* ---------- the scratch pad, shared by both surfaces ----------
+     ONE IMPLEMENTATION, TWO PLACES. The estimate has one and the Engine Room
+     has one (user, 2026-08-16) — the Engine Room's without a number line,
+     because there is nothing to sweep when you are calculating. Copying the
+     canvas code into `phSolve` would give this project two pads that start
+     identical and drift, which is the defect class it already has a file of.
+
+     WHAT IS TRUE OF IT EVERYWHERE: never parsed, never graded, never required,
+     and nothing downstream reads a single mark. It is thinking made visible.
+     Because it carries nothing anybody needs, it is hidden from assistive tech
+     and kept out of the tab order rather than given a keyboard equivalent that
+     would draw nothing. Nothing persists — it dies with the phase. */
+  function padHTML(id, label) {
+    return '' +
+      '<div class="est-pad-wrap" aria-hidden="true">' +
+        '<div class="est-pad-head">' + (label || 'Scratch &mdash; nothing here is marked') +
+          '<button type="button" class="est-clear" data-clear="' + id + '" tabindex="-1">Clear</button></div>' +
+        '<canvas class="est-pad" id="' + id + '" width="600" height="260"></canvas>' +
+      '</div>';
+  }
+
+  function wirePad(host, id) {
+    var pad = host.querySelector('#' + id);
+    if (!pad) return;
+    var ctx = pad.getContext('2d');
+    ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2C2214';
+    var drawing = false;
+    function pt(e) {
+      var r = pad.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * (pad.width / r.width), y: (e.clientY - r.top) * (pad.height / r.height) };
+    }
+    pad.addEventListener('pointerdown', function (e) {
+      drawing = true; var q = pt(e); ctx.beginPath(); ctx.moveTo(q.x, q.y);
+      pad.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    pad.addEventListener('pointermove', function (e) {
+      if (!drawing) return; var q = pt(e); ctx.lineTo(q.x, q.y); ctx.stroke();
+    });
+    function stop(e) { if (!drawing) return; drawing = false;
+      try { pad.releasePointerCapture(e.pointerId); } catch (err) { /* already gone */ } }
+    pad.addEventListener('pointerup', stop);
+    pad.addEventListener('pointercancel', stop);
+    var clear = host.querySelector('[data-clear="' + id + '"]');
+    if (clear) clear.addEventListener('click', function () { ctx.clearRect(0, 0, pad.width, pad.height); });
+  }
+
   /* ---------- markup ---------- */
   function html(p) {
     var w = windowFor(p);
@@ -144,7 +207,8 @@
        estimate needs — without printing a number anybody could copy. */
     var ticks = '';
     for (var i = 0; i <= 4; i++) {
-      var x = 6 + (88 * i / 4);
+      /* Same constants the thumbs use — see the note beside RAIL_LO. */
+      var x = RAIL_LO + (RAIL_SPAN * i / 4);
       var ends = (i === 0 || i === 4);
       ticks += '<div class="est-tick' + (ends ? '' : ' est-tick-minor') + '" style="left:' + x.toFixed(2) + '%">' +
                  (ends ? '<span>' + fmt(w.lo + (w.hi - w.lo) * (i / 4), w.step) + '</span>' : '') +
@@ -181,16 +245,7 @@
             '<input type="text" id="estv" inputmode="decimal" autocomplete="off">' +
           '</div>' +
 
-          /* THE INK PAD. Never parsed, never graded, never required — it is
-             thinking made visible, not an input. It carries nothing anybody
-             downstream reads, so it is hidden from assistive tech and kept out
-             of the tab order rather than given a keyboard equivalent that
-             would draw nothing. */
-          '<div class="est-pad-wrap" aria-hidden="true">' +
-            '<div class="est-pad-head">Scratch &mdash; nothing here is marked' +
-              '<button type="button" class="est-clear" id="est-clear" tabindex="-1">Clear</button></div>' +
-            '<canvas class="est-pad" id="est-pad" width="600" height="260"></canvas>' +
-          '</div>' +
+          padHTML('est-pad') +
         '</div>' +
       '</div>';
   }
@@ -210,7 +265,8 @@
 
     function centre() { return (lo === null) ? null : (lo + hi) / 2; }
 
-    function pctOf(v) { return ((v - w.lo) / (w.hi - w.lo)) * 100; }
+    /* Value → position, in the RAIL's coordinates, not the track's. */
+    function pctOf(v) { return RAIL_LO + RAIL_SPAN * ((v - w.lo) / (w.hi - w.lo)); }
 
     function paint(quiet) {
       var has = lo !== null;
@@ -259,9 +315,12 @@
     }
 
     /* ---- pointer: one path for mouse, touch and stylus ---- */
+    /* Position → value, the exact inverse of `pctOf`. Written as the inverse
+       rather than as its own arithmetic, so the two cannot disagree again. */
     function valueAt(clientX) {
       var r = track.getBoundingClientRect();
-      var t = (clientX - r.left) / r.width;
+      var pct = ((clientX - r.left) / r.width) * 100;
+      var t = (pct - RAIL_LO) / RAIL_SPAN;
       return snap(w.lo + (w.hi - w.lo) * Math.min(1, Math.max(0, t)), w);
     }
     var anchor = null, dragEnd = null;
@@ -325,30 +384,7 @@
       setBand(v - half, v + half, true);   // quiet: do not fight what is being typed
     });
 
-    /* ---- the ink pad ---- */
-    var pad = host.querySelector('#est-pad');
-    if (pad) {
-      var ctx = pad.getContext('2d');
-      ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2C2214';
-      var drawing = false;
-      function padPt(e) {
-        var r = pad.getBoundingClientRect();
-        return { x: (e.clientX - r.left) * (pad.width / r.width), y: (e.clientY - r.top) * (pad.height / r.height) };
-      }
-      pad.addEventListener('pointerdown', function (e) {
-        drawing = true; var q = padPt(e); ctx.beginPath(); ctx.moveTo(q.x, q.y);
-        pad.setPointerCapture(e.pointerId); e.preventDefault();
-      });
-      pad.addEventListener('pointermove', function (e) {
-        if (!drawing) return; var q = padPt(e); ctx.lineTo(q.x, q.y); ctx.stroke();
-      });
-      function stop(e) { if (!drawing) return; drawing = false;
-        try { pad.releasePointerCapture(e.pointerId); } catch (err) { /* gone */ } }
-      pad.addEventListener('pointerup', stop);
-      pad.addEventListener('pointercancel', stop);
-      var clear = host.querySelector('#est-clear');
-      if (clear) clear.addEventListener('click', function () { ctx.clearRect(0, 0, pad.width, pad.height); });
-    }
+    wirePad(host, 'est-pad');
 
     paint();
 
@@ -395,4 +431,8 @@
     current: function () { return live; },
     release: function () { live = null; }
   };
+
+  /* The pad on its own, for surfaces that want somewhere to work out but have
+     nothing to sweep — the Engine Room. Same code, same rules, no number line. */
+  global.Scratch = { html: padHTML, wire: wirePad };
 })(window);

@@ -35,9 +35,6 @@
     <!-- Below the title now, not above it. The lamps are the thing that reads
          as progress; the train only floats. -->
     <p class="load-sub">Getting up steam&hellip;</p>
-    <div class="load-dots" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
     <!-- THE PROGRESS BAR, from the sister site's `.loading-bar-wrap`.
          The five lamps say something is happening; nothing said how far along
          it was. This does, and it is driven by the two things that actually
@@ -46,6 +43,17 @@
          the loader clears rather than before it. -->
     <div class="load-bar-wrap">
       <div class="load-bar-fill" id="load-bar"></div>
+    </div>
+    <!-- THE LAMPS SIT BELOW THE BAR, matching the sister site's order (user,
+         2026-08-16). The Factory runs welcome / title / figure / status / bar /
+         dots, and its counted row is the last thing on the screen; ours was
+         above the bar, which put two progress indicators the wrong way round -
+         the coarse one first and the precise one under it.
+
+         They stay five signal lamps rather than becoming the Factory's plain
+         circles: on this site a row of five means the five lines. -->
+    <div class="load-dots" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
 </div>

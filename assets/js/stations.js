@@ -1651,9 +1651,18 @@
                 : 'Take it one step at a time.') + '</p>') +
       this.problemHTML(false) +
       '<h3>' + esc(step.prompt) + '</h3>' +
-      '<div class="field" style="max-width:320px">' +
-        '<label for="ans">Your answer' + (step.answer.unit ? ' (' + esc(step.answer.unit) + ')' : '') + '</label>' +
-        '<input type="text" id="ans" inputmode="decimal">' +
+      /* SOMEWHERE TO WORK IT OUT, BESIDE THE PLACE YOU TYPE IT (user,
+         2026-08-16). The same pad as the estimate, from the same code, WITHOUT
+         a number line — there is nothing to sweep when you are calculating, and
+         the whole point of §8 was that the two acts should not look alike. This
+         is a step's working, so it clears with every step, as scratch paper
+         does. Never parsed, never graded, never required. */
+      '<div class="solve-wrap">' +
+        '<div class="field">' +
+          '<label for="ans">Your answer' + (step.answer.unit ? ' (' + esc(step.answer.unit) + ')' : '') + '</label>' +
+          '<input type="text" id="ans" inputmode="decimal">' +
+        '</div>' +
+        Scratch.html('solve-pad', 'Work it out here &mdash; nothing here is marked') +
       '</div>' +
       '<div class="feedback" role="status" id="sfb"></div>' +
       '<div class="btn-row">' +
@@ -1667,6 +1676,8 @@
           : '') +
       '</div>' +
       '<div class="hints" id="hints"></div>';
+
+    Scratch.wire(this.host(), 'solve-pad');
 
     /* Reveal the board route once it has been earned, from either direction —
        the ladder run out, or three wrong answers. Called from both handlers so
