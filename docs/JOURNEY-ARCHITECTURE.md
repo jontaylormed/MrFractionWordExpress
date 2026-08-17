@@ -35,6 +35,18 @@ The landing view. A transit map of five lines radiating from a central station, 
 - **Learning Hubs** (§6) sit as interchange stations *between* lines — visible from the start, never gated, never labeled as remedial.
 - The map is the navigation. There is no menu.
 
+**What the map carries now, added 2026-08-17.** It is two groups, not one row: **the five situations**, then **Special lines** underneath — and the specials are not schemas, which is the whole reason they are grouped apart:
+
+| | |
+|---|---|
+| ✳ **The Grand Tour** | A mixed ride drawing from every running line. You are not told which situation is coming. |
+| % **The Percent Line** | A **route**, not a sixth schema — five problems spread over four lines, drawn by `surface` rather than by `line`. It has a card, a colour, a marker and its own Plan model, and its Ticket Booth asks **which of the five is hiding under the per cent**. Deliberately kept out of `MF.LINES`, because everything iterating that object would otherwise gain a phantom schema. |
+| ✦ **The Challenge Line** | **Does not start a trip — it crosses to a second map.** Crossover Island: five stops, seven two-line problems, its own coast and circuit. |
+
+**There are five Learning Hubs, not the number §6 implies** — `five-situations`, `word-board`, `fraction-yard`, `percent-yard` and **The Lighthouse**, which teaches the crossover and sits on *both* maps.
+
+**A line lights on the map at three published problems**, and the count comes from `Selector.availableLines()` rather than a hand-kept list. The Challenge Line's threshold is different and deliberately so: **two problems on two different lines**, because a route claims something a schema does not — that one surface sits on several structures — and the smallest honest demonstration of that is two.
+
 **Accessibility requirement:** the map is decorative-plus-functional, which makes it high-risk. It must be a real `<nav>` with a semantic `<ul>` underneath the SVG, fully keyboard operable, with each line's status conveyed by text and shape as well as color. A student using a screen reader gets an ordered list of lines and trips — not "graphic."
 
 ---
@@ -61,6 +73,24 @@ Stations always run in this order, because the strategies build on each other. A
 | 4 | **The Switchyard** | Choosing the operation; working backwards when the unknown is at the start |
 | 5 | **The Signal Box** | Spotting Signal Failures — keyword traps and reasonableness checks |
 | ★ | **The Terminus Hub** | *No strategy given.* You choose. |
+
+### The phases inside a station — CORRECTED 2026-08-17
+
+**This section described a journey the site stopped running in early August, and it is the part of this document most likely to mislead.** What a student actually walks through is a chain of *phases*, and the chain is not the same on every stop. **`Stations.phaseChain` is the implementation and it is normative** — `CHALLENGE-MODE.md` §4 carries the same table. If any of the three disagree, the code is right.
+
+| where | the chain, before `solve` and `check` |
+|---|---|
+| the five mainland lines | `read1` · `platform` · `read2` · `read3` · `ticket` · `plan` |
+| a staffed platform on Crossover Island | `read1` · `crossover` · `read2` · `read3` · `ticket` · `plan` |
+| an **unstaffed halt** on the island | `read1` — then straight to the Engine Room |
+
+Three things in that table did not exist when this document was written:
+
+- **The first read is TWO screens.** `read1` asks the five checklist questions; `platform` makes the student prove the answer from the sentences and then shows where the problem sits on the map. The split exists because the station header prints the line and its equation above every phase, so the five questions are part-answerable off the furniture — the *evidence* is not. **Never ask a student inside a trip to name the line.**
+- **The Test Track** (`demo`) sits between the estimate and the Engine Room on **24 of the 37** problems: the strategy demonstrated on numbers belonging to no problem on that line, then two questions about the student's own picture. Nothing is calculated there.
+- **`plan` is now a gate with a drag control in it.** The student sweeps a *band* on a derived number line and its centre commits; a typed field sits beside it, and there is a sketch pad neither is parsed. No estimate, no Engine Room — see `ESTIMATE-INPUT.md`.
+
+**And an unstaffed halt is a different journey, not a lighter one.** It runs the checklist and then the arithmetic: no Crossover Read, no second or third read, no Ticket Booth, no estimate. The Arrivals Board there drops its first question, because that question compares an answer against an estimate that was never made. That was ruled twice on 2026-08-16, in opposite directions, and **both arguments are recorded in `CHALLENGE-MODE.md` §4** — read the losing one before reversing it.
 
 ### The micro-loop
 

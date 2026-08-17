@@ -62,6 +62,16 @@ Before touching arithmetic, the student commits to a rough answer and a *reasona
 
 A student who estimated "about 40" and computed 400 has a self-generated reason to check their work. A student who estimated nothing has no reason at all.
 
+**The estimate is a RANGE the student sweeps, not a number they type — built 2026-08-16, spec `ESTIMATE-INPUT.md`.** This section said *"a rough answer and a reasonable range"* from the beginning, and for months the control could only take the first half of that: a text box, identical to the one the Engine Room uses for an exact result. The copy above it read *"It doesn't have to be good. It has to exist"* while the input said otherwise.
+
+Three things follow, and the first is the pedagogy rather than the interface:
+
+- **An estimate genuinely is a region.** *"Somewhere between 40 and 60"* is a better estimate than *"50"*, and the old control could not express it. The student drags a band on a number line and its **centre** commits, so nothing downstream changes.
+- **The modality now matches the mode of thinking** — the hand for a guess, the keyboard for a result. Inside the metaphor: a pencil on the platform, a dial in the Engine Room.
+- **The scale is derived per materialisation and never authored**, because an authored one is right for number set 1 and silently wrong for the other three. It is also a pre-solve surface, so it may not hand over the answer: only the two ends of the line carry numbers, which is safe by construction. Labelling the interior ticks printed the answer on **4 of 148** materialisations before it was measured and removed.
+
+**A sketch pad sits beside it — never parsed, never graded, never required.** It is thinking made visible rather than an input, and committing must never depend on a mark being in it. The Engine Room has one too, without a number line: there is nothing to sweep when you are calculating.
+
 ### 1.6 CRA and bar/tape diagrams — making relationships visible
 
 Concrete → Representational → Abstract. Our representational layer is the **bar model** (tape diagram), because it handles the whole scope — fractions, ratios, percents, and linear equations — with one consistent visual grammar. A student who can draw the bar can usually write the equation.
@@ -261,6 +271,30 @@ It follows that **inside a trip the student is never asked to name the line.** T
 **Still unbuilt:** the verdict branches as real content, and the full check in a Learning Hub where naming the line is an honest question. The hub renderer already dispatches a bespoke widget off `h.tool` (`app.js`, the Shunting Yard), so `tool: 'platform-check'` needs no engine work.
 
 **The standing risk:** a checklist is an acronym procedure wearing different clothes. What keeps this one honest is that every question terminates in a **question about the situation**, no step ever names an operation, and "none of these" is a permitted answer. If any of those three erodes, this has become the thing §2.1 rejects.
+
+---
+
+### 3.8 Two lines at once — Crossover Island, built 2026-08-15/16
+
+**§3 above has always ended by admitting that "multi-step problems routinely span two lines", and listing that among the things sitting outside the five.** It is taught now rather than acknowledged. Full design: [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md).
+
+A Challenge problem is **two of the five situations, one after the other**, and the second cannot start until the first has finished. The idea the whole thing turns on has a name:
+
+> **The transfer** — the one value the first situation hands to the second. It is an **answer** on one side of the problem and a **given** on the other.
+
+**The new skill is reading, not arithmetic.** A student who can do all five situations already has every operation this needs. What they cannot yet do is see that a problem contains two of them, and find the seam — which is why the reading protocol, not the calculation, is where the work went.
+
+**The lesson meant to outlast the island**, and it is the most transferable sentence in this document:
+
+> **The checklist does not classify a PROBLEM. It classifies a STRETCH OF STORY.**
+
+It has always worked on whole problems because, until here, whole problems were one situation — so the stretch and the problem were the same thing and nothing made a student notice the difference. On a two-line problem they come apart: run the five questions on the first half and get one answer, run the same five unchanged on the second and get a different one. **Two true answers is not confusion; it is the story telling you it has a middle.**
+
+**The classic error is stopping at the transfer**, and it is the primary distractor on all seven problems. It is not a careless mistake — the student computed a correct number and answered with it. So the feedback must say *that is right, and it is the answer to the first half* before it says anything else, or it teaches a student who did good work that they cannot do arithmetic.
+
+**Scaffolding fades by stop, and nothing is gated or scored.** Three staffed platforms teach the move; two unstaffed halts run the checklist and then the arithmetic, with no reads, no Ticket Booth and no estimate. A halt is not a harder place or a remedial one — it is the stop you are trusted with. **Any copy there that implies assessment puts a score back into a mode the user removed on purpose.**
+
+**And it has a hub: The Lighthouse**, the fifth, seven pages, listed on *both* maps and reachable by somebody who has never ridden a stop. Its relationship to the island is the one the Word Board has to Five Situations — **read it here, decide it there.** The hub teaches what a crossover is, how the checklist behaves when a story has two halves, and what it means for a number to be carried between them. Finding the seam in a *particular* story happens on the island, where it is the student's job. Nothing in the hub is gated and nothing is scored.
 
 ---
 

@@ -190,6 +190,53 @@ At 320px the plate scrolls inside its own `overflow-x: auto` box. **The page its
 
 ---
 
+## 6b. The illustration system — added 2026-08-17, and none of it existed when §§0–6 were written
+
+**This document described a site with no illustrations.** Everything below was built between 2026-08-08 and 2026-08-16 and had no entry here, which is why the art director brief now says bringing this file up to the build is part of that role's job.
+
+### Six scene libraries, one per line plus the island
+
+`ratio-scenes.js`, `change-scenes.js`, `compare-scenes.js`, `groups-scenes.js`, `partwhole-scenes.js`, `challenge-scenes.js`. Each exports `has(name)` and `html(p)`, and **`Scene.html` DISCOVERS them** — it scans for `*Scenes` globals rather than reading a list, because a hardcoded list of libraries silently exempted a fourth one for two days and every scene in it shipped unchecked while the sweep printed *0 faults*.
+
+**`Scene.html` returns `''` for art no library claims — a silent empty frame.** The validator now refuses an unclaimed art name, so a typo errors rather than blanks.
+
+### The rules that make this site's art different, and they are pedagogical rather than aesthetic
+
+These outrank the sister site wherever the two conflict, and the conflict must be *stated* rather than resolved silently:
+
+1. **No numerals in a scene**, ever.
+2. **When the drawn objects ARE the quantity, they must be uncountable** — benches running off both edges of the frame, overlapping each other. Drawing seventeen of anything hands over the answer.
+3. **A picture is only as uncountable as its most countable part.** `pw-seats-reserved` drew seat backs overlapping and uncountable, with a headrest on each one at the same pitch — and 13 of 17 headrests stood clear of their neighbours. The row of seats was uncountable and the tally on top of it was not.
+4. **No measurement furniture** — no rulers, brackets or shared baselines. Measuring is the Plan model's job, where the geometry is derived from the live number set.
+5. **No motion implying a compared quantity changed**, on any line whose Platform Check is keyed to `moments: steady`. The loader travels past crates that stay put; the barrier rocks instead of lifting. Busy is allowed. Changing is not.
+6. **Every animation ships a static end-state**, and the frozen pose must be a *finished picture* rather than a frozen mid-frame. The Equal Groups tray frozen is complete — every group down — because a half-laid row is a picture of a different number of groups.
+
+**Audit motion with a number, not an impression:** `[].slice.call(svg.querySelectorAll('[class*="rsc-"]')).length`. Anything at 1–3 is thin. And **an animated element that moves no pixels still counts** — `percenthundred` carried a group at `stroke-width: 0` and `opacity: 0` that passed every count and moved nothing.
+
+### Crossover Island — a second illustrated map
+
+Its own world: coast, mountains, forest, three rivers, a lake, one irregular circuit, a train on the rails, a lighthouse. Forests are placed **procedurally and rejected against everything already on the plate**, because placing them by hand means guessing at collisions on a map nobody can see.
+
+**Stop labels sit on translucent plates**, and that fix carries three lessons worth keeping: the plate is sized from text measured with an **SVG text probe** (canvas `measureText` read 13% narrow and ate the padding); it is painted **before** the marker so it passes underneath rather than covering it; and the label's clearance is derived from the **marker's kind**, because a staffed disc reaches 13.5px above its centre and an unstaffed signpost reaches 24.
+
+### The estimate and the sketch pad — two surfaces made to look nothing alike
+
+The brief was the user's: *estimating should not feel like answering.* So the estimate side is **paper** — a drawn rule, a swept band, soft edges, no machined box — and the Engine Room's field is **an instrument**. The hand for a guess, the keyboard for a result.
+
+The sketch pad appears on both, and **Mr Fraction floats over that corner**: a collision fixed once badly by shrinking the pad, then properly by swapping the columns so the tall element sits where he never reaches. `ESTIMATE-INPUT.md` §4a is marked for art-director review.
+
+### Two role colours that are deliberately none of the six line colours
+
+`--xo-a` and `--xo-b` mean **first half** and **second half** in the Lighthouse diagrams. Colouring a generic crossover in compare-blue and ratio-teal would teach that a crossover *is* those two — wrong on five of the seven island problems, and a see-this-go-there rule of exactly the kind this site exists to break. **Colour is never the only signal:** every half also carries a word and a solid-versus-dashed difference.
+
+### §38 is this role's rule
+
+**A reference site is compared as a rendered page, in document order — never as a list of its parts.** The audit that signed off "artwork matching the sister site" missed a whole component **because every token it used was already ticked as identical**. An inventory diff finds a thing done wrong; it is structurally blind to a thing absent. File two diffs — inventory, then a composition walk — and date the walk, because the reference is a live site the same author edits.
+
+**Still open from that walk:** the loader has no ticker, and the route map has no visible caption.
+
+---
+
 ## 7. What "finished" means
 
 A screen ships when all eight are true:
