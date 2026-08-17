@@ -128,6 +128,31 @@ Consequences worth stating now, because they are cheap before and expensive afte
 
 ---
 
+## 4a. ⚠ MARK FOR REVIEW — the Mr Fraction collision, and a bad edit of mine
+
+**Flagged by the user, 2026-08-16.** Recorded here because the first fix was wrong in a way worth remembering, not because the current one is in doubt.
+
+**The problem.** Mr Fraction floats `position: fixed` at the viewport's bottom-right. The sketch pad is the tallest thing on the estimate and Engine Room screens, so it reaches his corner — measured at 1280: 37px of overlap with him collapsed, about 215 with him open.
+
+**What I did first, and why it was wrong.** I reserved up to 240px of right margin on the pad so it would shrink away from him. That solved the collision by making the drawing surface smaller — **496px wide down to 274** — on the one element whose entire value is its area. The user's words: *the sketch pad should lose no area.* Right, and the give-away is that I was trading the thing being asked for against the thing causing the problem, when the two were never actually in competition.
+
+**What replaced it.** The pad and the number line swapped columns. The pad is tall, so it goes LEFT where he never reaches and keeps its full width; the line is short — a 54px track and a row of ticks — so it clears him on the right. The Engine Room got the same swap for the same reason.
+
+**And a second collision the swap created, caught by measuring rather than by assuming the swap was done.** With the line on the right its track still ran to 1178 while he starts at 993, so his bubble — which takes pointer events — covered the top 185px of the scale and a student could not sweep the high end of their own range. The reservation moved to the LINE, which can spare it: the scale is drawn in percentages, so a narrower track is the same range at slightly coarser resolution.
+
+| at 1280 | before any of this | while shrunk | now |
+|---|---|---|---|
+| pad area | 128,960px² | 71,240px² | **154,570px²** |
+| rail width | ~501px | ~501px | 293px |
+
+**What a reviewer should look at**, because these are judgement calls and only two of them are measurable:
+
+1. **Is a 293px rail long enough to sweep a range comfortably?** It is the number the split is really trading. An even column split was chosen over a pad-favouring one for exactly this reason.
+2. **Does the pad on the left and the line on the right read correctly**, or does the thing you commit belong on the left?
+3. **The Engine Room's field is now on the right**, which puts a text input in his column. It clears him horizontally at 1280, but it is the input a student types into.
+
+---
+
 ## 4b. FIRST JOB NEXT SESSION — the layout, from the user 2026-08-16
 
 Asked for after seeing the built gate, and not started:

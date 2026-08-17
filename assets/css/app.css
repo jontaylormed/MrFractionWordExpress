@@ -3021,7 +3021,16 @@ select {
    more than twice its height, so it read as floating above the pad rather than
    as one of two things side by side. `center` is on the grid rather than on the
    column, so the line stays centred against whatever that column grows to. */
-@media (min-width: 760px) { .est-wrap { grid-template-columns: 1.15fr 1fr; align-items: center; } }
+/* PAD LEFT, LINE RIGHT, and an EVEN split rather than a generous one for the
+   pad. At 1.25fr the pad was 592px but the rail came out 241 — and the rail is
+   what the student drags, so a line too short to sweep accurately is a worse
+   failure than a pad that could have been bigger. Even columns leave the pad
+   larger than it was before any of this and give the rail back most of its
+   length. */
+@media (min-width: 760px) { .est-wrap { grid-template-columns: 1fr 1fr; align-items: center; } }
+/* The typed field sits under the line in the same column now. Capped so it
+   reads as a field rather than as a second full-width control. */
+.est-typed { max-width: 320px; margin-top: calc(var(--su) * 2.5); }
 
 .est-lead { font-weight: 700; margin: 0 0 calc(var(--su) * 1.5); }
 
@@ -3081,29 +3090,29 @@ select {
    reads and a keyboard equivalent would draw nothing. */
 /* Tripled from `* 2` on the user's call, 2026-08-16 — the pad was crowding the
    typed field, and the two are different acts: one commits a number, the other
-   is for working out what number to commit. */
+   is for working out what number to commit. Only needed where the pad sits
+   BELOW something; in its own column it starts at the top. */
 .est-pad-wrap { margin-top: calc(var(--su) * 6); }
+.est-pad-col .est-pad-wrap,
+.solve-wrap .est-pad-wrap { margin-top: 0; }
 
-/* SHIFTED LEFT, CLEAR OF MR FRACTION (user-found, 2026-08-16 — he was sitting
-   on the pad). He is `position: fixed` at the viewport's bottom-right; the pad
-   sits in a column centred in the page. So the overlap is not a constant: it is
-   worst on a middling screen and gone on a wide one, because the gap between
-   the column's edge and the viewport's grows with the window while he does not
-   move. Measured at 1280: 37px against him collapsed, about 215 against him
-   open at 252 wide.
+/* THE PAD MOVED INSTEAD OF SHRINKING — see the note in `estimate.js`.
+   An earlier fix reserved up to 240px of right margin to keep the pad out from
+   under Mr Fraction, which cost it a third of its width. Swapping the columns
+   costs nothing instead: the pad is the tall element and now sits on the left
+   where he never reaches.
 
-   Hence a derived reservation rather than a fixed margin. He occupies roughly
-   272px of the right edge (252 wide plus a 20px inset), and the column's right
-   edge sits at `(100vw + 1180)/2` — so the bite he takes out of it is
-   `590 + 272 - 50vw`. Clamped at both ends: never negative, and never more than
-   240px, because on a middling screen the honest answer is to give up some pad
-   rather than all of it.
-
-   The pad is the right thing to move. It is the only element on these screens
-   that is both tall enough to reach his corner and worth nothing at its edges —
-   losing width costs a student nothing they were using. */
+   THE RESERVATION MOVES TO THE LINE, WHICH CAN AFFORD IT. Measured after the
+   swap: the track still ran to 1178 with him starting at 993, so his bubble —
+   which takes pointer events — covered the top 185px of the scale and a student
+   could not sweep the high end of their own range. Giving that width up costs
+   the line nothing that matters: the scale is drawn in percentages, so a
+   narrower track is the same range at slightly coarser resolution, and the
+   step already quantises what a sweep can land on. Giving it up on the PAD cost
+   a third of the only surface whose value is its area. Same clamp as before,
+   pointed at the element that can spare it. */
 @media (min-width: 760px) {
-  .est-pad-wrap { margin-right: clamp(0px, calc(862px - 50vw), 240px); }
+  .est-line-col { margin-right: clamp(0px, calc(862px - 50vw), 200px); }
 }
 /* THE BUTTON IS PINNED TO THE TOP-RIGHT OUTER CORNER, not laid out beside the
    heading (user, 2026-08-16). As a flex item it dropped below the label the
@@ -3136,11 +3145,12 @@ select {
   color: var(--ink-muted); opacity: .62; white-space: nowrap;
 }
 
-/* DOUBLED, on the user's call 2026-08-16 — 130px was room for one line of
+/* DOUBLED on the user's call 2026-08-16 — 130px was room for one line of
    working, which is not enough for the calculations and drawings the label now
-   invites. The width is the column's, so doubling the height doubles the area. */
+   invites — then nudged again to 290 when the swap gave the pad the wider
+   column. The width is the column's, so height is the only dial here. */
 .est-pad {
-  display: block; width: 100%; height: 260px; touch-action: none; cursor: crosshair;
+  display: block; width: 100%; height: 290px; touch-action: none; cursor: crosshair;
   background: var(--cream-light);
   border: 2px dashed var(--border-strong); border-radius: var(--radius-sm);
 }
@@ -3152,11 +3162,9 @@ select {
   display: grid; gap: calc(var(--su) * 3); grid-template-columns: 1fr;
   align-items: start; margin-bottom: calc(var(--su) * 2);
 }
-@media (min-width: 760px) { .solve-wrap { grid-template-columns: 320px 1fr; } }
+/* Pad first, field second — see the note in `phSolve`. */
+@media (min-width: 760px) { .solve-wrap { grid-template-columns: 1fr 320px; } }
 .solve-wrap .field { max-width: 320px; margin: 0; }
-/* The pad is the second thing here rather than an afterthought below a field,
-   so it needs no extra top margin of its own on the wide layout. */
-@media (min-width: 760px) { .solve-wrap .est-pad-wrap { margin-top: 0; } }
 
 /* Section headings on the map */
 .section-head { margin: calc(var(--su) * 5) 0 calc(var(--su) * 2); }

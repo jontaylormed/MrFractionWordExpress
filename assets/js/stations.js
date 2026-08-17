@@ -1699,14 +1699,18 @@
          the whole point of §8 was that the two acts should not look alike. This
          is a step's working, so it clears with every step, as scratch paper
          does. Never parsed, never graded, never required. */
+      /* PAD LEFT, FIELD RIGHT — the same swap as the estimate screen and for
+         the same reason: Mr Fraction floats at the viewport's bottom-right, the
+         pad is the tall element that reaches him, and moving it costs nothing
+         where shrinking it cost a third of its width. */
       '<div class="solve-wrap">' +
+        /* No custom label: both pads carry the same one, so a student meets the
+           same surface described the same way on both screens. */
+        Scratch.html('solve-pad') +
         '<div class="field">' +
           '<label for="ans">Your answer' + (step.answer.unit ? ' (' + esc(step.answer.unit) + ')' : '') + '</label>' +
           '<input type="text" id="ans" inputmode="decimal">' +
         '</div>' +
-        /* No custom label: both pads carry the same one, so a student meets the
-           same surface described the same way on both screens. */
-        Scratch.html('solve-pad') +
       '</div>' +
       '<div class="feedback" role="status" id="sfb"></div>' +
       '<div class="btn-row">' +

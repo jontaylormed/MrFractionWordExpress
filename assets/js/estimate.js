@@ -269,8 +269,30 @@
                  (ends ? '<span>' + fmt(w.lo + (w.hi - w.lo) * (i / 4), w.step) + '</span>' : '') +
                '</div>';
     }
+    /* THE PAD IS ON THE LEFT AND THE LINE IS ON THE RIGHT — swapped on the
+       user's call, 2026-08-16, and it undoes a bad edit of mine rather than
+       adding a preference.
+
+       Mr Fraction floats at the viewport's bottom-right. My first answer was to
+       shrink the pad away from him, which cost it a third of its width (496px
+       to 274) — solving a collision by making the drawing surface smaller,
+       which is the wrong thing to give up on the one element whose whole job is
+       area.
+
+       Swapping costs nothing instead. The PAD is the tall element, so it is the
+       one that reaches his corner; on the left it never does, and it keeps its
+       full width. The LINE is short — a 54px track and a row of ticks — so it
+       clears him on the right without being trimmed. Same two columns, same
+       screen height, no surface given up.
+
+       The typed field travels with the line, because "beside the line, not
+       behind a toggle" is a settled decision and the two belong together. */
     return '' +
       '<div class="est-wrap" id="est-wrap">' +
+
+        '<div class="est-pad-col">' +
+          padHTML('est-pad') +
+        '</div>' +
 
         '<div class="est-line-col">' +
           '<p class="est-lead" id="est-lead">Sweep the stretch you think the answer lies in.</p>' +
@@ -288,19 +310,18 @@
           '</div>' +
           '<div class="est-ticks">' + ticks + '</div>' +
           '<p class="est-read" id="est-read" aria-live="polite">Nothing set yet.</p>' +
-        '</div>' +
 
-        /* BESIDE THE LINE, NOT BEHIND A TOGGLE — the user's call, 2026-08-16.
-           For most students this is an alternative; for some it is the only
-           door, and a door behind a toggle reads as the back way in. */
-        '<div class="est-typed-col">' +
-          '<div class="field">' +
+          /* BESIDE THE LINE, NOT BEHIND A TOGGLE — the user's call, 2026-08-16.
+             For most students this is an alternative; for some it is the only
+             door, and a door behind a toggle reads as the back way in. It sits
+             under the line rather than in its own column now that the pad has
+             the other half of the screen — still on the page, still unlabelled
+             as the lesser path, which is what that decision was about. */
+          '<div class="field est-typed">' +
             '<label for="estv">Or type it' + (unit ? ' (' + unit + ')' : '') +
               '<span class="hint-text">It doesn&rsquo;t have to be good. It has to exist.</span></label>' +
             '<input type="text" id="estv" inputmode="decimal" autocomplete="off">' +
           '</div>' +
-
-          padHTML('est-pad') +
         '</div>' +
       '</div>';
   }
