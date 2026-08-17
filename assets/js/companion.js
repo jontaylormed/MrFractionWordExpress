@@ -117,7 +117,38 @@
           '<img src="' + ART + 'Conductor_Mr_Fraction_GIF.gif" alt="" id="mf-c-img">' +
         '</picture>' +
       '</button>';
-    document.body.appendChild(host);
+    /* FIRST IN THE DOM, NOT LAST. The user's instruction, 2026-08-16: Mr
+       Fraction is to be READ FIRST when the page is read.
+
+       He was `appendChild`ed to the body, which put him last in the document
+       and therefore last in a screen reader's browse order — after every
+       station phase, every option and every button on the screen. A sighted
+       student sees him immediately, in the corner; a student reading the page
+       linearly reached his commentary only after working through the thing he
+       was commenting on. Those are two different pages.
+
+       THIS COSTS NOTHING VISUALLY, and that is why it is the right fix rather
+       than an ARIA one. `.mf-companion` is `position: fixed`, so where it sits
+       in the document has no bearing on where it is painted. There is no
+       `aria-flowto` here, no tabindex ordering, no duplicate copy for screen
+       readers — the reading order is simply made to match what the eye already
+       does.
+
+       AFTER THE SKIP LINK, NOT BEFORE IT. The skip link has to stay the first
+       focusable thing on the page: its whole job is to let a keyboard user
+       bypass what comes next, and the companion is now part of what comes
+       next. Putting him ahead of it would mean tabbing THROUGH him to reach
+       the control that exists to let you skip him.
+
+       ONE THING THIS CHANGES THAT IS NOT READING ORDER, recorded because it is
+       invisible until it matters: `.a11y-panel` also sits at `z-index: 200`,
+       and among equal z-index the later element in the document paints on top.
+       Last in the body, the companion floated OVER the accessibility drawer;
+       second in the body, the drawer now covers him, which is the correct way
+       round for a settings panel the student has deliberately opened. */
+    var skip = document.querySelector('.skip-link');
+    if (skip && skip.parentNode === document.body) document.body.insertBefore(host, skip.nextSibling);
+    else document.body.insertBefore(host, document.body.firstChild);
     host.querySelector('#mf-c-figure').addEventListener('click', function () {
       if (host.getAttribute('data-open') === 'no') open(); else collapse();
     });
