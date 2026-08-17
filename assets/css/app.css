@@ -1662,6 +1662,33 @@ select {
   60%       { background: var(--lamp);      transform: scale(1); }
 }
 
+/* ---------- The loading bar, from the sister site's `.loading-bar-wrap` ----------
+   The Factory's is a 280x8 track with an `--orange` fill and a `width` transition,
+   and it is the one thing its loader has that this one did not: five lamps say
+   SOMETHING is happening, and nothing said how far. The track takes a border
+   here because this site's cream-mid on cream is a fainter step than the
+   Factory's #DDD0BA on white and the empty state needs an edge to read as a
+   track rather than as a smudge. */
+.load-bar-wrap {
+  width: min(280px, 70vw); height: 10px;
+  margin: calc(var(--su) * 2.5) auto 0;
+  background: var(--cream-mid);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.load-bar-fill {
+  width: 0; height: 100%;
+  background: var(--orange-deep);
+  border-radius: 999px;
+  transition: width .3s ease;
+}
+/* Reduced motion keeps the BAR and drops the tween. The width still reports
+   real progress — that is information, not decoration, and removing it would
+   take the loader back to having nothing that says how far along it is. It
+   simply steps rather than slides. */
+@media (prefers-reduced-motion: reduce) { .load-bar-fill { transition: none; } }
+
 .load-sub { animation: load-breathe 3.6s ease-in-out infinite; }
 /* THE FLOOR IS .8, NOT .55, AND IT IS A CONTRAST FIX RATHER THAN A TASTE ONE.
    `--ink-mid` on `--cream` is 8.39:1 at full opacity. Faded to .55 it composites

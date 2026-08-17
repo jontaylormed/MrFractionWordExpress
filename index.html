@@ -38,6 +38,15 @@
     <div class="load-dots" aria-hidden="true">
       <span></span><span></span><span></span><span></span><span></span>
     </div>
+    <!-- THE PROGRESS BAR, from the sister site's `.loading-bar-wrap`.
+         The five lamps say something is happening; nothing said how far along
+         it was. This does, and it is driven by the two things that actually
+         gate dismissal - see `#load-bar` in app.js. It is not a fake bar on a
+         timer: it measures the real wait, and it reaches 100% at the moment
+         the loader clears rather than before it. -->
+    <div class="load-bar-wrap">
+      <div class="load-bar-fill" id="load-bar"></div>
+    </div>
   </div>
 </div>
 

@@ -130,4 +130,18 @@ Mr_Fraction_Caboose.png
 
 [Creative Commons Attribution–NonCommercial–ShareAlike 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — free to use and adapt for teaching, with attribution, non-commercially.
 
+This covers the site, its word problems, its illustrations and the Mr Fraction character.
+
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+### Typefaces
+
+The three bundled typefaces are licensed separately by their own authors and are **not** covered by the licence above. All three are under the [SIL Open Font License 1.1](https://openfontlicense.org/), and all three are in `assets/fonts/` rather than fetched from a font service — which is what lets the site run offline, on `file://`, and on a locked-down school network.
+
+| Typeface | Used for | Licence |
+|---|---|---|
+| **Atkinson Hyperlegible** — Braille Institute of America | Body text, everywhere | SIL OFL 1.1 |
+| **Black Han Sans** | Display: station names, line cards, headings | SIL OFL 1.1 |
+| **Libre Baskerville** | Mr Fraction's asides | SIL OFL 1.1 |
+
+Atkinson Hyperlegible is the body face for a reason rather than for looks: it was drawn for low-vision readers, so the pairs that usually collapse into each other — `l`/`I`/`1`, `O`/`0`, `b`/`d` — stay distinguishable.

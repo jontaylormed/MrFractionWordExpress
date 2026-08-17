@@ -217,6 +217,18 @@
       'aria-label="The Challenge Line, on Crossover Island. ' +
       'Every stop joins two of the five situations together. ' +
       isle + ' of ' + isleTotal + ' stops open. Opens the island map.">' +
+      /* THE SEVENTH CARD WAS THE ONE WITHOUT A TICKET, and the comment on the
+         Grand Tour card forty lines up says exactly this happened there once
+         already: "the only one without a ticket — five cards carrying one and
+         a sixth conspicuously bare." The Challenge Line shipped the same way
+         and it read as an unfinished card sitting among six finished ones.
+
+         The grid was never the problem — `.map-lines .line-card .line-ticket`
+         has held a column for it since the cards were laid out — so this is
+         the missing element, not a missing rule. The island is not a line and
+         takes no line colour, but it does sell a ticket like everywhere else. */
+      '<img class="line-ticket" src="assets/art/Mr_Fraction_Train_Ticket.png" alt="" ' +
+        'aria-hidden="true" loading="lazy" decoding="async">' +
       /* ✦, not ◆◆ — the first draft doubled the Ratio Rail's marker, which on a
          map whose markers are how a line is identified reads as "two of those"
          rather than as a line of its own. Every marker on this map is unique
@@ -1295,8 +1307,37 @@
          wait: a slow load dismisses the instant it finishes. */
       var MIN_MS = 2600;
       var startedAt = Date.now();
+
+      /* THE PROGRESS BAR MEASURES THE REAL WAIT, and that constraint is what
+         makes it worth having. A bar animated 0-to-100 on a fixed timer is a
+         picture of a load rather than a report on one, and it lies in both
+         directions: it finishes early on a slow connection and crawls on a
+         fast one.
+
+         Dismissal here happens at `max(window.load, MIN_MS)`, so there are two
+         real gates and the bar tracks whichever is binding. Before `load` it
+         fills against the minimum — genuine progress, because on `file://` or
+         a warm cache the minimum IS the thing being waited on. It stops at 92%
+         rather than arriving, because the other gate has not been met yet and
+         a full bar over an unfinished load is the lie. When `load` fires the
+         remaining wait is known exactly, so the last stretch is handed to a
+         transition of precisely that duration and the bar reaches 100% as the
+         screen clears, never before. */
+      var bar = document.getElementById('load-bar');
+      var tick = bar && setInterval(function () {
+        var pct = ((Date.now() - startedAt) / MIN_MS) * 100;
+        bar.style.width = Math.min(pct, 92) + '%';
+      }, 80);
+
       var done = function () {
         var wait = Math.max(0, MIN_MS - (Date.now() - startedAt));
+        if (tick) { clearInterval(tick); tick = null; }
+        if (bar) {
+          /* A floor of 120ms so the finish is a movement rather than a jump —
+             on a load that already outran the minimum, `wait` is 0. */
+          bar.style.transitionDuration = Math.max(120, wait) + 'ms';
+          bar.style.width = '100%';
+        }
         setTimeout(function () {
           ls.setAttribute('data-done', 'yes');
           setTimeout(function () { if (ls.parentNode) ls.parentNode.removeChild(ls); }, 420);
