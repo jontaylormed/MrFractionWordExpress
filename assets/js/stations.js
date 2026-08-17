@@ -795,8 +795,36 @@
          said so before any of it was built: the teaching stops and the unaided
          ones differ by how much scaffolding they give, not by whether they are
          unlocked. Nothing here is gated. */
+      /* AN UNSTAFFED HALT NOW GOES STRAIGHT FROM THE CHECKLIST TO THE
+         CALCULATION — user, 2026-08-16: "they should be able to go to an
+         unstaffed station, receive the checklist, and then be asked to
+         calculate without any guidance."
+
+         THIS REVERSES A RULING RECORDED IN `CHALLENGE-MODE.md` §4, and the
+         reversal is deliberate rather than a drift, so the old reasoning is
+         kept here where anyone changing it back will read it. That section
+         settled that the Three Reads STAY at a halt, because read3 is where a
+         student names the question and this island's whole trap is answering
+         the wrong one — stopping at the transfer, which is a correct number
+         for a question nobody asked. Cutting read3 removes the last screen
+         standing between a student and exactly that.
+
+         The counter-argument, which is the one the user has taken: a halt that
+         still walks you through two reads and the Ticket Booth is not an
+         unaided stop, it is a staffed one with less commentary. If "no
+         assistance" is to mean anything, this is where it has to mean it.
+
+         WHAT DOES NOT GO: the estimate. `plan` is the destination rather than
+         `solve` because the estimate is a GATE and it is load-bearing far
+         beyond this island — `HANDOFF.md` §H-2 records that Look Back on a
+         wrong answer is only safe because every step's hint ladder ends by
+         stating that step's answer, and the estimate is what Look Back
+         compares against. It is also the only thing that catches an answer of
+         the wrong SIZE, which on a two-line problem is the exact shape of the
+         stopping-at-the-transfer error. Skipping it would break a guarantee
+         that belongs to the whole site, not to this stop. */
       self.go(!self.p.pair ? 'platform'
-            : self.p.fadeLevel === 'independent' ? 'read2'
+            : self.p.fadeLevel === 'independent' ? 'plan'
             : 'crossover');
     });
 
@@ -1581,7 +1609,13 @@
          asked to do yet. Compare like with like. */
       self.estimateRaw = String(raw).trim();
       self.m.estimates.push({ id: self.p.id, estimate: v });
-      var reasoning = est && est.modelReasoning
+      /* NO "ONE WAY TO THINK ABOUT IT" AT AN UNSTAFFED HALT. It is guidance on
+         how to arrive at the estimate, which is precisely what a student who
+         came here for no assistance did not ask for — and on a paired problem
+         it tends to describe the route through both halves. The estimate is
+         still required; only the coaching goes. */
+      var unaided = !!(self.p.pair && self.p.fadeLevel === 'independent');
+      var reasoning = (!unaided && est && est.modelReasoning)
         ? '<br><br><strong>One way to think about it:</strong> ' + esc(est.modelReasoning) : '';
       self.host().querySelector('#pfb').innerHTML = msg('go', '✓',
         'Estimate locked in: <strong>' + esc(raw) + '</strong>. Hold on to that.' + reasoning);

@@ -183,10 +183,21 @@
            that student to the seam. Rendering a screen the app would not is
            this file's oldest rule; here it would also scan copy that problem
            does not author. */
-        var second = !isPaired(p) ? 'platform'
-                   : p.fadeLevel === 'independent' ? null
-                   : 'crossover';
-        var phases = ['read1'].concat(second ? [second] : []).concat(['read2', 'read3', 'ticket', 'plan']);
+        /* AN UNSTAFFED HALT IS NOW READ1 THEN THE ESTIMATE, and this list has
+           to follow `phRead1`'s fork or it scans screens no student can reach.
+           Changed 2026-08-16 with the fork itself: a halt used to continue into
+           read2, read3 and the Ticket Booth, and it now goes straight from the
+           checklist to the calculation.
+
+           Rendering the three it skips would not merely waste work — it is this
+           file's oldest rule, and here it would report leaks and numberless
+           breaks on copy those problems still author but never show, which is
+           a finding nobody can act on. */
+        var unaided = isPaired(p) && p.fadeLevel === 'independent';
+        var second = !isPaired(p) ? 'platform' : unaided ? null : 'crossover';
+        var phases = unaided
+          ? ['read1', 'plan']
+          : ['read1'].concat(second ? [second] : []).concat(['read2', 'read3', 'ticket', 'plan']);
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         phases = phases.concat(['solve', 'check']);
