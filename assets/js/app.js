@@ -1324,14 +1324,50 @@
          transition of precisely that duration and the bar reaches 100% as the
          screen clears, never before. */
       var bar = document.getElementById('load-bar');
-      var tick = bar && setInterval(function () {
+
+      /* THREE PHRASES, NOT ONE — the user's call, 2026-08-16. The status line
+         said "Getting up steam…" for the whole wait and then the site
+         appeared, so the only thing on screen that changed was the lamps.
+
+         THEY ARE DRIVEN BY THE SAME NUMBER THE BAR IS, which is what keeps
+         them from being filler. The Factory's loader rotates a line on a timer
+         and this project's own reading of it (ROADMAP §5) called that worse
+         than a static one, because a line that turns over on its own says
+         nothing about how the load is going. Read off the same elapsed
+         fraction, they narrate the bar instead: each one lands as the fill
+         passes it.
+
+         The wording tracks what is visibly happening rather than inventing
+         business — the lamps light one per line, so the middle phrase names
+         them. Nothing here claims a step the site is not actually taking.
+
+         THE LOADER IS `aria-hidden`, so all three are visual only; a screen
+         reader hears none of them and is not made to sit through a countdown.
+
+         THEY KEEP ADVANCING UNDER REDUCED MOTION, for the same reason the bar
+         does: this is status, not decoration, and freezing it would leave a
+         reduced-motion user with the one thing the change set out to fix. */
+      var sub = document.querySelector('.load-sub');
+      var PHRASES = ['Getting up steam…', 'Lighting the signal lamps…', 'Signals clear…'];
+      var phraseAt = 0, finishing = false;
+
+      /* One interval for both, and it OUTLIVES `done()`. An earlier version
+         cleared it there, which on a warm cache — where `done()` runs within a
+         couple of hundred milliseconds — meant the bar was handed its final
+         transition and the words never advanced past the first. The common
+         path would have shown none of this. */
+      var tick = setInterval(function () {
         var pct = ((Date.now() - startedAt) / MIN_MS) * 100;
-        bar.style.width = Math.min(pct, 92) + '%';
+        if (bar && !finishing) bar.style.width = Math.min(pct, 92) + '%';
+        var want = pct >= 72 ? 2 : pct >= 36 ? 1 : 0;
+        if (sub && want !== phraseAt) { phraseAt = want; sub.textContent = PHRASES[want]; }
       }, 80);
+
+      var stopTick = function () { if (tick) { clearInterval(tick); tick = null; } };
 
       var done = function () {
         var wait = Math.max(0, MIN_MS - (Date.now() - startedAt));
-        if (tick) { clearInterval(tick); tick = null; }
+        finishing = true;
         if (bar) {
           /* A floor of 120ms so the finish is a movement rather than a jump —
              on a load that already outran the minimum, `wait` is 0. */
@@ -1340,7 +1376,10 @@
         }
         setTimeout(function () {
           ls.setAttribute('data-done', 'yes');
-          setTimeout(function () { if (ls.parentNode) ls.parentNode.removeChild(ls); }, 420);
+          setTimeout(function () {
+            stopTick();
+            if (ls.parentNode) ls.parentNode.removeChild(ls);
+          }, 420);
         }, wait);
       };
       if (document.readyState === 'complete') done();
