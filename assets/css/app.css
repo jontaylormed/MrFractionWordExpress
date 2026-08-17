@@ -3083,6 +3083,28 @@ select {
    typed field, and the two are different acts: one commits a number, the other
    is for working out what number to commit. */
 .est-pad-wrap { margin-top: calc(var(--su) * 6); }
+
+/* SHIFTED LEFT, CLEAR OF MR FRACTION (user-found, 2026-08-16 — he was sitting
+   on the pad). He is `position: fixed` at the viewport's bottom-right; the pad
+   sits in a column centred in the page. So the overlap is not a constant: it is
+   worst on a middling screen and gone on a wide one, because the gap between
+   the column's edge and the viewport's grows with the window while he does not
+   move. Measured at 1280: 37px against him collapsed, about 215 against him
+   open at 252 wide.
+
+   Hence a derived reservation rather than a fixed margin. He occupies roughly
+   272px of the right edge (252 wide plus a 20px inset), and the column's right
+   edge sits at `(100vw + 1180)/2` — so the bite he takes out of it is
+   `590 + 272 - 50vw`. Clamped at both ends: never negative, and never more than
+   240px, because on a middling screen the honest answer is to give up some pad
+   rather than all of it.
+
+   The pad is the right thing to move. It is the only element on these screens
+   that is both tall enough to reach his corner and worth nothing at its edges —
+   losing width costs a student nothing they were using. */
+@media (min-width: 760px) {
+  .est-pad-wrap { margin-right: clamp(0px, calc(862px - 50vw), 240px); }
+}
 /* THE BUTTON IS PINNED TO THE TOP-RIGHT OUTER CORNER, not laid out beside the
    heading (user, 2026-08-16). As a flex item it dropped below the label the
    moment the column got narrow enough to wrap a 50-character heading — so the

@@ -688,20 +688,52 @@
          halves collide on `shape` gets the same treatment with nothing added.
          It cannot fire on the mainland — all 30 problems there were measured
          at exactly one true option per question. */
+      /* AN UNSTAFFED HALT CONFIRMS; IT DOES NOT EXPLAIN. User-found,
+         2026-08-16: riding Marsh Halt "with No Assistance" produced a full
+         rundown of the read and the reasoning, which is the one thing
+         `CHALLENGE-MODE.md` §4 says a halt does not do — nobody walks the
+         student to the seam.
+
+         The Crossover Read was correctly skipped. Its TEACHING was arriving
+         anyway, through three strings on `read1`, none of which consulted
+         `fadeLevel`:
+
+           1. the `fit` question's authored `yes` — which names both halves, in
+              order, and what produces what. On `cl-buffet-crates` that is
+              "the scaling is what produces the total being cut": the seam AND
+              the transfer, handed over before the student has looked for
+              either;
+           2. the note below, which says in as many words that one answer fits
+              the first part and one fits the rest;
+           3. Mr Fraction's retelling at the end of the five.
+
+         So a halt keeps the checklist — it is the aid a halt keeps, and it
+         still marks right and wrong — and loses the prose that does the
+         finding for them. The other four questions keep their replies: those
+         are about the checklist itself, not about where this story turns. */
+      var unaided = !!(self.p.pair && self.p.fadeLevel === 'independent');
+
       var alsoTrue = self.p.pair
         ? q.options.filter(function (x) { return x !== o && optionTrue(x, self.p); })
         : [];
-      var both = (ok && alsoTrue.length)
+      var both = (!unaided && ok && alsoTrue.length)
         ? '<br><br><strong>And so is &ldquo;' + alsoTrue[0].text + '&rdquo;.</strong> ' +
           'Both are true, because this story is doing two different things &mdash; one of them fits ' +
           'the first part and one fits the rest. That is worth holding on to: the last question ' +
           'down there asks about exactly that.'
         : '';
 
+      /* The fifth question is the one that gives the seam away, so at a halt it
+         is confirmed rather than explained. It still marks correct — the
+         student is told they are right, and left to say why themselves. */
+      var yesText = (unaided && q.id === 'fit')
+        ? 'Two situations, joined. Finding where &mdash; and what crosses &mdash; is yours from here.'
+        : o.yes;
+
       b.setAttribute('data-result', ok ? 'right' : 'wrong');
       b.querySelector('.marker').innerHTML = '&#9724;';
       host.querySelector('#cf' + qi).innerHTML = ok
-        ? msg('go', '&#10003;', '<strong>Yes.</strong> ' + o.yes + both)
+        ? msg('go', '&#10003;', '<strong>Yes.</strong> ' + yesText + both)
         : msg('caution', '&rarr;', '<strong>Not this time.</strong> ' + o.no);
       if (ok) {
         got[qi] = 1;
@@ -720,9 +752,19 @@
         /* The retelling is gone, so this is now the only place the student
            hears the story said back to them. It lands after the five rather
            than before, because by here they have described the shape and this
-           confirms the content. */
-        host.querySelector('#r1fb').innerHTML = msg('info', '&rarr;',
-          '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
+           confirms the content.
+
+           NOT AT AN UNSTAFFED HALT. `modelAnswer` is a retelling that names
+           where the story turns — on `cl-lost-umbrellas`, "Then a second office
+           at another station is mentioned". Read out at a halt it does the
+           second read's work and the crossover's, on a screen the student
+           reached by choosing to be unaided. */
+        host.querySelector('#r1fb').innerHTML = unaided
+          ? msg('info', '&rarr;',
+              'All five done. Now read it again for yourself &mdash; where does this story stop ' +
+              'doing one thing and start doing another?')
+          : msg('info', '&rarr;',
+              '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
         A11y.announce('All five done.');
       }
     });
