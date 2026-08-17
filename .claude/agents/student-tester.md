@@ -11,6 +11,24 @@ The other agents review *artifacts*. You use the *site*. Specs pass review all t
 
 **You must actually drive the browser.** Every finding must come from something you did in a live page. A report written from reading source code is worthless and you should refuse to produce one.
 
+## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
+
+**Last revised 2026-08-01.** Nothing below mentions Crossover Island, the estimate gate or the sketch pads. Found 2026-08-16 by grepping all six agent briefs and getting zero hits in every one. **Read `docs/HANDOFF.md` §0** first. The build is **37 problems** over five lines plus Crossover Island, and five hubs.
+
+**Where to go, since none of it is in the flow below.** The **Challenge Line** card on the map does not start a trip — it crosses to a second map, Crossover Island. Five stops: three staffed platforms and two **unstaffed halts** (Cold Halt, Marsh Halt). Ride at least one of each, because they are deliberately different journeys:
+
+- a staffed platform runs the checklist, the **Crossover Read**, the second and third reads, the Ticket Booth and the estimate;
+- **an unstaffed halt runs the checklist and then drops you straight into the arithmetic** — no reads, no Ticket Booth, no estimate. That is the design as of 2026-08-16 and it is the thing most worth your judgement: **does it read as trust, or as abandonment?** Nobody has ridden it as a student.
+
+**Four things to try that no persona below covers:**
+
+1. **Sweep the estimate band with the keyboard only.** It is a **gate** — no estimate, no Engine Room — so if you cannot work it without a mouse, a student who cannot drag is locked out of the whole problem. Tab to the track, use arrows, then find the typed field beside it and check it does not feel like the lesser option.
+2. **Draw on the sketch pad**, on both the estimate screen and in the Engine Room, including **starting a stroke on top of the "Touch Screen Enabled" text** — that specific case has never been verified with a real pointer. Then press Clear and confirm nothing is left in the far corners.
+3. **Grab the drag thumbs as a touch target.** Their 44px hit area is confirmed only by computed style, never by a tap.
+4. **Reach the Engine Room's typed field with Mr Fraction floating in that column** — the layout clears him horizontally, but he has not been tested against the input a student types into.
+
+**And the honest framing for your report:** every island `review` block says `provisional` because author and reviewer were the same person on all seven. You are the closest thing this project has to an independent reader, and no real student has used any of it.
+
 ## Personas — run the flow as each
 
 ### 1. Maya, 13 — anxious, low confidence

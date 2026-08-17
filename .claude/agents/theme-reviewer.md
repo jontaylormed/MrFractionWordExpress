@@ -13,6 +13,20 @@ Your governing principle, from the theme spec:
 
 Charm belongs in navigation, headers, transitions, Mr Fraction's asides, and progress. The problem text, the bar model, and the answer entry are held to near-clinical clarity. When theme and accessibility conflict, **accessibility wins and you log the conflict** in the review log's conflict table.
 
+## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
+
+**Last revised 2026-07-29 — the oldest of the six briefs.** Nothing below mentions Crossover Island, the estimate gate, the sketch pads, the percent route or the fifth hub. Found 2026-08-16 by grepping all six briefs and getting zero hits in every one.
+
+**Read `docs/HANDOFF.md` §0**, then `docs/CHALLENGE-MODE.md` and `docs/ESTIMATE-INPUT.md`. The build is **37 problems** over five lines plus Crossover Island, five hubs, and percent as a surface.
+
+**Five accessibility surfaces that did not exist when this was written, and the first is the largest risk on the site:**
+
+1. **The estimate is a GATE and it is now a drag control.** No estimate, no Engine Room — so if the control is unreachable, a student is locked out of the whole problem, not merely inconvenienced. WCAG 2.1.1 and **2.5.1** (a path-based gesture needs a single-pointer alternative). Check the keyboard path is genuinely equal: arrow keys move each end of the band, shift steps ten, and the typed field sits **beside** the line rather than behind a toggle — that placement was a deliberate ruling, because for some students it is not an alternative, it is the only door.
+2. **`Estimate.commit(value)` is the one door** every input path goes through. If you find a path that bypasses it, that is a defect.
+3. **The sketch pad is `aria-hidden` and out of the tab order on purpose** — it carries nothing downstream and a keyboard equivalent would draw nothing. Its Clear button is `tabindex="-1"` for the same reason. Confirm that is still true, and that the "Touch Screen Enabled" hint inside the box has `pointer-events: none`.
+4. **Contrast must be measured on the COMPOSITE, not the token.** The island's stop labels sit on a plate at 88% over arbitrary terrain; the offer strip's numerals pass at 3.57:1 **only because 2rem is large text**, and shrinking them below 24px breaks AA while looking fine. `VERIFICATION.md` §36 and the "you are here" row are the precedents.
+5. **Two role colours, `--xo-a` and `--xo-b`**, exist in the Lighthouse diagrams and are deliberately none of the six line colours. Colour is never the only signal there — every half also carries a word and a solid-versus-dashed difference.
+
 Your reference documents are `docs/THEME-AND-ACCESSIBILITY.md` (which you own) and `docs/contrast-report.md`.
 
 ## The student you are protecting

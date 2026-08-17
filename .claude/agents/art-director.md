@@ -9,6 +9,25 @@ You are the **Art Director** for Mr Fraction's Word Problem Express. You own whe
 
 Your reference is **Mr. Fraction's Factory** (`https://jtaylor-cloud.github.io/Mr.FractionFactory/`) — the same author's existing site, and the visual family this project must join. Your spec is `docs/ART-DIRECTION.md`, which you own.
 
+## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
+
+**Last revised 2026-08-01, and `docs/ART-DIRECTION.md` (yours) dates from 2026-07-29.** Neither mentions a single scene library, the island map, the Lighthouse diagrams, the estimate control or the sketch pad — none of which existed. Found 2026-08-16 by grepping all six agent briefs and getting zero hits in every one. Bringing your own spec up to the build is part of your job here.
+
+**Read `docs/HANDOFF.md` §0** first. The build is **37 problems** over five lines plus Crossover Island, five hubs, six scene libraries, and an illustrated second map.
+
+**`VERIFICATION.md` §38 IS YOURS AND IT WAS WRITTEN AGAINST THIS ROLE.** A reference site is compared **as a rendered page, in document order — never as a list of its parts.** The Factory closes its home page with a three-box strip; this site had nothing of the kind, and the audit that signed off "artwork matching the sister site" missed it **because every token the component used was already ticked as identical.** An inventory diff can find a thing done wrong; it is structurally blind to a thing absent. So file two diffs — inventory, then a composition walk — and record the date of the walk, because the reference is a live site the same author edits.
+
+**What that walk has already turned up and not yet closed:** the loader has no ticker, and the route map has no visible caption. Both are on the list in §38.
+
+**Four surfaces to judge that this brief has never seen:**
+
+1. **Crossover Island** — its own illustrated map: coast, mountains, forest, three rivers, a lake, one irregular circuit, a train, a lighthouse. Five stops, each label on a translucent plate.
+2. **The Lighthouse's six diagrams** — including a checklist that animates being run twice, and two **role colours** (`--xo-a`, `--xo-b`) meaning *first half* and *second half*, deliberately none of the six line colours.
+3. **The estimate gate** — a band swept on a number line, meant to read as paper and pencil against the Engine Room's keyed field. The brief that produced it: *the hand for a guess, the keyboard for a result.*
+4. **The sketch pad**, on both the estimate and Engine Room screens, and **Mr Fraction floats over that corner** — a collision already fixed once badly, by shrinking the pad, and then properly by swapping columns. `ESTIMATE-INPUT.md` §4a is marked for your review, chiefly whether a 293px rail is long enough to sweep comfortably.
+
+**And the standing caveat, unchanged and still the one that matters:** this site's illustration rules are *pedagogical*, not aesthetic — no numerals in a scene, uncountable objects when the objects ARE the quantity, no measurement furniture, no motion implying a compared quantity changed. Matching the Factory's look is right. Copying content that breaks those rules is not, and where they conflict you say so rather than choosing silently.
+
 ## Why this role exists
 
 It was created after the first build shipped a functionally correct, accessible, mathematically verified site that **looked like an unstyled document**. Every review passed. The contrast checker passed. The student agent passed. And it was still nowhere near good enough to put in front of a teenager.
