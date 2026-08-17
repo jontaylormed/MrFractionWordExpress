@@ -1,5 +1,5 @@
 # Handoff — Mr Fraction's Word Problem Express
-### State at the end of 2026-08-10. Read this first, then `../CLAUDE.md`, then `VERIFICATION.md`.
+### State at the end of 2026-08-17. Read this first, then `../CLAUDE.md`, then `VERIFICATION.md`.
 
 # 🚂 THE SITE IS LIVE
 
@@ -13,23 +13,23 @@
 
 > **The rules most likely to save you time.** §29: bulk content edits go through `Edit`, never a shell — a PowerShell replace once corrupted seven files here. **There is a git repo now (2026-08-10), so the worst case is a `git checkout` rather than a lost session — but only for what is committed, so the rule stands.** §31: deletion is the cheapest fix to write and the most expensive to live with. §34 and §35 are new and are about deployment and about instruments that break what they measure.
 
-**Next session's work is §0.** Everything after it is the state you are picking up.
+**Next session's work is §0.** Everything after §1 is the state you are picking up, and much of it is history kept for its reasoning rather than a brief.
 
-> **[`ROADMAP.md`](ROADMAP.md) is the forward plan.** Everything on it is done **except item 6, Challenge Mode**, which is the only thing left.
->
-> **Its planning document is written: [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md) (2026-08-15).** Read it before `ROADMAP` §6. Five decisions are recorded there as made with the user, and the build order in its §9 is deliberate — **the leak scan and the `stacked` answer key come before the first problem is authored**, because both are instruments that will otherwise be judging content they were never taught about.
+> **[`ROADMAP.md`](ROADMAP.md) is the forward plan, and it is now empty of unbuilt items.** Item 6, Challenge Mode, was built 2026-08-15/16 — see [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md). Item 8, the estimate input, was designed and built 2026-08-16 — see [`ESTIMATE-INPUT.md`](ESTIMATE-INPUT.md). **What is left on this project is review and real students, not features.**
 
 ---
 
-## 0-NEW. Read this first — the state changed substantially on 2026-08-16
+## 0. The state, as of 2026-08-17
 
-**Challenge Mode is BUILT and ridden.** Everything in §0 below describes the site before it existed and is now history rather than a brief. The plan, what got built, and what is left are in **[`CHALLENGE-MODE.md`](CHALLENGE-MODE.md)** — its §10 is the outstanding list.
+**Challenge Mode and the estimate gate are both BUILT.** Everything in §0-HISTORY below describes the site before either existed and is kept for its reasoning, not as a brief. The two planning documents are **[`CHALLENGE-MODE.md`](CHALLENGE-MODE.md)** (its §4 fade ladder is normative) and **[`ESTIMATE-INPUT.md`](ESTIMATE-INPUT.md)** (its §4a is marked for art-director review).
 
-**The roadmap is now empty of unbuilt items except [`ROADMAP.md`](ROADMAP.md) §8**, the estimate-input idea (drawing an estimate, typing an answer), which is planned and not started.
+**What would most improve this site is no longer code.** Every island `review` block is `provisional` because author and reviewer are the same person, and **no real student has used any of it** — least of all the two unstaffed halts, which now drop a student from the checklist straight into the arithmetic. That is the missing check, and it has been the missing check since long before the island.
 
-**What would most improve this site is no longer code.** Every island `review` block is `provisional` because author and reviewer are the same person, and **no real student has used any of it** — least of all the two unstaffed halts, where the fade is most likely to be a wall rather than a challenge. That is the missing check, and it has been the missing check since long before the island.
+**37 problems, 148 materialisations, 1,428 rendered screens, every sweep count 0.** The screen count *fell* from 1,468 on 2026-08-16 and that is not a regression — an unstaffed halt stopped rendering three phases a student can no longer reach. When a count moves, check which direction the design moved first.
 
-**37 problems, 148 materialisations, 1,468 rendered screens, every sweep count 0.** Ridden end to end 2026-08-16.
+**A REVIEW CYCLE IS IN PROGRESS AS OF 2026-08-17, and its first finding is why.** All six agent briefs were grepped for Crossover Island and the estimate gate and returned **zero in every one** — six reviewers briefed on a site that no longer existed, whose clean pass would have been indistinguishable from a real one. The briefs and the stale specs were fixed first (`PROBLEM-SCHEMA` was missing four blocks, including `testTrack`, which 24 of 37 problems author). **Cycle 30 is the write-up; check `REVIEW-LOG.md` for whether the reviewer agents have run yet.**
+
+**The live site is current** — the user pushes manually and it was verified against the deployed origin on 2026-08-16. It drifts by default, so check the deployed file before calling anything shipped, and **give the case-sensitivity check a mis-cased control** or it proves nothing.
 
 What exists that did not before:
 
@@ -47,17 +47,21 @@ What exists that did not before:
 **Four things a new session should know before touching any of it:**
 
 1. **An island answer may not be 1, 2 or 5**, and no authored island copy may contain a number word. The station header says *"Two situations, joined"* on every island screen and *"five"* is everywhere the checklist is — the leak scan reads spelled-out answers, and it has already caught one. **Watch for "half"**: *"the first half hands the second half a number"* is the natural sentence and it is refused.
-2. **`fadeLevel: "independent"` is the unstaffed-halt switch**, not a label. It skips the Crossover Read and fades the Plan phase to the estimate alone. The Three Reads, the estimate and the hint ladder stay — settled by the user, do not re-open.
+2. **`fadeLevel: "independent"` is the unstaffed-halt switch**, not a label — and **what it drops was reversed twice on 2026-08-16, so ignore any older description of it, including the one this line used to carry.** It read *"the Three Reads, the estimate and the hint ladder stay — settled by the user, do not re-open"*, and both halves of that are now wrong. A halt runs **`read1` and then the Engine Room**: no Crossover Read, no second or third read, no Ticket Booth, **no estimate**. Only the hint ladder stays.
+
+   **The ladder is written in exactly one place — `Stations.phaseChain`** — because it used to be written twice, here in prose and again in `tools/sweep.js`, and the copies disagreed for a whole run. `CHALLENGE-MODE.md` §4 states it as a normative table naming that function; **if the table and the code disagree, the code is right.** Both of the day's opposite rulings are recorded there with their arguments, so read the losing one before reversing it again.
 3. **`SWEEP.report()` ends with a Challenge coverage line.** If it says *examined: 0*, the check ran over nothing and the run is not a pass. `SWEEP.selfTestChallenge()` proves the transfer rule independently of content.
 4. **No checker on this project can see the journey panel or the end-of-trip screen.** Both defects found in the verification ride lived there — the panel told the student every island stop was *"track being laid"*, and the end screen was one button on a blank page with its words off in the floating companion. **Ride a stop after changing anything in `app.js` or `scenery.js`.**
 
 ---
 
-## 0. Next session — the brief
+## 0-HISTORY. The brief as it stood on 2026-08-10 — NOT current, kept for its reasoning
 
-> ### Rewritten 2026-08-10, the day the site went live. Read §0, then §1, then `ROADMAP.md`. Everything past the ⏹ marker below is finished work kept for its reasoning.
+> ### ⚠ **This section is history. §0 above is the current state.** Every count below is superseded — it says 30 problems, four hubs and 1,196 screens against today's 37, five and 1,428 — and it describes a site with no island and a text-box estimate. It is kept because the *reasoning* in it is still good and several rules were earned here. **Do not take a brief from it.**
+>
+> Why it is still here at all: this file has twice been rewritten in a way that deleted the argument along with the outdated fact, and then somebody re-litigated a settled decision because the reason had gone with it. `VERIFICATION.md` §31 — deletion is the cheapest fix to write and the most expensive to live with.
 
-### 0.0 Where the build actually is
+### 0.0 Where the build was on 2026-08-10
 
 **All five lines run. 30 problems, four number sets each — 120 materialisations, 1,196 rendered screens, every check at zero.** Four Learning Hubs, all paged journeys. The percent card is complete: five problems across four lines, its own route, colour, marker, Plan model and hub, with a Ticket Booth that asks which line is hiding underneath.
 
