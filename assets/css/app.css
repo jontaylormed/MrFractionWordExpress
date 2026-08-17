@@ -2841,6 +2841,61 @@ select {
 .hub-card strong { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: .03em; font-size: 1.08rem; }
 .hub-card small { color: var(--ink-muted); display: block; margin-top: 4px; }
 
+/* ---------- The offer strip, ported from the sister site ----------
+   Mr. Fraction Factory closes its home page with three boxes — 5 STATIONS,
+   ∞ FRACTIONS TO EXPLORE, 1 MR. FRACTION — saying what the place holds in the
+   fewest words it can. This site ended on a list of hubs and stopped.
+
+   THE PALETTE NEEDED NO TRANSLATION, which is the strongest evidence yet that
+   these two really are one design system: the Factory's strip is #FDF8F0 on a
+   #C8B89A border with #C96A1F numerals, and those are this site's
+   `--cream-light`, `--border` and `--orange` to the byte. The display face is
+   Black Han Sans in both, and it is already self-hosted here.
+
+   TWO THINGS ARE DELIBERATELY NOT COPIED, and they are the standing caveat in
+   ROADMAP's sister-site section — match the look, not a rule this site holds
+   and the Factory does not:
+
+   1. THE LABEL COLOUR. The Factory sets `.stat-label` to #A08060 at 11px,
+      which measures 3.45:1 on this cream — under the 4.5 that size needs.
+      `--ink-muted` measures 6.95:1, and the label is 12px here. Both numbers
+      taken off the rendered page, not from the spec.
+   2. THE NUMERAL SIZE IS LOAD-BEARING, not decorative. `--orange` on
+      `--cream-light` measures 3.57:1, which passes as LARGE text and fails as
+      normal text. At 2rem it is large by a wide margin — but anyone shrinking
+      these numerals below 24px breaks AA doing it, and the number would look
+      fine the whole time. Same lesson the Platform Check's "you are here" row
+      taught: a threshold is a claim about how something RENDERS. */
+.stats-strip {
+  list-style: none; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--cream-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: calc(var(--su) * 5) 0 calc(var(--su) * 2);
+}
+.stat-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--su) * 2.5); text-align: center;
+}
+.stat-value {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 2rem; line-height: 1.05; letter-spacing: .01em;
+  color: var(--orange);
+}
+.stat-label {
+  margin-top: 6px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--ink-muted);
+}
+/* Stacked, the three need a line between them: the Factory's version relies on
+   sitting side by side to read as three things, and that stops being true the
+   moment they are in a column. */
+@media (max-width: 620px) {
+  .stats-strip { grid-template-columns: 1fr; }
+  .stat-item + .stat-item { border-top: 1px solid var(--border); }
+}
+
 /* Section headings on the map */
 .section-head { margin: calc(var(--su) * 5) 0 calc(var(--su) * 2); }
 .section-head:first-of-type { margin-top: 0; }

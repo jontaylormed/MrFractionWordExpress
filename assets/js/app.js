@@ -313,6 +313,37 @@
       '<p style="color:var(--ink-mid)">Interchange stops. Drop in whenever you want a refresher on the ' +
       'basics behind a line &mdash; before a trip, during one, or just because.</p>' +
       '<ul class="hub-list">' + (hubs || '<li class="soon">Hubs opening soon.</li>') + '</ul>' +
+
+      /* THE OFFER STRIP — the sister site's `.stats-strip`, ported 2026-08-16
+         on the user's instruction. It closes the Factory's home page with
+         three boxes saying what the place holds, in the fewest possible words,
+         and this site had nothing of the kind: the map ends on a list of hubs
+         and simply stops.
+
+         CLASS NAMES ARE THE FACTORY'S, DELIBERATELY. `.stats-strip`,
+         `.stat-item`, `.stat-value`, `.stat-label` — so anyone holding the two
+         sites side by side can see that this is the same component rather than
+         a lookalike, which is the whole point of a sister site.
+
+         EVERY NUMBER IS DERIVED. VERIFICATION.md §33: an authored count goes
+         stale the moment content is added, and this one would be wrong on the
+         day somebody writes problem 38 — on the page whose job is to say how
+         much there is. `MF.LINES` is the five situations and
+         `MF.publishedProblems()` is the same source the Grand Tour counts
+         from, so neither can drift from what the map above actually offers.
+
+         The third box is a joke the Factory makes too, and it is kept because
+         the two sites are meant to read as one family. */
+      '<ul class="stats-strip">' +
+        [{ value: Object.keys(MF.LINES).length, label: 'Situations' },
+         { value: MF.publishedProblems().length, label: 'Word problems' },
+         { value: 1, label: 'Mr Fraction' }].map(function (s) {
+          return '<li class="stat-item">' +
+                   '<span class="stat-value">' + esc(s.value) + '</span>' +
+                   '<span class="stat-label">' + esc(s.label) + '</span>' +
+                 '</li>';
+        }).join('') +
+      '</ul>' +
       '</div>');
 
     node.querySelector('#map-hero').appendChild(Scenery.railMap(counts));
