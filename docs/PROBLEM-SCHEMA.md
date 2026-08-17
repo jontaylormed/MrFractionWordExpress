@@ -334,6 +334,101 @@ Cycle 9b while this one was still unresolved.
 
 **`a11yDescription` is mandatory on every bar model.** A blind student must be able to reason from the description alone. Theme Agent rejects any manifest missing it.
 
+### 5.1 `signalBox.testTrack` — the demonstration between the estimate and the answer
+
+**Added to this document 2026-08-16, having been undocumented since it was built.** It was absent here while **24 of the 37 problems authored one** — so anyone authoring from this file wrote a problem with no Test Track and no way to know they had. Spec and the two rejected designs: [`TEST-TRACK-SPEC.md`](TEST-TRACK-SPEC.md).
+
+**Note the path.** It is `signalBox.testTrack`, **not** top level. A checker that looked for `p.testTrack` found zero across all 37 and that reads exactly like the feature having been removed.
+
+```jsonc
+"signalBox": {
+  "testTrack": {
+    "kind": "section",            // section | cross | drive | compare | groups
+    "title": "The Test Track",
+    "heading": "…",
+    "intro": "…",                 // what this screen is for
+    "worked": { … },              // the demonstration, on OTHER numbers
+    "yours": {                    // two questions about the student's own picture
+      "q1": "…", "q2": "…",
+      "options1": [ … ], "options2": [ … ],
+      "settled1": "…", "settled2": "…"
+    },
+    "law": "…",                   // the strategy, stated
+    "bridge": "…",                // carries the student to their own numbers
+    "a11yDescription": "…"
+  }
+}
+```
+
+**Five kinds, and the count of each is deliberate** — measured 2026-08-16: `section` 5, `cross` 5, `drive` 4, `compare` 5, `groups` 5. **The shape of `worked` and `yours` varies by kind** (`drive` has `cars` and a `gap`; `cross` needs exactly two rows and an `equation`; `section` needs `sayCut`/`sayTake`), so read the kind's own validator branch before authoring one.
+
+**What the validator enforces** (`data.js`): an `a11yDescription` — *"it is the whole demonstration for anyone who cannot see it move"*; exactly one correct option in each of `options1` and `options2`, at least three options each, and a real explanation on every one; both questions present; `cross` needs two rows with names and both values plus an `equation`; `drive` needs at least two cars and a `gap` that indexes one of them. Missing `law` or `bridge` is a **warning**, not an error.
+
+**The demo's numbers must belong to no problem on the line** (`VERIFICATION.md` §26). A worked example on the student's own numbers is not a demonstration, it is the answer.
+
+### 5.2 `signalBox.percentLine` — the double number line
+
+**Also undocumented until 2026-08-16**, on **5 problems**. Dispatched on the top-level `surface: "percent"` flag rather than on `line`, and `PercentModel` is asked **first**, so a percent problem on any line draws this instead of that line's own picture.
+
+```jsonc
+"signalBox": {
+  "percentLine": {
+    "title": "…", "heading": "…", "prompt": "…",
+    "unknownIs": "part",          // part | whole | percent
+    "wholeToken": "n1",           // the token that is 100% …
+    "percentToken": "n2",         // … XOR `percentAt`, never both
+    "base": "cold",               // which choice key counts as 100%
+    "choices": [ { "key": "cold", "label": "…" }, … ],
+    "questionLabel": "…", "settledLabel": "…",
+    "why": "…", "whyWrong": { "hot": "…" },
+    "a11yDescription": "…", "settledSay": "…"
+  }
+}
+```
+
+**What the validator enforces** — this block shipped on `cp-hot-drinks` with **no rule of its own at all**, which is why the list is long: `unknownIs` must be one of the three modes; the token for the unknown quantity must **not** be authored (the unknown is the question, not a given); the required token for the known one must exist and must name a number this problem defines; **exactly one** of `percentToken` / `percentAt`; the mark must parse as a percentage and must not exceed **200%**, past which the model refuses to draw rather than lie; at least two choices, each with a `key` and a `label`; a `base` that is one of those keys; every `whyWrong` key must be a real choice, and **must not** explain the base, because the base is the correct pick; and an `a11yDescription`, since it is the line's only text for a screen reader.
+
+**`percentAt` exists because the mark is not always a percentage the story states.** *"Busier by 20%"* puts the known amount at **120%**.
+
+### 5.3 `pair` and `signalBox.crossover` — a Crossover Island problem
+
+**Undocumented until 2026-08-16**, on the **7** island problems. `pair` is **top level**; the crossover block is under `signalBox`. Full design: [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md).
+
+A paired problem is **two situations end to end**, joined by a **transfer**: one value that is an *answer* on one side of the seam and a *given* on the other.
+
+```jsonc
+"pair": {
+  "first": "compare",             // the schema of each half — must DIFFER
+  "second": "ratio",
+  "transfer": "minutes per stop", // named, never computed here
+  "crossoverSentence": 4,         // 1-based index into problem.sentences
+  "crossoverWhy": "…", "firstWhy": "…", "secondWhy": "…", "readWhy": "…"
+},
+"signalBox": {
+  "crossover": {
+    "heading": "…", "prompt": "…", "cellLabel": "…",
+    "options": [ … ],             // ≥3, exactly one correct, every one with a `why`
+    "settledSay": "…",
+    "second": {                   // the second picture, drawn WAITING
+      "title": "…", "heading": "…",
+      "givenHeading": "…", "targetHeading": "…",
+      "rows": [ … ],              // one row must have key "transfer"
+      "waiting": "…", "a11yDescription": "…"
+    }
+  }
+}
+```
+
+**What the validator enforces.** `pair.first` and `pair.second` must each be one of the five lines, and **they must differ** — `A→A` is one situation taking two steps, and `CHECK.fit`'s own reply teaches that steps and situations are not the same thing, so content that blurs it makes that reply a lie. `pair.transfer` must be named. `crossoverSentence` must be a number, in range for the sentence count, and **not** the question sentence — a seam on the question leaves the second half as the question alone. The four `*Why` strings must exist. **No digit may appear anywhere in `signalBox.crossover`** — the slot *names* the transfer, it never states it. At least three options, exactly one correct, a `why` on each. And `second.rows` must contain a row keyed `transfer`.
+
+**These rules were written before the first island problem existed**, deliberately: *"so that the first Challenge problem written is checked by something that already knows what one is, rather than by rules retrofitted after the content exists."* Every one of them was inert on the day it was committed.
+
+**THE FADE LEVEL DECIDES WHETHER THIS BLOCK MAY EXIST, and the validator refuses both mistakes.** A staffed platform **must** carry `signalBox.crossover`; without it the Plan phase draws the first half only and reports success. An **unstaffed halt** (`fadeLevel: "independent"`) **must not** carry it, and must not carry any first-half model either — a leftover model would be claimed by `CompareModel` or the Model Yard and draw half the problem. Measured 2026-08-16: a staffed pair's `signalBox` holds `compareBars`, `crossover`, `estimate`; a halt's holds **`estimate` alone**.
+
+**The authoring trap, and it validates clean:** *if the problem can be solved without doing the first situation, it is a one-line problem with extra words.* Two mechanical tests in `CHALLENGE-MODE.md` §5.1 — is the transfer stated anywhere, and do the two halves differ in kind. Only re-solving from the text catches the first.
+
+**Island content also obeys two constraints nothing else does:** an answer may not be **1, 2 or 5** (those collide with counts the checklist copy states), and no authored island copy may contain a number word — *"half"* included, which is the natural word for this and is refused.
+
 ---
 
 ## 6. `engineRoom` — steps, hints, misconceptions
