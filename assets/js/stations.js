@@ -1662,7 +1662,9 @@
           '<label for="ans">Your answer' + (step.answer.unit ? ' (' + esc(step.answer.unit) + ')' : '') + '</label>' +
           '<input type="text" id="ans" inputmode="decimal">' +
         '</div>' +
-        Scratch.html('solve-pad', 'Work it out here &mdash; nothing here is marked') +
+        /* No custom label: both pads carry the same one, so a student meets the
+           same surface described the same way on both screens. */
+        Scratch.html('solve-pad') +
       '</div>' +
       '<div class="feedback" role="status" id="sfb"></div>' +
       '<div class="btn-row">' +

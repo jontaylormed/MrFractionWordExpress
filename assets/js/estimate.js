@@ -151,24 +151,54 @@
      Because it carries nothing anybody needs, it is hidden from assistive tech
      and kept out of the tab order rather than given a keyboard equivalent that
      would draw nothing. Nothing persists — it dies with the phase. */
+  /* THE LABEL SAYS WHAT IT IS FOR, AND THAT IT CAN BE TOUCHED (user,
+     2026-08-16). It read "Scratch — nothing here is marked", which said what it
+     was NOT for and left a student to guess what it was. Naming notes,
+     calculations and drawings gives all three permission, and saying the touch
+     screen works is the one thing a student cannot discover by looking. */
+  var PAD_LABEL = 'Sketch Pad: For Notes, Calculations, and/or Drawings (Touch Screen Enabled)';
+
   function padHTML(id, label) {
     return '' +
       '<div class="est-pad-wrap" aria-hidden="true">' +
-        '<div class="est-pad-head">' + (label || 'Scratch &mdash; nothing here is marked') +
+        '<div class="est-pad-head">' + (label || PAD_LABEL) +
           '<button type="button" class="est-clear" data-clear="' + id + '" tabindex="-1">Clear</button></div>' +
-        '<canvas class="est-pad" id="' + id + '" width="600" height="260"></canvas>' +
+        '<canvas class="est-pad" id="' + id + '" width="600" height="520"></canvas>' +
       '</div>';
   }
 
   function wirePad(host, id) {
     var pad = host.querySelector('#' + id);
     if (!pad) return;
+
+    /* MATCH THE BACKING STORE TO THE BOX IT IS DRAWN IN, or the ink comes out
+       stretched. The canvas has a fixed pixel size and is displayed at whatever
+       width its column gives it — 262px on a phone, 745px beside the Engine
+       Room's field — so a fixed 600-wide store was being squeezed differently
+       on each screen and a stroke drawn round came out oval. Sizing it from the
+       rendered box makes one drawn pixel one CSS pixel everywhere.
+
+       THE GUARD IS LOAD-BEARING: `tools/sweep.js` renders every phase into a
+       DETACHED host, where `getBoundingClientRect` is all zeros. Setting a
+       canvas to width 0 throws away its context and would turn the sweep's
+       1,468 screens into a wall of render errors on a pad nobody is drawing on.
+       No box, no resize — the authored attributes stand. */
+    var box = pad.getBoundingClientRect();
+    if (box.width > 0 && box.height > 0) {
+      var dpr = Math.min(2, global.devicePixelRatio || 1);
+      pad.width  = Math.round(box.width * dpr);
+      pad.height = Math.round(box.height * dpr);
+    }
     var ctx = pad.getContext('2d');
+    if (box.width > 0) ctx.scale(pad.width / box.width, pad.height / box.height);
     ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2C2214';
     var drawing = false;
+    /* CSS pixels, because the context is scaled above — the transform does the
+       conversion to device pixels, so doing it here as well would apply it
+       twice and put the ink at a multiple of where the finger is. */
     function pt(e) {
       var r = pad.getBoundingClientRect();
-      return { x: (e.clientX - r.left) * (pad.width / r.width), y: (e.clientY - r.top) * (pad.height / r.height) };
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
     }
     pad.addEventListener('pointerdown', function (e) {
       drawing = true; var q = pt(e); ctx.beginPath(); ctx.moveTo(q.x, q.y);
@@ -182,7 +212,15 @@
     pad.addEventListener('pointerup', stop);
     pad.addEventListener('pointercancel', stop);
     var clear = host.querySelector('[data-clear="' + id + '"]');
-    if (clear) clear.addEventListener('click', function () { ctx.clearRect(0, 0, pad.width, pad.height); });
+    /* Clear in DEVICE pixels, with the scale temporarily off — under the
+       transform, `pad.width` is already a scaled number and clearing to it
+       leaves a band of ink along the far edges. */
+    if (clear) clear.addEventListener('click', function () {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, pad.width, pad.height);
+      ctx.restore();
+    });
   }
 
   /* ---------- markup ---------- */
