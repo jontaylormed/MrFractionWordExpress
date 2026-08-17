@@ -1,0 +1,398 @@
+/* ============================================================
+   The estimate gate — a band on a line, a typed field beside it, and ink.
+
+   THE BRIEF is `ROADMAP.md` §8 and the design is `docs/ESTIMATE-INPUT.md`.
+   Read that before changing anything here; every number in this file was
+   measured across all 148 materialisations rather than chosen.
+
+   WHY IT IS NOT A TEXT BOX ANY MORE. Estimating and calculating are different
+   acts and the site said so in copy — "It doesn't have to be good. It has to
+   exist." — while offering the same input for both. An estimate is genuinely a
+   REGION, and a text box cannot express one. The student sweeps a band; its
+   centre commits, so nothing downstream changes.
+
+   THE ONE DOOR. Pointer, keyboard, typed entry and tests all commit through
+   `Estimate.commit`. That is not tidiness: the estimate is a GATE — no
+   estimate, no Engine Room — so a path that works for one input and not
+   another locks somebody out of the whole problem. It is also what makes the
+   gate testable, and those turned out to be the same requirement rather than
+   two (`ESTIMATE-INPUT.md` §3).
+
+   NOTHING PERSISTS. No storage of any kind; the band and the ink die with the
+   phase, as everything else here does.
+   ============================================================ */
+(function (global) {
+  'use strict';
+
+  var NS = 'http://www.w3.org/2000/svg';
+
+  /* The live gate, or null between Plan phases. Module-level so that
+     `Estimate.commit(v)` is reachable without a handle on the station — which
+     is how `tools/sweep.js` and any agent drive it. */
+  var live = null;
+
+  /* ---------- the window, derived and never authored ----------
+     `VERIFICATION.md` §33: an authored scale is right for number set 1 and
+     silently wrong for the other three.
+
+     B = niceCeil( max(answer, largest non-distractor given) × 1.25 )
+
+     MEASURED ACROSS ALL 148 MATERIALISATIONS: always contains the answer,
+     never at the extreme edge (worst 0.98), and 102 of the 148 windows are
+     fixed by the GIVENS ALONE — a zero-leak case, because the bound is then a
+     number already in front of the student. The other 46 say only "larger than
+     any number in the story", which the structure already licenses. Twelve
+     distinct windows serve all 148, so a window is weak evidence about any one
+     answer, and the answer's position within it spreads 0.05 to 0.72.
+
+     WHY NOT BRANCH ON THE OPERATION. `unknownCar` carries 23 distinct values
+     across 37 problems, most covering one or two. A rule with 23 branches is
+     `VERIFICATION.md` §36 waiting to happen — the 38th problem arrives without
+     one. This has no per-schema branching at all.
+
+     DISTRACTORS ARE EXCLUDED, and that is load-bearing: `rr-van-hours` carries
+     125 parcels as a distractor against an answer of 7. Included, it would set
+     a window eighteen times too wide. */
+  function niceCeil(x) {
+    if (!(x > 0)) return 1;
+    var e = Math.floor(Math.log(x) / Math.LN10), base = Math.pow(10, e), m = x / base;
+    var steps = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < steps.length; i++) if (m <= steps[i] + 1e-9) return +(steps[i] * base).toPrecision(12);
+    return 10 * base;
+  }
+
+  function realGivens(p) {
+    var nums = (p && p.problem && p.problem.numbers) || {}, out = [];
+    Object.keys(nums).forEach(function (k) {
+      var n = nums[k];
+      if (!n || n.role === 'distractor') return;
+      var v = MF.parseAnswer(String(n && n.value !== undefined ? n.value : n));
+      if (typeof v === 'number' && isFinite(v)) out.push(v);
+    });
+    return out;
+  }
+
+  function trueAnswer(p) {
+    var a = p && p.arrivals && p.arrivals.answer;
+    var v = a ? MF.parseAnswer(String(a.exact)) : null;
+    return (typeof v === 'number' && isFinite(v)) ? v : null;
+  }
+
+  /* THE STEP FOLLOWS THE NUMBERS, not the problem id. 143 of 148 answers are
+     whole; the exceptions are `pw-quilt-colors` (twentieths) and one 2.5. A
+     rule keyed to those ids breaks on the next fraction problem anybody
+     writes, so the denominator is searched for instead. */
+  function denominatorOf(v) {
+    if (!isFinite(v) || Math.abs(v - Math.round(v)) < 1e-9) return 1;
+    for (var d = 2; d <= 100; d++) if (Math.abs(v * d - Math.round(v * d)) < 1e-9) return d;
+    return 100;
+  }
+
+  function windowFor(p) {
+    var givens = realGivens(p), ans = trueAnswer(p);
+    var basis = givens.length ? Math.max.apply(null, givens) : 1;
+    if (ans !== null) basis = Math.max(basis, ans);
+    var hi = niceCeil(basis * 1.25);
+
+    var d = 1;
+    givens.concat(ans === null ? [] : [ans]).forEach(function (v) { d = Math.max(d, denominatorOf(v)); });
+
+    /* Whole numbers get a step that keeps the line usable rather than
+       pixel-exact: about a hundred stops, snapped to something a student would
+       actually say out loud. */
+    var step;
+    if (d === 1) {
+      step = Math.max(1, Math.round(niceCeil(hi / 100)));
+    } else {
+      step = 1 / d;
+    }
+    return { lo: 0, hi: hi, step: step };
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, step) {
+    if (v === null || !isFinite(v)) return '';
+    var dp = step >= 1 ? 0 : Math.min(4, String(step).replace(/^\d*\./, '').length);
+    var s = v.toFixed(dp);
+    return s.replace(/\.?0+$/, function (m) { return m.indexOf('.') === 0 ? '' : m; });
+  }
+
+  function snap(v, w) {
+    var n = Math.round(v / w.step) * w.step;
+    return Math.min(w.hi, Math.max(w.lo, +n.toFixed(6)));
+  }
+
+  /* ---------- markup ---------- */
+  function html(p) {
+    var w = windowFor(p);
+    var est = p.signalBox && p.signalBox.estimate;
+    var unit = (est && est.unit) ? est.unit : '';
+    /* ONLY THE ENDS CARRY A NUMBER, AND THAT IS A LEAK FIX RATHER THAN A STYLE
+       CHOICE. Labelling all five ticks printed the answer on a pre-solve screen
+       in 4 of 148 materialisations — `cp-ticket-queues` set 1 showed "25" on a
+       line whose answer is 25, and `ch-barrier-count` set 4 showed "500" for
+       500. Measured, not imagined.
+
+       Patching those four would leave the fifth to be written next year. With
+       no interior label there is no interior number to collide, and the two
+       that remain are safe BY CONSTRUCTION: `B ≥ answer × 1.25`, so the upper
+       label is always strictly greater than the answer, and the lower is 0
+       while the smallest answer on the site is 0.15.
+
+       The minor ticks stay, unlabelled. A line from 0 to B with three marks
+       between is still readable as thirds and halves — which is all an
+       estimate needs — without printing a number anybody could copy. */
+    var ticks = '';
+    for (var i = 0; i <= 4; i++) {
+      var x = 6 + (88 * i / 4);
+      var ends = (i === 0 || i === 4);
+      ticks += '<div class="est-tick' + (ends ? '' : ' est-tick-minor') + '" style="left:' + x.toFixed(2) + '%">' +
+                 (ends ? '<span>' + fmt(w.lo + (w.hi - w.lo) * (i / 4), w.step) + '</span>' : '') +
+               '</div>';
+    }
+    return '' +
+      '<div class="est-wrap" id="est-wrap">' +
+
+        '<div class="est-line-col">' +
+          '<p class="est-lead" id="est-lead">Sweep the stretch you think the answer lies in.</p>' +
+          /* role=group with two sliders inside: a band is two values, and a
+             screen reader has to be able to say which end it is on. */
+          '<div class="est-track" id="est-track" role="group" aria-labelledby="est-lead">' +
+            '<div class="est-rail"></div>' +
+            '<div class="est-band" id="est-band" hidden></div>' +
+            '<button type="button" class="est-thumb" id="est-lo" data-end="lo" hidden' +
+              ' role="slider" aria-label="Low end of my estimate"' +
+              ' aria-valuemin="' + w.lo + '" aria-valuemax="' + w.hi + '" aria-valuenow="' + w.lo + '"></button>' +
+            '<button type="button" class="est-thumb" id="est-hi" data-end="hi" hidden' +
+              ' role="slider" aria-label="High end of my estimate"' +
+              ' aria-valuemin="' + w.lo + '" aria-valuemax="' + w.hi + '" aria-valuenow="' + w.hi + '"></button>' +
+          '</div>' +
+          '<div class="est-ticks">' + ticks + '</div>' +
+          '<p class="est-read" id="est-read" aria-live="polite">Nothing set yet.</p>' +
+        '</div>' +
+
+        /* BESIDE THE LINE, NOT BEHIND A TOGGLE — the user's call, 2026-08-16.
+           For most students this is an alternative; for some it is the only
+           door, and a door behind a toggle reads as the back way in. */
+        '<div class="est-typed-col">' +
+          '<div class="field">' +
+            '<label for="estv">Or type it' + (unit ? ' (' + unit + ')' : '') +
+              '<span class="hint-text">It doesn&rsquo;t have to be good. It has to exist.</span></label>' +
+            '<input type="text" id="estv" inputmode="decimal" autocomplete="off">' +
+          '</div>' +
+
+          /* THE INK PAD. Never parsed, never graded, never required — it is
+             thinking made visible, not an input. It carries nothing anybody
+             downstream reads, so it is hidden from assistive tech and kept out
+             of the tab order rather than given a keyboard equivalent that
+             would draw nothing. */
+          '<div class="est-pad-wrap" aria-hidden="true">' +
+            '<div class="est-pad-head">Scratch &mdash; nothing here is marked' +
+              '<button type="button" class="est-clear" id="est-clear" tabindex="-1">Clear</button></div>' +
+            '<canvas class="est-pad" id="est-pad" width="600" height="260"></canvas>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ---------- behaviour ---------- */
+  function wire(host, p) {
+    var w = windowFor(p);
+    var track = host.querySelector('#est-track');
+    var band  = host.querySelector('#est-band');
+    var loT   = host.querySelector('#est-lo');
+    var hiT   = host.querySelector('#est-hi');
+    var field = host.querySelector('#estv');
+    var read  = host.querySelector('#est-read');
+    if (!track || !field) return null;
+
+    var lo = null, hi = null;      // the band, in problem units
+
+    function centre() { return (lo === null) ? null : (lo + hi) / 2; }
+
+    function pctOf(v) { return ((v - w.lo) / (w.hi - w.lo)) * 100; }
+
+    function paint(quiet) {
+      var has = lo !== null;
+      band.hidden = !has; loT.hidden = !has; hiT.hidden = !has;
+      if (has) {
+        band.style.left  = pctOf(lo) + '%';
+        band.style.width = Math.max(0.6, pctOf(hi) - pctOf(lo)) + '%';
+        loT.style.left = pctOf(lo) + '%';
+        hiT.style.left = pctOf(hi) + '%';
+        loT.setAttribute('aria-valuenow', lo); loT.setAttribute('aria-valuetext', fmt(lo, w.step));
+        hiT.setAttribute('aria-valuenow', hi); hiT.setAttribute('aria-valuetext', fmt(hi, w.step));
+        read.textContent = (lo === hi)
+          ? 'About ' + fmt(lo, w.step)
+          : 'Somewhere between ' + fmt(lo, w.step) + ' and ' + fmt(hi, w.step) +
+            ' — that commits as ' + fmt(centre(), w.step) + '.';
+      } else {
+        read.textContent = 'Nothing set yet.';
+      }
+      if (!quiet) field.value = has ? fmt(centre(), w.step) : '';
+    }
+
+    /* A TYPED VALUE OUTSIDE THE WINDOW WIDENS THE WINDOW; IT IS NEVER REFUSED.
+       The line is a derived guess at where the answer lives, not a rule about
+       what a student may think — `ESTIMATE-INPUT.md` §3.1. Refusing it would
+       make the scale authoritative, which is the one thing the leak
+       measurement says it must not be. Finding out an estimate is wrong is the
+       Arrivals Board's job. */
+    function growTo(v) {
+      if (v <= w.hi) return false;
+      w.hi = niceCeil(v * 1.25);
+      [loT, hiT].forEach(function (t) { t.setAttribute('aria-valuemax', w.hi); });
+      /* Only the two end labels exist, so only they are rewritten. Keyed off
+         the spans that are actually there rather than off an assumed count. */
+      var labels = host.querySelectorAll('.est-tick span');
+      if (labels.length === 2) {
+        labels[0].textContent = fmt(w.lo, w.step);
+        labels[1].textContent = fmt(w.hi, w.step);
+      }
+      return true;
+    }
+
+    function setBand(a, b, quiet) {
+      lo = Math.min(a, b); hi = Math.max(a, b);
+      lo = snap(lo, w); hi = snap(hi, w);
+      paint(quiet);
+    }
+
+    /* ---- pointer: one path for mouse, touch and stylus ---- */
+    function valueAt(clientX) {
+      var r = track.getBoundingClientRect();
+      var t = (clientX - r.left) / r.width;
+      return snap(w.lo + (w.hi - w.lo) * Math.min(1, Math.max(0, t)), w);
+    }
+    var anchor = null, dragEnd = null;
+    track.addEventListener('pointerdown', function (e) {
+      if (e.target === loT || e.target === hiT) { dragEnd = e.target.getAttribute('data-end'); }
+      else { anchor = valueAt(e.clientX); setBand(anchor, anchor); }
+      track.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    track.addEventListener('pointermove', function (e) {
+      if (anchor === null && dragEnd === null) return;
+      var v = valueAt(e.clientX);
+      if (dragEnd === 'lo') setBand(v, hi);
+      else if (dragEnd === 'hi') setBand(lo, v);
+      else setBand(anchor, v);
+    });
+    function endDrag(e) {
+      if (anchor === null && dragEnd === null) return;
+      anchor = null; dragEnd = null;
+      try { track.releasePointerCapture(e.pointerId); } catch (err) { /* already gone */ }
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+
+    /* ---- keyboard: equal, not lesser. WCAG 2.1.1 and 2.5.1 ---- */
+    function nudge(which, delta) {
+      if (lo === null) { var mid = snap((w.lo + w.hi) / 2, w); setBand(mid, mid); return; }
+      if (which === 'lo') setBand(lo + delta, hi); else setBand(lo, hi + delta);
+    }
+    [loT, hiT].forEach(function (t) {
+      t.addEventListener('keydown', function (e) {
+        var which = t.getAttribute('data-end'), s = w.step * (e.shiftKey ? 10 : 1);
+        var k = e.key;
+        if (k === 'ArrowRight' || k === 'ArrowUp') { nudge(which, s); }
+        else if (k === 'ArrowLeft' || k === 'ArrowDown') { nudge(which, -s); }
+        else if (k === 'Home') { setBand(which === 'lo' ? w.lo : lo, which === 'lo' ? hi : w.lo); }
+        else if (k === 'End') { setBand(which === 'lo' ? w.hi : lo, which === 'lo' ? hi : w.hi); }
+        else return;
+        e.preventDefault();
+      });
+    });
+    /* The track itself is reachable when no band exists yet, so a keyboard user
+       has something to land on before the thumbs appear. */
+    track.setAttribute('tabindex', '0');
+    track.addEventListener('keydown', function (e) {
+      if (lo !== null) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Enter' || e.key === ' ') {
+        var mid = snap((w.lo + w.hi) / 2, w);
+        setBand(mid, mid);
+        loT.focus();
+        e.preventDefault();
+      }
+    });
+
+    /* ---- typed: moves the band, both ways in sync ---- */
+    field.addEventListener('input', function () {
+      var v = MF.parseAnswer(field.value);
+      if (v === null || !isFinite(v)) { return; }
+      growTo(v);
+      var half = (lo === null) ? 0 : (hi - lo) / 2;
+      setBand(v - half, v + half, true);   // quiet: do not fight what is being typed
+    });
+
+    /* ---- the ink pad ---- */
+    var pad = host.querySelector('#est-pad');
+    if (pad) {
+      var ctx = pad.getContext('2d');
+      ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2C2214';
+      var drawing = false;
+      function padPt(e) {
+        var r = pad.getBoundingClientRect();
+        return { x: (e.clientX - r.left) * (pad.width / r.width), y: (e.clientY - r.top) * (pad.height / r.height) };
+      }
+      pad.addEventListener('pointerdown', function (e) {
+        drawing = true; var q = padPt(e); ctx.beginPath(); ctx.moveTo(q.x, q.y);
+        pad.setPointerCapture(e.pointerId); e.preventDefault();
+      });
+      pad.addEventListener('pointermove', function (e) {
+        if (!drawing) return; var q = padPt(e); ctx.lineTo(q.x, q.y); ctx.stroke();
+      });
+      function stop(e) { if (!drawing) return; drawing = false;
+        try { pad.releasePointerCapture(e.pointerId); } catch (err) { /* gone */ } }
+      pad.addEventListener('pointerup', stop);
+      pad.addEventListener('pointercancel', stop);
+      var clear = host.querySelector('#est-clear');
+      if (clear) clear.addEventListener('click', function () { ctx.clearRect(0, 0, pad.width, pad.height); });
+    }
+
+    paint();
+
+    live = {
+      /* THE ONE DOOR. Everything commits here: pointer, keyboard, typed and
+         tests. `raw` is what the student actually saw — the Arrivals Board
+         shows it back, because showing the parsed value once asked a student
+         whether 7/20 matched 0.35. */
+      value: function () { return centre(); },
+      raw: function () {
+        var typed = String(field.value).trim();
+        if (typed && MF.parseAnswer(typed) !== null) return typed;
+        if (lo === null) return '';
+        return (lo === hi) ? fmt(lo, w.step)
+                           : fmt(lo, w.step) + '–' + fmt(hi, w.step);
+      },
+      band: function () { return lo === null ? null : { lo: lo, hi: hi }; },
+      window: function () { return { lo: w.lo, hi: w.hi, step: w.step }; },
+      /* Used by tests and by any caller that has a number and no pointer. */
+      set: function (v) {
+        var n = (typeof v === 'number') ? v : MF.parseAnswer(String(v));
+        if (n === null || !isFinite(n)) return false;
+        growTo(n);
+        setBand(n, n);
+        return true;
+      }
+    };
+    return live;
+  }
+
+  global.Estimate = {
+    html: html,
+    wire: wire,
+    windowFor: windowFor,
+    niceCeil: niceCeil,
+    /* Module-level so an agent, the sweep, or anything else can drive the gate
+       without a handle on the station. Returns false when there is no live
+       gate or the value is unusable — never throws, because a checker that
+       throws here would look exactly like a broken phase. */
+    commit: function (v) { return live ? live.set(v) : false; },
+    value:  function () { return live ? live.value() : null; },
+    raw:    function () { return live ? live.raw() : ''; },
+    band:   function () { return live ? live.band() : null; },
+    current: function () { return live; },
+    release: function () { live = null; }
+  };
+})(window);

@@ -102,14 +102,20 @@ Three things follow, and all three are cheaper to settle now than to retrofit:
 
 **The phone cost is real and is not waved away.** At 320px a number line and a text field stacked with the bar model above them is a long screen. The measurement to take before building: the Plan phase's height at 320px today, and after. If it does not fit, the answer is to shorten something else on that screen, not to hide the field.
 
-> **That baseline is NOT yet taken, and the existing tools do not give it.** `SWEEP` renders every phase but extracts *text*, into a detached host where heights are not real; `SWEEP.show` returns excerpts, not layout. Measuring it means driving a real trip to the Plan phase in a laid-out page at 320px. Recorded here so the next person does not assume the sweep already covers it — it covers what a screen *says*, never what it *measures*.
+> **Taken 2026-08-16, and the way to take it is worth keeping.** `SWEEP` cannot: it extracts *text*, into a detached host where heights are not real, and `SWEEP.show` returns excerpts rather than layout. What works is building a real `Stations.Station`, appending `st.render()` to the live `#view`, and calling `st.go('plan')` — the app's own object, laid out on the page.
+>
+> **Narrow, single column: the Plan phase is 2,474px, about 2.7 screens, of which the estimate block is 520px.** The grid collapses to one column as intended, nothing overflows, and no element extends past the viewport. That is long, but the phase was already long — the bar model and the problem text are most of it.
+>
+> **One measurement this pane could NOT give.** The drag thumb's effective tap target. `elementFromPoint` takes viewport coordinates and the thumb sits ~2,050px down; `scrollIntoView` would not bring it up in the in-app pane, so every probe read empty space and returned null — which looks exactly like a dead control. The hit area is 44×44 **by computed style** (a centred `::before`), which is the mechanism, but it has not been confirmed by a real hit test. Take that one in Edge.
 
 Consequences worth stating now, because they are cheap before and expensive after:
 
 1. **The typed field stays, unembarrassed** — and per the decision above it is beside the line rather than behind anything. WCAG 2.5.1 requires a single-pointer alternative to any path-based gesture, and `MF.parseAnswer` keeps owning fractions.
 2. **The sweep drives the contract, not the DOM.** Today a test can only work this gate by knowing the internal id `#estv`. That is a checker coupled to a markup detail, and it will report a clean run the day the markup changes. `SWEEP` should commit through `Estimate.commit` and assert the gate opened.
 3. **A rule that has never fired is not known to work** (`CLAUDE.md`). The gate's refusal path — no estimate, no Engine Room — must be exercised in both directions: commit nothing and confirm it stays shut, commit and confirm it opens.
-4. **`SWEEP` must be able to reach every phase after Plan.** It already drives 1,468 screens through this gate. If the new control cannot be committed programmatically, the sweep stops at the Plan phase on all 148 materialisations and reports it as a pass on however many screens it did reach — which is `VERIFICATION.md` §36 in its purest form.
+4. ~~**`SWEEP` must be able to reach every phase after Plan.** It already drives 1,468 screens through this gate.~~ **WRONG, AND CORRECTED 2026-08-16 WHEN THE CODE WAS READ.** `tools/sweep.js` `render()` builds a phase list and renders each phase *independently* — it never walks a trip and never presses *Lock it in*. The gate has never been in its path and cannot block it. The claim was written from how the site behaves for a student, not from how the sweep behaves, which is §25's own lesson pointed at this document.
+
+   **The real interaction is the opposite one, and it bit immediately.** The sweep *does* render `plan`, so everything the new control prints is on a scanned pre-solve screen. Labelling all five ticks put the answer on the line in **4 of 148 materialisations** — `cp-ticket-queues` set 1 printing "25" for an answer of 25, `ch-barrier-count` set 4 printing "500" for 500. Only the two end labels survive, which makes it safe by construction rather than by patching four cases: `B ≥ answer × 1.25`, so the upper label is always strictly greater than the answer, and the lower is 0 against a smallest answer of 0.15. Re-measured after the fix: **0 of 148**.
 
 ---
 
@@ -119,6 +125,17 @@ Consequences worth stating now, because they are cheap before and expensive afte
 - **Nothing persists.** No `localStorage` — a locked decision. The ink dies with the phase.
 - **Pointer Events, hand-rolled**, one path for mouse, touch and stylus, with `touch-action: none` on the surface *only*, or the page stops scrolling on a phone.
 - **It is not an accessibility surface.** It carries no information the student needs and nothing downstream reads it, so it is `aria-hidden` and out of the tab order rather than being given a keyboard equivalent that would draw nothing.
+
+---
+
+## 4b. FIRST JOB NEXT SESSION — the layout, from the user 2026-08-16
+
+Asked for after seeing the built gate, and not started:
+
+1. **Triple the spacing above the scratch pad.** `.est-pad-wrap` is `margin-top: calc(var(--su) * 2)` today; the pad is crowding the typed field.
+2. **Centre the number line vertically on the left**, so it sits level between the typed answer above and the scratch space below it in the right-hand column. Today `.est-wrap` is `align-items: start`, which pins the line to the top of a right column that is much taller.
+
+Both are `.est-wrap` grid changes in `app.css` and neither touches `estimate.js`. **Re-measure the 320px height afterwards** (§3.1) — tripling a margin on the phone layout, where the two columns are stacked rather than side by side, is where that 2,474px gets longer.
 
 ---
 

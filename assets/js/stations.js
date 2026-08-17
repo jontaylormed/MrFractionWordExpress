@@ -1502,25 +1502,32 @@
       this.problemHTML(false) + bars +
       '<h3>Commit to an estimate</h3>' +
       '<p>' + esc(est ? est.prompt : 'Roughly what do you think the answer will be?') + '</p>' +
-      '<div class="field" style="max-width:320px">' +
-        '<label for="estv">My estimate' + (est && est.unit ? ' (' + esc(est.unit) + ')' : '') +
-        '<span class="hint-text">It doesn&rsquo;t have to be good. It has to exist.</span></label>' +
-        '<input type="text" id="estv" inputmode="decimal">' +
-      '</div>' +
+      /* THE GATE IS A BAND ON A LINE NOW, with a typed field beside it and a
+         scratch pad that nothing reads. `ROADMAP` §8 and `docs/ESTIMATE-INPUT.md`.
+         Everything downstream is unchanged: `this.estimate` is still the parsed
+         number and `this.estimateRaw` is still what the student saw. */
+      Estimate.html(this.p) +
       '<div class="feedback" role="status" id="pfb"></div>' +
       '<div class="btn-row"><button class="btn" id="pgo" type="button">Lock it in →</button></div>';
 
     if (bar) Model.wire(this.host(), this.p);
+    Estimate.wire(this.host(), this.p);
 
     var locked = false;
     this.host().querySelector('#pgo').addEventListener('click', function () {
       if (locked) { self.go(self.nextAfterPlan()); return; }
-      var raw = self.host().querySelector('#estv').value;
-      var v = MF.parseAnswer(raw);
-      if (v === null) {
+      /* THE GATE READS THE CONTROL, NOT THE MARKUP. It used to reach for
+         `#estv`.value directly, which coupled the one gate every problem passes
+         through to an element id — and the day that id moved, the gate would
+         have refused every estimate on the site. `Estimate.value()` is the same
+         door the pointer, the keyboard, a typed entry and the sweep all use. */
+      var v = Estimate.value();
+      var raw = Estimate.raw();
+      if (v === null || !isFinite(v)) {
         self.host().querySelector('#pfb').innerHTML = msg('caution', '!',
-          'Put a number in &mdash; any number you think is in the right area.');
-        self.host().querySelector('#estv').focus();
+          'Sweep a stretch on the line, or type a number &mdash; anything you think is in the right area.');
+        var t = self.host().querySelector('#est-track');
+        if (t) t.focus();
         return;
       }
       locked = true;
