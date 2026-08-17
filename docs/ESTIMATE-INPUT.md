@@ -13,6 +13,7 @@
 | **A range, not a point** | User, 2026-08-15 (`ROADMAP` §8) and again 2026-08-16. The student sweeps a **band**, and its centre commits as the value so nothing downstream changes. An estimate genuinely is a region; the text box cannot express one. |
 | **Free ink beside it, never parsed** | A scratch area that keeps the marks and grades nothing. It is not an input — it is thinking made visible, and committing the estimate must never depend on it. |
 | **One derived window per materialisation** | User, 2026-08-16, choosing this over a two-stage "pick the magnitude first". No extra tap: the line arrives already scaled. The leak risk that comes with it is not waved away — it is measured in §2. |
+| **The typed field sits BESIDE the line, not behind a toggle** | User, 2026-08-16. Both inputs are on screen at once, both live, neither announced as the fallback. See §3.1 — this is the decision that makes the accessibility path unbranded, and it costs phone height that has to be found rather than argued away. |
 
 ---
 
@@ -89,9 +90,23 @@ Estimate.commit(value, raw)     // the only door
   └── tests/agents     → call it directly
 ```
 
+### 3.1 Two inputs, on screen together — decided 2026-08-16
+
+The typed field sits **beside the number line**, both live, neither labelled as the lesser one. The alternative was a toggle, and it was rejected for a reason worth keeping: for most students the typed field is an alternative, but **for some it is the only door**, and a door behind a toggle is a door that reads as the back way in. Tidiness was the wrong axis to decide it on.
+
+Three things follow, and all three are cheaper to settle now than to retrofit:
+
+- **They stay in sync, both ways.** Sweeping updates the number in the field; typing moves the band. Neither is the master. A student who drags roughly and then types an exact figure has not fought the control — they have used it.
+- **Committing is one action, not two.** There is one *Lock it in* button, as today. The value it commits is whichever input the student touched last, and the screen has to make that legible — the field showing what the band means, the band showing where the number sits. Two inputs and one value is the whole risk of this layout, and it is resolved by them never disagreeing rather than by picking a winner.
+- **A typed value outside the window widens the window; it is never refused.** The line is a derived guess at where the answer lives (§2), not a rule about what a student may think. A student who types 900 into a 0–200 line is making an estimate that is probably wrong, and finding out it is wrong is the Arrivals Board's job, not the input's. Refusing it would make the scale authoritative — which is exactly what §2.3's leak measurement says it must not be.
+
+**The phone cost is real and is not waved away.** At 320px a number line and a text field stacked with the bar model above them is a long screen. The measurement to take before building: the Plan phase's height at 320px today, and after. If it does not fit, the answer is to shorten something else on that screen, not to hide the field.
+
+> **That baseline is NOT yet taken, and the existing tools do not give it.** `SWEEP` renders every phase but extracts *text*, into a detached host where heights are not real; `SWEEP.show` returns excerpts, not layout. Measuring it means driving a real trip to the Plan phase in a laid-out page at 320px. Recorded here so the next person does not assume the sweep already covers it — it covers what a screen *says*, never what it *measures*.
+
 Consequences worth stating now, because they are cheap before and expensive after:
 
-1. **The typed field stays, unembarrassed.** Not a fallback tucked behind a link — WCAG 2.5.1 requires a single-pointer alternative to any path-based gesture, and `MF.parseAnswer` keeps owning fractions.
+1. **The typed field stays, unembarrassed** — and per the decision above it is beside the line rather than behind anything. WCAG 2.5.1 requires a single-pointer alternative to any path-based gesture, and `MF.parseAnswer` keeps owning fractions.
 2. **The sweep drives the contract, not the DOM.** Today a test can only work this gate by knowing the internal id `#estv`. That is a checker coupled to a markup detail, and it will report a clean run the day the markup changes. `SWEEP` should commit through `Estimate.commit` and assert the gate opened.
 3. **A rule that has never fired is not known to work** (`CLAUDE.md`). The gate's refusal path — no estimate, no Engine Room — must be exercised in both directions: commit nothing and confirm it stays shut, commit and confirm it opens.
 4. **`SWEEP` must be able to reach every phase after Plan.** It already drives 1,468 screens through this gate. If the new control cannot be committed programmatically, the sweep stops at the Plan phase on all 148 materialisations and reports it as a pass on however many screens it did reach — which is `VERIFICATION.md` §36 in its purest form.
@@ -109,7 +124,7 @@ Consequences worth stating now, because they are cheap before and expensive afte
 
 ## 5. Open, and needing the user
 
-1. **Does the typed field sit beside the line, or behind a toggle?** Beside is more honest and costs vertical space on a phone; behind a toggle is tidier and risks reading as the lesser path.
+1. ~~Does the typed field sit beside the line, or behind a toggle?~~ **Settled 2026-08-16 — beside.** See §0 and §3.1.
 2. **Does the band's width mean anything downstream?** Today only the centre commits. A wide band is a less confident estimate, and the Arrivals Board could say so — but that is new behaviour on a screen whose forgiveness is already deliberately loose.
 3. **The Engine Room's typed field** — §8 records that the user asked for it to look different from what it is now, not merely different from the estimate. That is a second design, not covered here.
 4. **No student has used any of this.** Same gap as everything else on the site.
