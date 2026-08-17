@@ -13,6 +13,56 @@
   var DISPLAY = 'Black Han Sans, Arial Black, sans-serif';
   var BODY    = 'Atkinson Hyperlegible, Verdana, sans-serif';
 
+  /* HOW WIDE IS THIS LABEL, ACTUALLY — for anything that needs a plate drawn
+     behind text in an SVG that is built as a string.
+
+     MEASURED WITH AN SVG TEXT NODE, NOT WITH A CANVAS, and that is the whole
+     point of this function. The first version used `canvas.measureText`, which
+     is the obvious tool and is WRONG HERE: with the webfont fully loaded
+     (`document.fonts.status === 'loaded'`) and the font shorthand verifiably
+     applied, canvas reported 127.2px for a string that SVG then rendered at
+     143.3px — 13% narrow, and narrow is the direction that produces a plate
+     smaller than the words on it. Canvas returns an advance-width sum; SVG
+     text is laid out by a different path that also carries this site's
+     inherited `letter-spacing`. Measuring one engine to place something in the
+     other is the same mistake as measuring the check instead of the subject.
+
+     So the probe is an off-screen `<svg><text>` — the same engine, the same
+     inherited CSS, `getBBox` on the real thing. Off-screen rather than
+     `display: none`, because a node in a `display: none` subtree has no boxes
+     and `getBBox` returns zeros.
+
+     THE FALLBACK EXISTS BECAUSE A PLATE SIZED 0 IS A PLATE THAT IS NOT THERE,
+     which would look exactly like the defect this was written to fix. Callers
+     pad the result; none of them should trust it to the pixel. */
+  var _probeSvg, _probeText;
+  function labelWidth(str, weight, size) {
+    str = String(str == null ? '' : str);
+    if (_probeSvg === undefined) {
+      try {
+        _probeSvg = document.createElementNS(NS, 'svg');
+        _probeSvg.setAttribute('aria-hidden', 'true');
+        _probeSvg.setAttribute('width', '10');
+        _probeSvg.setAttribute('height', '10');
+        _probeSvg.style.cssText = 'position:absolute;left:-9999px;top:0;overflow:hidden';
+        _probeText = document.createElementNS(NS, 'text');
+        _probeSvg.appendChild(_probeText);
+        document.body.appendChild(_probeSvg);
+      } catch (e) { _probeSvg = null; }
+    }
+    if (_probeSvg && _probeText) {
+      _probeText.setAttribute('font-family', BODY);
+      _probeText.setAttribute('font-size', size);
+      _probeText.setAttribute('font-weight', weight);
+      _probeText.textContent = str;
+      try {
+        var w = _probeText.getBBox().width;
+        if (w > 0) return w;
+      } catch (e) { /* fall through */ }
+    }
+    return str.length * size * 0.62;
+  }
+
   /* ---------- Ambient marks ---------- */
 
   function wheelSVG() {
@@ -1238,9 +1288,19 @@
                  [648, 508], [552, 528], [462, 520], [392, 540], [330, 494],
                  [278, 428], [252, 350], [244, 268]];
 
+  /* RIVERS ARE CLIPPED TO THE LAND, so a river that is to reach the sea must be
+     drawn PAST the coast and let the clip cut it at the shoreline. Ending one
+     exactly on the coast leaves it short, because the coast is a spline through
+     these points rather than the polygon itself and it bows.
+
+     The east river ended at [820, 440] and stopped about forty units inland —
+     the user saw it, 2026-08-16. Its tail now runs on to [880, 500], which is
+     outside the landmass, and crosses the coast at roughly [838, 458]. The
+     south-west river already did this correctly: [286, 552] is well south of
+     the coast, which is why that one has always had a mouth. */
   var ISL_RIVERS = [
     [[402, 250], [388, 306], [366, 372], [330, 436], [300, 500], [286, 552]],   // south-west, to the sea
-    [[672, 246], [700, 300], [736, 348], [772, 392], [820, 440]],               // east, to the sea
+    [[672, 246], [700, 300], [736, 348], [772, 392], [820, 440], [880, 500]],   // east, to the sea
     [[498, 300], [520, 336], [548, 364], [586, 384]]                            // short feeder into the lake
   ];
 
@@ -1281,19 +1341,19 @@
       /* `note` says what the stop IS, never which two situations it joins.
          This read "Compare, then a rate" and was the same leak as the marker
          colours in English — see `pairStop`. */
-      name: 'Thorne Bridge',  note: 'Open — the join is taught here' },
+      name: 'Thorne Bridge',  note: 'Open — Assistance Available' },
     { key: 'kelder', at: [788, 286], kind: 'staffed',
       ids: ['cl-season-tickets'],
-      name: 'Kelder Sands',   note: 'Open — the join is taught here' },
+      name: 'Kelder Sands',   note: 'Open — Assistance Available' },
     { key: 'fell',   at: [648, 508], kind: 'staffed',
       ids: ['cl-platform-planters', 'cl-track-sleepers'],
-      name: 'Fell Crossing',  note: 'Open — the join is taught here' },
+      name: 'Fell Crossing',  note: 'Open — Assistance Available' },
     { key: 'cold',   at: [330, 494], kind: 'halt',
       ids: ['cl-lost-umbrellas'],
-      name: 'Cold Halt',      note: 'Open — nobody on the platform' },
+      name: 'Cold Halt',      note: 'Open — No Assistance' },
     { key: 'marsh',  at: [252, 350], kind: 'halt',
       ids: ['cl-buffet-crates'],
-      name: 'Marsh Halt',     note: 'Open — nobody on the platform' }
+      name: 'Marsh Halt',     note: 'Open — No Assistance' }
   ];
 
   /* A stop is open when ANY problem in its pool is published. Derived here so
@@ -1603,15 +1663,70 @@
       var open = stopIsOpen(st, counts);
       /* `data-stop` carries the STOP now, not a problem — a pooled stop has two
          and the map cannot know which one a student will get. */
+      var below = st.at[1] > 400;
+      var noteTxt = open ? st.note : 'track being laid';
+
+      /* A PLATE UNDER EVERY STOP LABEL — the user's call, 2026-08-16: the note
+         line was unreadable where it crossed the track.
+
+         These labels are the only text on the island that lands wherever the
+         circuit put its stop, so what sits behind them is whatever happens to
+         be there — rails, a river, forest, coast. The name is 11px bold and
+         mostly survived it; the note is 9.5px in `--ink-muted` and did not.
+         Everything else on this map either sits in cleared ground (the title,
+         LIGHTHOUSE HUB) or is deliberately faint (Lake Transfer, in italic on
+         open water).
+
+         SIZED FROM MEASURED TEXT, NOT FROM A GUESS. `labelWidth` measures the
+         real string in the real font, so a plate cannot come out too narrow for
+         the words it is backing — the failure that would be invisible on the
+         four stops whose notes are short and obvious on the one whose are not.
+
+         DRAWN BEFORE THE MARKER, so it passes UNDER it. A label plate is
+         backing for text and has no business in front of the thing it labels:
+         emitted after the marker it covered the top of every stop drawn with
+         its label above — 8.5px of the round staffed discs and 19px of Marsh
+         Halt's signpost, which is more than half that marker's height. Painting
+         order is the whole fix; not one label moved. The alternative was to
+         push the labels far enough clear to miss the tallest marker, which
+         costs the association between a name and the stop it names.
+
+         `pointer-events="none"` because the stop's hit area is the marker's
+         own `<g>`; a plate that swallowed clicks would make the labels look
+         pressable and do nothing. */
+      var plateW = Math.max(labelWidth(st.name, 700, 11), labelWidth(noteTxt, 400, 9.5)) + 16;
+
+      /* THE TWO MARKERS ARE NOT THE SAME HEIGHT, and a fixed offset cannot
+         serve both. Measured off the rendered map: a staffed disc reaches
+         13.5 above its centre; an unstaffed halt's signpost reaches 24, because
+         the post stands up out of it. With one constant for both, Marsh Halt's
+         note was drawn straight across its own signpost — which put a dark
+         line immediately behind 9.5px text, in the one place this whole change
+         exists to make readable.
+
+         So the clearance comes from the marker's kind. Painting the plate
+         under the marker (below) fixes what the plate covers; it does nothing
+         about what the TEXT covers, since text is drawn last and must be. Only
+         moving the label clear does that. */
+      var clear = (st.kind === 'staffed' ? 17 : 28);
+      var plateY = below ? st.at[1] + 21 : st.at[1] - clear - 34;
+
+      s += '<rect x="' + (st.at[0] - plateW / 2).toFixed(1) + '" y="' + plateY.toFixed(1) + '" ' +
+           'width="' + plateW.toFixed(1) + '" height="34" rx="6" pointer-events="none" ' +
+           'fill="#FDF8F0" fill-opacity=".88" stroke="#C8B89A" stroke-opacity=".7" stroke-width="1"/>';
+
+      /* `data-stop` carries the STOP, not a problem — a pooled stop has two and
+         the map cannot know which one a student will get. */
       s += '<g' + (open ? ' data-stop="' + st.key + '" class="map-hit"' : ' opacity=".72"') + '>' +
            pairStop(st.at[0], st.at[1], st.kind === 'staffed', !!opts.reveal && open) +
            '</g>';
-      var below = st.at[1] > 400;
-      s += '<text x="' + st.at[0] + '" y="' + (st.at[1] + (below ? 34 : -26)) + '" text-anchor="middle" ' +
+
+      /* Both baselines are DERIVED FROM THE PLATE rather than from the stop, so
+         the box and the words it backs cannot drift apart when either moves. */
+      s += '<text x="' + st.at[0] + '" y="' + (plateY + 13).toFixed(1) + '" text-anchor="middle" ' +
            'font-family="' + BODY + '" font-size="11" font-weight="700" fill="#2C2214">' + st.name + '</text>';
-      s += '<text x="' + st.at[0] + '" y="' + (st.at[1] + (below ? 47 : -13)) + '" text-anchor="middle" ' +
-           'font-family="' + BODY + '" font-size="9.5" fill="#6B5138">' +
-           (open ? st.note : 'track being laid') + '</text>';
+      s += '<text x="' + st.at[0] + '" y="' + (plateY + 26).toFixed(1) + '" text-anchor="middle" ' +
+           'font-family="' + BODY + '" font-size="9.5" fill="#6B5138">' + noteTxt + '</text>';
     });
 
     /* --- the terminus --- */
