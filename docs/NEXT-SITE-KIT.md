@@ -86,5 +86,15 @@ What almost certainly *does* carry regardless of topic:
 
 ## 4. Also parked here
 
-- **A 30-minute YouTube video, to be connected to the site "as its sister site."** Recorded as the user's intent 2026-08-17. **What "connected" means is not yet specified** — an embed on a page, a link from the map, a companion property alongside [Mr. Fraction Factory](https://jtaylor-cloud.github.io/Mr.FractionFactory/), or something else. Worth pinning down before building anything, because an embedded 30-minute video has real consequences for a zero-dependency site that runs from `file://`: a YouTube iframe is a third-party dependency and a privacy surface, and it will not play offline. A link out has none of those problems.
+- **A 30-SECOND promotional video** — clarified by the user 2026-08-17. **It does not exist yet:** they will design, animate and record it themselves.
+
+  **At thirty seconds, this site does not need YouTube at all, and that is the whole point.** A 30s animation encodes to roughly 2–6MB as MP4 (H.264) or WebM. That is smaller than the art already in `assets/art/` — `Mr_Fraction_Train.png` alone is 693KB and the folder totals ~3.2MB. So it can be **self-hosted and played with a plain `<video>` element**: no third-party script, no iframe, no privacy surface, no tracking, works offline, and works from `file://`. Every locked constraint survives intact.
+
+  **The recommendation is therefore both, not either.** Put the file in the repo and play it on the site; put the same file on YouTube for sharing, discovery and anywhere a link is more use than a page. They are not in competition, and choosing the embed would trade away four constraints to solve a problem the file size does not actually pose.
+
+  Ship it with a `poster` frame, captions (`<track kind="captions">` — it is a teaching site and Devon exists), `preload="none"` so it costs nothing until asked for, and no autoplay. Reduced-motion should not autoplay it either.
+
+- **The character art is already animation-ready, which is not an accident but is easy to forget.** `assets/art/` holds Mr Fraction in **four directions** — Front, Back, Left Side, Right Side — plus an existing GIF, plus the train, caboose, ticket, ticket booth and station. That is a sprite set and a set of props. **A commercial can be built almost entirely from assets that already exist and already match the site**, which matters because the fastest way to make a promo feel like a different product is to draw new art for it.
+
+  If a storyboard is wanted, the constraint to hold is the site's own: the display face is **Black Han Sans at 0.04em tracking** (the sister site's exact value), body is Atkinson Hyperlegible, and the palette is in `:root` in `app.css`. `art-director` owns this and is the agent to run against a draft.
 - **Teacher and student feedback is beginning.** This closes the gap every review cycle on this project has named as the most important one. It outranks new features.
