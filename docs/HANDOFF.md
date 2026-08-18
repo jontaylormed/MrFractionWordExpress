@@ -27,7 +27,25 @@
 
 **37 problems, 148 materialisations, 1,428 rendered screens, every sweep count 0.** The screen count *fell* from 1,468 on 2026-08-16 and that is not a regression — an unstaffed halt stopped rendering three phases a student can no longer reach. When a count moves, check which direction the design moved first.
 
-**A REVIEW CYCLE IS IN PROGRESS AS OF 2026-08-17, and its first finding is why.** All six agent briefs were grepped for Crossover Island and the estimate gate and returned **zero in every one** — six reviewers briefed on a site that no longer existed, whose clean pass would have been indistinguishable from a real one. The briefs and the stale specs were fixed first (`PROBLEM-SCHEMA` was missing four blocks, including `testTrack`, which 24 of 37 problems author). **Cycle 30 is the write-up; check `REVIEW-LOG.md` for whether the reviewer agents have run yet.**
+## ⚠ CYCLE 30 RAN, AND IT BLOCKED THE GATE. READ THIS BEFORE ANYTHING ELSE.
+
+**Five instruments, six blocking findings, and the arithmetic was clean.** Full write-up in [`REVIEW-LOG.md`](REVIEW-LOG.md) — Cycle 30 for the findings, **Cycle 30b for what was fixed and what was not.**
+
+**Why the cycle existed at all, and the finding that came before any agent ran:** all six agent briefs were grepped for Crossover Island and the estimate gate and returned **zero in every one** — six reviewers briefed on a site that no longer existed, whose clean pass would have been indistinguishable from a real one. The briefs and the stale specs were fixed first (`PROBLEM-SCHEMA` was missing four blocks, including `testTrack`, which 24 of 37 problems author).
+
+**All six blockers are fixed and verified** (Cycle 30b): `optionTrue` marking false statements correct on 6 of 7 island problems; two independent answer leaks in the Plan phase; the companion bubble covering 56% of the Engine Room input; the Look Back check locking after one misjudgement; right/wrong conveyed by hue alone on four builders and the seam picker; and every island stop headed *"The Reading Room."*
+
+**Four things to take from it that outlive the fixes:**
+
+1. **The content was in better shape than the engine.** All 28 island answers correct, every transfer sound, all 56 estimate bands containing their answers, every lazy-input gate holding, 55/55 hint ladders complete — and the student pass could not find a single string that made it feel stupid. **Every blocker was in the machinery, not the maths.**
+2. **`VERIFICATION.md` §30's exemption mechanism does not exist.** `tier` is read in exactly one place, `hub.js:634`, as a filter choosing which vocabulary rows render. **Nothing consults it as an exemption**, and `five-situations.js:17` asserts in capitals that the tag protects it while that file has no `tier` field at all. §30 is the one rule written before its failure; this is its failure, and it arrived as **an asserted protection rather than a widened one**. Three documents in that cycle claimed a protection that was not there. **When a comment says something is safe, check that the thing it names exists.**
+3. **The instruments disagreed with each other, twice, and both times the disagreement was the finding.** Theme refuted student's touch-target measurement (taken mid-animation); art-director refuted student's reading of the halt (made without a compositing browser). New rule in `VERIFICATION.md` §40.
+4. **Appearance is still unverified.** The browser pane never composited a frame for any agent. `art-director` got real pixels via headless Edge and its recipe is in the log — **bare `--headless`, not `--headless=new`, which silently writes no file**, plus `--virtual-time-budget` to seek animations rather than sample mid-flight.
+
+**What is still open after the fixes** — the full list is at the end of Cycle 30b. The two that need **you** rather than an agent:
+
+- **Is `--target-min: 44px` still the standard?** `.car` sits at 34px via a bare literal. WCAG 2.2 needs 24px and passes either way. Either the token is the rule and `.car` is a defect, or the token is aspirational and should say so.
+- **The estimate gate ships its only affordance `hidden`** (`estimate.js:303-307`) — at rest it is a rule, five ticks and *"Nothing set yet."* Measured, deliberately not fixed: it needs a design decision, and `ESTIMATE-INPUT.md` §4a needs rewriting around it rather than patching.
 
 **The live site is current** — the user pushes manually and it was verified against the deployed origin on 2026-08-16. It drifts by default, so check the deployed file before calling anything shipped, and **give the case-sensitivity check a mis-cased control** or it proves nothing.
 
@@ -290,7 +308,7 @@ Note that none of those is a word. They are all descriptions of **what the sente
 | | |
 |---|---|
 | [`../CLAUDE.md`](../CLAUDE.md) | How to work on this project, and why the rules live where they do. |
-| [`VERIFICATION.md`](VERIFICATION.md) | **39 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 is the exception and says so. |
+| [`VERIFICATION.md`](VERIFICATION.md) | **41 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 was the exception; **Cycle 30 found its failure**, and §39 and §40 are that cycle's. |
 | [`REVIEW-LOG.md`](REVIEW-LOG.md) | Cycle history. Read the cycle that touched what you are about to change. |
 
 **The single most useful habit on this project:** before building anything that resembles something already here — a choice UI, a picture, a gate, a phase — grep for how the existing one solved it and read the comment above it. The comments record the failures. They are the most valuable thing in the repo.

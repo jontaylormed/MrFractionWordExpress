@@ -1989,6 +1989,58 @@ The Browser pane failed identically for all three browser agents (*"not displaye
 
 ---
 
+## Cycle 30b — 2026-08-17 — the six blockers fixed, each as a class
+
+**Trigger:** the user, on reading the Cycle 30 findings — *"work on fixes."*
+**Applied directly, not by an agent.** Author and fixer are the same, which is the standing limitation; the verification numbers below are the mitigation, not a substitute.
+
+### What changed, and why each is a class fix rather than an instance fix
+
+| Finding | Fix | Why it cannot recur the same way |
+|---|---|---|
+| **Math CRITICAL** — `optionTrue` confirms false statements | `all: true` declared on the four universal/negative options; `optionTrue` requires **both** halves for those, either half otherwise | The quantifier is a property of the **claim**, so any future problem pairing any lines is covered, and any new universal option is one flag away. A fix keyed to the six known problems would have been a hand-kept list. |
+| **Model Yard leak** | `knowsPartOf()` hoisted to module scope; `html()` and `finishSingle()` both read it | The defect was **one rule implemented twice** — `html()` checked "is it given?", `finishSingle()` checked only "is it present?". One copy is now the rule and the other reads it. |
+| **Change Train leak** | Three `a11yDescription`s reworded to stop where the picture stops | It was a **different surface** from the Model Yard — different model, different field, authored not generated. Fixing only `model.js` would have left it. |
+| **Colour-alone, 4 builders** | Glyph moved from `.choice[data-result] .marker::after` to `.choice[data-result]::before`; `.marker` hidden when answered | The indicator no longer depends on a builder remembering to emit a sibling element. **No future `.choice` can be authored without it.** |
+| **Colour-alone, seam picker** | Solid vs **dotted** underline, plus opacity, plus a ✓/✗ glyph | Three channels now, of which colour is the least. Survives greyscale and CVD, and accumulated wrong marks stay distinguishable from the seam. |
+| **Engine Room 56% unclickable** | The same `clamp(0px, calc(862px - 50vw), 200px)` reservation the estimate line already had, applied to `.solve-wrap` | The pad/field swap was copied from the estimate screen **without the clamp that makes it work.** Reserved on the wrap, not the field, because a 320px input cannot give up 200px. |
+| **Look Back locks after one misjudgement** | Only the pressed button disables; the metric still counts first-try catches only | The screen no longer asks a question it has made unanswerable. |
+| **Island stops headed "The Reading Room"** | `islandHead()` finds the stop by id from `Scenery.islandStops()` and carries the **staffing** in the heading | Derived, not listed — a stop gaining a problem needs no change here. It also puts the fade level on the screen where the drop happens, which is what `student-tester` said it needed. |
+
+### Verification — what was measured, and what was not
+
+**Instrument first.** The server on 8413 was checked to be serving *this* tree before any result was believed: all seven edits were confirmed present in the fetched sources, and the page hard-reloaded onto them. Then:
+
+| Check | Result | Against |
+|---|---|---|
+| `MF.validate()` | **37 problems, 0 errors, 28 warnings** | Baseline unchanged (28 at 30 problems in Cycle 29, still 28 at 37) |
+| `SWEEP.render()` | **1428 screens** | Exactly the recorded baseline — nothing became unreachable |
+| collisions / geometry / numberless / `selfTestChallenge` | **0 / 0 / 0 / 0** | — |
+| `SWEEP.leaks()` | **18 hits** — every one `rr-market-stall`, set 1 | All documented in `SWEEP.CLEARED`: *"two stalls / two totals / two prices"*, the story's cardinality colliding with a set-1 answer. **None on any file touched.** |
+| `optionTrue` over all 7 island problems × 5 questions | **0 contradictions / 91 cells**, 35/35 questions still answerable | Was 13 false-confirmation cells |
+| Model Yard fallback | `pw-orders-day` `segmentValue` 24 ∉ givens {14, 40, 96} → falls to `markedTotal` = *"96 orders"* | **The surface is not emptied** — it asks a real question with a given number |
+| Change Train copy | *"In words:"* paragraph **present** and reworded on all four sets | Same check — the leak was not fixed by deletion |
+| `.choice::before` | ✓ on a marker-less choice, ✗ on wrong, **no double glyph** where a marker exists | The four failing builders now covered |
+| Seam picker | solid inset vs `underline dotted`, opacity 1 vs 0.72, ✓ vs ✗ | Three channels |
+
+**NOT verified, and it is the same gap the cycle had:** **appearance.** The browser pane still does not composite frames, so every number above is geometry, computed style or logic. Nothing here has been *looked at*. `art-director`'s headless-Edge recipe (`--headless`, not `--headless=new`, plus `--virtual-time-budget`) is the way to close that and was not run against these fixes.
+
+### Still open after 30b — nothing below was touched
+
+- **The estimate gate ships its only affordance `hidden`** (`estimate.js:303-307`). Measured, not fixed: it needs a design decision about what the resting state should show, and `ESTIMATE-INPUT.md` §4a needs rewriting around it rather than patching.
+- **`.car` at 34px against the project's own `--target-min: 44px`**, set by a bare literal. **This needs the user's ruling first** — either the token is the standard and `.car` is a defect, or the token is aspirational. WCAG 2.2 (24px) passes either way.
+- **`.est-clear` computes to 23.5px**, 0.5px under 2.5.8, and `tabindex="-1"` does not exempt a pointer target.
+- **The Plan phase is not a gate** — the two-model Plan is skippable in two clicks.
+- **The Ticket Booth re-asks read 3's question** on two lines.
+- **`m.selfChecks` cannot increment at a halt** — the metric is estimate-gated and a halt has no estimate.
+- **Cold Halt's retrospective describes a ride nobody took**, and the island map's frame clips three stop labels.
+- **The "waiting" second model reads as a skeleton loader**, and the Lighthouse hub card uses the site's own *"not built yet"* dashed idiom.
+- Everything in the "not covered" paragraph above: contrast on the island, reading level, dyslexia provisions, 320px, the end-of-trip screen and the journey panel.
+
+**GATE 2 remains BLOCKED.** Six blockers are fixed and verified against everything this project can measure without a compositing browser; none of it has been seen, and no student has used any of it.
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.

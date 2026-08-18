@@ -149,7 +149,33 @@ Consequences worth stating now, because they are cheap before and expensive afte
 
 1. **Is a 293px rail long enough to sweep a range comfortably?** It is the number the split is really trading. An even column split was chosen over a pad-favouring one for exactly this reason.
 2. **Does the pad on the left and the line on the right read correctly**, or does the thing you commit belong on the left?
-3. **The Engine Room's field is now on the right**, which puts a text input in his column. It clears him horizontally at 1280, but it is the input a student types into.
+3. **The Engine Room's field is now on the right**, which puts a text input in his column. ~~It clears him horizontally at 1280~~ **— IT DID NOT. See the review below.**
+
+---
+
+### ⚠ REVIEWED 2026-08-17 (Cycle 30). Q1 is closed, Q3 was FALSE, and the real defect is one this section never asks about.
+
+**Q1 — CLOSED. Yes, comfortably.** 293px less a 26px thumb leaves 267px of travel; at 10% granularity that is 29px a step, fine on mouse and on touch. **The limit this section worried about was not real** — and inventing one would have cost the split for nothing.
+
+**Q3 — FALSE, and it was a blocker.** The field did not clear him. Measured at 1280 by riding the site: the input spans **x858–1178** while `.mf-companion` spans **x993–1245**, and sweeping `elementFromPoint` across the field's vertical centre returns his bubble for **180 of 320px — 56% of the answer box was not clickable.** Because he is `position: fixed`, the dead band **moved with scroll**: at some offsets only the right edge, at others the centre of the box.
+
+The cause is the one §4a already documents for the *line* and never applied to the *field*: `.mf-companion` is `pointer-events: none` but `.mf-c-bubble` is `pointer-events: auto`, so the wrapper passes clicks through and the bubble catches them. **The swap was copied to the Engine Room; the reservation that makes the swap work was not.** Keyboard still reached the field, which is why nothing automated caught it — this excluded mouse and touch only.
+
+**Fixed** (`app.css`, `.solve-wrap`): the same `clamp(0px, calc(862px - 50vw), 200px)`, applied to the **wrap** rather than the field, because unlike the line a 320px input cannot give up 200px and still be an input. The pad is the `1fr` column and absorbs it — roughly 740px to 540px at 1280, still far larger than the field.
+
+**The lesson worth more than the fix:** this section asserted a clearance that had never been measured, and the assertion is what stopped anyone measuring it. That is now `VERIFICATION.md` §40 — *when a comment claims a protection, check the thing it names exists.* Two other documents in the same cycle did the same thing.
+
+### The defect §4a never asks about, and it outranks all three questions
+
+**The estimate gate ships its only affordance `hidden`.** `estimate.js:303-307` marks `.est-band` and **both** `.est-thumb` elements with the `hidden` attribute, cleared only in `paint()` at `:349` (`band.hidden = !has`, where `has = lo !== null`).
+
+So the **resting state of the gate every problem passes through** is a 4px ink rule, five ticks, two numbers and the sentence *"Nothing set yet."* The thumbs are well made — 26×34, cream, 2.5px ink border, a 44px hit area — and they are **absent at the one moment a student has to work out what to do**. The only affordance is `cursor: crosshair`: invisible until the pointer is already there, and non-existent on touch. Beside a 530×300 dashed sketch pad, the eye lands on the pad every time.
+
+**This is the same defect as the keyboard one from the other side.** Nothing tells a keyboard user the track takes arrow keys (`/arrow|key/i` against `main.innerText` is false); nothing shows a pointer user there is anything to grab. **The gate announces itself to neither.**
+
+**Deliberately not fixed**, because it is a design decision rather than a bug: showing the thumbs at rest, showing a ghosted band, or rewriting the lead copy are three different answers with different costs, and §4a should be rewritten around whichever is chosen rather than patched.
+
+**Also open, from the same review:** the pad sits in the first-read column at **~13× the area of the required control**, under an 11px grey label, while the field sits under a `p.est-lead` that renders **larger and heavier than the `h3` above it** (h3 measured 16.8px/700). The recommendation was explicit — **keep the pad left, it must not lose area; fix the type hierarchy instead.**
 
 ---
 

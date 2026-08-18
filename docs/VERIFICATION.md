@@ -1,7 +1,7 @@
 # The Verification Standard
 ### Mr Fraction's Word Problem Express
 **Applies to:** every agent, **and to anyone working without one** — see `../CLAUDE.md`.
-**Owner:** Oversight. **Last updated:** 2026-08-16. **39 rules.**
+**Owner:** Oversight. **Last updated:** 2026-08-17. **41 rules.**
 
 Every rule here was written after a specific failure on this project. The evidence is kept with each rule, because a rule without its scar gets softened away.
 
@@ -290,6 +290,12 @@ Recovery cost roughly a quarter of the session and turned on a cache that could 
 **The rules.**
 
 - **Bulk content edits go through `Edit`, not a shell.** It matches an exact unique string, fails loudly when the string is absent, and cannot address a file by character offset. Every one of the seven repairs after recovery was an `Edit`, and every one either applied or errored.
+
+> ### The clause this rule was missing, added 2026-08-17 (Cycle 30)
+>
+> Since 2026-08-10 this rule has carried the reassurance that *"the worst case is a `git checkout` rather than a lost session"*. **That reassurance silently assumed the file was tracked.** In Cycle 30 a review agent overwrote `.claude/launch.json` without reading it. `git log --all -- .claude/launch.json` returns nothing: git had **never** held a copy, so there was no worst case, only a total loss. The file was untracked because nobody had thought about it, which is exactly the condition under which this happens.
+>
+> **So: read any file before you overwrite it, and before leaning on the safety net, check that git actually holds a copy of the thing you are about to change.** An untracked file has no safety net at all. And a review pass should not be writing to project files in the first place — the same cycle's `art-director` ran its whole harness against a scratch copy and left the tree untouched, which is the standard to copy.
 - **A replace whose arguments are single characters is a bug**, not an edit. Assert the length of every search string before using it.
 - ~~**This project has no version control.** There is no `git checkout` here. Treat every scripted write to `content/` as irreversible, because it is.~~
   **THIS IS NO LONGER TRUE, AS OF 2026-08-10.** The folder is a git repository with a full initial commit (105 files). `git checkout -- <file>` now exists and works. **Proven, not assumed:** the exact 2026-08-04 disaster was re-staged — a scripted `w`→`h` substitution across `ch-water-tank.js`, same shape, same 28,261 characters — and one `git checkout --` restored it byte-for-byte, verified by normalising line endings and confirming `git status` clean.
@@ -425,3 +431,43 @@ Do the composition walk on the **rendered page**, not the stylesheet and not the
 **What the same walk found once it was run** — a loader with no progress indicator, no ticker on the loader, an uncaptioned hero image, and a licence and three bundled typefaces that appeared in no file a reader opens. Four more absences, none of which any token diff could ever have surfaced.
 
 *Two are closed since: the loader has a progress bar, and the typeface credits are in the README's License section rather than in a page footer — a colophon was built into `.rail-foot` first and taken out again on the user's call. The ticker and the hero caption remain open.*
+
+---
+
+## 39. A measurement taken while an animation is running is not the settled value
+
+**This has now produced a false accessibility CRITICAL twice, in opposite directions, and both times the harness was the subject rather than the site.**
+
+> **2026-08-03.** `theme-reviewer` filed a CRITICAL: a tapped sentence rendered invisible at **1.23:1**, cream on cream. It had read `background-color` repeatedly and correctly — inside a browser pane where `requestAnimationFrame` never fires, so a 120ms transition never advanced and the property stayed at its from-value **forever**. `art-director`, rendering real pixels, saw a solid fill. The pixels were right.
+>
+> **2026-08-17 (Cycle 30).** `student-tester` measured Model Yard car buttons at **19.4 × 66px** and filed a WCAG 2.2 touch-target failure. `theme-reviewer` refuted it from the CSS: `min-width: 34px` is a hard clamp on a `flex: 1 1 0` item, so 19.4 cannot come from that rule. **The decisive tell was the height — exactly 66px, the nominal `min-height`, which is what a horizontal-only transform looks like.** `19.4 / 34 = 0.57`, inside the `scaleX(.4) → 1` ramp of `car-arrive`, which on a 20-car problem is still settling at ~1385ms. The measurement was taken mid-animation.
+
+One froze because the animation never advanced; the other was caught while it did. **Neither was detectable from inside the measurement** — both produced plausible numbers, and both agents were working carefully.
+
+**The rule.** Before believing any box, colour or computed style:
+
+```js
+document.getAnimations().length   // must be 0
+```
+
+**And say in the finding that you checked.** A geometric claim with no statement about animation state is not yet a claim about the settled page. Where the harness cannot settle animations, seek them instead — `art-director` used Edge's `--virtual-time-budget`, which advances virtual time rather than sampling wall-clock, and is the reason its captures were trustworthy where three other passes' were not.
+
+**The generalisation, which is the part worth keeping.** Both errors were caught only because **a second instrument disagreed** — pixels against computed style, CSS against a live probe. Neither agent could have found its own error. So: *when a measured CRITICAL rests on one instrument, get a second one before acting, and treat the disagreement itself as the finding.* Rule 2 says suspect the instrument; this is what that costs when you do not.
+
+---
+
+## 40. When a comment claims a protection, check the thing it names exists
+
+Cycle 30 found **three separate documents asserting a safeguard that was not there**, and no check on this project can see this class — the assertions are prose, and prose validates clean.
+
+1. **`five-situations.js:17`** states in capitals that *"THE TIER-3 SECTION IS TAGGED `tier: "lies"` AND MUST STAY TAGGED"*, citing §30 while doing it. **That file has no `tier` field anywhere.**
+2. **`app.css`**, above the answered-choice rules, claimed *"the glyph and the border weight both carry it"* — WCAG 1.4.1 cover for right/wrong. **Both halves were false:** the glyph hung off a `.marker` child that four builders never emit, and `border-width` goes 2px→3px for right and wrong *alike*, so weight separated answered from unanswered and never right from wrong.
+3. **`ESTIMATE-INPUT.md` §4a** stated the Engine Room field *"clears him horizontally at 1280"*. It was measured **56% covered** by the companion bubble.
+
+**And §30's exemption mechanism turned out not to exist at all.** `tier` is read in exactly one place, `hub.js:634`, as a filter selecting which vocabulary rows a vocab page renders. It is a display parameter. **Nothing anywhere consults it as an exemption.**
+
+> The failure mode §30 predicted was somebody **widening** the exemption. What actually happened was somebody **asserting** it. A widened exemption is at least visible in a diff; an asserted one reads as diligence.
+
+**The rule.** A comment that says something is safe is a claim about code, and claims about code are checkable. When you read one — or write one — grep for the mechanism it names and confirm it is (a) present in the data and (b) actually consulted by something. A protection nobody reads is not a protection, and a comment describing it is worse than no comment, because it stops the next reader looking.
+
+**Corollary for authors:** if you write a comment asserting an invariant, say in the same breath *what enforces it*. "Tagged `tier: "lies"`" is an assertion; "tagged `tier: "lies"`, which `<file:line>` refuses to render untagged" is a claim someone can falsify.
