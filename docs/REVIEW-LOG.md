@@ -1606,6 +1606,389 @@ The booth was an absolutely-positioned float, and the comments above it record *
 
 ---
 
+## Cycle 30 — 2026-08-17 — Crossover Island, the estimate gate, and the unstaffed halts — **IN PROGRESS**
+
+> **On the number.** 30 is the next **unused** number, not the next in sequence — the file already holds two Cycle 27s, two Cycle 21s and a 28 between the 27s.
+>
+> **This entry is being written as the cycle runs, not at the end of it.** Three oversight runs on this project have been cut off mid-pass and all three lost everything, because each held its findings for a final write-up. Anything below is what had landed at the time it was written.
+
+**Trigger:** the user, directly — *"run the cycle 30 reviewer agents."*
+
+**Scope:** **56 commits since Cycle 29 (2026-08-15), none of them reviewed.** Crossover Island and its seven two-line problems, the Crossover Read, the two-model Plan phase, the Lighthouse hub, the estimate gate and its sketch pads, and the unstaffed halts.
+
+### The finding that came before any agent ran
+
+Recorded on 2026-08-16 and repeated here because it is the reason this cycle exists in the form it does: **all six agent briefs were grepped for Crossover Island and the estimate gate and returned zero hits in every one.** Six reviewers were briefed on a site that no longer existed. A clean pass from them would have described the site of August the 4th and been indistinguishable from a real one. The briefs and the stale specs (`PROBLEM-SCHEMA.md` was missing four blocks, `testTrack` among them, which 24 of 37 problems author) were fixed first, in the five commits of 2026-08-17. **This cycle is the first pass those briefs are capable of producing.**
+
+### Deviation from the documented sequence, and why
+
+`oversight.md` runs teacher → math → theme → GATE 1 → theme → student, on the reasoning that correctness is pointless to check before content settles. **Nothing here is about to change** — this is a review of a shipped build, not a gate on new content — so the passes were grouped by **instrument contention** instead: the three browser-driving agents run one at a time because they share one browser, and the two source-analysis passes run alongside the first of them. If any finding forces a content change, the agents downstream of that change re-run, per the standing re-review rule.
+
+### Standing limitation on everything below
+
+**Author and reviewer are the same model wearing different hats.** All seven island problems carry `review.*.status = "provisional"` for exactly this reason. Nothing in this cycle changes that, and no verdict here should be read as independent in the sense the sequence diagram implies. **No real student has used any of it.**
+
+### Attempt 1 died on a session limit — all three passes, at the starting line
+
+**2026-08-17.** `teacher`, `math-reviewer` and `student-tester` were spawned in parallel and **all three were killed by a session limit before any of them finished reading the briefing documents.** Their last recorded actions were, verbatim, *"I'll start by reading the required documents in order"*, *"I'll start by reading the required docs in order"* and one viewport being set. **Nothing was reviewed. No finding in this cycle rests on attempt 1.**
+
+This is recorded rather than quietly retried because it is now the **fourth, fifth and sixth** agent deaths by session limit on this project — `HANDOFF.md` §5 already carried three. That is a pattern about how this project schedules reviews, not bad luck:
+
+- **Uniform total failure is normally a dead harness**, and the rule here is to suspect the instrument first. It was checked: the message was identical and explicit on all three (*session limit, resets 3:10am*), and the coordinating session kept running afterwards. A real account limit, not an instrument fault.
+- **Three opus agents in parallel is the most expensive possible shape** and it bought nothing — three simultaneous deaths at the starting line rather than one completed pass. Attempt 2 runs them **serially, cheapest instrument first**, so that a constrained budget yields finished work instead of three stubs.
+- **The order changed with the budget.** Correctness first (`math-reviewer`: no browser, cannot be overruled, worst defect if wrong), then the other source pass, then the three browser passes, which are by far the most expensive and are the ones most likely to die mid-ride.
+
+### Verdicts
+
+| Agent | Instrument | Verdict | Blocking findings |
+|---|---|---|---|
+| math-reviewer | independent re-derivation | **FAIL** | CRITICAL: `optionTrue` confirms statements the story contradicts, on 11 surfaces across 6 of 7 island problems |
+| teacher | source statistics | **PASS-WITH-FINDINGS** | CRITICAL 1a: same class as math's, 13 cells; MAJOR: §30's exemption tag is not an exemption mechanism; MAJOR: the seam is guessable at 7/7 |
+| student-tester | live browser, end to end | **DO-NOT-SHIP** | B-1 the answer box is 56% unclickable; B-2 Look Back locks after one misjudgement; **C-7 the Plan phase leaks the Engine Room's answers** |
+| theme-reviewer | source + arithmetic (no browser) | **FAIL** | 2 a11y CRITICALs: right/wrong is hue-only on 4 builders incl. the estimate gate, and on the island seam picker where wrong marks accumulate |
+| art-director | **rendered pixels — the only pass that got any** | **NEEDS WORK** | A second answer leak on the Change Train; the estimate gate's only affordance ships `hidden`; the halt renders ~600px of empty cream |
+
+> **A fourth agent death by session limit, on a different window.** `theme-reviewer` was killed before writing a line; the reset it named was **9:20pm**, where attempt 1's three deaths named **3:10am**, so this is a second limit rather than the first recurring. `student-tester` alone consumed ~235k tokens and 305 tool calls, which is the likely cause. **Attempt 2 cuts theme's scope from five items to two and orders it source-first**, so that a short run still yields a complete class enumeration rather than a half-finished browser session. Recorded because *"budget is a real constraint — say so rather than failing silently"* is this project's standing rule, and because the count now matters: **six agent deaths by session limit in this cycle alone, against three in the whole prior history.**
+
+### math-reviewer — 28 materialisations, and the arithmetic is not the problem
+
+**All 28 answers are correct** (7 problems × 4 sets, each re-derived from the story text before its stated work was read, each cross-checked by a reverse operation). Every transfer is genuinely the first half's answer and the second half's given **in that set**; the transfer is stated nowhere in any of the seven texts, so no pair is solvable without doing the first half. No misconception collisions within any step of any set. Every answer an exact integer, so no tolerance was needed. Both estimate mechanisms checked: **28 derived windows and 28 authored `reasonableMin/Max` bands all contain their answer, 0 failures / 28 subjects**, and no band end is equal to the answer.
+
+**The content is sound. The defect is in the engine, and it is worse than anything in the arithmetic would have been.**
+
+#### CRITICAL — the checklist confirms statements the story contradicts
+
+`assets/js/stations.js:336`. On a paired problem `optionTrue` accepts an option if it is true of **either** half:
+
+```js
+return o.lines.indexOf(p.pair.first) >= 0 || o.lines.indexOf(p.pair.second) >= 0;
+```
+
+That disjunction is valid for an **existential** claim — *"a whole thing, cut into shares"* is true of the story if either half does it — and invalid for a **negative or universal** one. Three of the five checklist options are exactly that, and `shape/neither` (`:158`) is the clearest: *"Neither — nothing is being carved up or repeated"*, `lines: ['change','compare','ratio']`, replying *"Nothing is being carved into shares, and no fixed amount is being repeated to build a total."*
+
+A negative universal is true of a two-part story only if it holds of **both** parts. Applied disjunctively it is confirmed by the half that happens to satisfy it, and the other half is what the student is looking at.
+
+| Problem | pair | accepted via | but the other half | |
+|---|---|---|---|---|
+| `cl-season-tickets` | compare + partwhole | `compare` | cuts 57 into 38 + 19 | |
+| `cl-buffet-crates` | ratio + partwhole | `ratio` | cuts 84 into 47 + 37 | **halt** |
+| `cl-track-sleepers` | groups + change | `change` | 12 × 15 | |
+| `cl-lost-umbrellas` | change + compare | `compare` (`moments/steady`) | shelf goes 54 → 37 → 46 | **halt** |
+| `cl-carriage-clean` | ratio + change | `ratio` (`moments/steady`) | 48 → 72 | |
+
+On the first three, `cut` or `repeat` is **also** accepted, so the `alsoTrue` rider at `:763` renders *"Nothing is being carved into shares … **And so is 'A whole thing, cut into shares'.** Both are true."* — **P and not-P on one screen, both marked correct.**
+
+**And it is worst exactly where the student has least help.** `var unaided = !!(p.pair && p.fadeLevel === 'independent')` at `:758` suppresses that rider at an unstaffed halt. So on `cl-lost-umbrellas` and `cl-buffet-crates` the false confirmation arrives **alone and unqualified, on the only aided screen the stop has.** The fade ladder was designed to remove prose that does the student's finding for them; it also removes the sentence that was the only thing making the contradiction survivable.
+
+Five weaker instances of the same class (`kinds/same` on 3 problems, `things/single` on 2). **11 surfaces, 6 of 7 problems.** Only `cl-platform-planters` is clean, and it is clean by accident: it is `partwhole + groups`, and `neither` lists neither of those.
+
+**Why no checker sees it:** `tools/sweep.js` asks `optionTrue` the same question the screen asks. Instrument and subject agree by construction — the check cannot disagree with the thing it is checking. `VERIFICATION.md` §36 is the nearest existing rule and it does not cover this shape.
+
+**What the fix may not be.** The comment at `:333` forbids the obvious one in advance: *"Declared as data on the option, never as `if (challenge)` at the call site: a renderer branch is an exemption, and this project has seven files of what hand-kept exemptions do."* The repair belongs on the option — a quantifier the option declares, so a negative one requires both halves — not in `optionTrue`'s caller and not in a list of affected problems.
+
+#### MAJOR — `cl-platform-planters`' Model Yard asserts a false proportion
+
+`signalBox.barModel` authors `segments: 6, marked: 2`, claiming the named destinations take 1/3 and the leftover 2/3. Actual: **42/90, 49/84, 52/96, 40/76** — and in sets 2, 3 and 4 the leftover is the **smaller** part, so the picture inverts which is bigger. Authored geometry cannot track the set. **It precedes the estimate**, so a student calibrates against a picture that contradicts the numbers. This is the `parseFloat("2/3")` class of defect in a new place: a picture that validates clean because nothing ties it to the arithmetic.
+
+#### MINOR
+- `cl-platform-planters` header line 22 and its `review.math` still record set 2 as `35 ÷ 7 = 5`; the shipped set is 5 platforms answering 7.
+- `cl-carriage-clean`'s `numberChecks` never ties `rise` to `n4` and `cleaned` — a set with a false percentage would validate clean.
+- `cl-lost-umbrellas`' header states the halt ruling that HANDOFF §0 records as **reversed** — another copy of the fade ladder in prose, which is the exact failure `Stations.phaseChain` was created to end.
+- The estimate cannot catch a student stopping at the transfer on `cl-signal-delay` or `cl-track-sleepers` — the transfer sits inside the band in all 8 sets, contradicting the argument written in `cl-lost-umbrellas`' header.
+
+### teacher — convergence on the CRITICAL, and three findings nothing else would have reached
+
+**The strongest signal this cycle is convergence.** `math-reviewer` (re-derivation) and `teacher` (source statistics) reached the same defect class from different instruments and different directions — exactly the pairing `oversight.md` says produces the best evidence. Teacher then sharpened it past what math could see.
+
+#### CRITICAL 1a — the pedagogical shape of the `optionTrue` defect
+
+**Four of the eleven non-`fit` options are universal or negative** — `kinds/same`, `moments/steady`, `things/single`, `shape/neither` — and the either-half rule is unsound for all four. **13 false-confirmation cells across 6 of 7 problems.**
+
+**The sharp end: on `cl-buffet-crates` a student who reads the story as an ordinary Part–Whole problem gets four green ticks out of four on the four situational questions.** Only `fit` pushes back, and `fit` is answered from the `pairs` flag rather than from the story — so nothing on the screen is responding to the misreading. The checklist does not merely mark a wrong answer right; **it coherently confirms a whole wrong reading.**
+
+Measured: **random tapping scores 57.1% on the island checklist against 40% on the mainland; 50 of 91 island option-taps are marked correct.** At the two halts `unaided` suppresses the rider, so **5 false universals arrive bare** — a green tick, a sentence that is false about the story, nothing on screen disagreeing, and a closing instruction to *"read it again for yourself."*
+
+**On the count.** Math reported 11 surfaces, teacher 13 cells; teacher flagged the discrepancy rather than quietly reconciling it, which is the right call. **It is left unreconciled deliberately, and it does not gate the repair.** The fix must be a quantifier declared on the option — so it is derived from the data and covers every cell whether or not anyone counted it correctly. A repair that depended on the count being right would be the hand-kept exemption list this project already has seven files of.
+
+#### MAJOR 1b — the self-monitoring metric cannot increment at a halt
+
+`m.selfChecks` — the trip report's headline *"You caught N things at the arrivals board"* — increments in exactly two places, `stations.js:1984` and `:2144`, and **both are estimate-vs-answer comparisons.** Both are unreachable at a halt. So **the site's stated headline metric is structurally incapable of firing on the two stops chosen by the student who wanted the hardest route.**
+
+Teacher explicitly did **not** re-open the 2026-08-16 ruling — it read the losing argument first, as instructed, and reports the design goal stands. The ruling was about *scaffolding*; the metric went with it by implementation accident. Instrumenting the halt's existing *"did you answer the question asked?"* reverses nothing.
+
+#### MAJOR 2c — the crossover seam is guessable, on the one unshuffled surface
+
+`crossoverSentence` is **4 on five of seven problems and 5 on the other two.** The seam is **never in the first two thirds of any story**, so *"tap sentence 4"* scores 5/7 and *"tap 4 or 5"* scores **7/7 against a 15.2% chance baseline.**
+
+**The Lighthouse's own page 4 tells students *"do not count sentences and take the middle one"* — and the content rewards counting sentences.** The fix is authoring (move a scene-setting sentence across the seam, targeting a spread over indices 3–5), not a rule that the seam is never fifth.
+
+#### MAJOR 3b — §30's exemption mechanism does not exist
+
+**This is the finding with the longest reach, because it is about the rule this project trusts most.** `VERIFICATION.md` §30 says the keyword-grep exemption is a **data tag**, `tier: "lies"`, never a reading of intent. Verified: **`tier` is read in exactly one place, `hub.js:634`, and it is a filter selecting which vocabulary rows a vocab page renders.** It is a display parameter. **Nothing anywhere consults it as an exemption**, and a prose page cannot carry a meaningful one.
+
+**11 untagged hits** across `five-situations.js`, `word-board.js` and five problem-level Signal Failure strings. All eleven read as correct pedagogy — and **not one is covered by the mechanism §30 names as the only permissible exemption.**
+
+Worst single line: **`five-situations.js:17` asserts in capitals that *"THE TIER-3 SECTION IS TAGGED `tier: "lies"` AND MUST STAY TAGGED"* — and there is no `tier` field anywhere in that file.** The comment defends a tag that was never applied, and cites §30 while doing it.
+
+So the pattern §30 was written to prevent has occurred in the one form nobody checked: not by widening the exemption, but by **asserting the exemption exists.** §30 is the only rule here written before its failure. This is its failure, and it arrived as documentation rather than as code.
+
+#### The passes, with their numbers
+
+- **2a PASS.** *"Always tap position 1"* across every shuffled island surface: **6/25 = 24.0% against a 24.7% baseline.** The recurring correct-option-first defect has **not** recurred on the island.
+- **2b PASS.** Length, both directions: correct is longest-or-joint **6/19 = 32% vs 28% expected**; mean correct length 44.3 vs 44.5. Correct is *shortest* twice, so the inverted tell created by past fixes is absent.
+- **4 PASS. 55 steps across 37 files, 55/55 hint ladders end by stating that step's answer, 0 misses.** The load-bearing claim holds at 37 problems. **The recorded "164" reconciles as a count of *rungs* at 30 problems, not steps** — today's equivalent is 220. A four-cycle-old number was being carried as if it measured something it did not.
+- **5a PASS with residual.** 42 masked-phase string fields scanned: 4 number words, all determiners in `modelAnswer` (*"Two trains leave…"*), none a number-set value, 2 unreachable at a halt. **No "half" anywhere** — the trap the brief warned about did not fire.
+- **5b PASS.** 56 answer values (28 final + 28 first-step); **none is 1, 2 or 5.**
+- **3a / 3c PASS.** `lighthouse.js` has zero student-facing keyword hits; 7 tier-2 entries, 14 examples, every pair taking different operations.
+
+#### Two instrument notes, both the standard working
+
+- Teacher's **first hint-ladder instrument reported 30 misses and was wrong.** It rebuilt it, **planted a defect and confirmed it fired** before believing the second result. That is `VERIFICATION.md` rule 3 doing its job unprompted.
+- The shuffle instrument was **given a control before any result was believed** — it reproduces the documented `|xo-half-N|` = [3,3]. A position measurement with no control has been wrong on this project before.
+
+### student-tester — the site was ridden, and it does not ship
+
+**VERDICT: DO-NOT-SHIP.** 5 personas, 2 island stops (Cold Halt unstaffed, Kelder Sands staffed), a full 3-stop mainland ride through the Terminus Hub to the trip report, plus two partial rides.
+
+**Read its instrument disclosure first, because it changes what the report is evidence of.** The Browser pane **never composited a frame** — every screenshot timed out — so **no appearance judgement was made at all**. Everything geometric is `getBoundingClientRect` / `elementFromPoint` at an explicit viewport; sketch strokes are synthetic `PointerEvent`s, not a real pointer; `prefers-reduced-motion` could not be toggled. **Three "findings" evaporated when the agent probed the instrument**, and it says it nearly filed two fictional CRITICALs. Anyone reproducing this needs the four harness facts it lists: `key` never fires a native button's default activation; it sends `Right`, not `ArrowRight`; and `html { scroll-behavior: smooth }` makes every programmatic scroll silently no-op in this pane.
+
+That disclosure is the report working. It is also why **`art-director` remains genuinely necessary** — the pixel instrument is the one nobody has run.
+
+#### C-7 CRITICAL — the Plan phase prints the Engine Room's answers. Cycle 6, again, in a new place.
+
+Part–Whole Loop stop 3, *The Signal Box* (46 orders = 20%, find 230). Model Yard completion feedback, verbatim:
+
+> *"That is the picture. 2 of the 10 parts are the 46 orders packed before lunch, which leaves 8 as the afternoon's work. **Each part is 23 orders.**"*
+
+Directly below it, on the same screen, the model's own description says *"Two things are still blank: what one part is worth, and how big the whole bar is. You work it out."* One screen later the Test Track says *"No value is worked out here."* **23 × 10 = 230.** Same shape at stop 1 (*"Each part is 9 cups"*, and `aria-label="Part 1 of 4. Marked. Worth 9 cups."` — so it leaks to a screen reader too). At stop 2 **both** Engine Room step answers are on the previous screen.
+
+**Verified at source, and the finding is sharper than the report.** `model.js:374` already guards this:
+
+```js
+var knows = bar.segmentValue && bar.segmentValue !== '?';
+var tail = knows ? ' Each part is ' + esc(bar.segmentValue) + … 
+```
+
+and the comment above it records the whole history: blanking `segmentValue` after Cycle 6 left the yard saying *"Each part is ? shots"*, which read as broken software, so a `markedTotal` fallback was built to turn the unknown into a real question. **That design is correct.** The defect is that **nothing enforces its precondition** — no check anywhere says *if `bar.segmentValue` is present, no Engine Room step may have that value as its answer.*
+
+**This is the `fixing-leaks-by-deletion` lesson followed properly and then left unguarded.** The renderer was taught to say the right thing when the value is absent; the authoring side was never stopped from supplying it.
+
+**And it is checkable, contrary to the usual framing.** Both `segmentValue` and the step answers are materialised numbers, so a validator rule can compare them post-materialisation. This one does **not** need to live only on the screen — but it does today, which is why five agent passes and every sweep have missed it since Cycle 6.
+
+#### B-1 BLOCKER — 56% of the Engine Room answer box cannot be clicked
+
+1280×720, Kelder Sands Engine Room step 1. Input spans x858–1178; `.mf-companion` spans x993–1245, `position: fixed`, `z-index: 200`. **Sweeping `elementFromPoint` across the field's vertical centre, the first non-input x is 998 — 180 of 320px (56%) return the companion's bubble.** The blocked band **moves with scroll**: at scrollY 300–380 it covers only the right edge; at 420–460 it covers the **centre**.
+
+**Verified at source.** `app.css:2044` sets `.mf-companion { pointer-events: none }` — but `.mf-c-bubble` at `:2058` sets `pointer-events: auto`. The wrapper passes clicks through; **the bubble child catches them.**
+
+The irony is recorded in the code: `stations.js:1786` says the field was deliberately moved right *because* Mr Fraction floats there and the sketch pad was the tall element reaching him. **The pad was moved out of his way and the input was moved into it.** Keyboard still reaches the field, so this excludes mouse and touch only — which is most students.
+
+#### B-2 BLOCKER — one misjudgement makes a self-catch permanently unrecordable
+
+Estimate 63, answer 18. Choosing *"Yes — my estimate was in the right area"* replies *"Look at the two numbers again side by side. Are they in the same ballpark or not?"* — and then **both buttons are disabled.** You are told to look again and cannot record what you see.
+
+**This is the site's headline metric.** `m.selfChecks` has only two increment sites and this is one of them; the Engine Room never lets a wrong answer through, so **the estimate comparison is the only place on the site a student can catch their own error.** One misjudgement closes it.
+
+#### C-1 MAJOR — every island stop is labelled with the wrong station
+
+At Cold Halt **and** Kelder Sands the eyebrow reads *"The Reading Room"* and the h2 *"Read it three times, each with a different job."* — for the whole stop, through the Crossover Read, both later reads, the Ticket Booth, the Plan, the estimate and the arithmetic. `/engine/i` and `/plan/i` against `main.innerText` are **both false everywhere**.
+
+On the mainland this is coherent: the journey panel proves *"The Reading Room"* is the **name of stop 1**, and it becomes *"The Drafting Table"* at stop 2. On the island the stop is Cold Halt, the map says so, the story says so — and the header names a different place **and promises three reads that an unstaffed halt will never give.**
+
+#### C-3 MAJOR — the two-model Plan phase is not a gate
+
+Reach the Plan screen, touch neither the bar model nor the crossover slot, arrow the estimate band, *Lock it in*, *To the Engine Room*. Verified immediately before: all `.cmp-row` at `aria-pressed=false`, all four `.xo-opt` enabled. **The Engine Room opened.** The estimate is the only gate on that screen, so **the pedagogical core of a paired problem is skippable in two clicks.** Alex finds this in thirty seconds.
+
+#### C-8 MAJOR — the halt's retrospective describes a ride nobody took
+
+Cold Halt: *"…no screen walked you to the seam and **the Plan phase gave you an estimate and nothing else**."* **There was no Plan phase and no estimate.** And Kelder Sands: *"On the last island stop the halfway number was in the wrong units, so checking the units caught it."* — the agent's last island stop was Cold Halt, halfway 46 umbrellas, final 17 umbrellas, **identical units**. The continuity line assumes a fixed stop order and never checks what was ridden.
+
+**This is copy written against the fade ladder as it stood before 2026-08-16.** It is the same class as `cl-lost-umbrellas`' stale header that math flagged: **the reversed ruling left copies of itself behind**, and `Stations.phaseChain` being the single source of truth for the *chain* did not make the *prose about the chain* single-sourced.
+
+#### The rest, in brief
+- **C-2** the Ticket Booth re-asks what read 3 just answered, on two lines. The honest answer to *"does Three Reads feel repetitive"* is that **reads 1–3 are genuinely three different jobs — the Ticket Booth is a fourth that restates.**
+- **C-4** *"Step 1 of 2"* exists only in the `aria-live` region; sighted students are never told how many steps there are.
+- **C-5** *"Back at the Estimation Tower you said about 6"* — the screen was headed *"Commit to an estimate"*. Internal place names surfacing in student copy; same class as C-1.
+- **BA-6** with the band collapsed (`lo == hi`, exactly what keyboard entry produces) every hit-test point on the thumb returns `#est-hi`; `#est-lo` is unreachable by pointer until the band is opened.
+- **Console:** one uncaught `TypeError` at `model.js:402` (`okBtn` handler, no guard on `stages[stageIdx]`), **agent-caused** by clicking a button a student cannot reach (`offsetParent === null`). Correctly **not** counted as a student-facing error. A latent crash worth a guard.
+
+#### PRIORITY 1 — does the unstaffed halt read as trust or abandonment?
+
+**Trust — narrowly, and by one sentence most students will scroll past.**
+
+The drop is real: after the Platform Check gate opens, the next thing on screen is the first arithmetic step, a sketch pad, a typed field, *Check this step*, *I'd like a hint*. What carries the intent is the checklist's own final feedback — ***"Yes. Two situations, joined. Finding where — and what crosses — is yours from here."*** and, on a wrong tap, *"…finding both parts is the whole job here, and at this stop it is yours."*
+
+**Those are the right words in the wrong place.** They sit in a feedback panel that a student who gets it right first time reads as praise — and then the drop happens **under a heading that still says "Read it three times, each with a different job"** (C-1). The design intent is sound and is **one sentence away from being invisible**. The recommendation is to give the drop its own line on the screen where it happens.
+
+The hint ladder that remains is well graded (WHISTLE → SIGNAL → COUPLING → FULL ROUTE) and the halt-aware Look Back line *"Nothing on this stop was going to tell you that"* is exactly right.
+
+#### PRIORITY 2 — the estimate gate, keyboard only: **PASS**
+
+Tab to `div#est-track` → ArrowRight snaps the band to midpoint, unhides both thumbs, moves focus to `button#est-lo` (`role=slider`, full `aria-valuemin/max/now`), announces *"About 50"*. Arrow steps, Shift+Arrow coarse steps, Home/End all present and announced. **Sam is not locked out of the gate.** Only BA-3 (nobody tells him it takes arrows) and BA-5 stand against it. **The CRITICAL this pass was chartered to look for is not there.**
+
+#### DISCOURAGEMENT — the most important paragraph in the report
+
+Rode five stations getting things wrong on purpose. **"Nothing on this site made me feel stupid."** No string was found that lands as *"you should have known that"*. The wrong-answer voice is consistently *"Not this time"* plus what that answer would have meant, and the best of them teach: *"You took the claimed umbrellas off and stopped. Two things happened to this shelf during the day, not one."*
+
+Three moments that did sting:
+- **D-1** *"4. The signal that failed"* / *"You worked out what Cold Halt closes with and it was right. Why was it not the answer?"* — shown **after a flawless ride, both steps right first time.** Being told a signal failed when nothing failed reads as the site having decided in advance that you got it wrong. Make the heading conditional, or phrase it as the trap rather than the student's failure.
+- **D-2** *"Have a go at all of them first"* — after having. The first gate on the site, contradicting the student about what they just did.
+- **D-3** The unstaffed halt gives nothing back: *"There is no trip report for this one…"*. The prose is careful and the reasoning is sound — but **the one ride where nobody is on the platform is also the only ride that tells you nothing about how you did**, and with C-8's invented retrospective on top, the loneliest journey ends with the least information.
+
+#### WHAT WORKED — do not break any of this
+The trip report is called the best screen on the site: *"No score, no percentage. This is about how you travelled."* Strategy first, correctness **last** and defused (*"Hub problem: not this time. That's information, not a verdict."*), support offered as a plain option rather than a demotion. Self-caught error is rewarded emphatically and twice. Every correct-step reply ends with a reverse check. The Crossover Read's seam picker **is** keyboard-operable. Read-aloud says *"some number"* for every mask with no duplicated units. The Terminus Hub is genuinely novel with **no leaks** and its gate holds. **Every lazy-input attack was repelled** — the historic `"x"` hole is closed and read 3 is multiple-choice now. 320px reflows with no horizontal scroll at 150% text in OpenDyslexic.
+
+### theme-reviewer — two colour-alone CRITICALs, and a touch-target finding that contradicts student-tester
+
+Scope was **cut from five items to two** after attempt 1 died, and ordered source-first. It never got a browser (three routes failed, below), so **everything here is CSS inspection and arithmetic** — which is sufficient for item 1 and leaves two numbers open in item 2. It says so itself.
+
+#### Item 1 — the colour-alone class. **33 state-carrying selector groups examined: 3 FAIL, 2 borderline, 28 PASS.**
+
+Method worth keeping: **hue-vs-hue luminance ratio**, which is what survives greyscale and red-green CVD. 1.00 = indistinguishable.
+
+| ratio | pair |
+|---|---|
+| **1.274** | `--go #45742B` vs `--stop #A32E22` — the right/wrong border |
+| **1.022** | `#F0F6EA` vs `#FBEFED` — the right/wrong background |
+| **1.091** | `--line-compare` vs `--line-partwhole` — Model Yard car groups |
+
+**CRITICAL — `.choice[data-result]` on the four builders that emit no `.marker`.** `app.css:768` puts the tick/cross on `.choice[data-result] .marker::after`, and **a `::after` needs a `.marker` element to attach to.** Seven builders emit one; **four do not, and all four still set `data-result`**: `app.js:876` (`data-hcar`), `app.js:890` (`data-strat`), `stations.js:1962` (`#unsck`), and `stations.js:2083` — **the estimate gate path**. On those four, right and wrong differ by hue alone.
+
+**This is the `discovered-not-listed` class in a new form:** the glyph is attached to an element the builder has to remember to emit, so every new `.choice` builder is exempt by default. The fix named — move the glyph to `.choice[data-result]::before` — is the right shape, because it makes the state carry its own indicator instead of depending on a sibling.
+
+**And the CSS comment defending it is false.** It claims *"the glyph and the border weight both carry it"*. The glyph is absent on four builders, and **`border-width` goes 2px→3px for right and wrong alike** — so weight separates *answered from unanswered*, never right from wrong. **A second comment asserting a protection that does not exist**, after `five-situations.js:17`. That is now a pattern in this codebase, not an incident.
+
+**CRITICAL — `#xr-story [data-result]`, the Crossover Island seam picker.** `app.css:1255-1256` are two rules **byte-identical apart from the colour token**. Worse than the first: at `stations.js:1030` a wrong pick sets `data-result="wrong"` and **nothing else** — no ARIA change, no disable; `data-picked` and the aria-disabled sweep are on the right branch only. **Wrong marks persist and accumulate**, so a student can finish with four underlines, three meaning *no* and one meaning *yes*, separable only by 1.27:1 of hue.
+
+**MAJOR — `.car[data-group]`.** `unknown` carries a `"?"` glyph, which is right. `blue` vs `red` carry two fills **1.09:1 apart, in the exact hue pair CVD affects most** — and the tell is that the group keys *are the colour names*.
+
+**A limit it declined to invent, having measured:** `--go` 5.25:1, `--stop` 6.69:1 on cream; 5.04:1 and 6.28:1 on their own backgrounds. **All pass AA for normal text. The palette needs a second channel, not darker tokens.** That is the correct call and it protects the open palette decision in `ROADMAP` §5b.
+
+#### Item 2 — the touch-target class. **15 candidates examined; the class is narrower than the brief assumed.**
+
+Most count-sized things here are scenery, not targets. The real class: **interactive controls that set their own minimum with a literal instead of `var(--target-min)`.** There are exactly **two** — `.car` (`min-width: 34px`) and `.est-clear` (no minimum). Every other interactive rule references the token.
+
+`.car` worst case: largest authored count is **n = 20** (`pw-cycling-club`, `pw-quilt-colors`, 3 more). Row min-content at n=20 is 756px, so the 34px floor is reached below roughly an 830px viewport; the yard then scrolls **inside itself**, so the page does not scroll and 1.4.10 is honoured. **WCAG 2.2 SC 2.5.8 (24px): PASS at 34×66. The project's own `--target-min: 44px`: FAIL, by 23%, via a bare literal invisible to anyone grepping the token.**
+
+`.est-clear` computes to **23.5px — 0.5px under 2.5.8's floor.** Too close to call without a browser. `tabindex="-1"` does not exempt it, since 2.5.8 governs pointer targets.
+
+**Dead CSS worth knowing about:** `.seg` (`app.css:2553`) is correctly built on `--target-min` — and **no builder emits `class="seg"` anywhere.** It is the one place a reviewer grepping `--target-min` gets false reassurance about bar segments.
+
+#### Why it had no browser, reported rather than inferred
+`file://` in the preview pane degrades to a `data:` URL with no scripts or CSS (`typeof MF === "undefined"`) — **a snapshot, not the app**. Port 8080 is OS-reserved. Port 8791 exited on PowerShell execution policy, **and the `-ExecutionPolicy Bypass` workaround was denied by the permission system, which the agent did not route around.** Declining to circumvent a denied permission is correct and is recorded as such.
+
+### Conflicts and rulings
+
+| # | Conflict | Precedence applied | Ruling |
+|---|---|---|---|
+| 30-1 | Does CRITICAL 1a mean the fade ladder should stop dropping the estimate? | 1 (correctness) over 3 (pedagogical integrity) | **No.** Teacher's reasoning is adopted: *"one aid, and it is the checklist"* is a coherent design; *"one aid, and it is wrong on 5 taps with the qualifier deliberately suppressed"* is not. **Fix the checklist, not the phase chain.** The 2026-08-16 ruling stands and was not re-opened — the losing argument was read first, per `CHALLENGE-MODE.md` §4. |
+| 30-2 | math says 11 surfaces, teacher says 13 cells | — | **Left unreconciled, deliberately.** Same class, same problems, different accounting of which options are universal. The repair is a declared quantifier on the option, derived from data, so it covers every cell regardless of who counted correctly. **A fix whose correctness depended on the count would be the hand-kept exemption this project has seven files of.** |
+| 30-3 | **`student-tester` measured Model Yard cars at 19.4×66px (a WCAG 2.2 fail); `theme-reviewer` says the CSS clamps them at 34px minimum and 19.4 is impossible** | 2 (accessibility) — but the instrument rule decides it | **Theme's reading is adopted as the likely truth, and NEITHER is treated as settled.** `min-width: 34px` is a hard clamp on a `flex: 1 1 0` item, so 19.4 cannot come from that CSS. The decisive tell is theme's, and it is a good one: **the reported height was *exactly* 66 — the nominal `min-height` — which is what a horizontal-only transform looks like**, and 19.4/34 = 0.57 sits inside the `scaleX(.4)→1` ramp of the `car-arrive` animation, which on 20 cars is still settling at ~1385ms. **The measurement was almost certainly taken mid-animation.** Acting on 19.4 would mean redesigning a control that is not broken. **The finding that survives either way, and is the one to act on: 34px is 23% under this project's own `--target-min: 44px`, set by a bare literal that is invisible to anyone grepping the token.** To close it, serve over http and read `getBoundingClientRect()` twice — once immediately, once after `document.getAnimations().length === 0`. |
+| 30-4 | Does `student-tester`'s "the halt reads as trust" survive not being able to see the screen? | — | **Held open for `art-director`, deliberately.** The judgement was made from text and structure by an agent that disclosed the pane never composited a frame. It is a real reading of the *words* and no reading at all of the *screen*. `VERIFICATION.md`'s rule is that measurement proves geometry, never appearance — and in Cycle 4 every agent passed a site that looked unfinished because none of them owned that question. |
+
+> **A class worth promoting to `VERIFICATION.md`, from conflict 30-3.** *A geometric or computed-style measurement taken while an animation or transition is running is not the settled value.* **This is the second time it has produced a false a11y CRITICAL on this project**, in opposite directions: on 2026-08-03 a transition never advanced because `requestAnimationFrame` never fires in the pane, freezing a colour at its from-value and yielding a 1.23:1 "invisible text" CRITICAL that the pixels refuted; here an animation *was* advancing and was caught mid-ramp, yielding a touch-target CRITICAL that the CSS refutes. **Both times the harness was the subject and nobody noticed until a second instrument disagreed.** The practical form: assert `document.getAnimations().length === 0` before believing any box or colour, and say in the finding that you did.
+
+### Damage done during this cycle, recorded rather than tidied away
+
+**`theme-reviewer` overwrote `.claude/launch.json` without reading it first, and disclosed this unprompted.** The file was untracked — verified: `git log --all -- .claude/launch.json` returns nothing, so **git never held a copy and it is unrecoverable.** It existed before this session (it was in the untracked list at session start) and now contains a single `mrfraction` dev-server entry on port 8791.
+
+`VERIFICATION.md` §29 says bulk content edits go through `Edit`, never a shell, *"because the worst case is a `git checkout`"* — **and that reasoning silently assumed the file was tracked.** An untracked file has no worst case; it has a total loss. The rule needs the clause: **read any file before overwriting it, and check whether git actually holds a copy before relying on the safety net.** Review passes should not be writing to project files at all.
+
+### Spot-checks performed
+
+**The CRITICAL was re-verified from the source and data, not from the report.** It does not rest on a measurement, so the "second instrument before acting" rule takes its other form: the claim is about code semantics and was re-read directly.
+
+- `:336–339` — the either-half disjunction is present exactly as quoted. ✅
+- `:758` and `:763` — `unaided` is computed from `fadeLevel === 'independent'` and does gate the `alsoTrue` rider, so the qualifying sentence is genuinely absent at the two halts. ✅
+- `:158` — `neither` carries `lines: ['change','compare','ratio']` and its text is a negative universal. ✅
+- `cl-season-tickets` is `first: compare, second: partwhole`; the disjunction accepts `neither` through `compare` while the second half carves 57 into 38 + 19. ✅
+- **The negative control held.** `cl-platform-planters` is `partwhole + groups`, neither in `neither`'s list, so the option is correctly rejected there — which is what the agent reported as the single clean problem. An agent that had pattern-matched rather than derived would have reported 7 of 7.
+
+**Instrument note from the pass, worth keeping.** `Grep` rendered `/*` at `stations.js:881` as `\*`, which reads exactly like the syntax-error class `CLAUDE.md` warns about. Reading the file directly showed it correct — the display escaped it. **A tool's rendering of a file is not the file**; this is the second instrument artefact on this project to imitate a real defect.
+
+**Teacher's findings were spot-checked the same way, and two came back *sharper* than reported.**
+
+- **3b confirmed, and it is worse than stated.** `grep -rn "tier:" content/` returns **no `tier` data field in `five-situations.js` at all** — only the comment at `:17` asserting in capitals that the tag is there. The only real `tier:` fields in the codebase are the vocabulary rows in `word-board.js`, and `hub.js:470`/`:634` read them **solely to filter which vocab rows a page renders**. ✅ **§30's exemption mechanism is a display parameter that nothing consults as an exemption.**
+- **2c confirmed, and the numbers are stronger than reported.** All seven problems declare `crossoverSentence`: **4, 4, 5, 5, 4, 4, 4** — five 4s and two 5s. Teacher scoped its claim to "four of the five that ask for it"; the full set gives *"tap sentence 4"* = 5/7 and *"tap 4 or 5"* = **7/7**. ✅
+- **1b confirmed as to mechanism.** `m.selfChecks` is incremented at exactly two sites, `stations.js:1984` and `:2144`, and rendered at `app.js:1075`. ✅ **Stated precisely: I verified there are only two increment sites, not independently that both are estimate-gated** — that part rests on teacher's reading, and it is consistent with `:2171`'s own comment.
+
+### art-director — the only pass that saw a pixel, and it changes two verdicts
+
+**VERDICT: NEEDS WORK.** *"The mainland reads as a product. The island reads as its greyscale proof. The unstaffed halt reads as a page whose middle failed to render."*
+
+#### How it got pixels — write this down, four agents lost time to it
+
+The Browser pane failed identically for all three browser agents (*"not displayed, so the page is not compositing frames"*), before and after `resize_window`. What worked:
+
+1. `tools/serve.ps1 -Port 8413`, plus a second instance on 8414 rooted at a **scratch copy** of the site with an injected driver script reading `?pid=&phase=&scrollto=` and doing `MF.materialize` → `new Stations.Station` → mount → `st.go(phase)`.
+2. `msedge.exe --headless --disable-gpu --no-sandbox --user-data-dir=… --window-size=W,H --virtual-time-budget=6000 --screenshot=out.png <url>`, then read the PNG.
+
+**`--headless=new` silently writes no file. It must be bare `--headless`.** (Edge 151.0.4129.86.) And `--virtual-time-budget` **seeks** animations rather than sampling mid-flight — which is exactly the remedy conflict 30-3 called for, arrived at independently.
+
+**The project tree was left unchanged**; all harness edits went to the scratch copy. That is the right way to run a review pass, and it is the contrast with the `launch.json` incident above.
+
+#### CRITICAL — a SECOND answer leak, on a different surface
+
+`ch-water-tank`, Plan phase. The **In words:** paragraph sits directly beneath *"Which move reaches the missing car?"* and its three options, and reads: *"…you reach it by travelling backwards: **take the {{n1}} litres that arrived off the {{n2}} litres** that ended up in the tank."*
+
+**Verified at source: `ch-water-tank.js:250`, in `a11yDescription`.** It states the move the question is asking the student to choose.
+
+**This is why the Model Yard leak had to be treated as a class and not an instance.** The two share the shape — *the Plan phase's own explanatory text answers the Plan phase's own question* — and share nothing else: different model (Change Train vs Model Yard), different field (`a11yDescription`, authored, vs generated completion feedback), different payload (the operation vs a numeric step answer). **A fix aimed at `model.js:381` would have left this one standing**, and the next one after it. `CLAUDE.md`'s third rule — *no answer may reach a student before it is asked* — is breached on at least two independent surfaces.
+
+#### The `ESTIMATE-INPUT.md` §4a ruling
+
+**§4a asks the wrong question, and one of its three claims is false.**
+
+- **Q1 — "is a 293px rail long enough to sweep comfortably?" Yes. Close it.** 293px less a 26px thumb leaves 267px of travel; at 10% granularity that is 29px per step, fine on mouse and touch. **A limit correctly not invented.**
+- **The defect §4a never asks about, and it is measured.** `estimate.js:303-307` ships `.est-band` and **both** `.est-thumb` elements with the `hidden` attribute, cleared only in `paint()` at `:349` (`band.hidden = !has` where `has = lo !== null`). **Verified.** So the resting state of the gate every problem passes through is a 4px ink rule, five ticks, two numbers and *"Nothing set yet."* **The only affordance is `cursor: crosshair`** — invisible until the pointer is already there, and nonexistent on touch. The thumbs are well made; they are absent at the one moment the student must work out what to do. **This is the missing half of `student-tester`'s BA-3** (*nothing says it takes arrow keys*): the gate does not announce itself to the keyboard **or** to the eye.
+- **Q2 — the collision fix was right, the hierarchy it produced is wrong.** Measured: rail ends x≈955, the companion bubble starts x≈993, clearing by ~38px. But it puts the **optional** pad in the first-read column at **~13× the area of the required control**, and the required control sits under a `p.est-lead` that renders **larger and heavier than the `h3` above it** (h3 measured 16.8px/700). **Keep the pad left — fix the type hierarchy.**
+- **Q3 is false and must be corrected in the doc.** §4a states the Engine Room field *"clears him horizontally at 1280"*. `student-tester` measured that input **56% covered**. Two documents now assert a protection that does not exist (`five-situations.js:17`, the `.choice` CSS comment) — **this is the third.**
+
+#### Seen — appearance judgements, marked as such
+
+- **The unstaffed halt looks like a page with its middle removed.** `cl-buffet-crates` Plan: the panel ends at y≈1390 in a 2000px document — **~600px, about 30% of the page, of empty cream** before the footer. Nothing on screen says the scaffolding was withdrawn deliberately; the island map labels the stop *"Open — No Assistance"* two panels earlier and the stop screen never repeats it. **This is the direct answer to conflict 30-4, and it goes the other way from `student-tester`'s.** Student read the words and found trust; art-director looked at the screen and found a hole.
+- **The island map is genuinely good** and does hold the mainland's language — same sea, coast ink, tree and mountain glyphs, wavelets, compass rose, sleepered track. **Everything below it is the bolt-on:** no colour anywhere, the entire fade ladder carried on a ~6px filled-vs-hollow dot, headings at x=64 over cards starting at x=224, and **the Lighthouse hub card drawn in a dashed orange outline — the site's own "not built yet" idiom.** The companion on that screen begins *"Each stop is marked in two colours…"* and is **clipped mid-sentence behind a scrollbar** (`max-height: 170px; overflow-y: auto`, `app.css:2067`) — on the one screen that explains the island's core idea.
+- **The "waiting" second model reads as a rendering failure.** Kelder is a clean bordered bar, solid fill, labelled hatched segment, right-hand total; Harbour Halt above it is ~40 loose vertical ticks, a dashed rectangle over part of it, no enclosing outline, no total. **Two different drawing systems — and a striped placeholder where a filled block belongs is, in 2026, the universal idiom for a skeleton loader.** The judgement to keep: *difference by one property (fill) reads as a state; difference by four reads as a bug.*
+- **The Cycle 7 leg-map framing scar has recurred on the island map, which did not exist when that fix was made.** The frame cuts the south off entirely (Cold Halt, Fell Crossing outside it) and **bisects the Marsh Halt node on the bottom edge**; "Cold Halt" sits half over its own coastline; "LIGHTHOUSE HUB" is a bare caption with no plate while every other label on both maps has one.
+- **The companion-collision class is broader than the Engine Room** — Mr Fraction also sits on the teaching illustration at `cl-season-tickets` scroll-top.
+- **The display face appears three times in the whole document and never once below the station header.** Every heading in the working panel is Atkinson 700 at 16.8–18.4px. Tracking is right where it is used (24.8px Black Han Sans at 0.040em — the sister site's 0.04em exactly); the gap is **coverage**, not craft.
+
+#### Two retractions it made unprompted, both worth the space
+
+- ***"Or type it (students)"* is not an authoring leak** — on `ch-kiosk-sandwiches` the same label reads *"(sandwiches)"*. It is the unit. **One instance of a suspicious string is not evidence.**
+- **Its own "320px fails" finding was an instrument error.** Captured at `--window-size=320`, everything clipped mid-word — but the probe reported `viewport inner=504x1824`: **Edge headless would not go below ~504 CSS px, so the PNG was a 320px crop of a 504px layout.** At 504, `scrollWidth 489` vs `innerWidth 504` — no overflow. The 43 "overflowing" elements were all `.ticker-item` inside a marquee. It also caught its own `[class*="rail"]` selector matching `.ticker-track`. **Two instrument traps in one run, both self-caught. 320px remains untested by anyone this cycle.**
+
+### Decision
+
+## GATE 2: **BLOCKED.**
+
+**Rationale.** Six blocking findings, from four instruments, no two of which share a failure mode:
+
+1. **The checklist confirms false statements** (math CRITICAL, cannot be overruled) — 11–13 cells, 6 of 7 island problems, worst at the unstaffed halts where the qualifier is suppressed.
+2. **Two independent answer leaks in the Plan phase** — Model Yard (`model.js:381`) and Change Train (`ch-water-tank.js:250`). `CLAUDE.md` rule 3.
+3. **56% of the Engine Room answer box is unclickable** by mouse or touch.
+4. **One misjudgement permanently destroys the site's headline metric** for that problem.
+5. **Right/wrong is hue-only on four builders including the estimate gate**, and on the island seam picker wrong marks accumulate.
+6. **The estimate gate's only affordance ships `hidden`.**
+
+**What is NOT wrong, and matters as much:** all 28 island answers are correct, every transfer is sound, all 56 estimate bands contain their answers, the keyboard estimate gate passes, every lazy-input gate holds, correct-option position shows no learnable pattern, 55/55 hint ladders are complete, the Terminus Hub is novel and leak-free — and **no string on the site made the student agent feel stupid.** The content is in better shape than the engine.
+
+**Independence, stated as the standard requires.** Author and reviewer remain the same model in different hats. What this cycle *can* claim, which no previous one could: **five instruments disagreeing with each other productively** — teacher converging with math on one class from opposite directions, theme refuting student's touch-target number, art-director refuting student's reading of the halt, and two agents retracting their own findings after probing their instruments. **The disagreements are the evidence that the passes were real.**
+
+**Escalated to the user — only they can decide:**
+
+1. **The site is public and the local build is not deployed by default.** Whether any of these six defects is currently *live* is unknown to this cycle and is the first thing to establish, because it decides urgency. Nobody checked the deployed origin.
+2. **Fix order and scope.** Six blockers, two of which (the `optionTrue` quantifier and the leak-precondition validator) are engine changes with a design decision inside them.
+3. **Is `--target-min: 44px` still the standard?** WCAG 2.2 requires 24px; `.car` sits at 34px. Either the token is the rule and `.car` is a defect, or the token is aspirational and should say so.
+4. **`ESTIMATE-INPUT.md` §4a needs correcting**, not just answering — its Q3 is false.
+5. **The unstaffed halt now has two opposed readings** from two instruments (conflict 30-4). Whether ~600px of cream reads as trust or as a hole is an appearance call, and this project's standing rule is that appearance is the user's.
+
+**Follow-ups:** none created as tasks. Every finding is recorded above with its file and line; **no fixes were applied by any agent**, and the working tree carries only this log entry plus the `launch.json` loss recorded above.
+
+**Not covered by this cycle, stated so nobody infers it was:** contrast was never re-run across the island or the estimate gate; reading level and tone of the new copy were never reviewed; dyslexia provisions on island screens were never checked; **320px was never successfully rendered by anyone**; and the end-of-trip screen and journey panel — which no checker can see and which held both defects of the last verification ride — **remain unseen.**
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.
