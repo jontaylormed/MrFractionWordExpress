@@ -247,7 +247,14 @@ MF.registerProblem({
       settledSay: "Backwards along the train. Undoing the change is how you get to a missing start.",
       law: "Which move you make depends on WHICH car is missing, not on the words in the story.",
       pending: "The front car stays a question mark on purpose — actually doing the subtraction is the next stop.",
-      a11yDescription: "A train of three cars. The first car, what the tank held before the tanker came, is unknown. The second is what the tanker put in, {{n1}} litres. The third is what the tank held afterwards, {{n2}} litres. Because the missing car is at the FRONT and the change added water, you reach it by travelling backwards: take the {{n1}} litres that arrived off the {{n2}} litres that ended up in the tank."
+      /* This used to end "...you reach it by travelling backwards: take the
+         {{n1}} litres that arrived off the {{n2}} litres" — which is the answer
+         to the question printed directly above it on the same screen ("Which
+         move reaches the missing car?"), and `change-model.js:114` renders this
+         string in a VISIBLE "In words:" paragraph, not only to a screen reader.
+         Cycle 30. It now stops where the picture stops, which is what the Test
+         Track descriptions in this same file already do. */
+      a11yDescription: "A train of three cars. The first car, what the tank held before the tanker came, is unknown. The second is what the tanker put in, {{n1}} litres. The third is what the tank held afterwards, {{n2}} litres. The missing car is at the FRONT of the train, and the change added water — which way you travel to reach it is the question below."
     },
     estimate: {
       prompt: "Before calculating — roughly how many litres do you think were in the tank before the tanker came?",

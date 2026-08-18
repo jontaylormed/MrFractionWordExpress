@@ -38,6 +38,44 @@
     return p.signalBox && p.signalBox.barModel && p.signalBox.barModel.bars && p.signalBox.barModel.bars[0];
   }
 
+  function numOf(s) {
+    if (s == null) return NaN;
+    var t = String(s).replace(/[^0-9./]/g, '');
+    if (t.indexOf('/') > 0) { var q = t.split('/'); return parseFloat(q[0]) / parseFloat(q[1]); }
+    return parseFloat(t);
+  }
+
+  /** Is a part's value ours to state — i.e. does the PROBLEM give it, rather
+      than it being one step off an answer? See the long note in `html()`:
+      THE PICTURE SHOWS WHAT IS GIVEN, NOT WHAT IS DERIVED.
+
+      THIS LIVES AT MODULE SCOPE BECAUSE THE QUESTION WAS BEING ASKED TWICE AND
+      THE TWO ANSWERS DISAGREED. `html()` asked "is it given?" and hid derived
+      values from the cars and the readout, exactly as intended. `finishSingle()`,
+      over in `wire()`, asked only "is it present?" — so after the student marked
+      the parts, the completion feedback printed the very value the cars had just
+      been careful not to show.
+
+      What that shipped (Cycle 30, found by riding the site): on Part-Whole stop 3
+      the yard closed with "Each part is 23 orders." while the Engine Room had yet
+      to ask for the day's total, and 23 x 10 = 230 is that total. Stop 1 leaked
+      the same way, including through `aria-label="...Worth 9 cups."`, so it
+      reached a screen reader too. At stop 2 BOTH Engine Room step answers were
+      on the previous screen.
+
+      This is the fourth recurrence of the Cycle 6 defect and the first one that
+      was not about WHEN or WHICH number appears — the policy was already right.
+      It was about the policy being implemented twice. One copy is now the rule
+      and the other reads it; two copies of a rule is one copy and one guess. */
+  function knowsPartOf(p, bar) {
+    if (!bar || !bar.segmentValue || bar.segmentValue === '?') return false;
+    var givens = {};
+    Object.keys((p && p.problem && p.problem.numbers) || {}).forEach(function (k) {
+      givens[numOf(p.problem.numbers[k].value)] = 1;
+    });
+    return !!givens[numOf(bar.segmentValue)];
+  }
+
   /** Stages to mark, in order. Empty means single-group behaviour. */
   function stagesOf(p) {
     var g = p.scene && p.scene.mode === 'unit' && p.scene.groups;
@@ -117,17 +155,7 @@
        derived values hidden, every one of the 24 screens still shows a given
        number, either `whole =` or `marked parts =`. Neither of those is on the
        path to an answer; both are printed in the problem. */
-    function numOf(s) {
-      if (s == null) return NaN;
-      var t = String(s).replace(/[^0-9./]/g, '');
-      if (t.indexOf('/') > 0) { var q = t.split('/'); return parseFloat(q[0]) / parseFloat(q[1]); }
-      return parseFloat(t);
-    }
-    var givens = {};
-    Object.keys((p.problem && p.problem.numbers) || {}).forEach(function (k) {
-      givens[numOf(p.problem.numbers[k].value)] = 1;
-    });
-    var knowsPart = bar.segmentValue && bar.segmentValue !== '?' && givens[numOf(bar.segmentValue)];
+    var knowsPart = knowsPartOf(p, bar);
 
     var cars = '';
     for (var i = 0; i < n; i++) {
@@ -375,7 +403,10 @@
       settled = true;
       yard.setAttribute('data-stage', 'done');
       var restN = n - target;
-      var knows = bar.segmentValue && bar.segmentValue !== '?';
+      /* Was `bar.segmentValue && bar.segmentValue !== '?'` — the same test
+         `html()` does, minus the givens check, which is how a derived value the
+         cars had hidden got printed here anyway. Reads the shared rule now. */
+      var knows = knowsPartOf(p, bar);
       var wholeKnown = bar.knownTotal && bar.knownTotal !== '?';
       var tail = knows
         ? ' Each part is ' + esc(bar.segmentValue) + (bar.unit ? ' ' + esc(bar.unit) : '') + '.'

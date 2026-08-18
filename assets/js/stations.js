@@ -94,7 +94,9 @@
       id: 'kinds', label: 'Kinds',
       ask: 'What is being counted in this story?',
       options: [
-        { id: 'same', text: 'A single kind of thing', lines: ['change', 'compare', 'groups', 'partwhole'],
+        /* `all` — "a SINGLE kind", i.e. everything in the story. One of the four
+           universal claims; see the quantifier note above `optionTrue`. */
+        { id: 'same', text: 'A single kind of thing', lines: ['change', 'compare', 'groups', 'partwhole'], all: true,
           yes: 'Everything here is measured in the same stuff.',
           no: 'That would mean the story counts the same stuff all the way through. Look again at what is being measured, and whether it is all the same sort of thing.' },
         { id: 'different', text: 'Different kinds, locked together', lines: ['ratio'],
@@ -122,7 +124,9 @@
         { id: 'changed', text: 'Yes &mdash; something was added or taken away', lines: ['change'],
           yes: 'The story runs through time, and an amount is not what it was.',
           no: 'That would mean an amount ends up different from how it started. Read it again and check whether any amount actually changes.' },
-        { id: 'steady', text: 'No &mdash; the amounts stay as they are, even if something is moving', lines: ['compare', 'groups', 'partwhole', 'ratio'],
+        /* `all` — "the amounts", every one of them. A negative universal: false
+           of the story if EITHER half changes an amount. */
+        { id: 'steady', text: 'No &mdash; the amounts stay as they are, even if something is moving', lines: ['compare', 'groups', 'partwhole', 'ratio'], all: true,
           yes: 'Things can be busy without any amount changing. A train can run all day and still be running at the same rate.',
           no: 'That would mean every amount is still what it was at the start. Look again for something being added or taken away.' }
       ]
@@ -131,7 +135,9 @@
       id: 'things', label: 'Things',
       ask: 'How many separate things is the story keeping track of?',
       options: [
-        { id: 'single', text: 'Just a single thing', lines: ['change', 'groups', 'partwhole'],
+        /* `all` — "JUST a single thing" is a claim about the whole story, and a
+           paired story that compares two things anywhere is not keeping one. */
+        { id: 'single', text: 'Just a single thing', lines: ['change', 'groups', 'partwhole'], all: true,
           yes: 'A single thing, and everything else in the story is about it.',
           no: 'That would mean only a single thing is ever in view. Look again at what the story is holding up beside what.' },
         { id: 'separate', text: 'Separate things, held up against each other', lines: ['compare'],
@@ -155,7 +161,9 @@
         { id: 'repeat', text: 'The same amount, over and over', lines: ['groups'],
           yes: 'You could act it out: make a group, then another the same, then another.',
           no: 'That would mean an identical amount repeating, and the question counting how many of them there are.' },
-        { id: 'neither', text: 'Neither &mdash; nothing is being carved up or repeated', lines: ['change', 'compare', 'ratio'],
+        /* `all` — "NOTHING is being carved up or repeated". The clearest of the
+           four, and the one that shipped P and not-P on the same screen. */
+        { id: 'neither', text: 'Neither &mdash; nothing is being carved up or repeated', lines: ['change', 'compare', 'ratio'], all: true,
           /* Was "nothing repeats", which is false of a rate — a rate is the same
              amount per unit, over and over, and the manifests say so themselves
              ("Bags do come in lots, which sounds like groups"). Narrowed to the
@@ -333,10 +341,48 @@
      Declared as data on the option, never as `if (challenge)` at the call
      site: a renderer branch is an exemption, and this project has seven files
      of what hand-kept exemptions do. */
+/* ---- THE QUANTIFIER, and why `all` exists (Cycle 30, a math CRITICAL) ----
+
+     The rule below used to be a bare disjunction: true of either half, true of
+     the story. That is SOUND FOR AN EXISTENTIAL CLAIM and UNSOUND FOR A
+     UNIVERSAL OR NEGATIVE ONE, and four of the eleven options are the latter.
+
+     "A whole thing, cut into shares" is existential — if either half cuts
+     something up, the story cuts something up, and either-half is right.
+     "Neither — nothing is being carved up or repeated" is a claim about the
+     WHOLE STORY. It is true only if it holds of BOTH halves. Applied
+     disjunctively it was confirmed by whichever half happened to satisfy it,
+     while the other half sat on screen doing the opposite.
+
+     What that shipped: on cl-season-tickets (compare + partwhole) the site
+     marked "nothing is being carved up" CORRECT while the second half cut 57
+     into 38 and 19 — and marked "A whole thing, cut into shares" correct on the
+     same screen, so the rider rendered P and not-P together, both ticked. 13
+     such cells across 6 of the 7 island problems. Random tapping scored 57.1%
+     on the island checklist against 40% on the mainland.
+
+     It was worst exactly where the student had least help. `unaided` suppresses
+     the rider at an unstaffed halt, so on cl-lost-umbrellas and cl-buffet-crates
+     the false confirmation arrived ALONE and unqualified, on the only aided
+     screen those stops have. On cl-buffet-crates a student reading the story as
+     an ordinary Part-Whole problem collected four green ticks out of four.
+
+     No checker could see it: tools/sweep.js asks `optionTrue` the same question
+     the screen asks, so instrument and subject agreed by construction.
+
+     THE QUANTIFIER IS DECLARED ON THE OPTION, never as `if (challenge)` at the
+     call site — same reason as the note above. A renderer branch would be an
+     exemption, and a fix keyed to the six known problems would be a hand-kept
+     list, which is the defect class this project already has seven files of.
+     Tag the claim, and every problem that ever pairs those lines is covered. */
   function optionTrue(o, p) {
     if (!p || !p.pair) return o.lines.indexOf(p && p.line) >= 0;
     if (typeof o.pairs === 'boolean') return o.pairs;
-    return o.lines.indexOf(p.pair.first) >= 0 || o.lines.indexOf(p.pair.second) >= 0;
+    var inFirst  = o.lines.indexOf(p.pair.first)  >= 0;
+    var inSecond = o.lines.indexOf(p.pair.second) >= 0;
+    // `all`: the option claims something about the whole story, so both halves
+    // must satisfy it. Absent: an ordinary existential claim, either half does.
+    return o.all ? (inFirst && inSecond) : (inFirst || inSecond);
   }
 
   /* ============================================================
@@ -472,8 +518,47 @@
            '</div>';
   };
 
+  /* AN ISLAND STOP IS A PLACE, AND THE HEADER USED TO NAME A DIFFERENT ONE.
+     `MF.STATIONS` is keyed by mainland ROLE, and every island stop fell through
+     to `reading` — so Cold Halt, Marsh Halt and Kelder Sands all sat under the
+     eyebrow "The Reading Room" and the heading "Read it three times, each with
+     a different job." For the whole stop: through the Crossover Read, both later
+     reads, the Ticket Booth, the Plan, the estimate and the arithmetic.
+
+     On the mainland that is coherent — the journey panel proves "The Reading
+     Room" is the NAME OF STOP 1 and it becomes "The Drafting Table" at stop 2.
+     On the island the stop is Cold Halt, the map says so, the story says so, and
+     the header named somewhere else.
+
+     Worst at an unstaffed halt, where the heading PROMISED THREE READS THAT
+     NEVER COME. Cycle 30 found the drop into bare arithmetic reads as trust
+     only by one sentence buried in a feedback panel, under a heading still
+     advertising the scaffolding that had just been withdrawn. So the staffing
+     goes in the heading, where it is unmissable and where the map's own words
+     for it — "Assistance Available" / "No Assistance" — are finally repeated on
+     the screen they describe. `Scenery.islandStops()` is the single source; the
+     stop is found by id rather than listed, so a stop gaining a problem needs
+     nothing here. */
+  function islandHead(p) {
+    if (!p || !p.pair || !(window.Scenery && Scenery.islandStops)) return null;
+    var stops = Scenery.islandStops(), s = null;
+    for (var i = 0; i < stops.length; i++) {
+      if ((stops[i].ids || []).indexOf(p.id) >= 0) { s = stops[i]; break; }
+    }
+    if (!s) return null;
+    return {
+      name: s.name,
+      /* Plain punctuation, no entities: `render()` passes this through `esc()`,
+         so an `&mdash;` would reach the student as five literal characters. The
+         mainland strategies are plain text for the same reason. */
+      strategy: s.kind === 'halt'
+        ? 'Two situations, joined. Nobody on the platform, so this one is yours.'
+        : 'Two situations, joined. There is help on this platform if you want it.'
+    };
+  }
+
   Station.prototype.render = function () {
-    var st = MF.STATIONS[this.role];
+    var st = islandHead(this.p) || MF.STATIONS[this.role];
 
     /* THE STATION HEADER WAS PRINTING THE ANSWER TO THE TICKET BOOTH'S NEW
        QUESTION, and this is the composition defect §13 describes exactly: every
@@ -2136,15 +2221,39 @@
       self.onComplete();
     });
 
+    /* ONE MISJUDGEMENT USED TO END THIS SCREEN FOR GOOD. Both buttons were
+       disabled on any click, and the wrong branch then said "Look at the two
+       numbers again side by side. Are they in the same ballpark or not?" — a
+       question the student had just been made unable to answer. Cycle 30.
+
+       That mattered more here than the same bug would anywhere else. The Engine
+       Room never lets a wrong answer through, so THIS is the only place on the
+       site where a student can catch their own error, and `m.selfChecks` — the
+       trip report's headline "You caught N things at the arrivals board" — has
+       only two increment sites, of which this is one.
+
+       So a wrong self-assessment now disables only the button that was pressed.
+       The other stays live, the question stays answerable, and the student can
+       record what they actually see. The METRIC still only counts a first-try
+       catch: getting there on the second go is worth doing and worth saying so,
+       but it is not the same as having spotted it, and a headline number that
+       counts both would be flattering rather than true. */
+    var selfChecked = false;
     if (hasEst) this.host().querySelector('#estck').addEventListener('click', function (e) {
       var b = e.target.closest('[data-v]'); if (!b) return;
       var said = b.getAttribute('data-v') === 'yes';
       var truth = inRange === null ? said : inRange;
       var correct = said === truth;
-      if (correct) self.m.selfChecks++;
+      var firstTry = !selfChecked;
+      selfChecked = true;
+      if (correct && firstTry) self.m.selfChecks++;
 
-      var all = self.host().querySelectorAll('#estck [data-v]');
-      for (var i = 0; i < all.length; i++) all[i].disabled = true;
+      if (correct) {
+        var all = self.host().querySelectorAll('#estck [data-v]');
+        for (var i = 0; i < all.length; i++) all[i].disabled = true;
+      } else {
+        b.disabled = true;   // not this one again; the other is still open
+      }
       b.setAttribute('data-result', correct ? 'right' : 'wrong');
 
       var text = correct

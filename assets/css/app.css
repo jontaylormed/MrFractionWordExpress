@@ -760,17 +760,40 @@ select {
 .choice .marker { font-size: 1.3em; line-height: 1; flex-shrink: 0; }
 .choice strong { display: block; font-size: 1.02em; }
 .choice small { color: var(--ink-muted); display: block; margin-top: 2px; }
-/* An answered choice has to be unmistakable at a glance: the empty box glyph
-   becomes a tick or a cross and the border thickens. Colour is never the only
-   signal (WCAG 1.4.1) — the glyph and the border weight both carry it.
+/* An answered choice has to be unmistakable at a glance: a tick or a cross
+   appears and the border thickens. Colour is never the only signal (WCAG 1.4.1).
+
+   THE GLYPH HANGS OFF THE CHOICE, NOT OFF A `.marker` CHILD — and that is the
+   whole point of this rule. It used to be `.choice[data-result] .marker::after`,
+   and a `::after` needs a `.marker` element to attach to. Cycle 30 found FOUR
+   builders that emit no marker and then set `data-result` anyway — `data-hcar`
+   (app.js:876), `data-strat` (app.js:890), `#unsck` (stations.js:1962) and
+   `#estck` (stations.js:2083), the last of which is on the estimate gate. On all
+   four, right and wrong differed by hue alone: 1.274:1 on the border and 1.022:1
+   on the background, which is nothing at all in greyscale or with red-green CVD.
+
+   Seven other builders did emit a marker and did get the glyph, so the failure
+   was invisible on screen and every new `.choice` builder was exempt by default.
+   That is this project's `discovered, not listed` defect in its purest form: the
+   indicator depended on somebody remembering to emit a sibling. Now the state
+   carries its own indicator and a builder cannot opt out of it.
+
+   The comment that used to sit here claimed "the glyph and the border weight
+   both carry it". BOTH HALVES WERE FALSE — the glyph was absent on four
+   builders, and `border-width` goes 2px->3px for right and wrong ALIKE, so
+   weight separates answered from unanswered and never right from wrong. It is
+   kept as a second channel for answered-ness, which is what it actually does.
+
    No box-shadow here: `.choice[disabled]` clears it later in the cascade, so
    a ring set at this point would silently do nothing. */
 .choice[data-result="right"] { border-color: var(--go);   background: #F0F6EA; border-width: 3px; }
 .choice[data-result="wrong"] { border-color: var(--stop); background: #FBEFED; border-width: 3px; }
-.choice[data-result] .marker { font-size: 0; line-height: 1; }
-.choice[data-result] .marker::after { font-size: 1.25rem; font-weight: 700; }
-.choice[data-result="right"] .marker::after { content: "\2713"; color: var(--go); }
-.choice[data-result="wrong"] .marker::after { content: "\2717"; color: var(--stop); }
+.choice[data-result]::before { font-size: 1.25rem; font-weight: 700; line-height: 1; flex-shrink: 0; }
+.choice[data-result="right"]::before { content: "\2713"; color: var(--go); }
+.choice[data-result="wrong"]::before { content: "\2717"; color: var(--stop); }
+/* The builders that DO emit a marker must not now show two glyphs, and a
+   zero-font-size marker would still draw a second flex gap. Removed outright. */
+.choice[data-result] .marker { display: none; }
 .choice[disabled] { cursor: default; opacity: .9; transform: none; box-shadow: none; }
 /* :not([data-result]) matters — without it, hovering an already-answered
    choice reset its border back to grey and the answer appeared to un-select. */
@@ -1251,9 +1274,39 @@ select {
   [data-half] { transition: opacity .25s ease; }
 }
 /* The sentence the student picked as the seam keeps its mark once found, the
-   way the Platform Check keeps its evidence on screen. */
-#xr-story [data-result="right"] { box-shadow: inset 0 -3px 0 var(--go); }
-#xr-story [data-result="wrong"] { box-shadow: inset 0 -3px 0 var(--stop); }
+   way the Platform Check keeps its evidence on screen.
+
+   THESE TWO RULES USED TO BE BYTE-IDENTICAL APART FROM THE COLOUR TOKEN, and
+   that was worse here than anywhere else on the site. A wrong pick sets
+   `data-result="wrong"` and nothing else — no aria change, no disable, because
+   `data-picked` and the aria-disabled sweep are both on the right branch only
+   (stations.js:1030). So wrong marks PERSIST AND ACCUMULATE: a student can
+   finish this phase looking at four underlined sentences, three of them meaning
+   "no" and one meaning "yes", separable only by 1.274:1 of hue. In greyscale,
+   or with the commonest colour vision deficiency, that is four identical marks
+   and no way to tell which one was the answer.
+
+   So the two states now differ in SHAPE as well as colour — a solid rule under
+   the seam, a dotted one under a rejected sentence — and each carries a glyph.
+   Shape is the channel that survives both greyscale and CVD; the colour stays
+   because it is genuinely useful to everyone else. */
+#xr-story [data-result="right"] {
+  box-shadow: inset 0 -3px 0 var(--go);
+  text-decoration: none;
+}
+#xr-story [data-result="wrong"] {
+  box-shadow: none;
+  text-decoration: underline dotted var(--stop);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  opacity: .72;
+}
+#xr-story [data-result]::after {
+  font-size: .82em; font-weight: 700; margin-inline-start: .25em;
+  vertical-align: baseline;
+}
+#xr-story [data-result="right"]::after { content: "\2713"; color: var(--go); }
+#xr-story [data-result="wrong"]::after { content: "\2717"; color: var(--stop); }
 
 /* ---------- Crossover Island ----------
    The island map sits in the same frame the mainland map does, so the two read
@@ -3165,6 +3218,33 @@ select {
 /* Pad first, field second — see the note in `phSolve`. */
 @media (min-width: 760px) { .solve-wrap { grid-template-columns: 1fr 320px; } }
 .solve-wrap .field { max-width: 320px; margin: 0; }
+
+/* THE SAME RESERVATION THE ESTIMATE LINE GOT, AND THE ENGINE ROOM NEVER DID.
+   The swap above (pad left, field right) was copied from the estimate screen;
+   the clamp that goes WITH it was not — see `.est-line-col` earlier in this
+   file. So the field inherited the exact problem the swap was invented to
+   solve, and Cycle 30 measured it by riding the site: at 1280 the input spans
+   x858-1178 while `.mf-companion` spans x993-1245, and `elementFromPoint`
+   across the field's vertical centre returns the bubble for 180 of 320px.
+   56% OF THE ANSWER BOX WAS NOT CLICKABLE — and because the companion is
+   `position: fixed`, the dead band MOVES WITH SCROLL: at some offsets it took
+   only the right edge, at others the centre of the box.
+
+   `.mf-companion` is `pointer-events: none` but `.mf-c-bubble` is
+   `pointer-events: auto` (it must be — it scrolls), so the wrapper passes
+   clicks through and the bubble catches them. The keyboard still reached the
+   field, which is why every automated check passed it: this excluded mouse and
+   touch only, which is almost every student.
+
+   Reserved on the WRAP, not on the field, because unlike the estimate line a
+   320px input cannot give up 200px and still be an input. The pad is the `1fr`
+   column so it absorbs the reservation — roughly 740px to 540px at 1280, still
+   far larger than the field, and the same cycle's art pass independently judged
+   the pad over-weighted against the control beside it. Same clamp, same
+   formula, pointed at the box that can spare it. */
+@media (min-width: 760px) {
+  .solve-wrap { margin-right: clamp(0px, calc(862px - 50vw), 200px); }
+}
 
 /* Section headings on the map */
 .section-head { margin: calc(var(--su) * 5) 0 calc(var(--su) * 2); }

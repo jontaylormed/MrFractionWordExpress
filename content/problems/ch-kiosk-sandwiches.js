@@ -216,7 +216,10 @@ MF.registerProblem({
       settledSay: "The distance between the two ends of the day is exactly what the day took away.",
       law: "Which move you make depends on WHICH car is missing, not on the words in the story.",
       pending: "The middle car stays a question mark on purpose — actually doing the subtraction is the next stop.",
-      a11yDescription: "A train of three cars. The first is what the kiosk opened with, {{n1}} sandwiches. The third is what was left at closing, {{n2}} sandwiches. The middle car, what the day did to the stack, is unknown. Because both ends are known and the stack got smaller, the missing car is the difference between them: the closing amount taken off the opening one."
+      /* Used to end "...the missing car is the difference between them: the
+         closing amount taken off the opening one" — the answer to the question
+         above it, rendered visibly by change-model.js:114. Cycle 30. */
+      a11yDescription: "A train of three cars. The first is what the kiosk opened with, {{n1}} sandwiches. The third is what was left at closing, {{n2}} sandwiches. The middle car, what the day did to the stack, is unknown. Both ends are known and the stack got smaller over the day — which move reaches the middle car is the question below."
     },
     estimate: {
       prompt: "Before calculating — roughly how many sandwiches do you think were sold?",

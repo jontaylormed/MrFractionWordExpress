@@ -224,7 +224,10 @@ MF.registerProblem({
       settledSay: "Start, plus what happened, gives the end. That is the whole line in one move.",
       law: "Which move you make depends on WHICH car is missing, not on the words in the story.",
       pending: "The last car stays a question mark on purpose — actually doing the addition is the next stop.",
-      a11yDescription: "A train of three cars. The first is what the office started the week with, {{n1}} umbrellas. The second is what happened during the week: {{n2}} more were handed in. The third car, what the office ended with, is unknown. Because the change adds to the pile, the missing car is reached by adding the first two."
+      /* Used to end "...the missing car is reached by adding the first two" —
+         the answer to the question above it, rendered visibly by
+         change-model.js:114. Cycle 30. */
+      a11yDescription: "A train of three cars. The first is what the office started the week with, {{n1}} umbrellas. The second is what happened during the week: {{n2}} more were handed in. The third car, what the office ended with, is unknown. The missing car is at the END of the train, and the change adds to the pile — which move reaches it is the question below."
     },
     estimate: {
       prompt: "Before calculating — roughly how many umbrellas do you think the office ends up with?",
