@@ -47,25 +47,37 @@ It also hands you the equals sign for free. `1/2 cup = 8 tbsp` is not an instruc
 
 And it comes with built-in verification: **substitute wrongly and the cake fails.** That is self-monitoring made physical, and it is a better check than the Express's estimate gate because it is exact rather than approximate.
 
-### Two risks, and the second is the serious one
+### ✅ DECIDED 2026-08-17 — no competition
 
-**Risk 1 — it collapses into the Factory.** Baking is combining ingredients to make a thing, which is ASSEMBLE, which is already taken. **The discipline: this site is about MEASURING, not about MAKING.** The scene is not "bake a cake." It is *"you are out of the 1/3 cup — what else gets you there?"* Substitution and re-measurement are the whole subject; the cake is why you care. If a screen is ever about combining rather than re-describing, it belongs to the Factory.
+**The user's ruling: no competition.** Recorded here rather than merely acted on, because it is a decision that could otherwise be re-opened by anyone who thinks a leaderboard would add motivation.
 
-**Risk 2 — "Competition" collides with a non-negotiable, and with the audience.**
+The reason it was refused: `PEDAGOGY.md` non-negotiable 7 forbids scores, percentages and grades, and §0 defines the audience as students with **low mathematical self-concept who read confusion as evidence they "aren't a math person."** A competition's engine is ranking against other people, and no warmth of presentation changes what the format is for.
 
-`PEDAGOGY.md` non-negotiable 7: **no scores, no percentages, no letter grades — progress is described, not graded.** Non-negotiable 11: help is never remedial. And `PEDAGOGY.md` §0 defines the audience as students with **low mathematical self-concept who read confusion as evidence they "aren't a math person."**
+**What survives:** the brief (*"tonight: halve this recipe with the wrong measures"*), the episode structure, the return-to kitchen, and judgement **against the recipe** — *did it rise?* That last one is worth more than a rank anyway: it is exact verification, which is a better self-monitoring check than the Express's estimate gate, because a substitution either holds or it does not.
 
-**A competition ranks people.** However warm the tent, the format's engine is comparison against others and elimination. That is the one dynamic this project has spent every review cycle refusing to build. It would also be a strange thing to hold alongside a trip report that opens *"No score, no percentage. This is about how you travelled."*
+### ✅ DECIDED 2026-08-17 — the subject is MEASUREMENT AND UNITS, not fractions and not word problems
 
-**But the appeal is real and worth keeping** — a competition supplies stakes, warmth, a reason to care, and a natural episode structure. So keep the engine and drop the ranking:
+**The user's refinement, and it is a significant improvement rather than a narrowing.** It resolves Risk 1 below completely and makes the site sharper than "equivalence" alone would have been.
 
-| keep | drop |
-|---|---|
-| a **brief** — *"tonight: halve this recipe with the wrong measures"* | placings, scores, elimination |
-| a **judgement against the recipe** — did it rise? | judgement against other bakers |
-| a **kitchen you return to**, with episodes | a leaderboard |
+**Why it is stronger.** A unit conversion *is* an equivalence, and it is the cleanest one available:
 
-**The one-word fix:** *Mr Fraction's* **Test Kitchen** — where a test kitchen's whole purpose is trying a substitution to see whether it holds. It keeps every warm thing about the baking frame, discards the ranking, and describes the mathematics more accurately than "competition" does. **Your call, and worth making deliberately rather than by default** — if you want the competition, it should be a decision recorded against non-negotiable 7, the way non-negotiable 4 was amended.
+> **1 cup = 16 tablespoons = 8 fluid ounces.** One quantity. Three numbers. The flour never moved.
+
+And it exposes a misconception that maps exactly onto `STRUCTURE-MAP.md` §1.3 — a process or a part treated as the whole object:
+
+> **Students treat the NUMBER as the quantity and the UNIT as a label.** So "16 is bigger than 1" survives being told that 1 cup and 16 tablespoons are the same amount. The number is doing all the cognitive work and the unit is decoration. **The whole subject of this site is that a measurement is a number *and* a unit, and that neither one is the quantity by itself.**
+
+> **What the picture must show, and it is unusually precise here:** the quantity **fixed**, the unit **changing**, and the number changing **as a consequence of the unit** — visibly, in that order. Not three measures side by side. One amount, re-described, with the causal direction on screen. **The number moves because the unit moved. That single sentence is the site.**
+
+This is also the foundation of dimensional analysis, which students meet years later in science with no idea it is the same idea, so the site earns a reach well past its own topic.
+
+### The remaining risk, now much reduced
+
+**It collapses into the Factory.** Baking-as-combining is ASSEMBLE, which is taken. **The discipline: this site is about MEASURING, not MAKING** — and the measurement-and-units framing above enforces that on its own, since re-describing a quantity is not the same act as building one.
+
+The test for any screen: *is the student combining, or re-expressing?* Combining belongs to the Factory. **The scene is never "bake a cake." It is "you are out of the ⅓ cup — what else gets you there?"** The cake is why the student cares, not what the screen is about.
+
+**And a bonus the refinement buys:** because the subject is units rather than fraction arithmetic, this site can teach a student who is still shaky on fractions. `1 cup = 16 tbsp` needs no fraction at all. **That matters for an audience that arrives with gaps** — the site is not gated behind the Factory, which keeps non-negotiable 11 intact across the family, not just within a site.
 
 ---
 
@@ -116,7 +128,59 @@ Two things already established and worth restating so they are not re-litigated:
 
 ---
 
-## 4. What would change these verdicts
+## 4. The Interior Design ↔ Mining crossover, and what the philosophy does for it
+
+The user asked what the philosophy contributes here. It contributes four things and one warning, and the warning is the part most likely to be skipped.
+
+### 4.1 The transfer test already exists — the Express built it
+
+Crossover Island's whole design rests on one idea: **two situations are genuinely joined when a single value is an ANSWER on one side and a GIVEN on the other.** That value is the transfer, and `CHALLENGE-MODE.md` insists the story never states it, so the second half is unreachable without doing the first.
+
+**That mechanism ports from cross-*problem* to cross-*site* unchanged, and it is the test this crossover must pass:**
+
+> **The floor area is the transfer.** Interior Design *produces* it — here are the sides, what is the floor? The Mine *consumes* it — here is the floor, what are its sides? One value, an answer on one site and a given on the other.
+
+**And that gives you the falsifier.** If you cannot name the value that crosses, you do not have a crossover — you have two sites that both contain rectangles. **A shared aesthetic is not a shared structure**, and the difference is exactly whether something passes between them.
+
+### 4.2 What the crossover teaches that neither site teaches alone
+
+This is its reason to exist, and it is a real one.
+
+> **Factoring is not a new operation. It is multiplication, read the other way, on the same object.**
+
+Students almost universally learn factoring as a **separate procedure with its own rules**, disconnected from the multiplication they already own. The area model run forwards on one site and backwards on the other says otherwise, without a word of explanation: *the rectangle did not change. Only the direction of the question did.*
+
+That is `STRUCTURE-MAP.md` §1.3 in its most useful form — **the rectangle is not a picture of a product, it IS the product**, and a thing that can be examined from either end is an object rather than a process. Neither site alone can make that point, because each only ever asks its own direction.
+
+### 4.3 The shared diagram must be the same drawing, not two that resemble each other
+
+This one is engineering, and it is derived from a rule this project learned expensively.
+
+`VERIFICATION.md` and `model.js` both record the same lesson: **a rule written twice is one copy and one guess.** The Model Yard leak fixed in Cycle 30 was exactly that — `html()` and `finishSingle()` answering "is this value given?" separately and disagreeing.
+
+**The same failure across two sites would be invisible and worse.** If Interior Design's floor and the Mine's floor are drawn by different code with different conventions — different proportions, labels, hatching, colour roles — then **the student will not recognise them as the same object**, and the entire teaching value of §4.2 evaporates while both sites look correct.
+
+> **So: the area model is a shared asset, or the crossover does not exist.** One implementation, one set of conventions, consumed by both sites. That is a constraint on the build, decided now, because retrofitting a shared diagram after two sites have each drawn their own is the expensive version.
+
+### 4.4 The referent applies here too
+
+`STRUCTURE-MAP.md` §1.2: area-versus-perimeter is not a definitions problem, it is a **referent** problem — *how much floor* versus *how much skirting board*. In a crossover the referent question sharpens further, because now there are two candidate wholes on screen: **the floor, and each of its parts.** The picture must keep them distinguishable, or the crossover trades one confusion for a worse one.
+
+### 4.5 ⚠ The warning — a prerequisite chain is a gate, and gates are forbidden
+
+**This is the thing the philosophy contributes that nobody would otherwise notice.**
+
+`PEDAGOGY.md` non-negotiable 11: **support is never gated, never mandatory, and never described as remedial.** The Express honours this by putting every Learning Hub on the map from the first screen, so that visiting one is ordinary navigation rather than an admission.
+
+**"Interior Design teaches the Mine's prerequisite" quietly violates that, at family scale.** The moment one site is *required before* another, a student who arrives at the Mine without it is behind — and worse, they are behind in a way the product itself announces. That is precisely the "you are not ready for this" message every non-negotiable on that list exists to prevent, reintroduced at a level no single site's review would catch, because **no review of either site can see the relationship between them.**
+
+> **The rule this generates:** *the crossover is enrichment, never sequence.* The Mine must teach its own area model completely, for a student who has never opened Interior Design. What the crossover adds for a student who *has* is **recognition** — *"I have seen this floor before, from the other side"* — which is a reward, not a requirement.
+
+**Recognition is a gift; prerequisite is a gate.** Build the first and the crossover is the best thing in the family. Build the second and you have taught a struggling student that they started in the wrong place.
+
+---
+
+## 5. What would change these verdicts
 
 - **The Kitchen turning out to be about combining** rather than re-measuring. That is the Factory, and two sites with one verb is the failure §0 exists to catch.
 - **Interior Design shipping area formulas** rather than partition. Thin topic, gated nothing, furniture choosing the mathematics.

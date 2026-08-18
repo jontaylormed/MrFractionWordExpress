@@ -227,6 +227,43 @@ It also restores what I wrongly said was missing. **There IS a recognition task*
 
 ---
 
+## 6b. Using this on a project that is not Mr Fraction
+
+**The themes discussed anywhere in these documents are worked examples, not a plan.** The user's framing, 2026-08-17: *"these are not an exclusive list — just examples to help understand the Mr Fraction philosophy."* A kitchen, a mine and a floor plan are there to show the reasoning working; the reasoning is the thing being handed on.
+
+### The four documents, and what each answers
+
+| document | the question it answers |
+|---|---|
+| **`MR-FRACTION-PHILOSOPHY.md`** *(this file)* | What makes something a Mr Fraction site? The invariants, the verb taxonomy, and the case against. |
+| **`STRUCTURE-MAP.md`** | Why is this concept hard, and what would the picture have to show? |
+| **`SITE-THEMES.md`** | Does this specific theme work — and does the family still hold together? |
+| **`NEXT-SITE-KIT.md`** | What files, agents and rules physically move to the new repo? |
+
+**`VERIFICATION.md` is not on that list and moves regardless.** It is 41 rules about building carefully, 40 written after a real failure, and almost none of it is about mathematics. **If exactly one file transfers to a new project, it is that one.**
+
+### The procedure, cold
+
+Nine steps. The first four decide whether there is a site at all, and skipping to step 5 is how you get furniture without a subject.
+
+1. **Name the structural failure.** Which of `STRUCTURE-MAP.md` §1 is this concept's real difficulty — equivalence blindness, referent blindness, or a process that has not become an object? If none of them fits, say so; the catalogue is not complete and a new entry is more useful than a forced match.
+2. **Name the structure.** What does this concept look like *once it is an object*? That description is what the site will draw.
+3. **Name the verb.** What does the student *do* to the structure? Assemble, navigate, extract, transform, decompose, relate, generalise — or a new one.
+4. **Find a metaphor where the verb is literal and the noun IS the object.** Both halves of §2.1. `A vein IS a factor`, and mining is literally extraction. If either half needs "represents," keep looking. **And test the metaphor's strongest reading, not its most obvious one** — §6 records what happened when that was not done.
+5. **Design the diagram before the interface.** What does the problem *give*, and what must the student *produce*? Draw the first; leave the second as the question (§2.2). Then check the harder half: does removing the answer leave a **question** or a **blank**?
+6. **Find the surface cue that lies**, and author the problem where following it fails (§2.3). Every topic has one. If you cannot find it, look harder before concluding there is none.
+7. **Decide the gate.** What must the student commit to before they are allowed to compute (§2.4)? A commitment is the only thing a later error can be measured against.
+8. **Check the family.** Is this verb already taken by another site? Two sites with one verb is the failure that is invisible from inside either — `SITE-THEMES.md` §0.
+9. **Check the shape.** Does the concept have *phases* — read, classify, plan, solve, check — or is it **one move made repeatedly at increasing depth**? The first wants a journey. The second wants a workbench, and forcing it onto a map is the furniture choosing the mathematics (§4.3).
+
+### Three failures to expect, because they have all happened here
+
+- **Cargo-culting the artefact.** Shipping Three Reads because Mr Fraction sites have Three Reads. §3 is the whole defence against this, and the failure looks *finished*, which is why it needs a rule rather than good judgement.
+- **Testing a caricature of your own metaphor.** §6. The test in step 4 is only as good as the reading you test it against.
+- **Building a prerequisite and calling it a crossover.** `SITE-THEMES.md` §4.5. Recognition is a gift; prerequisite is a gate; non-negotiable 11 forbids gates — and no review of either site can see the relationship between them.
+
+---
+
 ## 7. What would change my mind
 
 Stated so that this document can lose an argument.
