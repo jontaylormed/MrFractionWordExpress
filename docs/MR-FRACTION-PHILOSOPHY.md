@@ -25,13 +25,27 @@ That single observation is the model for this whole document. **Almost nothing a
 
 Each is stated with the **test** that decides whether a new site honours it, because a principle you cannot fail is decoration.
 
-### 2.1 The metaphor must be load-bearing
+### 2.1 The metaphor is not a setting. It is the verb.
 
-On the Express, **a line IS a schema.** Not "problems are stored on lines" — the Change Line *is* the change structure, and asking *"which line is this?"* is asking *"which structure is this?"* The Ticket Booth is the schema-identification gate. The map is the taxonomy. The transfer ticket is analogical transfer. The metaphor and the mathematics are the same object seen twice.
+**Revised 2026-08-17 after the user pushed back on §6, correctly.** The first draft of this section said only that the metaphor must be load-bearing. That is true and too weak, and it made me misread one of the user's own themes badly enough to reject it. The stronger claim is his:
 
-> **The test.** Name the metaphor's central noun, then name the mathematical object it *is*. If the sentence needs the word "represents" or "stands for," the metaphor is decoration. `A line IS a schema` passes. `A mine shaft represents a factoring problem` fails.
+> **Each Mr Fraction site teaches one MODE OF STRUCTURING, and the metaphor names it.**
 
-This is the invariant most at risk on the next site, and §6 shows exactly where it breaks.
+| site | verb | what the student does to the mathematics |
+|---|---|---|
+| **The Factory** | **ASSEMBLE** | structure is *built up* from parts — a fraction manufactured from units |
+| **The Word Problem Express** | **NAVIGATE** | structure is *chosen from a taxonomy* — which of five situations is this |
+| **The Mine** | **EXTRACT** | structure is *recovered from apparent formlessness* — factors pulled out of a lump |
+
+On the Express, **a line IS a schema.** Not "problems are stored on lines" — the Change Line *is* the change structure, and asking *"which line is this?"* is asking *"which structure is this?"* The Ticket Booth is the identification gate, the map is the taxonomy, the transfer ticket is analogical transfer. The metaphor and the mathematics are one object seen twice.
+
+But notice what the table adds: the three metaphors are not three decorative worlds that happen to fit. **They are three genuinely different relationships a person can have with structure** — making it, choosing it, finding it. That is why the sites feel like siblings rather than reskins, and it is a far better generative rule than "pick a theme that fits."
+
+> **The test, in two parts.**
+> **(a)** Name the metaphor's central noun and the mathematical object it *is*. If the sentence needs "represents" or "stands for," it is decoration. `A line IS a schema` passes. `A vein IS a factor` passes.
+> **(b)** Name the verb. If the verb is not something the student does *to the mathematics*, the metaphor is a setting rather than a mode — and a setting is exactly the extraneous load §4.1 objects to.
+
+**What this predicts, which is the sign it is doing real work.** The modes not yet used are visible from here, and each names a site rather than a topic: **DECOMPOSE** (assemble's inverse — partitioning, place value, breaking a whole), **TRANSFORM** (equivalence — the same object in different clothes; equations, equivalent fractions, rewriting), **COMPARE / ORDER**, and **GENERALISE** (instances to a rule — sequences, functions, proof). A framework that only described what already existed would list three. This one lists seven and tells you what each would have to be about.
 
 ### 2.2 The picture shows what is GIVEN, never what is DERIVED
 
@@ -107,6 +121,22 @@ The Express is **text-heavy by design**. The visual work is concentrated in one 
 
 That is a sharper and more defensible thesis than "visual math," it explains the art rules rather than merely permitting them, and — unlike "visual" — it tells you what to leave out.
 
+### 3.1 Structuring the thought, not visualising the concept
+
+**The user's phrasing, 2026-08-17, and it is better than mine.** It is worth taking apart, because the difference between those two things is the difference between this site and most educational software.
+
+**"Visualising the concept" is something the site does to the student.** A well-drawn picture appears; the student looks at it; it is clearer than prose. The work of structuring has been done *for* them, and what they receive is the finished product of someone else's thinking. It reliably produces the feeling of understanding and unreliably produces understanding — because the thing that was hard has already happened offstage.
+
+**"Structuring the thought" is something the student does, and the picture is where they do it.** The diagram is not the output of comprehension; it is the *instrument* of comprehension. It holds the relationship outside the head so that working memory — which for this audience is already fully committed to decoding the sentence — does not have to hold it too.
+
+**This is why the Model Yard makes the student build the bar** rather than showing them one (`PEDAGOGY.md` §4: *"every problem gets a picture the student builds"*). A displayed bar model visualises the concept. A built one structures the thought. **The pixels can be identical and the pedagogy is opposite**, which is exactly the sort of distinction that is invisible to a screenshot and to every automated check this project owns.
+
+And it explains why the art rules are **subtractive**. If the picture is an instrument, everything in it that is not the structure is competing for the same attention the structure needs — which reframes "no numerals, uncountable objects, no rulers, no brackets" from a list of prohibitions into a single design stance: *the diagram carries the relationship and nothing else, because anything else is friction on the mechanism.*
+
+> **The test.** Strip the surface. If the picture still supports the reasoning when the benches become bars and the trains become blocks, it is structural. **If it only works because it is a picture of benches, it is an illustration** — and the student will not be able to re-draw it on a page with no benches on it.
+
+That last clause is the practical form and the one to hold onto: **a student who cannot reproduce the diagram has not acquired the structure.** Which is the real argument for building rather than showing, and the real reason this is a thinking-tool brand rather than a graphics brand.
+
 ---
 
 ## 4. The case against
@@ -166,19 +196,34 @@ It has genuine **forms**: common factor, difference of squares, trinomial with l
 
 And the check-by-expanding loop is §2.4's commitment structure with a different name: **commit to a factorisation, then multiply back.** Better than the estimate gate, in fact, because the verification is exact rather than approximate.
 
-### Mining for Math Factors — the harder case, and worth saying why
+### Mining — I argued against this and was wrong. The correction, and why it matters
 
-Prime factorisation has **no taxonomy of forms**. Every number is approached the same way. So there is no recognition step, §2.4 has nothing to gate, and the site would have the strongest possible pull toward building stations that gate nothing.
+**The first draft of this section rejected the mine on §2.1's test**, on the grounds that *mining is search — you dig where you guess* — while unique factorisation is about *arriving at the same place regardless of route*. The user pushed back. He was right, and the way I was wrong is instructive enough to keep rather than quietly delete.
 
-**But it has something the Express does not**, and it may be the better *idea* even though it is the worse fit for the existing machinery: **the fundamental theorem of arithmetic is a genuinely visual, genuinely structural claim** — a number has exactly one prime factorisation, and it is a property of the number rather than of the route you took to find it. Two different factor trees for 72 landing on the same multiset is a picture of a theorem, and it is the sort of thing students are told and never shown.
+**I took the weak reading of the metaphor.** Mining is not prospecting. Prospecting is guessing where to look; **mining is extraction of structure that was already there.** And once that is the reading, every objection dissolves and the fit becomes better than anything else on the table:
 
-> **A mine is the wrong metaphor for that, by §2.1's test.** Mining is *search* — you dig where you guess. The theorem is about *uniqueness of destination regardless of route*. The metaphor that fits is closer to **many paths converging on one place**, and the honest conclusion is that this topic wants a different central image and possibly a different site shape entirely. **That is a finding, not an obstacle** — it is the philosophy doing its job, which is to stop the furniture choosing the mathematics.
+- **A vein IS a factor.** It was in the rock before any miner arrived. You do not create it, you find it and follow it. That passes §2.1(a) without needing the word "represents."
+- **The verb is EXTRACT**, and it is genuinely distinct from the Factory's ASSEMBLE and the Express's NAVIGATE. That passes §2.1(b).
+- **The property I claimed the metaphor lacked, it has physically.** Two miners starting from different faces and following the same vein arrive at the same ore body. **That is unique factorisation, and it is the picture of the theorem I said the mine could not provide.** Two factor trees for 72 are two shafts into one seam.
+- And the framing the user actually gave — *"mined from the ground of what looks complex but can be structured"* — is the whole pedagogical point. **Ore looks like rock. `x² − 5x + 6` looks like a lump.** The learnable claim is that apparent formlessness is not formlessness, which is precisely §3's structuring-the-thought thesis with a shovel in it.
 
-### Recommendation
+**The lesson for this document, not just for the mine:** §2.1's test is only as good as the reading of the metaphor you test. I tested a caricature and rejected a good idea. **When the test fails, ask whether the metaphor is weak or whether the reading is** — and prefer the author's reading, since he chose it for reasons he may not have written down yet.
 
-**Factoring Binomials as the third site**, on the grounds that its taxonomy gives §2.4 real work, its area model exercises §2.2 unchanged, and its keyword trap makes §2.3 immediately concrete. Build it, and the philosophy gets its n = 3 test on a topic where the invariants are all live.
+### And the correction merges the two topics, which is the bigger prize
 
-**Keep Mining for Math Factors** for after that, and treat it as the deliberate stress test: a topic with no recognition task, which will force the philosophy to say what a Mr Fraction site is when its most-used machinery does not apply. **That is the more interesting question, and it should be asked second rather than first.**
+I had these as two candidate sites. The user's framing puts them on one: *"the Factors are mined from the ground of what looks complex but can be structured into factored binomials."*
+
+**That is mathematically deeper than the split, and it is deep in a way schools almost never teach.** Factoring 72 into 2³·3² and factoring `x² − 5x + 6` into `(x−2)(x−3)` are **the same act** — ℤ and ℝ[x] are both unique factorisation domains, primes and irreducible polynomials are the same idea wearing different clothes, and the theorem that guarantees one guarantees the other. Students meet these years apart, in different courses, and are never told they are one thing.
+
+**A site that teaches them as one thing has a real claim to being worth building**, and it gives the mine a natural difficulty gradient that needs no grade levels (non-negotiable 6): **the same seam, worked deeper.** Numbers first, then expressions, because the second is the first with letters in it.
+
+It also restores what I wrongly said was missing. **There IS a recognition task**, and it is the same one at both depths: *is this thing irreducible, or does it come apart — and if it comes apart, along which seam?* Common factor, difference of squares, trinomial — those are seam types. §2.4 has work to gate after all, and §2.3 gets its trap for free: ***"it has a minus sign, so it's difference of squares"*** is the same error class as *"more means add"*, refuted by `x² − 5x + 6`.
+
+### Recommendation, revised
+
+**One site, not two: the Mine, working numbers and binomials as the same seam.** It passes both halves of §2.1, it has a recognition task at both depths, its area model exercises §2.2 unchanged — draw the area, leave the sides as the question — and it teaches a genuine unification that the curriculum splits.
+
+**What still needs deciding before any file exists**, and it is a real question rather than a formality: **prime factorisation and binomial factoring are the same act, but they are not the same difficulty, and the mine has to make the descent feel like depth rather than like a different mine.** The seam metaphor supports it; whether the *interface* does is the thing to design first.
 
 ---
 
