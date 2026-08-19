@@ -488,7 +488,7 @@
        defect, shipped once on all six ratio tables after being written down
        twice. Two salts, and the position is measured after the fact. */
     var subject = shuffled(mis, seedFrom('critique-pick' + salt))[0];
-    var order   = shuffled(mis, seedFrom('critique-order' + salt));
+    var order   = balancedOrder(mis, subject, p, 'critique');
     return { subject: subject, order: order, unit: (last.answer && last.answer.unit) || '' };
   }
 
@@ -1536,6 +1536,63 @@
   function seedFrom(str) { return str; }
   function shuffled(arr, seed) { return MF.seededShuffle(arr, seed); }
 
+  /* ============================================================
+     WHERE THE CORRECT OPTION SITS — DESIGNED, NOT DRAWN
+
+     The user, riding the site: "are these correct answers randomized? It
+     always seemed to be the middle option."
+
+     The shuffle was checked first and exonerated: over 12,000 seeds all six
+     permutations of a three-item list fall between 16.0% and 17.2% against an
+     expected 16.7%. The generator is uniform. But the site does not take 12,000
+     draws — it takes about 148 per surface, once, and then that is what every
+     student sees forever. Three independent surfaces all came out middle-heavy
+     by 5 to 7 points, which is inside sampling noise individually and is
+     exactly what a student would perceive as a pattern.
+
+     A fair coin does not owe you a flat sample. So the position is no longer
+     sampled at all: it is ASSIGNED, cycling through the slots so the site's
+     actual distribution is flat by construction, and only the distractors are
+     shuffled around it. This is the same move the project already made for
+     number sets — design the distribution rather than hoping for it.
+
+     WHY IT IS NOT LEARNABLE. The slot comes from a dense ordinal over
+     (problem, number set), offset per surface so read 3, the Ticket Booth and
+     the critique never move in step. A student cannot see their problem's
+     ordinal or their set index, and the same problem gives a different slot in
+     a different set. What they can see — "it was the middle last time" — is
+     precisely what this removes.
+
+     `VERIFICATION.md` rule 1: measured after, not asserted. ============ */
+
+  var ORDINALS = null;
+  function ordinalOf(p) {
+    if (!ORDINALS) {
+      ORDINALS = {};
+      Object.keys(MF.problems).sort().forEach(function (id, i) { ORDINALS[id] = i; });
+    }
+    var sets = MF.setCount ? (MF.setCount(MF.problems[p.id]) || 4) : 4;
+    return (ORDINALS[p.id] || 0) * sets + (p.numberSetIndex || 0);
+  }
+
+  function surfaceOffset(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) { h = (h * 31 + name.charCodeAt(i)) >>> 0; }
+    return h;
+  }
+
+  /** Correct option placed at a balanced slot; the rest shuffled around it. */
+  function balancedOrder(items, correct, p, surface) {
+    var n = (items || []).length;
+    if (n < 2 || correct == null) return (items || []).slice();
+    var rest = items.filter(function (x) { return x !== correct; });
+    var slot = (ordinalOf(p) + surfaceOffset(surface)) % n;
+    var mix = shuffled(rest, seedFrom(surface + '|' + p.id + '|' + (p.numberSetIndex || 0)));
+    var out = [], k = 0;
+    for (var i = 0; i < n; i++) out.push(i === slot ? correct : mix[k++]);
+    return out;
+  }
+
   Station.prototype.phRead3 = function () {
     var self = this, r3 = this.p.threeReads.read3;
     /* SALTED WITH THE NUMBER SET, and it was not before.
@@ -1552,7 +1609,8 @@
        is the one kind of noise they can learn. Found by the user, from riding
        the site, which is where every pattern defect on this project has come
        from. */
-    var order = shuffled(r3.options || [], seedFrom(this.p.id + '|read3|' + (this.p.numberSetIndex || 0)));
+    var r3opts = r3.options || [];
+    var order = balancedOrder(r3opts, r3opts.filter(function (o) { return o.correct; })[0], this.p, 'read3');
     var opts = order.map(function (o, i) {
       return '<li><button class="choice" type="button" data-opt="' + i + '" aria-label="' + esc(o.text) + '">' +
         '<span class="marker" aria-hidden="true">&#9723;</span>' +
@@ -1634,8 +1692,9 @@
   Station.prototype.phTicket = function () {
     var self = this, tb = this.p.ticketBooth;
     var L = MF.LINES[this.p.line];
-    // Salted with the number set for the same reason as read 3 above.
-    var choices = shuffled(tb.unknownCarOptions || [], seedFrom(this.p.id + '|car|' + (this.p.numberSetIndex || 0)));
+    // Balanced by construction, same as read 3 — see `balancedOrder`.
+    var carOpts = tb.unknownCarOptions || [];
+    var choices = balancedOrder(carOpts, tb.unknownCarAnswer, this.p, 'car');
     var hidden = this.asksHiddenLine();
 
     var opts = choices.map(function (c, i) {
