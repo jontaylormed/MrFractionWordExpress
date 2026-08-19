@@ -13,6 +13,14 @@ The other agents review *artifacts*. You use the *site*. Specs pass review all t
 
 ## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
 
+> ### ⛔ NOTHING IN THIS FILE IS A RELIABLE STATEMENT ABOUT WHAT THE SITE IS
+>
+> **Read [`docs/SITE-STATE.md`](../../docs/SITE-STATE.md) first and treat it as the only source of what exists.** Every count, phase, feature and file named below is a **copy** of something that was true when it was written, and copies drift.
+>
+> These six briefs were rewritten on 2026-08-16 to match the build. **They were stale again by the evening of 2026-08-17** — not one knew about the critique phase or the Engine Room's near-miss handling, both shipped that day. Editing six documents every time the build moves is not a process; it is a promise nobody keeps.
+>
+> **Where this brief and `SITE-STATE.md` disagree, `SITE-STATE.md` is right.** What remains valuable here is the **method** — how to do this role, and the failures that shaped it. Read it for that.
+
 **Last revised 2026-08-01.** Nothing below mentions Crossover Island, the estimate gate or the sketch pads. Found 2026-08-16 by grepping all six agent briefs and getting zero hits in every one. **Read `docs/HANDOFF.md` §0** first. The build is **37 problems** over five lines plus Crossover Island, and five hubs.
 
 **Where to go, since none of it is in the flow below.** The **Challenge Line** card on the map does not start a trip — it crosses to a second map, Crossover Island. Five stops: three staffed platforms and two **unstaffed halts** (Cold Halt, Marsh Halt). Ride at least one of each, because they are deliberately different journeys:

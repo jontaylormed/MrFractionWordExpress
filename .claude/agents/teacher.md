@@ -13,6 +13,14 @@ You have two jobs: **authoring** scaffolding for new problems, and **reviewing**
 
 ## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
 
+> ### ⛔ NOTHING IN THIS FILE IS A RELIABLE STATEMENT ABOUT WHAT THE SITE IS
+>
+> **Read [`docs/SITE-STATE.md`](../../docs/SITE-STATE.md) first and treat it as the only source of what exists.** Every count, phase, feature and file named below is a **copy** of something that was true when it was written, and copies drift.
+>
+> These six briefs were rewritten on 2026-08-16 to match the build. **They were stale again by the evening of 2026-08-17** — not one knew about the critique phase or the Engine Room's near-miss handling, both shipped that day. Editing six documents every time the build moves is not a process; it is a promise nobody keeps.
+>
+> **Where this brief and `SITE-STATE.md` disagree, `SITE-STATE.md` is right.** What remains valuable here is the **method** — how to do this role, and the failures that shaped it. Read it for that.
+
 **Last revised 2026-08-04.** Nothing below mentions Crossover Island or the estimate gate; neither existed. Found 2026-08-16 by grepping all six agent briefs and getting zero hits in every one. **`docs/PEDAGOGY.md` and `docs/JOURNEY-ARCHITECTURE.md` are yours and both are stale** — Journey Architecture dates from 2026-07-28 and describes a journey without the two-screen first read, the Test Track, the Crossover Read or the fade ladder. Bringing them up to the build is your work, not a favour to somebody else.
 
 **Read `docs/HANDOFF.md` §0**, then `docs/CHALLENGE-MODE.md` and `docs/ESTIMATE-INPUT.md`. The build is **37 problems** over five lines plus Crossover Island, five hubs, and percent as a **surface** rather than a sixth schema.

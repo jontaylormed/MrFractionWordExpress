@@ -25,7 +25,29 @@
 
 **What would most improve this site is no longer code.** Every island `review` block is `provisional` because author and reviewer are the same person, and **no real student has used any of it** — least of all the two unstaffed halts, which now drop a student from the checklist straight into the arithmetic. That is the missing check, and it has been the missing check since long before the island.
 
-**37 problems, 148 materialisations, 1,428 rendered screens, every sweep count 0.** The screen count *fell* from 1,468 on 2026-08-16 and that is not a regression — an unstaffed halt stopped rendering three phases a student can no longer reach. When a count moves, check which direction the design moved first.
+**Counts are in [`SITE-STATE.md`](SITE-STATE.md) and nowhere else** — that is the whole point of the file. What is worth keeping here is the *habit*: the screen count once **fell**, from 1,468 to 1,428, and that was not a regression — an unstaffed halt had stopped rendering three phases a student could no longer reach. It has since risen to 1,576 because the critique phase added one screen per materialisation. **When a count moves, check which direction the design moved first.**
+
+## ⛔ FIRST: [`SITE-STATE.md`](SITE-STATE.md) IS NOW THE ONLY DOCUMENT THAT SAYS WHAT THE SITE IS
+
+Counts, phases, features — they live in one file now, and **every agent brief disclaims its own contents and points there.** The six briefs were rewritten on 2026-08-16 to match the build and **were stale again by the evening of 2026-08-17**. Six documents restating the same facts is not a process.
+
+**This file is the current state of the WORK — what is open, what is owed, what to do next.** `SITE-STATE.md` is the current state of the BUILD. If they disagree about the build, `SITE-STATE.md` wins.
+
+## ⚠ 2026-08-17: FOUR FEATURES SHIPPED, AND THE WORKING TREE WAS DELETED AND RECOVERED
+
+**23 commits.** Full account in [`REVIEW-LOG.md`](REVIEW-LOG.md) Cycle 30c. In short:
+
+- **The Engine Room tells a near miss from a wrong turn**, **the critique phase** (MP3's missing half, derived from existing misconceptions, all 37 problems), **its trip-report metric**, and **option positions balanced by construction**.
+- **A defect the user found by riding the site**: read 3 and the Ticket Booth froze their option order per problem, forever. Five agent passes missed it because they measured *"always position 1"* — the historical defect — and never asked about the middle.
+- **The working tree was deleted and committed.** `git commit` printed `33774 deletions(-)` and it went in; recovered in one command because everything had been committed minutes before. **`.claude/launch.json`, untracked, was lost permanently the same day.** Both halves of §29, one session. Now **§42** — *read what the instrument printed, not what you expected it to print.*
+
+**Before publishing, three things are unresolved and one is a documentation error:**
+
+1. **`.github/workflows/static.yml` DOES NOT EXIST in this repository**, though §0.0b below says the site is deployed by it. Whether Pages deploys from a workflow on the remote or from a branch is **unconfirmed** — establish it before assuming a push publishes anything.
+2. **No remote is configured**, so publishing is still a manual upload — the route that once flattened `assets/` and `content/` silently while every local check passed.
+3. **`docs/cycle-30/` is 3.4MB** of screenshots, now tracked, and would ship with any full upload. Excluding it costs nothing.
+
+**And the standing one: appearance is unverified.** Nothing shipped on 2026-08-17 has been *looked at* in a browser that composites. `tools/zz-drive.js` plus headless Edge is the way — its header carries the two flags that cost an hour each.
 
 ## ⚠ CYCLE 30 RAN, AND IT BLOCKED THE GATE. READ THIS BEFORE ANYTHING ELSE.
 
@@ -308,7 +330,7 @@ Note that none of those is a word. They are all descriptions of **what the sente
 | | |
 |---|---|
 | [`../CLAUDE.md`](../CLAUDE.md) | How to work on this project, and why the rules live where they do. |
-| [`VERIFICATION.md`](VERIFICATION.md) | **41 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 was the exception; **Cycle 30 found its failure**, and §39 and §40 are that cycle's. |
+| [`VERIFICATION.md`](VERIFICATION.md) | **42 rules.** All but §30 were written after a real failure here — not a style guide, a list of ways this project has actually been broken. §30 was the exception; **Cycle 30 found its failure**, and §39 and §40 are that cycle's. |
 | [`REVIEW-LOG.md`](REVIEW-LOG.md) | Cycle history. Read the cycle that touched what you are about to change. |
 
 **The single most useful habit on this project:** before building anything that resembles something already here — a choice UI, a picture, a gate, a phase — grep for how the existing one solved it and read the comment above it. The comments record the failures. They are the most valuable thing in the repo.

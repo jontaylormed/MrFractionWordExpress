@@ -11,6 +11,14 @@ Your obligation is to the student who will use this site. Not to the schedule, n
 
 ## ⚠ WHAT THIS BRIEF DID NOT KNOW — read this before you start
 
+> ### ⛔ NOTHING IN THIS FILE IS A RELIABLE STATEMENT ABOUT WHAT THE SITE IS
+>
+> **Read [`docs/SITE-STATE.md`](../../docs/SITE-STATE.md) first and treat it as the only source of what exists.** Every count, phase, feature and file named below is a **copy** of something that was true when it was written, and copies drift.
+>
+> These six briefs were rewritten on 2026-08-16 to match the build. **They were stale again by the evening of 2026-08-17** — not one knew about the critique phase or the Engine Room's near-miss handling, both shipped that day. Editing six documents every time the build moves is not a process; it is a promise nobody keeps.
+>
+> **Where this brief and `SITE-STATE.md` disagree, `SITE-STATE.md` is right.** What remains valuable here is the **method** — how to do this role, and the failures that shaped it. Read it for that.
+
 **This file was last revised 2026-08-04 and the build moved a long way after it.** Nothing below this block mentioned Crossover Island or the estimate gate, because neither existed when it was written. That was found on 2026-08-16 by grepping all six agent briefs for them and getting zero hits in every one — six reviewers briefed on a site that no longer exists, which would have produced a review of August the 4th and read exactly like a clean pass.
 
 **Read `docs/HANDOFF.md` §0 first.** Then the two documents that describe what was added:

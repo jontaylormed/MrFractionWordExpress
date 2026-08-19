@@ -1,7 +1,7 @@
 # The Verification Standard
 ### Mr Fraction's Word Problem Express
 **Applies to:** every agent, **and to anyone working without one** — see `../CLAUDE.md`.
-**Owner:** Oversight. **Last updated:** 2026-08-17. **41 rules.**
+**Owner:** Oversight. **Last updated:** 2026-08-17. **42 rules.**
 
 Every rule here was written after a specific failure on this project. The evidence is kept with each rule, because a rule without its scar gets softened away.
 
@@ -471,3 +471,26 @@ Cycle 30 found **three separate documents asserting a safeguard that was not the
 **The rule.** A comment that says something is safe is a claim about code, and claims about code are checkable. When you read one — or write one — grep for the mechanism it names and confirm it is (a) present in the data and (b) actually consulted by something. A protection nobody reads is not a protection, and a comment describing it is worse than no comment, because it stops the next reader looking.
 
 **Corollary for authors:** if you write a comment asserting an invariant, say in the same breath *what enforces it*. "Tagged `tier: "lies"`" is an assertion; "tagged `tier: "lies"`, which `<file:line>` refuses to render untagged" is a claim someone can falsify.
+
+---
+
+## 41. Read what the instrument printed, not what you expected it to print
+
+Rule 2 is about checks that find nothing and are believed. **This is its opposite and it is more dangerous: checks that report loudly, correctly, and are not read.** Three instances in one day, 2026-08-17, and the first nearly ended the project.
+
+> **The working tree, deleted and committed.** `git commit` printed **`103 files changed, 475 insertions(+), 33774 deletions(-)`** and the deletion of `index.html`, `assets/`, `content/` and `README.md` went in as part of a commit that was meant to add screenshots. The filename list was read; the number was not. Recovery took one command — `git checkout <prev> -- .` — **only because everything had been committed minutes earlier.**
+>
+> **A case-sensitivity check that was case-insensitive.** Built to prove every asset reference resolves on Linux Pages, using a PowerShell hashtable — which compares keys **case-insensitively by default**. The check reported on 130 references and could not have failed. **It was caught only because it had been given a deliberately mis-cased control**, which came back "not flagged". Without the control it would have gone into a deploy-readiness report as a pass.
+>
+> **A distribution computed from n=4.** A Ticket Booth position measurement compared rendered labels against `p.unknownCar` where the answer key is `ticketBooth.unknownCarAnswer`. It matched **4 of 148** and printed a tidy three-column percentage table. `n=4` was in the output. It was nearly reported as a finding.
+
+**What the three share:** the instrument told the truth, in the output, at the time. Nobody read it.
+
+**The rules.**
+
+- **Before committing, read the stat line.** Not the file list — the numbers. A commit whose deletions you cannot account for is a commit you do not understand. `git diff --stat` before `git add -A`, every time, and treat any deletion you did not intend as a stop.
+- **Every check reports its denominator, and you read it.** "0 failures" is meaningless without "of how many". A denominator that is small, zero, or different from what you expected is the result — not a footnote to it.
+- **Give every check a control that must fail.** The case check survived only because of one. A control is not diligence theatre; on this project it is the single highest-yield habit in this document. **State the control and its outcome in the finding.**
+- **When an instrument's output surprises you, re-read the output before re-running the check.** Twice today the answer was already on screen.
+
+> **And the corollary that makes §29 honest.** The same day proved both halves: the whole site was **tracked**, so a total working-tree loss cost one command. `.claude/launch.json` was **untracked**, so an overwrite by an agent that had never read it was permanent. **The safety net is not "git exists" — it is "git holds this file". Check which before you rely on it.**

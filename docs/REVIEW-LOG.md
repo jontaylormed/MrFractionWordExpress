@@ -2041,6 +2041,61 @@ The Browser pane failed identically for all three browser agents (*"not displaye
 
 ---
 
+## Cycle 30c — 2026-08-17 — four features, one near-catastrophe, and a defect the user found by riding
+
+**Trigger:** the user, after Cycle 30b — *"work on fixes"*, then the philosophy work, then *"implement the clarity/correctness split"*, *"now implement the critique phase"*, *"add the critique metric"*, *"balance the position by construction"*.
+
+**23 commits.** 761 lines of code across 10 files; 1,614 lines of documentation across 27, including four documents that did not exist that morning.
+
+### What shipped
+
+| | |
+|---|---|
+| **The Engine Room tells a near miss from a wrong turn** | `checkAnswer` gains `reason: 'near'` at 10% relative. Generalises the `scale` reason beside it. **Deliberately fails silent on small answers** — 5-against-4 is ambiguous and a false *"you had the right idea"* is worse than the neutral message it replaced. A named misconception always wins over it: **13 of 736 misconceptions sit inside the near band**, including `percent-of-the-wrong-amount` at 4% off, and all 13 are matched first. |
+| **The critique phase** | MP3's missing half. The student is shown another passenger's wrong answer and asked which mistake produced it. **Derived entirely from existing misconceptions — no authored content** — so it covered all 37 problems on day one. Second person transformed to third, safe because English second-person and third-person-plural share verb morphology; **zero survivors** across 520 diagnoses. |
+| **The critique metric** | `critiqueFirstTry` / `critiqueAttempts`, shaped like the schema pair. A count, never a proportion: everyone reaches the right explanation eventually, so a percentage would score *how fast*. |
+| **Option positions balanced by construction** | `balancedOrder` assigns the correct slot from a dense ordinal; only distractors shuffle. read 3 **37/37/37/37**, Ticket Booth **48/48/48**. |
+
+Also fixed in passing: **finding C-6** from Cycle 30 — a single `A11y.announce` after the branch chain told screen-reader users their *maths* was wrong when it was their *typing*.
+
+### The defect the user found, and the axis nobody had measured
+
+> *"Are these stories' correct answers randomized? It always seemed to be the middle option."*
+
+**The shuffle was exonerated first** — 12,000 seeds, all six permutations of a three-item list between 16.0% and 17.2% against 16.7% expected. **The defect was beside it:** read 3 seeded on `p.id + '|read3'` and the Ticket Booth on `p.id + '|car'`, **neither carrying the number set**. One arrangement per problem, identical on every ride, for every student, permanently. *A fair draw taken once and then frozen is not a fair draw* — whatever clustering those 148 draws contained became shared and learnable.
+
+**Why five agent passes and a dedicated measurement missed it:** Cycle 30's teacher pass measured *"always position 1"* — the historical defect — and reported 24.0% against a 24.7% baseline, correctly. **So did I.** Nobody asked about the middle, because §38's lesson is that *a discovered enumeration still hardcodes its axis*, and the axis here was inherited from the last defect rather than chosen.
+
+**The fix went further than the bug.** Position is no longer sampled at all. And it was verified **from the seat**, not from the enumeration: in enumeration order the slot never repeats consecutively — 0.0%, itself a pattern — so 220 trips were simulated. 660 screens: positions 23.6/24.5/24.8/27.0 against 25.0 flat, consecutive-same 26.4% against 25.0% chance, all-three-same 4.5% against 6.3%.
+
+### ⚠ The working tree was deleted and committed
+
+**`git commit` printed `103 files changed, 475 insertions(+), 33774 deletions(-)`** and it went in. `index.html`, `assets/`, `content/` and `README.md` were gone from disk when `git add -A` ran, and the commit staged their removal faithfully. **The file list was read. The number was not.**
+
+Recovered with `git checkout aee5dd4 -- .`, verified byte-identical across all 119 paths, and the restoration committed with the incident recorded rather than tidied away.
+
+**What actually deleted the files is unknown.** What survived — `docs/`, `tools/`, `.claude/` and the dotfiles — is exactly the set an agent's scratch copy of the *site* would not include, which points at the art-director harness, but that was never proven and should not be written down as though it were.
+
+**Both halves of §29 were tested in one day.** The site was tracked: total loss, one command. `.claude/launch.json` was untracked: overwritten by an agent that had never read it, and gone permanently. **The safety net is not "git exists" — it is "git holds this file".** Now §41.
+
+### Instrument errors, counted honestly
+
+**Five in one session**, and in every case the instrument was wrong before the subject was:
+
+1. The commit stat, above.
+2. A **case-sensitivity check that was case-insensitive** — PowerShell hashtables compare keys case-insensitively by default. It reported on 130 references and could not have failed. **Caught only by the deliberately mis-cased control.**
+3. A Ticket Booth distribution computed from **n=4 of 148** — wrong answer-key field — which printed a tidy percentage table.
+4. `teacher`'s first hint-ladder instrument: **30 false misses**, rebuilt and re-proved with a planted defect.
+5. `art-director`'s "320px fails": a **320px crop of a 504px layout**, self-retracted.
+
+### Decision
+
+**No gate ruling.** Cycle 30's GATE 2 remains **BLOCKED** — six blockers are fixed and verified, and **appearance is still unverified**: nothing shipped today has been looked at in a browser that composites. The trip report's critique line has never rendered on a real end-of-trip screen.
+
+**New for the next session:** [`SITE-STATE.md`](SITE-STATE.md) is now the only document that states what the site is. All six agent briefs point at it and disclaim their own contents — **because they were rewritten on 2026-08-16 and were stale again within a day.**
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.
