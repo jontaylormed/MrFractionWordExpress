@@ -26,13 +26,29 @@ That split does not exist in this repo yet, and **making it is the first piece o
 
 | | why it carries |
 |---|---|
-| **`VERIFICATION.md`** | **41 rules, 40 of them written after a real failure.** Almost none is about fractions. "A check that finds nothing is suspicious", "measure before asserting in both directions", "attack every gate with the laziest input", "a defect can exist with every file correct", "an instrument can destroy the subject", "a measurement taken mid-animation is not the settled value", "when a comment claims a protection, check the thing it names exists" — every one of those is about *building carefully*, not about mathematics. **If only one file moves, move this one.** |
+| **`VERIFICATION.md`** | **42 rules, 41 of them written after a real failure.** Almost none is about fractions. "A check that finds nothing is suspicious", "measure before asserting in both directions", "attack every gate with the laziest input", "a defect can exist with every file correct", "an instrument can destroy the subject", "a measurement taken mid-animation is not the settled value", "when a comment claims a protection, check the thing it names exists", "read what the instrument printed" — every one is about *building carefully*, not about mathematics. **If only one file moves, move this one.** |
 | **The five personas** | Maya (anxious), Devon (dyslexic, capable), Sam (keyboard/screen reader), Alex (impatient, will try to break the gates), Jordan (phone, 320px). Entirely subject-independent and the sharpest instrument in the set. |
-| **The review-log discipline** | Append as each pass lands, never at the end; record instrument errors and retractions as first-class entries; record dissent when overruling. Four agents died mid-cycle today and cost one pass instead of five *because of this rule*. |
+| **The review-log discipline** | Append as each pass lands, never at the end; record instrument errors and retractions as first-class entries; record dissent when overruling. Four agents died mid-cycle on 2026-08-17 and cost one pass instead of five *because of this rule*. |
 | **The precedence order** | correctness → accessibility → pedagogical integrity → student experience → theme coherence. Plus: precedence decides *who yields*, not *whether the problem is real*. |
 | **The standing caveats** | "We are one model wearing several hats." "Independence is a property you check, not assume." "Author and reviewer being the same means the sign-off means less, and the log must say so." |
-| **`tools/zz-drive.js`** and the headless-Edge recipe | Any site built this way needs a way to photograph one screen. The two flags that cost an hour each are documented in its header. |
+| **`tools/zz-drive.js`** and the headless-Edge recipe | Any site built this way needs a way to photograph one screen. **Bare `--headless`, never `--headless=new`, which silently writes no file**; `--virtual-time-budget` to seek animations rather than sample mid-flight. The two flags that cost an hour each are in its header. |
+| **`tools/serve.ps1`** | Twenty lines of `HttpListener`. Every browser check on this project needs a real origin, because `file://` degrades to a snapshot in an automation pane. |
+| **`SITE-STATE.md` — the pattern, not the file** | **One document owns what the build is; every brief disclaims its own contents and points at it.** Added 2026-08-17 after the six agent briefs, rewritten to match the build one day, were stale the next. Start the new project with this on day one rather than after the first stale review. |
 | **The locked constraints**, if wanted again | zero dependencies, no build step, runs from `file://`, no localStorage. These shaped everything and are worth choosing deliberately rather than inheriting by accident. |
+
+### Ports as a CODE SHAPE — proven here, none of it about fractions
+
+These are the ones that would otherwise be re-derived expensively. Each was written after a real defect on this project.
+
+| pattern | the rule | the scar |
+|---|---|---|
+| **One place per chain** | `Stations.phaseChain` and `Stations.postSolve` are the only places the screen sequences are written, and the sweep reads them. | The fade ladder was written twice — here and in the sweep — and they disagreed for a whole run. When `postSolve` was added, the critique phase was covered by the sweep the moment it existed. |
+| **Positions are designed, not drawn** | `balancedOrder(items, correct, p, surface)` — assign the correct option's slot from a dense ordinal, shuffle only the distractors. | A uniform shuffle still produced a middle-heavy site, because the site takes ~148 draws once and freezes them. **Verify from a simulated student's seat, not from your enumeration** — the enumeration looked *too* clean (0% consecutive repeat). |
+| **Derive content, do not author it** | The critique phase generates its whole task from misconceptions each step already carries. Zero new authored content; universal coverage on day one. | Anything requiring per-problem authoring covers the handful somebody got round to. Measure the available material *before* designing the feature. |
+| **Authored specificity beats derived generality** | Check the hand-written diagnosis first; fall back to the generated message. | The near-miss rule would have said "your plan is probably right" about `percent-of-the-wrong-amount` — the exact error the problem teaches. 13 of 736 misconceptions sat inside the band. |
+| **Fail silent when the signal is ambiguous** | The near-miss threshold is relative and never fires on small answers. | A false *"you had the right idea"* is worse for a struggling student than a neutral message. |
+| **Guard every metrics write** | The sweep drives stations with `{}`; an unguarded `.push` throws **inside the listener**, where it looks exactly like a phase rendering nothing. | Recorded trap, not hypothetical. |
+| **The indicator carries itself** | State glyphs hang off the element with the state (`.choice[data-result]::before`), never off a child a builder must remember to emit. | Four builders emitted no `.marker`, so right and wrong differed by hue alone at 1.274:1 — including on the estimate gate. |
 
 ### Ports with rewriting
 
@@ -72,6 +88,38 @@ What almost certainly *does* carry regardless of topic:
 - **Support that is never framed as remedial.**
 
 ---
+
+## 2b. The literal manifest — what to copy, in order
+
+**Copy verbatim, day one, before writing a line of the new site:**
+
+```
+docs/VERIFICATION.md          42 rules. Strip the four Mr-Fraction-specific
+                              examples if you like; keep every rule.
+docs/SITE-STATE.md            As a TEMPLATE. Fill it with the new build's
+                              facts and let nothing else restate them.
+tools/serve.ps1               Works unchanged.
+tools/zz-drive.js             Adapt the mount call; keep the header's flags.
+.claude/agents/*.md           METHOD HALVES ONLY — see §0.
+```
+
+**Copy as a starting document, then rewrite the subject:**
+
+```
+docs/PROCESS.md               Gate definitions.
+docs/REVIEW-LOG.md            Empty, with the standing caveats already in it.
+docs/THEME-AND-ACCESSIBILITY.md   WCAG floor, dyslexia provisions, tone.
+```
+
+**Write fresh, using the philosophy as the method:**
+
+```
+PEDAGOGY.md equivalent        The new topic's structural failure and gate.
+PROBLEM-SCHEMA.md equivalent  The new content shape.
+ART-DIRECTION.md equivalent   The new visual language.
+```
+
+**And bring the philosophy family whole** — [`MR-FRACTION-PHILOSOPHY.md`](MR-FRACTION-PHILOSOPHY.md) (§6b is the nine-step cold procedure), [`STRUCTURE-MAP.md`](STRUCTURE-MAP.md), [`SITE-THEMES.md`](SITE-THEMES.md). They are about the *family*, not this site, and the new project is the third data point they were written to be tested against.
 
 ## 3. Sequence, when it starts
 
