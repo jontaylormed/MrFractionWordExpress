@@ -264,6 +264,61 @@ Nine steps. The first four decide whether there is a site at all, and skipping t
 
 ---
 
+## 6c. Triangulation — what two outside frameworks changed
+
+**Added 2026-08-17.** The philosophy was compared against two external sources, deliberately as **peers rather than authorities**: the **CCSS Standards for Mathematical Practice** (MP1–8) and **the Proposed SAAS Math Standards 2026**, a competency-based grading proposal from the user's own department. The user's instruction was that the result stay *"unique and not necessarily anchored"* on either.
+
+**One framing correction came out of it and it matters more than any single adoption.** The tension that looked sharpest — SAAS is entirely a gradebook, and non-negotiable 7 forbids grades — **dissolves once the layers are named.** Mr Fraction is an *interactive, non-graded, supplemental* practice space on foundational principles. SAAS is *summative reporting*. They are not competing answers to one question. Both are trying to describe growth rather than rank a moment; they differ in where they sit, not in what they want. **State the layer whenever this comes up, because the disagreement is otherwise easy to manufacture.**
+
+### 6c.1 Where we improve — adopted
+
+**(a) Separate the structural judgement from the computational one.** *From SAAS's best idea: Communication grades clarity, not correctness — a student may reason precisely and still be wrong. Reinforced by SAAS scaling precision to the course, so a fraction slip counts against a PreCalculus student and not a Math 6 one.*
+
+Today the Engine Room marks an answer right or wrong. **A student who identified the right structure and slipped in arithmetic receives the same signal as one who chose the wrong structure entirely** — and those are opposite situations for a learner whose whole difficulty is structural. The misconception machinery already diagnoses *structural* errors; what is missing is the path that says *you had this right and the arithmetic got away from you.*
+
+**This is the highest-value change on the list and it is nearly free, precisely because nothing is graded.** There is no score to split — only a sentence to get right.
+
+**(b) Critique as a phase, not a warning.** *From MP3's missing half — "critique the reasoning of others" — and from SAAS's own reflection prompts, which already ask students to argue against their own solution and to name the mistakes others make.*
+
+The site currently **tells** students that keyword strategies fail. The Signal Failure is delivered as information. **Give them a fictional student's worked solution that followed a keyword rule, and ask what went wrong**, and the site's founding argument stops being a claim it makes and becomes an exercise the student performs. It needs no peers and no backend — which is the objection that would otherwise kill it.
+
+**(c) A positive account of the earned shortcut.** *From MP8 — "look both for general methods and for shortcuts."*
+
+The anti-keyword stance is easy to over-read as anti-shortcut, and the philosophy has never said otherwise out loud. The distinction it needs:
+
+> **A shortcut you derived is earned. A shortcut you were told is a keyword rule.** The problem was never brevity; it was borrowing a conclusion you cannot reconstruct.
+
+And the site could *teach* this rather than merely permitting it: after several problems sharing a structure, invite the student to state the pattern they have noticed. That is MP8 almost verbatim, and it is the GENERALISE verb showing up inside an existing site rather than needing a new one.
+
+**(d) Choice in the reflection.** *From SAAS's exit tickets, which offer a menu of prompts to raise buy-in.* Look Back currently asks fixed questions. Offering two or three is cheap and costs no rigour.
+
+### 6c.2 Where we differ — deliberately, and stated so it is a decision rather than an oversight
+
+**(a) Gates over strategic freedom.** MP5 wants students choosing tools and knowing each one's limits. **We remove choice on purpose** — schema step required, estimate required, no skipping. The justification is that freedom comes after structure and our audience does not yet have the structure. **That is a claim, not a fact**, and it belongs in 6c.3.
+
+**(b) Meaning over symbolic fluency — the most honest gap.** MP2 asks students to *decontextualise*: to manipulate symbols "as if they have a life of their own," suspending attention to what they refer to, and only then to contextualise back. **Our entire design fights that**, because grab-and-compute is the pathology we exist to interrupt. But grab-and-compute is the *pathological form of a legitimate skill*, and fluent symbol manipulation is half of what MP2 calls proficiency.
+
+**Mr Fraction does not build symbolic fluency and should say so.** As a supplement that is a scope decision and a defensible one. Undeclared, it looks like an oversight — and worse, it invites the site to be judged as a whole mathematics curriculum, which it is not.
+
+**(c) Single-player.** SAAS assesses group roles — Includer, Connector, Synthesizer, Questioner — and MP3 wants the reasoning *of others*. We have no peers and no backend. **Fictional critique (6c.1b) is a workaround, not a solution**, and the difference is worth admitting: judging an invented student's work is not the same as being answerable to a real one.
+
+**(d) One named audience, not all students.** Both external frameworks describe every learner. `PEDAGOGY.md` §0 names one: a grade 6–12 student who computes adequately and freezes at paragraphs. **That specificity is what generates our design consequences and what limits our reach.** Keep both halves of that sentence.
+
+### 6c.3 Claims we want to test
+
+Each is falsifiable, and each needs the teachers and students now beginning to use the site. **None can be settled from inside the project.**
+
+| # | claim | how it fails |
+|---|---|---|
+| **1** | **The metaphor is load-bearing, not decoration.** | Ask a student *"what is a line?"* A structural answer confirms it. **A colour answer means we have been charging them for scenery.** |
+| **2** | **The diagram is an instrument, not an illustration.** | Ask them to re-draw it a week later on blank paper. If they cannot, they did not acquire the structure — they watched us have it. |
+| **3** | **The unstaffed halt reads as trust, not abandonment.** | Two instruments already disagreed: the student pass read the words and found trust; the art pass looked at the screen and found ~600px of empty cream. **Students settle it.** |
+| **4** | **Structure-first produces transfer.** | The Terminus Hub is our only transfer assessment. Does identifying the schema first actually predict success there, or only success at identifying schemas? |
+| **5** | **Non-graded practice gets used voluntarily.** | Do students return without being assigned? A supplement nobody chooses is a supplement that does not exist. |
+| **6** | **The clarity/correctness split lands as encouragement.** | *New, created by 6c.1a.* Does *"your structure was right and the arithmetic slipped"* read as genuine progress — or as a consolation prize? **The adoption could backfire**, and only a student can say. |
+
+---
+
 ## 7. What would change my mind
 
 Stated so that this document can lose an argument.
