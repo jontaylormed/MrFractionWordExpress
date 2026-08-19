@@ -2133,12 +2133,24 @@
       '<ul class="choices" id="cqopts">' + opts + '</ul>' +
       '<div class="feedback" role="status" id="cqfb"></div>';
 
+    /* Counted here rather than in the handler's closure-free scope so a second
+       click cannot restart the count. Guarded on read because `tools/sweep.js`
+       drives stations with `{}` for metrics — an unguarded `.push` throws
+       INSIDE the listener, where it looks exactly like a phase that renders
+       nothing. That is a recorded trap on this project, not a hypothetical. */
+    var cqTries = 0;
+
     this.host().querySelector('#cqopts').addEventListener('click', function (e) {
       var b = e.target.closest('[data-cq]'); if (!b || b.disabled) return;
       var m = c.order[+b.getAttribute('data-cq')];
       var fb = self.host().querySelector('#cqfb');
+      cqTries++;
 
       if (m === c.subject) {
+        if (self.m && self.m.critiqueAttempts) {
+          self.m.critiqueAttempts.push(cqTries);
+          if (cqTries === 1) self.m.critiqueFirstTry++;
+        }
         b.setAttribute('data-result', 'right');
         var all = self.host().querySelectorAll('[data-cq]');
         for (var i = 0; i < all.length; i++) all[i].disabled = true;

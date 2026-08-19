@@ -17,6 +17,11 @@
   function newMetrics() {
     return { schemaFirstTry: 0, schemaAttempts: [], estimates: [], hints: [],
              misconceptions: [], selfChecks: 0, stationsDone: 0,
+             /* Critique of somebody else's working — same shape as the schema
+                pair above: a count of first-go successes and the attempt count
+                per stop, so the report can say "first go, n times out of m"
+                without ever holding a score. */
+             critiqueFirstTry: 0, critiqueAttempts: [],
              hubStrategyOk: null, hubSchemaFirstTry: null, hubCorrect: null,
              hubCarFirstTry: null };
   }
@@ -1075,6 +1080,22 @@
     if (m.selfChecks > 0) {
       lines.push(['✓', 'You caught ' + m.selfChecks + ' thing' + (m.selfChecks > 1 ? 's' : '') + ' at the arrivals board.',
         'Checking your own work against your own estimate is what stops small slips becoming wrong answers.']);
+    }
+
+    /* Sits beside the arrivals-board line on purpose: both are the same skill,
+       aimed once at your own working and once at somebody else's. Reported as
+       "first go, n out of m" rather than as a proportion, because everybody
+       reaches the right explanation eventually — the wrong options disable —
+       so a percentage would be a score of how fast, which is the one thing
+       this report does not do. */
+    var cq = m.critiqueAttempts || [];
+    if (cq.length) {
+      var cqf = m.critiqueFirstTry;
+      lines.push(['◎', 'You worked out what somebody else had done wrong, first go, ' +
+        cqf + ' time' + (cqf === 1 ? '' : 's') + ' out of ' + cq.length + '.',
+        cqf === cq.length
+          ? 'Finding the flaw in someone else&rsquo;s working is the same move as checking your own &mdash; and you did it cold every time.'
+          : 'Finding the flaw in someone else&rsquo;s working is the same move as checking your own. It is easier from the outside, which is why it is worth practising there.']);
     }
 
     var att = m.schemaAttempts;
