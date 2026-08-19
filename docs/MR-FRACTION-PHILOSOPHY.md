@@ -278,7 +278,11 @@ Today the Engine Room marks an answer right or wrong. **A student who identified
 
 **This is the highest-value change on the list and it is nearly free, precisely because nothing is graded.** There is no score to split — only a sentence to get right.
 
-**(b) Critique as a phase, not a warning.** *From MP3's missing half — "critique the reasoning of others" — and from SAAS's own reflection prompts, which already ask students to argue against their own solution and to name the mistakes others make.*
+**(b) Critique as a phase, not a warning. — BUILT 2026-08-17.** *From MP3's missing half — "critique the reasoning of others" — and from SAAS's own reflection prompts, which already ask students to argue against their own solution and to name the mistakes others make.*
+
+> **Shipped as the `critique` phase**, running after the Arrivals Board on all 37 problems. It **authors no new content**: every step already carries misconceptions with a wrong value and a written diagnosis, so the machinery simply runs backwards — the site normally diagnoses the student, and here the student diagnoses somebody else. All 148 materialisations had at least three misconceptions on their last step, so coverage was universal on day one rather than a handful someone got round to writing.
+>
+> **The thing to keep:** on `ch-water-tank` the value it draws is **640, which is 460 + 180** — the keyword-addition trap that problem was built around. **The founding argument stopped being a claim the site makes and became an exercise the student performs.** That is the general form to aim for whenever this philosophy says the site "teaches" something.
 
 The site currently **tells** students that keyword strategies fail. The Signal Failure is delivered as information. **Give them a fictional student's worked solution that followed a keyword rule, and ask what went wrong**, and the site's founding argument stops being a claim it makes and becomes an exercise the student performs. It needs no peers and no backend — which is the objection that would otherwise kill it.
 
