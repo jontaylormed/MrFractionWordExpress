@@ -197,7 +197,13 @@
         var phases = Stations.phaseChain(p).slice();
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
-        phases = phases.concat(['solve', 'check']);
+        /* `['solve', 'check']` used to be written literally here, which meant a
+           new post-solve screen was invisible to this sweep while rendering
+           perfectly well in the app — the same shape as the fade ladder being
+           written twice, which cost a whole run. `Stations.postSolve` is now the
+           one place the post-Engine-Room sequence is decided and this reads it,
+           so the critique phase was covered here the moment it existed. */
+        phases = phases.concat(['solve']).concat(Stations.postSolve(p));
         /* THE ARRIVALS BOARD HAS TWO FACES NOW, and this sweep could only ever
            see one of them. `phCheck` branches on `st.solvedWrong` and renders a
            different screen when a student brings an answer that is not right —

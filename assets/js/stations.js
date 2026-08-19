@@ -429,6 +429,96 @@
     return (i >= 0 && chain[i + 1]) ? chain[i + 1] : 'solve';
   }
 
+  /* ---------- THE SCREENS AFTER THE ENGINE ROOM ----------
+
+     `phaseChain` above is the pre-solve ladder and stops at the Engine Room.
+     What came after it was written as a literal `['solve', 'check']` in
+     `tools/sweep.js` and as a bare `go('check')` in three places here — which is
+     the same two-copies-of-one-rule shape that the fade ladder had before
+     `phaseChain` existed, and it meant a new post-solve screen would be
+     invisible to the sweep while looking perfectly fine on screen.
+
+     So the post-solve sequence is DERIVED here and both consumers read it. */
+  function postSolve(p) {
+    return critiqueOf(p) ? ['check', 'critique'] : ['check'];
+  }
+
+  /* ---------- CRITIQUE: the half of MP3 this site never had ----------
+
+     The Common Core practice standard is "construct viable arguments AND
+     CRITIQUE THE REASONING OF OTHERS." This site did the first — the student
+     commits to a schema, an estimate and a method, and defends none of them to
+     anybody. The second half had no home at all, and it was the one practice
+     with no counterpart anywhere in the philosophy (see
+     MR-FRACTION-PHILOSOPHY.md §6c.1b).
+
+     WHY IT MATTERS MORE HERE THAN THE GAP SUGGESTS. This site exists to refute
+     keyword strategies, and until now it did that by TELLING the student they
+     fail — the Signal Failure is delivered as information. Handing them somebody
+     else's wrong answer and asking what happened turns the founding argument
+     from a claim the site makes into an exercise the student performs.
+
+     NO NEW CONTENT IS AUTHORED, AND THAT IS THE DESIGN. Every step already
+     carries misconceptions with a wrong `response` and a written `diagnosis`.
+     Normally the site uses them to diagnose the student; here the student
+     diagnoses somebody else. The machinery runs backwards, which is why this
+     covers all 37 problems on the day it ships rather than the handful anyone
+     would have got round to authoring. Measured before building: all 148
+     materialisations carry at least three misconceptions on their last step, so
+     there is always a subject and at least two distractors, and no problem needs
+     an exemption.
+
+     IT RUNS AFTER THE ENGINE ROOM, WHICH IS NOT AN AESTHETIC CHOICE. Showing a
+     wrong answer to a student who has not yet solved would narrow the field for
+     them — CLAUDE.md rule 3, no answer reaching a student before it is asked.
+     After the Arrivals Board the answer is already theirs and nothing leaks. */
+  function critiqueOf(p) {
+    var steps = (p && p.engineRoom && p.engineRoom.steps) || [];
+    if (!steps.length) return null;
+    var last = steps[steps.length - 1];
+    var mis = (last.misconceptions || []).filter(function (m) {
+      return m && m.diagnosis && m.response !== undefined && m.response !== null;
+    });
+    // one to be the subject, and at least two to make the choice real
+    if (mis.length < 3) return null;
+    var salt = '|' + p.id + '|' + (p.numberSetIndex || 0);
+    /* Picked with one seed and DISPLAYED with another. Shuffling once and
+       taking [0] as the subject would have put the correct option first on
+       every problem on the site — which is this project's most-repeated
+       defect, shipped once on all six ratio tables after being written down
+       twice. Two salts, and the position is measured after the fact. */
+    var subject = shuffled(mis, seedFrom('critique-pick' + salt))[0];
+    var order   = shuffled(mis, seedFrom('critique-order' + salt));
+    return { subject: subject, order: order, unit: (last.answer && last.answer.unit) || '' };
+  }
+
+  /* Turn authored feedback into a description of somebody else.
+
+     76.9% of the 520 last-step diagnoses are written in the second person —
+     "You divided 12 by 3" — because they were written to be said TO the
+     student. Read back as options about another passenger they would accuse
+     the reader instead.
+
+     THE TRANSFORM IS SAFE FOR A REASON WORTH KNOWING, not by luck: English
+     second-person and third-person-plural take the same verb form. You divide /
+     they divide, you have / they have, and even you ARE / they ARE. So `you` ->
+     `they` never leaves a verb disagreeing. The possessives and contractions go
+     first because "your" contains "you". */
+  function thirdPerson(s) {
+    var out = String(s);
+    [[/\byourselves\b/g, 'themselves'], [/\bYourselves\b/g, 'Themselves'],
+     [/\byourself\b/g, 'themselves'],   [/\bYourself\b/g, 'Themselves'],
+     [/\byours\b/g, 'theirs'],          [/\bYours\b/g, 'Theirs'],
+     [/\byou(['’])re\b/g, 'they$1re'],  [/\bYou(['’])re\b/g, 'They$1re'],
+     [/\byou(['’])ve\b/g, 'they$1ve'],  [/\bYou(['’])ve\b/g, 'They$1ve'],
+     [/\byou(['’])ll\b/g, 'they$1ll'],  [/\bYou(['’])ll\b/g, 'They$1ll'],
+     [/\byou(['’])d\b/g, 'they$1d'],    [/\bYou(['’])d\b/g, 'They$1d'],
+     [/\byour\b/g, 'their'],            [/\bYour\b/g, 'Their'],
+     [/\byou\b/g, 'they'],              [/\bYou\b/g, 'They']
+    ].forEach(function (r) { out = out.replace(r[0], r[1]); });
+    return out;
+  }
+
   function focusFeedback(node) {
     if (!node) return;
     node.setAttribute('tabindex', '-1');
@@ -687,7 +777,8 @@
       crossover: this.phCrossover,
       read2: this.phRead2, read3: this.phRead3,
       ticket: this.phTicket, plan: this.phPlan, demo: this.phDemo,
-      solve: this.phSolve, check: this.phCheck
+      solve: this.phSolve, check: this.phCheck,
+      critique: this.phCritique
     }[this.phase];
     if (f) f.call(this);
     var h = this.host();
@@ -2017,6 +2108,65 @@
     });
   };
 
+  /* ---------- Phase 5: Critique — somebody else's working ---------- */
+
+  Station.prototype.phCritique = function () {
+    var self = this, c = critiqueOf(this.p);
+    if (!c) { this.onComplete(); return; }          // never strand the ride
+
+    var unit = c.unit ? ' ' + c.unit : '';
+    var opts = c.order.map(function (m, i) {
+      var text = thirdPerson(m.diagnosis);
+      return '<li><button class="choice" type="button" data-cq="' + i + '" aria-label="' + esc(text) + '">' +
+        '<span class="marker" aria-hidden="true">&#9723;</span>' +
+        '<span>' + esc(text) + '</span></button></li>';
+    }).join('');
+
+    this.host().innerHTML =
+      MrFraction.aside('thinking',
+        '<p><strong>One last thing before you go.</strong> Reading somebody else&rsquo;s working is the ' +
+        'same skill as checking your own &mdash; it is just easier to see from the outside.</p>') +
+      this.problemHTML(false) +
+      '<h3>Another passenger answered ' + esc(String(c.subject.response)) + esc(unit) + '</h3>' +
+      '<p class="hint-text">They were working on this same question. Every one of these is a real mistake ' +
+      'somebody makes here &mdash; which one would land them on that number?</p>' +
+      '<ul class="choices" id="cqopts">' + opts + '</ul>' +
+      '<div class="feedback" role="status" id="cqfb"></div>';
+
+    this.host().querySelector('#cqopts').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-cq]'); if (!b || b.disabled) return;
+      var m = c.order[+b.getAttribute('data-cq')];
+      var fb = self.host().querySelector('#cqfb');
+
+      if (m === c.subject) {
+        b.setAttribute('data-result', 'right');
+        var all = self.host().querySelectorAll('[data-cq]');
+        for (var i = 0; i < all.length; i++) all[i].disabled = true;
+        fb.innerHTML = msg('go', '✓',
+          '<strong>That&rsquo;s the one.</strong> Working out what somebody else did wrong is the ' +
+          'same move as checking your own answer &mdash; you are asking what a number would have to ' +
+          'mean for that working to be right.') +
+          '<div class="btn-row"><button class="btn" id="cqgo" type="button">Finish this stop →</button></div>';
+        self.host().querySelector('#cqgo').addEventListener('click', function () {
+          self.m.stationsDone++;
+          self.onComplete();
+        });
+        A11y.announce('That is the one.');
+      } else {
+        /* The wrong-answer reply names the number THAT explanation produces.
+           It is true, it is already on the manifest, and it means an
+           elimination guess still teaches something on the way past. */
+        b.setAttribute('data-result', 'wrong');
+        b.disabled = true;
+        fb.innerHTML = msg('stop', '→',
+          '<strong>Not that one.</strong> That mistake is real, but it would have landed them on ' +
+          esc(String(m.response)) + esc(unit) + ' instead.');
+        A11y.announce('Not that one.');
+      }
+      focusFeedback(fb);
+    });
+  };
+
   /* ---------- Phase 4b: Arrivals Board (Look Back) ---------- */
 
   /* ---------- The Arrivals Board, arrived at UNSURE ----------
@@ -2244,6 +2394,12 @@
        have acquired a listener — a dead end at the end of the ride, on the
        stop built for the student least likely to ask for help. */
     this.host().querySelector('#donebtn').addEventListener('click', function () {
+      /* The Arrivals Board is no longer always the last screen. Where there is
+         material for it, the critique runs after Look Back and owns the exit —
+         including `stationsDone`, which must be incremented exactly once and is
+         therefore incremented in whichever screen actually finishes the stop.
+         `postSolve` is the one place that decides which that is. */
+      if (postSolve(self.p).indexOf('critique') >= 0) { self.go('critique'); return; }
       self.m.stationsDone++;
       self.onComplete();
     });
@@ -2329,5 +2485,9 @@
                       /* Exported so `tools/sweep.js` renders the phases a
                          student can actually reach rather than keeping its own
                          copy of the fork. See `phaseChain`. */
-                      phaseChain: phaseChain, phaseAfter: phaseAfter };
+                      phaseChain: phaseChain, phaseAfter: phaseAfter,
+                      /* Exported so `tools/sweep.js` reads the post-solve
+                         sequence rather than keeping its own copy of it. */
+                      postSolve: postSolve, critiqueOf: critiqueOf,
+                      thirdPerson: thirdPerson };
 })(window);
