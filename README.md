@@ -12,7 +12,7 @@ An interactive site that teaches students how to **start** a maths word problem 
 
 Students who struggle with word problems usually are not bad at arithmetic. They are stuck earlier — at understanding what the story says, representing it, and knowing whether their answer makes sense. So the site spends nearly all its effort *before* the arithmetic starts.
 
-A **trip** is a run of stations along one line. Each station teaches a different strategy, and each problem is worked through up to nine screens:
+A **trip** is a run of stations along one line. Each station teaches a different strategy, and each problem is worked through up to ten screens:
 
 | Screen | What the student does |
 |---|---|
@@ -23,8 +23,9 @@ A **trip** is a run of stations along one line. Each station teaches a different
 | **Ticket Booth** | Works out which piece of the problem is missing |
 | **Plan** | Builds a picture of the relationship — a bar, a ratio table, a train, a tray, a number line |
 | **Test Track** | Watches the strategy demonstrated on different numbers, then answers two questions about their own — on 24 of the 37 |
-| **Engine Room** | Does the arithmetic, one step at a time, with a hint ladder |
+| **Engine Room** | Does the arithmetic, one step at a time, with a hint ladder. A near miss is told apart from a wrong turn: land close and it says the plan is probably right and the working slipped, and points at the calculation rather than back at the plan |
 | **Arrivals Board** | Checks the answer against their own estimate, the question, the units and common sense |
+| **Critique** | Reads somebody else's wrong answer and works out which mistake produced it — the student diagnosing, instead of being diagnosed |
 
 Every trip ends at a **Terminus Hub**: one fresh problem with no scaffolding at all, where the student chooses their own approach and says why.
 
