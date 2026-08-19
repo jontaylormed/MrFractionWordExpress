@@ -1970,6 +1970,14 @@
         self.host().querySelector('#shint').disabled = true;
         A11y.announce('Correct.');
       } else {
+        /* EVERY BRANCH BELOW SETS ITS OWN ANNOUNCEMENT, and that is a fix as
+           well as a convenience. There used to be a single
+           `A11y.announce('Not correct. Feedback shown.')` after the chain, which
+           meant a screen-reader user who mistyped was told their MATHS was wrong
+           when it was their TYPING (Cycle 30, finding C-6) — and it would have
+           silently overridden the near-miss message below. What is announced now
+           matches what is on screen in every case. */
+        var say = 'Not correct. Feedback shown.';
         var mis = MF.matchMisconception(raw, step.misconceptions);
         if (mis) {
           self.m.misconceptions.push(mis.tag);
@@ -1977,15 +1985,34 @@
         } else if (res.reason === 'scale') {
           fb.innerHTML = msg('caution', '→',
             'You&rsquo;ve got the right digits but the wrong scale &mdash; check whether you want a percent or a decimal.');
+          say = 'Right digits, wrong scale.';
+        } else if (res.reason === 'near') {
+          /* THE ONE MESSAGE ON THIS SCREEN THAT SENDS A STUDENT SOMEWHERE OTHER
+             THAN BACK TO THE PLAN. See `checkAnswer` for why the reason exists.
+
+             The wording is careful on purpose and should stay careful. It does
+             NOT say "your structure was right" — nothing here knows that, and a
+             false reassurance is worse for this audience than the neutral
+             message this replaced. It says the number is close, that this
+             USUALLY means the arithmetic rather than the plan, and it names
+             which of the two to go back over. That last part is the whole value:
+             every other branch points at the plan, and this one points at the
+             calculation. `caution` rather than `stop` for the same reason. */
+          fb.innerHTML = msg('caution', '→',
+            '<strong>That&rsquo;s close.</strong> Near enough that the plan is probably right and ' +
+            'something slipped in the working. Go back over the calculation rather than the ' +
+            'plan &mdash; and there&rsquo;s a hint if you want one.');
+          say = 'Close. Check the calculation rather than the plan.';
         } else if (res.reason === 'unparsed') {
           fb.innerHTML = msg('caution', '!', 'I couldn&rsquo;t read that as a number. Try something like 12, 3/4, 0.75 or 75%.');
+          say = 'I could not read that as a number.';
         } else {
           fb.innerHTML = msg('stop', '→',
             'Not this time. Look back at what this step is asking for &mdash; and there&rsquo;s a hint if you want one.');
         }
         wrongTries++;
         offerBoard();
-        A11y.announce('Not correct. Feedback shown.');
+        A11y.announce(say);
       }
     });
   };

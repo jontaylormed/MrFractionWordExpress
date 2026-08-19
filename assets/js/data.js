@@ -349,6 +349,40 @@
       if (Math.abs(got / 100 - want) < 1e-9 || Math.abs(got * 100 - want) < 1e-9) {
         return { ok: false, reason: 'scale', got: got };
       }
+
+      /* NEAR: the answer landed in the target's neighbourhood, which usually
+         means the plan was sound and the arithmetic slipped.
+
+         WHY THIS EXISTS. Every wrong answer used to collapse into one message —
+         "Not this time. Look back at what this step is asking for." So a student
+         who chose the right structure and fumbled a digit was told to re-examine
+         their PLAN, which is the one thing that was not wrong, while a student
+         who had genuinely misread the situation got the same sentence. For an
+         audience whose whole difficulty is structural (PEDAGOGY §0) those are
+         opposite situations and they were indistinguishable on screen.
+
+         Adopted from the SAAS competency proposal, whose best idea is that
+         communication is graded for CLARITY and not for CORRECTNESS — a student
+         may reason precisely and still be wrong. `reason: 'scale'` directly above
+         is the same move made once, for percent-versus-decimal; this generalises
+         it. Nothing is graded here, so the whole cost of the distinction is
+         getting one sentence right.
+
+         THE THRESHOLD IS DELIBERATELY CONSERVATIVE AND FAILS SILENT. 10% of the
+         target, relative — so for a small answer it simply never fires, because
+         5-against-4 is genuinely ambiguous and a false "you had the right idea"
+         is worse than the neutral message it replaced. It is relative rather
+         than absolute so that it means the same thing at 12 and at 4,600, and a
+         fraction answer of 3/4 is not told that 1.7 is close.
+
+         ORDER MATTERS AND THE CALLER OWNS IT. `matchMisconception` is consulted
+         BEFORE this reason is read (stations.js), so a value that is both near
+         and a named wrong turn is reported as the wrong turn. A diagnosed
+         structural error must never be excused as a slip. */
+      if (want !== 0 && Math.abs(got - want) <= Math.abs(want) * 0.10) {
+        return { ok: false, reason: 'near', got: got };
+      }
+
       return { ok: false, reason: 'wrong', got: got };
     }
 
