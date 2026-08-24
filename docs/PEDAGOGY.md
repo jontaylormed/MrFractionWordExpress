@@ -28,7 +28,19 @@ These are the approaches this site implements, and why each was chosen.
 
 Struggling students treat every word problem as a brand-new, unique puzzle. Strong students recognize a small number of recurring *structures*. SBI explicitly teaches those structures.
 
-SBI has among the strongest effect sizes in the word-problem intervention literature, and it works particularly well for students with learning disabilities. It is the single highest-leverage thing on this site.
+SBI is a well-established approach in the word-problem intervention literature, developed and studied for students who struggle with word problems specifically — including students with learning disabilities, which is the population §0 describes. **It is the single highest-leverage thing on this site**, and that is a statement about our design priorities, which we can stand behind.
+
+> ### ⚠ AN UNSOURCED CLAIM WAS REMOVED FROM THIS PARAGRAPH ON 2026-08-24 — do not put it back from memory
+>
+> It read: *"SBI has among the strongest effect sizes in the word-problem intervention literature, and it works particularly well for students with learning disabilities."*
+>
+> **That is a quantitative comparative claim about a research field, and it carried no citation.** Nobody on this project has read the meta-analyses it summarises. It may well be true — it is the sort of thing that is said about SBI — but *"the sort of thing that is said"* is exactly what `VERIFICATION.md` §1 forbids: **no claim without the number, and the number has to come from somewhere.**
+>
+> It mattered more than an ordinary bit of doc rot because this document is the pedagogical justification for the whole site, and the claim is the load-bearing sentence in it. It has also now travelled — the README credits SBI publicly, and this project's author is a teacher who may put these materials in front of a department.
+>
+> **To restore it, cite it.** Name the meta-analysis or study, give the effect size it actually reports, and say what it was measured against. A sourced version of this sentence would strengthen the document; the unsourced one was borrowed authority.
+>
+> **What survives without a source**, and is kept above: that SBI exists, that it targets this population, and that we chose it. Those are descriptions and a design decision, not findings.
 
 **Implementation:** each schema is a **train line**. Classifying a problem = choosing which line you're riding. This is a required, explicit, assessed step — not an optional aside.
 

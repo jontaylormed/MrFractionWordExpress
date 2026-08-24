@@ -66,7 +66,7 @@ The five structures themselves come from two older strands of that literature:
 - **The schema is a place, not a label.** You ride a line and choose it at a gate you cannot skip, because a taxonomy students can recite is not the same as one they can use.
 - **Percent is a route across four lines**, not a sixth structure — a notation can sit on top of any situation.
 
-> A caveat, stated because this README is public: the lineage above is accurate to the best of our knowledge but is **not a citation list**, and the effect-size claim in [`docs/PEDAGOGY.md`](docs/PEDAGOGY.md) §1.1 carries no source. Anyone using this in a professional setting should go to the primary literature rather than to us.
+> A caveat, stated because this README is public: the lineage above is **not a citation list**. It names the traditions this site drew on, not the papers. **We do not make quantitative claims about how well SBI works** — an unsourced effect-size assertion was removed from [`docs/PEDAGOGY.md`](docs/PEDAGOGY.md) §1.1 on 2026-08-24 for exactly that reason, and the note left in its place explains what it would take to restore it. Anyone using this in a professional setting should go to the primary literature rather than to us.
 
 ### What the five do not cover
 
