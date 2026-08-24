@@ -5,34 +5,51 @@
    fade is the point of it rather than a property of the story. At
    `fadeLevel: "independent"` the engine gives this problem:
 
-     - NO Crossover Read. `phRead1` sends it straight to the second read, so
-       nothing walks the student to the seam. They have just run the checklist
-       on the first screen, which is the one aid an unstaffed halt keeps, and
-       finding where the story changes is now their own job.
-     - NO Plan picture. No crossover slot, no two-model diagram, no first-half
-       model — the Plan phase fades to the estimate alone. `data.js` refuses a
-       first-half model block here, because leaving one behind would let
-       ChangeModel claim the problem and draw half of it while reporting
-       success.
+   ⚠ CORRECTED 2026-08-17. THE RULING BELOW WAS REVERSED AND THIS FILE KEPT
+   DESCRIBING THE LOSING SIDE OF IT. What follows is what the engine actually
+   does, then the argument that was had, kept because §31 says deleting the
+   reasoning along with the outdated fact is how a settled question gets
+   re-litigated.
 
-   THE THREE READS STAY, AND THAT IS A RULING RATHER THAN AN OVERSIGHT.
-   `CHALLENGE-MODE.md` §4 originally said a halt drops "the guided Three Reads,
-   the Plan model and the Test Track". It drops the last two. The user ruled on
-   2026-08-16, with this problem built so the choice could be looked at instead
-   of imagined: `read1` is the checklist and is the aid a halt keeps by
-   definition, and `read3` is where the student identifies the question — on an
-   island whose entire trap is answering the wrong one, cutting that would
-   remove the last thing standing between a student and handing in the
-   transfer. Problem 5 inherits this; do not re-open it.
+   `Stations.phaseChain` IS THE ANSWER, AND IT IS FOUR WORDS LONG:
 
-   WHAT DOES NOT FADE, and this is not a style choice either: the ESTIMATE and
-   the HINT LADDER. `HANDOFF` §H-2 records that Look Back on a wrong answer is only
-   safe because every step's ladder ends by stating that step's answer,
-   re-measured across 164 steps. Strip the ladder here and that guarantee
-   breaks for the whole site, not just this stop. The estimate stays for the
-   same reason, and because it is the only thing that catches an answer of the
-   wrong SIZE — which on a two-line problem is the exact shape of stopping
-   halfway. An unstaffed halt removes support. It does not remove the floor.
+       if (p.fadeLevel === 'independent') return ['read1'];
+
+   So an unstaffed halt runs **read 1, then the Engine Room, then the Arrivals
+   Board, then the critique.** No Crossover Read. No second or third read. No
+   Ticket Booth. No Plan phase. **NO ESTIMATE.** The hint ladder is the only aid
+   that survives, and the checklist on `read1` is the only screen before the
+   arithmetic. If this comment and `phaseChain` ever disagree again, the code is
+   right — that is the standing rule and this file is why it exists.
+
+   THE ARGUMENT THAT WAS HAD, and it went the other way twice on 2026-08-16.
+   `CHALLENGE-MODE.md` §4 first said a halt drops "the guided Three Reads, the
+   Plan model and the Test Track". This file then argued the Three Reads and the
+   estimate should STAY — `read1` is the checklist and the aid a halt keeps by
+   definition; `read3` is where the student identifies the question, and on an
+   island whose whole trap is answering the wrong one, cutting it removes the
+   last thing between a student and handing in the transfer. The estimate was
+   argued for as the only thing that catches an answer of the wrong SIZE, which
+   on a two-line problem is the exact shape of stopping halfway.
+
+   **The user ruled against that**, and the ruling is the code above: a halt is
+   the checklist and then the calculation. The counter-argument is worth knowing
+   before anyone re-opens it — a halt that keeps the reads and the estimate is
+   not much of a halt, and the point of the stop is to find out whether the
+   student can hold the structure without being walked through it.
+
+   WHAT THE REVERSAL COST, recorded because it is a real consequence and not a
+   footnote. `m.selfChecks` — the trip report's "You caught N things at the
+   arrivals board" — increments only from an estimate-versus-answer comparison,
+   so it is **structurally unable to fire at a halt**. The site's headline
+   self-monitoring metric cannot be earned on the two stops chosen by the
+   student who wanted the hardest route. That is Cycle 30's MAJOR 1b and it is
+   still open. This problem's authored `estimate` block is likewise unreachable
+   here and is kept only because the sweep and the validator still read it.
+
+   `data.js` refuses a first-half model block on a halt, because leaving one
+   behind would let ChangeModel claim the problem and draw half of it while
+   reporting success.
 
    THE PAIR IS CHOSEN FOR THE FADE. Change → Compare is the most familiar pair
    on the island: both halves are the two lines a student meets first, and both

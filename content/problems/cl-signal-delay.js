@@ -35,12 +35,21 @@
      - No `testTrack`. The Test Track kinds are `section`/`cross`/`drive`/
        `compare`, all of them single-situation. A Challenge demo has to
        demonstrate the CROSSOVER, which is a new kind and is not written.
-     - The Plan phase draws the Compare model only. The two-model plan with the
-       transfer slot between them is `CHALLENGE-MODE.md` §6.1 and is the
-       largest remaining piece of engine work. What renders today is honest as
-       far as it goes: it is the first half's picture.
-     - No Crossover Read. The five passes are §3 of that document. This problem
-       runs through the ordinary Three Reads until they exist.
+     - ⚠ BOTH OF THE FOLLOWING WERE BUILT. Corrected 2026-08-17; the list
+       described them as outstanding long after they shipped, which is a
+       different rot from a reversed ruling — **completed work still written up
+       as future work.** Verified against the running engine: this problem's
+       chain is `read1 -> crossover -> read2 -> read3 -> ticket -> plan`, and
+       `PairModel.applies()` returns true for it.
+     - The Plan phase draws BOTH models. `pair-model.js` renders the first
+       half's picture, a crossover slot naming what passes between them, and a
+       second picture drawn *waiting* — because on a two-line problem nothing in
+       the second half can be known until the transfer exists. This was
+       `CHALLENGE-MODE.md` §6.1 and was called the largest remaining piece of
+       engine work; it is done.
+     - The Crossover Read runs. It REPLACES the Platform Check on a paired
+       problem — find the seam, then run the same five-question checklist on
+       each half. This problem does not fall back to the ordinary Three Reads.
 
    THE ARITHMETIC, RE-DERIVED PER SET AND CHECKED BOTH WAYS.
    The express reaches Kelder first and carries on up the line; the question is

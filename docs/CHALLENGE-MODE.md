@@ -16,7 +16,9 @@
 > | **The Lighthouse** | A fifth Learning Hub, seven pages, on both maps. |
 > | **The art** | `challenge-scenes.js` — seven scenes, neutral ink, subjects drawn uncountable. |
 >
-> **The fade is settled and is driven by `fadeLevel: "independent"`**, which marks the two unstaffed halts. It removes the Crossover Read and the Plan picture. The Three Reads, the estimate and the hint ladder all stay — see §4.
+> **The fade is settled and is driven by `fadeLevel: "independent"`**, which marks the two unstaffed halts. **A halt runs the checklist and then the calculation: `read1`, the Engine Room, the Arrivals Board, the critique.** No Crossover Read, no second or third read, no Ticket Booth, no Plan picture, **no estimate**. Only the hint ladder survives — see §4.
+>
+> ⚠ **This line said the opposite until 2026-08-17**, as did four others in this file, while §4's own table and prose said the correct thing. The ruling reversed on 2026-08-16 and the document was updated in some places and not others. **`Stations.phaseChain` is the answer and it is four words long: `if (p.fadeLevel === 'independent') return ['read1'];`** Where this file and that function disagree, the function is right.
 >
 > ### The three rules a new session must know before touching any of it
 >
@@ -34,7 +36,7 @@
 |---|---|
 | **No scoring, no gating** | User, 2026-08-08. Five problems always available. Nothing locked, nothing lost on reload. |
 | **Open island — any stop, any order** | User, 2026-08-15. There is no route menu here and no fixed sequence. The map is the route screen. |
-| **Estimate and hint ladder survive everywhere** | User, 2026-08-15. Including the unaided stops. See §5 for why this is not negotiable. |
+| ~~**Estimate and hint ladder survive everywhere**~~ **HALF REVERSED, 2026-08-16** | User, 2026-08-15, then revised after riding it. **The hint ladder survives everywhere, including the unaided stops** — §5, and it is not negotiable because Look Back on a wrong answer depends on it. **The estimate does not survive a halt.** A halt is the checklist and then the calculation. |
 | **Plan draws two models with a transfer slot between them** | User, 2026-08-15. §6.1. |
 | **A new reading protocol, using the SAME checklist** | User, 2026-08-15: *"a new type of reading strategy… use the checklist correctly to identify two different strategies. We may need more than three Guided Reads. But it needs to be different and use the same checklist."* This is §3, and it is the heart of the build. |
 
@@ -136,7 +138,7 @@ Open island, so these are not a sequence — they are five stops whose support d
 | **1** | Staffed | **Both lines named**, in order | Find the crossover and the transfer only. Learns what a two-line problem *is*. |
 | **2** | Staffed | **First line named** | Names the second, finds the crossover and the transfer. |
 | **3** | Staffed | **Nothing named** | Full Crossover Read with `stacked` live. Names both lines, their order, and the transfer. |
-| **4** | Unstaffed halt | Checklist available | The whole thing. Estimate and hint ladder stay. |
+| **4** | Unstaffed halt | Checklist available | The whole thing. **Hint ladder stays; the estimate does not.** |
 | **5** | Unstaffed halt | Checklist available | The whole thing, different pair. |
 
 **One thing fades per stop.** Three stops, three removals — the same discipline as the existing `fadeLevel`, which every problem on the site already carries.
@@ -165,12 +167,13 @@ An earlier draft of this section said a halt drops *"the guided Three Reads, the
 | | |
 |---|---|
 | **Gone** | The Crossover Read — nobody walks the student to the seam. `phRead1` forks three ways and sends a paired problem at `fadeLevel: "independent"` straight to the second read. |
-| **Gone** | The Plan picture — no crossover slot, no two-model diagram, no first-half model. The Plan phase fades to the estimate alone. |
+| **Gone** | The Plan picture — no crossover slot, no two-model diagram, no first-half model. **And the Plan phase itself is gone, not faded to the estimate**: `phaseChain` returns `['read1']`, so nothing between the checklist and the Engine Room renders at all. |
 | **Gone** | The Test Track, which no island problem has anyway. |
-| ~~**Stays**~~ **GONE — reversed 2026-08-16** | ~~**The Three Reads.**~~ `read1`, the checklist, is still the aid a halt keeps. **`read2`, `read3` and the Ticket Booth now go too**, on the user's ruling after riding it: *"they should be able to go to an unstaffed station, receive the checklist, and then be asked to calculate without any guidance."* A halt runs **checklist → estimate → Engine Room** and nothing else. |
+| ~~**Stays**~~ **GONE — reversed 2026-08-16** | ~~**The Three Reads.**~~ `read1`, the checklist, is still the aid a halt keeps. **`read2`, `read3` and the Ticket Booth now go too**, on the user's ruling after riding it: *"they should be able to go to an unstaffed station, receive the checklist, and then be asked to calculate without any guidance."* A halt runs **checklist → Engine Room** and nothing else. |
 | **The argument that lost, kept because it was a good one** | `read3` is where a student names the question, and this island's trap is answering the wrong one — stopping at the transfer, a correct number for a question nobody asked. Cutting it removes the last screen between a student and exactly that. **What beat it:** a halt that still walks you through two reads and the Ticket Booth is not an unaided stop, it is a staffed one with less commentary. If *no assistance* is to mean anything, this is where it has to mean it. |
-| **Stays** | **The estimate**, and this is not a preference. `plan` is where the checklist now leads, because `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe while every step's hint ladder ends by stating that step's answer — and the estimate is what Look Back compares against. It is also the only thing that catches an answer of the wrong SIZE, which on a two-line problem is the exact shape of the stopping-at-the-transfer error. Its coaching line (*"One way to think about it…"*) is suppressed at a halt; the estimate itself is still required. |
-| **Stays** | The hint ladder, for the reason below, which is not a preference. **The estimate no longer does** — see the ladder table above. |
+| ~~**Stays**~~ **GONE — reversed 2026-08-16, with the row that said otherwise kept below it for a whole day** | ~~**The estimate.**~~ The argument for keeping it was that Look Back compares against it, and that it is the only thing catching an answer of the wrong SIZE — which on a two-line problem is exactly the shape of stopping at the transfer. **What beat it:** the same thing that beat the Three Reads. A stop that still asks for an estimate is a staffed stop with less commentary. |
+| **Stays** | **The hint ladder, and it is the only thing that does.** Not a preference — see §5. |
+| ⚠ **What the reversal cost, and it is still open** | `m.selfChecks` — the trip report's *"You caught N things at the arrivals board"* — increments only from an estimate-versus-answer comparison, so it **cannot fire at a halt**. The site's headline self-monitoring metric is unearnable on the two stops chosen by the student who wanted the hardest route. Cycle 30 MAJOR 1b. Instrumenting the halt's existing *"did you answer the question asked?"* would close it and reverses nothing. |
 
 ### How to write the next ruling so it survives — the convention this file now follows
 
@@ -182,7 +185,9 @@ The question that produced this section was *"how do we improve the .md's inhere
 
 **The engine enforces the two removals as a matched pair.** Dropping the crossover block is what fades the Plan phase — but a first-half model left behind would be claimed by `CompareModel` or the Model Yard, drawing half the problem and reporting success. `data.js` therefore refuses a paired problem at `independent` that carries *either* a crossover block or any first-half model, and refuses one at any other fade level that lacks a crossover block.
 
-**The floor never fades, and this is not a style preference.** `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe because **every step's hint ladder ends by stating that step's answer** — re-measured at 30 problems, 164 steps. Strip the ladder at the unstaffed halts and that guarantee breaks for the whole site, not just this island. The estimate stays for the same reason: it is what Look Back compares against, and it is the only thing that catches an answer of the wrong *size* — which on a two-line problem is the exact shape of the stopping-at-the-transfer error.
+**The floor never fades, and this is not a style preference.** `HANDOFF.md` §H-2 records that Look Back on a wrong answer is only safe because **every step's hint ladder ends by stating that step's answer** — re-measured at 30 problems, 164 steps. Strip the ladder at the unstaffed halts and that guarantee breaks for the whole site, not just this island. **That re-measurement is also out of date and the number is now 55 steps across 37 problems, 55/55 clean — the recorded "164" turned out to be a count of *rungs* at 30 problems, not steps** (Cycle 30).
+
+**The estimate does NOT stay, and this sentence used to say it did.** It was argued for on the same grounds — Look Back compares against it, and it is the only thing catching an answer of the wrong *size*, which on a two-line problem is exactly the shape of stopping at the transfer. That argument lost on 2026-08-16. The floor at a halt is the hint ladder alone.
 
 **The checklist at an unstaffed halt is the existing five-situations hub content, rendered as a pull-out.** Not a second copy. A second copy is how two documents drift, and this project has a file of examples.
 

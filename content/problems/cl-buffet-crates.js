@@ -1,11 +1,17 @@
 /* CROSSOVER ISLAND · problem 5 · RATIO → PART–WHOLE · the second unstaffed halt
    Marsh Halt, and the stop that closes the circuit. `CHALLENGE-MODE.md` §5.2.
 
-   THE FADE IS PROBLEM 4'S, INHERITED WHOLE, and settled: at
-   `fadeLevel: "independent"` there is no Crossover Read and no Plan picture,
-   and the Three Reads, the estimate and the hint ladder all stay. That was
-   ruled on 2026-08-16 with `cl-lost-umbrellas` built so the choice could be
-   looked at rather than imagined. Do not re-open it here.
+   ⚠ THE FADE IS PROBLEM 4'S, INHERITED WHOLE — AND THIS PARAGRAPH DESCRIBED
+   THE LOSING SIDE OF THAT RULING UNTIL 2026-08-17. It used to say the Three
+   Reads, the estimate and the hint ladder all stay. **Only the hint ladder
+   stays.** `Stations.phaseChain` returns `['read1']` for an independent halt,
+   so this stop is: the checklist, then the Engine Room, then the Arrivals
+   Board, then the critique. No reads, no Ticket Booth, no Plan, no estimate.
+
+   The argument on both sides is in `cl-lost-umbrellas`, which is where the
+   ruling was made. Read the losing one before re-opening it — and note that
+   this problem's authored `estimate` block is unreachable here for the same
+   reason. If this comment and `phaseChain` disagree, the code is right.
 
    WHAT IS NEW IS THE FIRST HALF. Every island problem so far opens with a
    single move — a subtraction, or a day's worth of arrivals and departures.

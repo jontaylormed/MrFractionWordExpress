@@ -596,7 +596,12 @@
         var unstaffed = p.fadeLevel === 'independent';
         if (unstaffed) {
           if (xo)
-            err.push('a paired problem at fadeLevel "independent" is an unstaffed halt and must NOT carry signalBox.crossover — the Plan phase fades to the estimate there');
+            /* Wording corrected 2026-08-17: this said "the Plan phase fades to
+               the estimate there", which was the pre-reversal ruling. There is
+               no Plan phase and no estimate at a halt — `phaseChain` returns
+               `['read1']`, so nothing renders between the checklist and the
+               Engine Room. */
+            err.push('a paired problem at fadeLevel "independent" is an unstaffed halt and must NOT carry signalBox.crossover — the Plan phase does not render there at all');
           ['compareBars', 'barModel', 'ratioTable', 'ratioTables', 'changeTrain'].forEach(function (k) {
             if ((p.signalBox || {})[k])
               err.push('a paired problem at fadeLevel "independent" must not carry signalBox.' + k +
