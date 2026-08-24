@@ -33,7 +33,7 @@ On [Crossover Island](#crossover-island) the Platform Check is replaced by the *
 
 ## The five lines
 
-Nearly every word problem in grades 6–12 is one of five structures. Recognising which one you are looking at is the highest-leverage skill on the site.
+**Most** word problems in grades 6–12 are one of five structures. Recognising which one you are looking at is the highest-leverage skill on the site — and knowing when a problem is *none* of them is part of the same skill. See [what the five do not cover](#what-the-five-do-not-cover).
 
 | Line | Structure | Covers |
 |---|---|---|
@@ -46,6 +46,41 @@ Nearly every word problem in grades 6–12 is one of five structures. Recognisin
 **37 problems, four number sets each** — 148 materialisations in all, so meeting the same problem twice gives different numbers.
 
 The unifying metaphor: **a word problem is a train with a missing car.** Same line, same structure — but *which* car is missing is what makes it easy or hard. That is how the site scales from grade 6 to grade 12 without changing framework, and how algebra can arrive later as "the missing car finally gets a name" rather than as a new subject.
+
+### Where the five come from
+
+**They are not this project's invention.** They are the standard taxonomy from word-problem research, and the site is an implementation of it rather than a proposal.
+
+The approach is **Schema-Based Instruction** — teach the recurring *structure* of a problem rather than its surface features, and make classifying it an explicit, taught, assessed step. SBI is associated above all with **Asha Jitendra's** research programme, which developed and tested it specifically for students who struggle with word problems, including students with learning disabilities. That is the population this site is built for, and SBI is the single largest influence on its design.
+
+The five structures themselves come from two older strands of that literature:
+
+- **The additive three — Change, Part–Whole, Compare** — are the long-standing problem-type analysis behind Cognitively Guided Instruction and the semantic-structure research that preceded it. They have been essentially stable for decades.
+- **The multiplicative two — Equal Groups, Ratio & Rate** — come from research on multiplicative structures, which usually names four: equal groups, multiplicative comparison, ratio/rate, and Cartesian product/area.
+
+**Common Core codifies the same situations**, and teachers will recognise them from the glossary tables — Table 1 for addition and subtraction situations, Table 2 for multiplication and division. The Standards for Mathematical Practice run alongside, particularly **MP1** (analyse givens and constraints, plan a pathway rather than jumping in, check by a different method) and **MP7** (look for and make use of structure), which is close to a one-line statement of what this whole site is for.
+
+**What this project chose, as distinct from what it inherited:**
+
+- **Five lines, not six or seven.** Multiplicative comparison is folded into **Compare** rather than given its own line; Cartesian product and area are left out entirely (see below).
+- **The schema is a place, not a label.** You ride a line and choose it at a gate you cannot skip, because a taxonomy students can recite is not the same as one they can use.
+- **Percent is a route across four lines**, not a sixth structure — a notation can sit on top of any situation.
+
+> A caveat, stated because this README is public: the lineage above is accurate to the best of our knowledge but is **not a citation list**, and the effect-size claim in [`docs/PEDAGOGY.md`](docs/PEDAGOGY.md) §1.1 carries no source. Anyone using this in a professional setting should go to the primary literature rather than to us.
+
+### What the five do not cover
+
+Plenty of real mathematics does not fit, and the site says so rather than pretending otherwise. **Area, volume and rate-of-change problems are the clearest cases**, and they are worth naming because a student who has learned the five will meet them and needs to know the checklist is allowed to come back *no*.
+
+| | why it resists the schema |
+|---|---|
+| **Area and volume** | The hard part is not recognising a situation — it is holding a formula and knowing what the dimensions mean. There is no family of unknown-positions the way there is on the five lines. *(Partly honest exception: the array/area model IS a multiplicative situation in Common Core's Table 2, so the **multiplicative** reading of area schematises. The **geometric** one does not.)* |
+| **Rate of change** | Closest to **Ratio & Rate**, and still different: two quantities vary *together*, and the work is coordinating them rather than deciding which of five shapes the story has. It is the on-ramp to slope and then to calculus, and it needs its own treatment. |
+| Also outside | Probability, combinatorics, most of geometry, and anything whose difficulty is a definition rather than a relationship. |
+
+**The reason they sit outside is not that they are harder.** It is that **their bottleneck is somewhere else.** The five exist because, for those problems, the difficulty is *recognising the structure* — so teaching structure is the intervention that pays. For area and volume the difficulty is applying a known formula correctly; for rate of change it is coordinating two quantities that change together. Different bottleneck, different intervention, and schema instruction does comparatively little for either.
+
+This is why the site teaches the **Platform Check** — a student is meant to be able to run the five questions and conclude that *none of these fits*, which is a correct and useful answer rather than a failure. A site that taught five structures and implied everything is one of them would be teaching a keyword strategy with more steps.
 
 ## Special lines
 
