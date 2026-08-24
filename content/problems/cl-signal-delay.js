@@ -392,6 +392,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n1}} − {{n2}} = {{gap}}. The express is running on alone for {{gap}} minutes." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is how far past Kelder the express has got, which is the answer to the whole problem — you have run both halves. This step wants the number the second half was waiting on: how many minutes the express is running on for before the local arrives. Miles come from that time and the express's speed.", tag: "jumped-to-the-answer" },
           { response: "{{mSum}}", diagnosis: "You added the two journey times. That would be the total time both trains spent travelling between them, which is not something the story is asking about. The space BETWEEN the times is a subtraction.", tag: "added-not-compared" },
           { response: "{{n1}}", diagnosis: "That is the local's whole journey, which the story gave you. The express is only running alone for the part of it after the express had already arrived.", tag: "gave-back-the-larger" },
           { response: "{{n2}}", diagnosis: "That is the express's own journey to Kelder. The question is about what happens AFTER that, while the local is still on its way.", tag: "gave-back-the-smaller" }

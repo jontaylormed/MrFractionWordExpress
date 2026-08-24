@@ -362,6 +362,11 @@ MF.registerProblem({
         answer: { exact: "{{p1}}", unit: "dollars per bag", acceptedForms: ["{{p1}}", "{{p1dec}}", "${{p1dec}}", "${{p1}}"] },
         workedExplanation: "The first stall charges {{n2}} dollars for {{n1}} bags, and every bag costs the same. {{n2}} divided by {{n1}} is {{p1dec}}. Check it: {{n1}} bags at {{p1dec}} each is {{n2}} dollars.",
         misconceptions: [
+          /* Not quite the `jumped-to-the-answer` of the other eight — this
+             problem's second step is the OTHER stall rather than a value built
+             on the first, so the same keystroke means a different mistake.
+             See the note in `cl-buffet-crates` for where the class came from. */
+          { response: "{{p2}}", diagnosis: "That is the second stall's price for one bag. It is a real number and you will need it in a moment — but this step is asking about the FIRST stall. Work them out one at a time and keep them apart, because the comparison at the end only means something if you know which price belongs to which stall.", tag: "priced-the-other-stall" },
           { response: "{{inv1}}", diagnosis: "You divided {{n1}} by {{n2}} instead of {{n2}} by {{n1}}. That gives bags per dollar, not dollars per bag. Check the units against the question: it asks what a bag COSTS, so the answer should be an amount of money.", tag: "inverted-rate" },
           { response: "{{mul1}}", diagnosis: "You multiplied {{n2}} by {{n1}}. That would be the cost of {{n1}} lots, not one bag. One bag has to cost less than the whole lot.", tag: "multiplied-instead-of-divided" },
           { response: "{{sub1}}", diagnosis: "You subtracted {{n1}} from {{n2}}. Taking bags away from dollars doesn't leave a price per bag; the two have to be divided to link them.", tag: "subtracted-unlike-units" },

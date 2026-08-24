@@ -327,6 +327,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n1}} − {{n2}} = {{smaller}}. Harbour Halt sells {{smaller}} season tickets altogether." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is the child tickets, which is where this problem ends — you have carried it all the way through. This step wants the whole those tickets are a part of: how many season tickets Harbour Halt sells altogether. The adult and child numbers are pieces of that total, so the total has to exist first.", tag: "jumped-to-the-answer" },
           { response: "{{mSum}}", diagnosis: "You added, because the story says \"more\". The word tells you Kelder is the bigger of the two — and Kelder's count was already given to you. Adding makes Harbour Halt bigger than the station it is supposed to sell fewer than.", tag: "keyword-addition" },
           { response: "{{n1}}", diagnosis: "That is Kelder's count, which the story handed you. Harbour Halt sells fewer, so its number has to come out below {{n1}}.", tag: "gave-back-the-larger" },
           { response: "{{n2}}", diagnosis: "That is the gap between the stations, not a count of tickets at either of them. It is how many MORE Kelder sells.", tag: "gave-back-the-difference" }

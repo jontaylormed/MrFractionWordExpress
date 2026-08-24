@@ -295,6 +295,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n1}} × {{n2}} = {{total}}. The section starts with {{total}} sleepers." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is the finished section, which is the end of this problem — you have done the whole winter's work in one go. This step wants where it started: how many sleepers were on the section before anything was lifted out or put in. The changes have to happen to a number that already exists.", tag: "jumped-to-the-answer" },
           { response: "{{mSum}}", diagnosis: "You added the lengths to the sleepers-under-one. Those two count different things — one is how many times, the other is how much each time — and adding them describes nothing on the track. The same amount repeated is a multiplication.", tag: "added-not-multiplied" },
           { response: "{{n2}}", diagnosis: "That is what sits under a single length, which the story gave you. The section is made of {{n1}} of those.", tag: "gave-back-the-size" },
           { response: "{{n1}}", diagnosis: "That is how many rail lengths there are, which the story gave you. The question is about sleepers, and each length brings {{n2}} of them.", tag: "gave-back-the-groups" }

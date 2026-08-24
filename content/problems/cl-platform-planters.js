@@ -316,6 +316,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n1}} − {{n2}} − {{n3}} = {{rest}}. There are {{rest}} planters left to share." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is what each platform gets, which is the end of this problem — you have done both moves. This step is asking for the number you shared out to get there: how many planters were left once the footbridge and the booking hall had taken theirs. That leftover is the thing being divided.", tag: "jumped-to-the-answer" },
           { response: "{{mSum}}", diagnosis: "You added the two named pieces together. That is how many planters have destinations already — a useful number, and the opposite of the one you want. The leftover is what is NOT in that pile, so those pieces come OFF the delivery rather than being added up.", tag: "added-the-parts" },
           { response: "{{afterBridge}}", diagnosis: "You took the footbridge planters off and stopped. There are two named pieces coming out of this delivery, not one — the booking hall's have to come off as well before what is left is really left over.", tag: "took-off-one-part" },
           { response: "{{n1}}", diagnosis: "That is the whole delivery, which the story handed you. Some of it has already gone to the footbridge and the booking hall, so the leftover has to come out smaller than {{n1}}.", tag: "gave-back-the-whole" }

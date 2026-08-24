@@ -255,6 +255,27 @@ MF.registerProblem({
           { rung: 4, text: "{{n3}} ÷ {{n2}} = {{lots}}, and {{lots}} × {{n1}} = {{total}}. The order was {{total}} bottles." }
         ],
         misconceptions: [
+          /* THE STUDENT WHO SOLVED THE WHOLE THING AND TYPED THE END.
+             Found 2026-08-17 by the user, riding this stop: they worked the
+             problem out, entered the final answer at step 1, and got the
+             generic "Not this time. Look back at what this step is asking for"
+             — which tells somebody who did MORE work than asked that they have
+             misunderstood the question.
+
+             The mirror of this already existed and was kind about it: step 2's
+             `stopped-at-the-transfer` tells a student who gives the total that
+             it was right and that it took real working to reach. The same
+             generosity had never been pointed the other way.
+
+             Worst at an unstaffed halt, which is where it was found. A halt
+             drops the reads, the Ticket Booth and the estimate, so the student
+             arrives at the Engine Room holding the whole problem — the person
+             on this site most likely to run it through and type the answer,
+             and the one with least support when told they are wrong.
+
+             Nine problems were missing it; the other eight carry a one-line
+             pointer back here. */
+          { response: "{{ans}}", diagnosis: "That is the water, and it is the right answer to the question this problem ends on — you have run the whole thing through in your head. This step is asking for the one before it: how big the order was altogether, which is the whole that the lemonade and the water are both pieces of. Put that in first and the last step is the subtraction you have already done.", tag: "jumped-to-the-answer" },
           { response: "{{lots}}", diagnosis: "That is how many lots of the plant's filling time the order took, which is the right first move — but it is a count of lots, not of bottles. Each lot is worth {{n1}} bottles, so there is one multiplication still to do.", tag: "stopped-at-the-scale-factor" },
           { response: "{{mMult}}", diagnosis: "You multiplied the plant's own two numbers together. Those two describe a single speed — bottles in a stretch of minutes — and multiplying them describes nothing. The order's time is what the speed has to be scaled up to.", tag: "multiplied-the-rate" },
           { response: "{{n3}}", diagnosis: "That is how long the order took, in minutes. The question asks for bottles, and minutes only become bottles once the plant's speed is applied to them.", tag: "gave-back-the-time" }

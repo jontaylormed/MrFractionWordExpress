@@ -286,6 +286,8 @@ MF.registerProblem({
         answer: { exact: "{{rate}}", unit: "miles per hour", acceptedForms: ["{{rate}}", "{{rate}} mph", "{{rate}} miles per hour"] },
         workedExplanation: "The van covered {{n1}} miles in {{n2}} hours at a steady speed, so each hour got the same share. {{n1}} divided by {{n2}} is {{rate}} miles per hour. Check it: {{n2}} hours at {{rate}} miles each is {{n1}} miles.",
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is how long the long run takes, which is the end of this problem — you have gone all the way. This step wants the speed it depends on: how many miles the van covers in one hour. Hours only come out once you know what one hour is worth.", tag: "jumped-to-the-answer" },
           { response: "{{mMul1}}", diagnosis: "You multiplied {{n1}} by {{n2}}. That would be the distance for {{n2}} whole trips, not the distance for one hour. One hour has to be less than the {{n1}} miles, not more.", tag: "multiplied-instead-of-divided" },
           { response: "{{mAdd1}}", diagnosis: "You added the miles and the hours. Those count different things, so the total isn't a distance or a time — it isn't anything.", tag: "added-unlike-units" },
           { response: "{{mSub1}}", diagnosis: "You subtracted the hours from the miles. Taking {{n2}} hours away from {{n1}} miles doesn't leave a speed; the two units have to be divided to link them.", tag: "subtracted-unlike-units" },

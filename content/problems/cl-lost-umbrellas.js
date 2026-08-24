@@ -272,6 +272,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n1}} − {{n2}} + {{n3}} = {{closing}}. Cold Halt closes with {{closing}} umbrellas." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is the gap between the two halts, which is what this problem asks for at the end — you have gone all the way through. This step wants the number that comparison rests on: what Cold Halt actually has at closing time. You cannot say how many MORE one has until you know what one of them has.", tag: "jumped-to-the-answer" },
           { response: "{{afterClaims}}", diagnosis: "You took the claimed umbrellas off and stopped. Two things happened to this shelf during the day, not one — the umbrellas handed in off the trains have to go back on before you have the closing count.", tag: "half-the-change" },
           { response: "{{n1}}", diagnosis: "That is the morning count, which the story handed you. Things happened to the shelf during the day, so what it closes with has to be different from what it opened with.", tag: "gave-back-the-start" },
           { response: "{{mSum}}", diagnosis: "That looks like Cold Halt's closing count added to Marsh Halt's. Marsh Halt has nothing to do with this step — it does not appear until the day at Cold Halt is over.", tag: "brought-in-the-other-station" }

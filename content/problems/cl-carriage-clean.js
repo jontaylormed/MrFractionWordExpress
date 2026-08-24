@@ -300,6 +300,8 @@ MF.registerProblem({
           { rung: 4, text: "{{n3}} ÷ {{n2}} = {{lots}}, and {{lots}} × {{n1}} = {{cleaned}}. The shift gets through {{cleaned}} carriages." }
         ],
         misconceptions: [
+          // Answered the end at step 1 — see the note in `cl-buffet-crates`.
+          { response: "{{ans}}", diagnosis: "That is next month's figure, which is where this problem finishes — you have taken it all the way. This step wants the number that one grows out of: how many carriages the shift gets through NOW, before the increase is applied to it. A per cent has to be a per cent of something, and that something is what is missing.", tag: "jumped-to-the-answer" },
           { response: "{{lots}}", diagnosis: "That is how many stretches of the shed's time the shift is, which is the right first move — but it is a count of stretches, not of carriages. Each one is worth {{n1}} carriages, so there is one multiplication still to do.", tag: "stopped-at-the-scale-factor" },
           { response: "{{mMult}}", diagnosis: "You multiplied the shed's own two numbers together. Those two describe a single speed — carriages in a stretch of hours — and multiplying them describes nothing. The shift's length is what the speed gets scaled up to.", tag: "multiplied-the-rate" },
           { response: "{{n3}}", diagnosis: "That is how long the shift runs, in hours. The question asks for carriages, and hours only become carriages once the shed's speed is applied to them.", tag: "gave-back-the-time" }
