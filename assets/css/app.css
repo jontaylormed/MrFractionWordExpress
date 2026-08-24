@@ -810,6 +810,18 @@ select {
 }
 .msg .ico { flex-shrink: 0; font-weight: 700; font-size: 1.05em; }
 .msg p { margin: 0; }
+/* The hint nudge after a run of wrong answers. Set apart from the feedback it
+   follows, and quieter than it: the message above is about the answer, this is
+   an aside about what is available. A rule rather than a second colour, because
+   the msg box already carries a state colour and adding another would make an
+   offer of help look like a second verdict. */
+.msg p.hint-nudge {
+  margin-top: calc(var(--su) * 1.25);
+  padding-top: calc(var(--su) * 1.25);
+  border-top: 1px dashed var(--border);
+  color: var(--ink-muted);
+  font-size: .94em;
+}
 .msg-go      { border-color: var(--go);      background: #F0F6EA; }
 .msg-stop    { border-color: var(--stop);    background: #FBEFED; }
 .msg-caution { border-color: var(--caution); background: #FCF3E4; }

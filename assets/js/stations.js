@@ -2142,6 +2142,12 @@
            when it was their TYPING (Cycle 30, finding C-6) — and it would have
            silently overridden the near-miss message below. What is announced now
            matches what is on screen in every case. */
+        /* Counted BEFORE the branches so the nudge below can speak about this
+           attempt rather than the previous one. `offerBoard()` still runs after
+           the branches and sees exactly the total it always did, so its
+           three-tries threshold is unchanged. */
+        wrongTries++;
+
         var say = 'Not correct. Feedback shown.';
         var mis = MF.matchMisconception(raw, step.misconceptions);
         if (mis) {
@@ -2175,7 +2181,52 @@
           fb.innerHTML = msg('stop', '→',
             'Not this time. Look back at what this step is asking for &mdash; and there&rsquo;s a hint if you want one.');
         }
-        wrongTries++;
+        /* THE SITE NEVER NOTICED IT WAS THE TENTH GO.
+           Driven 2026-08-17 on Marsh Halt's first step: ten wrong answers
+           produced ten byte-identical screens. Nothing escalated, nothing
+           acknowledged the run, and nothing pointed at the hint ladder beyond
+           the button that had been sitting there since the first attempt.
+
+           The site's only existing escalation is `offerBoard()`, and it is
+           doubly gated — wired `if (lastStep)`, which needs the FINAL step AND
+           an estimate. So it cannot appear on any earlier step of a multi-step
+           problem, and it cannot appear at either unstaffed halt, because a
+           halt has no estimate. That is precisely where a student is most
+           likely to need it: step one of a two-step problem, unaided.
+
+           The ladder already does the work — every step's last rung states that
+           step's answer, 55 of 55 across 37 problems. What was missing is that
+           nothing ever said so. This costs nothing and reveals nothing.
+
+           THREE GUARDS, EACH FOR A REASON:
+           - not on `unparsed`, because mistyping is not struggling and a
+             student who fumbles the keyboard should not be handed a hint;
+           - not once the ladder is spent, because pointing at hints they have
+             already read is worse than silence;
+           - not when a step has no hints at all.
+
+           NO DIGITS AND NO NUMBER WORDS in this copy. `solve` is inside the
+           sweep's PRE_SOLVE set, so a spelled-out "three" here would be flagged
+           the day some step's answer is 3 — and on the island no authored copy
+           may contain a number word at all. "A few goes" costs nothing and is
+           exempt from both rules by construction rather than by a cleared-hits
+           list. */
+        var ladder = step.hints || [];
+        if (wrongTries >= 3 && res.reason !== 'unparsed' &&
+            ladder.length && self.hintRung < ladder.length) {
+          var box = fb.querySelector('.msg');
+          if (box) {
+            box.insertAdjacentHTML('beforeend', wrongTries >= 6
+              ? '<p class="hint-nudge">The hint ladder ends by working the whole route through, ' +
+                'if you would rather see it than keep trying.</p>'
+              : '<p class="hint-nudge">You have had a few goes at this one. The hints are there ' +
+                'whenever you want them &mdash; the first is a nudge rather than the answer.</p>');
+            say += wrongTries >= 6
+              ? ' The hint ladder ends by working the whole route through.'
+              : ' The hints are there whenever you want them.';
+          }
+        }
+
         offerBoard();
         A11y.announce(say);
       }
