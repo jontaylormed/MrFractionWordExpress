@@ -83,6 +83,28 @@ This follows directly from who the site is for (`PEDAGOGY.md` §0): students wit
 
 ---
 
+### 2.6 A candidate, not yet an invariant: substitute last
+
+**Added 2026-08-24 from Stewart's *Calculus* §2.7** (see `STRUCTURE-MAP.md` §G.1). Kept separate from the five above because it comes from one outside text and has not been tested here — promoting it now would be exactly the borrowed authority §40 is about.
+
+That section's margin warning:
+
+> Do not substitute numerical values for quantities that vary with time **too early**. Do it only *after* the differentiation. Put `h = 3` in before differentiating and you get `dV/dt = 0`, which is clearly wrong.
+
+**That is our numberless-first principle, arriving independently in calculus**, with a crisp failure mode attached. Both say the same thing: *work the structure before the numbers touch it.* Ours masks the numbers on the first read; Stewart's keeps them symbolic until the differentiation is done.
+
+The generalised form, and the reason it might belong beside §2.4:
+
+> **Keep quantities symbolic while you are establishing structure. Numbers are the last step, not the first.**
+
+It reaches well past related rates — it is most of what goes wrong in early algebra, and it is the same instinct as refusing to let a student compute before committing to an interpretation. **What it would need before promotion:** a second and third topic where it discriminates, and one worked case where it is *wrong* — a place where substituting early is the right move. Without that it is a slogan.
+
+### 2.7 On testing this against outside texts
+
+The §G.1 exercise is worth repeating as a practice rather than treated as a one-off. Reading a textbook section and asking *what does this framework say about it, and what does it say back* cost one sitting and produced three things: a confirmation of a claim the README had just made, a new catalogue entry written against real material rather than memory, and the candidate above.
+
+**It also produced a fair result rather than a flattering one.** The text fades its exercises properly — bare symbolic, then scaffolded story, then unscaffolded — which is `fadeLevel` by another name, and better instructional design than a quick reading suggests. A framework that only ever finds outside work wanting is not being tested by it.
+
 ## 3. The distinction nobody has drawn yet: Mr Fraction vs. word problems
 
 **This is the most important section in the document, and getting it wrong is the likeliest way to ruin the third site.**

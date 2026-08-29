@@ -115,6 +115,30 @@ Sequences, patterns to formulae, why exponent rules are *derived* rather than re
 
 ---
 
+**G · Covariation and rate of change** — *verb: COORDINATE* — **added 2026-08-24, and it is the first entry here written against a real text rather than from memory.**
+
+Two quantities change together and the work is holding both at once. Slope, related rates, and eventually the derivative itself.
+
+> **What the picture must show:** the two quantities changing **at the same time, with the link between them visible** — not a graph of one against the other after the fact. The failure is coordinating them live, so a static end-state teaches nothing.
+
+**The trap:** confusing the rate with the quantity. A student who can differentiate fluently and freezes at related rates is stuck exactly at §1.3 — they can *perform* `dV/dt` and cannot hold it as **a thing the problem is asking for**, one that goes into an equation and gets solved for. §1.2 sits right beside it: *"the rate at which the level is rising"* — rising with respect to **what**? The referent of a rate is the variable underneath the `d`, and it is invisible on the page.
+
+### G.1 Tested against Stewart's *Calculus* §2.7, Related Rates
+
+Read 2026-08-24 as a deliberate exercise: take an outside text and see whether this framework says anything true about it. It did, and it also produced a new principle, which is a better return than confirmation alone.
+
+**The section's taught schema is a PROCEDURE, not a situation.** Its seven-step STRATEGY box is identical whether the problem is a cone, two cars or a searchlight. Nothing is ever classified.
+
+**But a taxonomy is hiding inside step 5** — *"write an equation that relates the various quantities"* — and the text never names it. Its own examples sort into families: Pythagorean (two cars; and exercises 13, 15, 16, 18), similar triangles (the cone's `r = h/2`; exercises 12, 14), a volume or area formula (exercise 17), and trigonometric (the searchlight). **Four families, unnamed, doing all the work.**
+
+> **The observation worth keeping:** step 5 *is* the problem, and it is listed as a peer of step 1, *"read the problem carefully"*. One is not actionable; the other is the entire difficulty. That is `MR-FRACTION-PHILOSOPHY.md`'s critique of Polya — a checklist recited rather than a process performed — found in the wild.
+
+**Where the text agrees with us more than expected.** Its exercises fade properly: 1–8 are bare symbolic, 9–12 are stories **with** an explicit scaffold (*what is given, what is unknown, draw it, write the equation, solve*), 13–18 are stories with none. That scaffold is Three Reads, and the progression is `fadeLevel` by another name.
+
+**And the gap it leaves.** Related rates has an obvious estimation move nobody asks for: as the cone fills, the surface widens, so **`dh/dt` must be decreasing**. A student producing an increasing rate would have caught themselves. The text never asks for a sign, a trend, or a magnitude.
+
+**This entry also confirms the README's claim** that rate-of-change problems do not fit the five situations. Try classifying the two-car example: it *smells* like Compare and the work is Pythagorean covariation. The cone smells like Part–Whole and is really a formula plus a proportionality constraint. **The five do not discriminate, because the difficulty is not which situation it is.**
+
 ## 3. What this predicts about site shape
 
 Two consequences worth stating before anyone builds.
