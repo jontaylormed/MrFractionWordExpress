@@ -7,7 +7,7 @@
 
 **The old one is retired:** `jtaylor-cloud/MrFractionWordProblemExpress`, and its Pages site `https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/`, will no longer be updated (user, 2026-09-22). Do not push to it, and do not treat what it serves as the current build.
 
-**For the first time this repo has a remote, so `git push` publishes the source.** Whether it also publishes the *site* depends on GitHub Pages being switched on for the new repository (Settings → Pages → deploy from `main`, root). If it is, the site will be at `https://jontaylormed.github.io/MrFractionWordExpress/`. **That URL was not verified when this was written** — load it and check it before quoting it to anyone.
+**For the first time this repo has a remote, and Pages is on (user, 2026-09-22): `git push` to `main` publishes the site** at **https://jontaylormed.github.io/MrFractionWordExpress/**. Verified against the deployed origin the same day: `MF.validate()` 37 problems / 0 errors / 28 warnings, stylesheet applied, art 200 with a mis-cased control 404ing, For Teachers pill on the home map, and the teachers page's link landing on the home map with no loader. **Still check the live URL after every push** — Pages builds take a minute or two, and §34 stands.
 
 **The new repository was created with an Apache 2.0 `LICENSE`.** The project is **CC BY-NC-SA 4.0** — the README and the whole licence section say so, and Apache would permit commercial use. The first push kept the project's own licence. If the user actually meant to relicense, that is their call and the README must change with it.
 
