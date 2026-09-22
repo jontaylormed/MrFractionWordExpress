@@ -27,7 +27,7 @@ Each is stated with the **test** that decides whether a new site honours it, bec
 
 ### 2.1 The metaphor is not a setting. It is the verb.
 
-**Revised 2026-08-17 after the user pushed back on §6, correctly.** The first draft of this section said only that the metaphor must be load-bearing. That is true and too weak, and it made me misread one of the user's own themes badly enough to reject it. The stronger claim is his:
+**Revised 2026-08-17 after the user pushed back on §6, correctly.** The first draft of this section said only that the metaphor must be load-bearing. That is true and too weak, and it made me misread one of the user's own themes badly enough to reject it. The stronger claim is theirs:
 
 > **Each Mr Fraction site teaches one MODE OF STRUCTURING, and the metaphor names it.**
 
@@ -220,7 +220,7 @@ And the check-by-expanding loop is §2.4's commitment structure with a different
 
 ### Mining — I argued against this and was wrong. The correction, and why it matters
 
-**The first draft of this section rejected the mine on §2.1's test**, on the grounds that *mining is search — you dig where you guess* — while unique factorisation is about *arriving at the same place regardless of route*. The user pushed back. He was right, and the way I was wrong is instructive enough to keep rather than quietly delete.
+**The first draft of this section rejected the mine on §2.1's test**, on the grounds that *mining is search — you dig where you guess* — while unique factorisation is about *arriving at the same place regardless of route*. The user pushed back. They were right, and the way I was wrong is instructive enough to keep rather than quietly delete.
 
 **I took the weak reading of the metaphor.** Mining is not prospecting. Prospecting is guessing where to look; **mining is extraction of structure that was already there.** And once that is the reading, every objection dissolves and the fit becomes better than anything else on the table:
 
@@ -229,7 +229,7 @@ And the check-by-expanding loop is §2.4's commitment structure with a different
 - **The property I claimed the metaphor lacked, it has physically.** Two miners starting from different faces and following the same vein arrive at the same ore body. **That is unique factorisation, and it is the picture of the theorem I said the mine could not provide.** Two factor trees for 72 are two shafts into one seam.
 - And the framing the user actually gave — *"mined from the ground of what looks complex but can be structured"* — is the whole pedagogical point. **Ore looks like rock. `x² − 5x + 6` looks like a lump.** The learnable claim is that apparent formlessness is not formlessness, which is precisely §3's structuring-the-thought thesis with a shovel in it.
 
-**The lesson for this document, not just for the mine:** §2.1's test is only as good as the reading of the metaphor you test. I tested a caricature and rejected a good idea. **When the test fails, ask whether the metaphor is weak or whether the reading is** — and prefer the author's reading, since he chose it for reasons he may not have written down yet.
+**The lesson for this document, not just for the mine:** §2.1's test is only as good as the reading of the metaphor you test. I tested a caricature and rejected a good idea. **When the test fails, ask whether the metaphor is weak or whether the reading is** — and prefer the author's reading, since they chose it for reasons they may not have written down yet.
 
 ### And the correction merges the two topics, which is the bigger prize
 
@@ -288,19 +288,19 @@ Nine steps. The first four decide whether there is a site at all, and skipping t
 
 ## 6c. Triangulation — what two outside frameworks changed
 
-**Added 2026-08-17.** The philosophy was compared against two external sources, deliberately as **peers rather than authorities**: the **CCSS Standards for Mathematical Practice** (MP1–8) and **the Proposed SAAS Math Standards 2026**, a competency-based grading proposal from the user's own department. The user's instruction was that the result stay *"unique and not necessarily anchored"* on either.
+**Added 2026-08-17.** The philosophy was compared against two external sources, deliberately as **peers rather than authorities**: the **CCSS Standards for Mathematical Practice** (MP1–8) and **a proposed set of competency-based math standards (2026)** — a grading proposal, referred to below as *the competency proposal*. The user's instruction was that the result stay *"unique and not necessarily anchored"* on either.
 
-**One framing correction came out of it and it matters more than any single adoption.** The tension that looked sharpest — SAAS is entirely a gradebook, and non-negotiable 7 forbids grades — **dissolves once the layers are named.** Mr Fraction is an *interactive, non-graded, supplemental* practice space on foundational principles. SAAS is *summative reporting*. They are not competing answers to one question. Both are trying to describe growth rather than rank a moment; they differ in where they sit, not in what they want. **State the layer whenever this comes up, because the disagreement is otherwise easy to manufacture.**
+**One framing correction came out of it and it matters more than any single adoption.** The tension that looked sharpest — the competency proposal is entirely a gradebook, and non-negotiable 7 forbids grades — **dissolves once the layers are named.** Mr Fraction is an *interactive, non-graded, supplemental* practice space on foundational principles. The competency proposal is *summative reporting*. They are not competing answers to one question. Both are trying to describe growth rather than rank a moment; they differ in where they sit, not in what they want. **State the layer whenever this comes up, because the disagreement is otherwise easy to manufacture.**
 
 ### 6c.1 Where we improve — adopted
 
-**(a) Separate the structural judgement from the computational one.** *From SAAS's best idea: Communication grades clarity, not correctness — a student may reason precisely and still be wrong. Reinforced by SAAS scaling precision to the course, so a fraction slip counts against a PreCalculus student and not a Math 6 one.*
+**(a) Separate the structural judgement from the computational one.** *From the competency proposal's best idea: Communication grades clarity, not correctness — a student may reason precisely and still be wrong. Reinforced by its scaling precision to the course, so a fraction slip counts against a PreCalculus student and not a Math 6 one.*
 
 Today the Engine Room marks an answer right or wrong. **A student who identified the right structure and slipped in arithmetic receives the same signal as one who chose the wrong structure entirely** — and those are opposite situations for a learner whose whole difficulty is structural. The misconception machinery already diagnoses *structural* errors; what is missing is the path that says *you had this right and the arithmetic got away from you.*
 
 **This is the highest-value change on the list and it is nearly free, precisely because nothing is graded.** There is no score to split — only a sentence to get right.
 
-**(b) Critique as a phase, not a warning. — BUILT 2026-08-17.** *From MP3's missing half — "critique the reasoning of others" — and from SAAS's own reflection prompts, which already ask students to argue against their own solution and to name the mistakes others make.*
+**(b) Critique as a phase, not a warning. — BUILT 2026-08-17.** *From MP3's missing half — "critique the reasoning of others" — and from the competency proposal's own reflection prompts, which already ask students to argue against their own solution and to name the mistakes others make.*
 
 > **Shipped as the `critique` phase**, running after the Arrivals Board on all 37 problems. It **authors no new content**: every step already carries misconceptions with a wrong value and a written diagnosis, so the machinery simply runs backwards — the site normally diagnoses the student, and here the student diagnoses somebody else. All 148 materialisations had at least three misconceptions on their last step, so coverage was universal on day one rather than a handful someone got round to writing.
 >
@@ -316,7 +316,7 @@ The anti-keyword stance is easy to over-read as anti-shortcut, and the philosoph
 
 And the site could *teach* this rather than merely permitting it: after several problems sharing a structure, invite the student to state the pattern they have noticed. That is MP8 almost verbatim, and it is the GENERALISE verb showing up inside an existing site rather than needing a new one.
 
-**(d) Choice in the reflection.** *From SAAS's exit tickets, which offer a menu of prompts to raise buy-in.* Look Back currently asks fixed questions. Offering two or three is cheap and costs no rigour.
+**(d) Choice in the reflection.** *From the competency proposal's exit tickets, which offer a menu of prompts to raise buy-in.* Look Back currently asks fixed questions. Offering two or three is cheap and costs no rigour.
 
 ### 6c.2 Where we differ — deliberately, and stated so it is a decision rather than an oversight
 
@@ -326,7 +326,7 @@ And the site could *teach* this rather than merely permitting it: after several 
 
 **Mr Fraction does not build symbolic fluency and should say so.** As a supplement that is a scope decision and a defensible one. Undeclared, it looks like an oversight — and worse, it invites the site to be judged as a whole mathematics curriculum, which it is not.
 
-**(c) Single-player.** SAAS assesses group roles — Includer, Connector, Synthesizer, Questioner — and MP3 wants the reasoning *of others*. We have no peers and no backend. **Fictional critique (6c.1b) is a workaround, not a solution**, and the difference is worth admitting: judging an invented student's work is not the same as being answerable to a real one.
+**(c) Single-player.** The competency proposal assesses group roles — Includer, Connector, Synthesizer, Questioner — and MP3 wants the reasoning *of others*. We have no peers and no backend. **Fictional critique (6c.1b) is a workaround, not a solution**, and the difference is worth admitting: judging an invented student's work is not the same as being answerable to a real one.
 
 **(d) One named audience, not all students.** Both external frameworks describe every learner. `PEDAGOGY.md` §0 names one: a grade 6–12 student who computes adequately and freezes at paragraphs. **That specificity is what generates our design consequences and what limits our reach.** Keep both halves of that sentence.
 

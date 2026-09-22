@@ -5,7 +5,7 @@
 
 ## **https://github.com/jontaylormed/MrFractionWordExpress** — the `origin` remote, and the ONLY repository to push to
 
-**The old one is retired:** `jtaylor-cloud/MrFractionWordProblemExpress`, and its Pages site `https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/`, will no longer be updated (user, 2026-09-22). Do not push to it, and do not treat what it serves as the current build.
+**The previous repository and its Pages site are retired** and will no longer be updated (user, 2026-09-22). Do not push to it, and do not treat what it serves as the current build.
 
 **For the first time this repo has a remote, and Pages is on (user, 2026-09-22), deployed by `.github/workflows/static.yml` — GitHub's standard static workflow, committed on GitHub, so `git fetch` before pushing if the remote may have moved. `git push` to `main` publishes the site** at **https://jontaylormed.github.io/MrFractionWordExpress/**. Verified against the deployed origin the same day: `MF.validate()` 37 problems / 0 errors / 28 warnings, stylesheet applied, art 200 with a mis-cased control 404ing, For Teachers pill on the home map, and the teachers page's link landing on the home map with no loader. **Still check the live URL after every push** — Pages builds take a minute or two, and §34 stands.
 
@@ -19,7 +19,7 @@
 
 # The previous host — kept for its reasoning, NOT current
 
-## ~~https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/~~ *(retired 2026-09-22)*
+## ~~The previous repository's Pages site~~ *(retired 2026-09-22)*
 
 **It is public and being shared.** That changes one thing about how you work: from now on **`file://` and the deployed origin are two runtimes and both must keep working**, and *"it works locally"* is no longer evidence about the thing anyone else opens. See `VERIFICATION.md` **§34**, which was written the day the first upload went live completely broken while every local check passed.
 
@@ -135,7 +135,7 @@ What exists that did not before:
 
 ### 0.0b Hosting — what is true now
 
-**Repo:** `jtaylor-cloud/MrFractionWordProblemExpress`, deployed by `.github/workflows/static.yml`, which uploads `path: '.'` — the whole repository. Pages source is the repository root.
+**Repo:** the previous repository (retired), deployed by `.github/workflows/static.yml`, which uploads `path: '.'` — the whole repository. Pages source is the repository root.
 
 **The first upload shipped broken**, and the failure is worth knowing because it will recur with any new folder: `index.html` and the ten images were uploaded but **`assets/` and `content/` were not**, and the images landed at the repository root rather than in `assets/art/`. GitHub's drag-and-drop uploader flattens silently when files are selected instead of a directory being dragged. Every local check had passed — they verified the local folder was internally consistent, which was true and useless.
 
@@ -161,10 +161,7 @@ The live site is uploaded **by hand**. It is working, but it is behind this work
 
 **No remote is configured and nothing has been pushed.** The live site's history is unrelated to this one, so a first push needs `--force` and is the user's call, not an agent's. Note that it would also publish `docs/`, `tools/` and `.claude/`, which the user has deliberately kept off the public repo:
 
-```
-git remote add origin https://github.com/jtaylor-cloud/MrFractionWordProblemExpress.git
-git push -f origin main
-```
+*(Superseded 2026-09-22 — `origin` now exists and points at the new repository; see the top of this file.)*
 
 **The safety net was tested rather than assumed.** The 2026-08-04 corruption was re-staged exactly — a scripted `w`→`h` substitution across `ch-water-tank.js` — and `git checkout -- <file>` restored it byte-for-byte. `VERIFICATION.md` §29 is updated: the "no version control" clause is struck, and the rest of the rule stands.
 

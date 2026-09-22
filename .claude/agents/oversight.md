@@ -240,14 +240,15 @@ The site runs from `file://` — no server, no build step. Opening the page is t
 Open it with a percent-encoded URL:
 
 ```powershell
-Start-Process msedge 'file:///C:/Users/jtayl/.claude/sessions/Mr%20Fraction%20Word%20Problem%20Express/index.html'
+# Run from the project folder. Builds file:///C:/.../Mr%20Fraction%20Word%20Problem%20Express/index.html
+Start-Process msedge ('file:///' + ((Resolve-Path index.html).Path -replace '\\','/' -replace ' ','%20'))
 ```
 
 Never pass the bare Windows path:
 
 ```powershell
 # WRONG — opens junk tabs, never the site
-Start-Process msedge "C:\Users\jtayl\.claude\sessions\Mr Fraction Word Problem Express\index.html"
+Start-Process msedge (Resolve-Path index.html).Path
 ```
 
 `Start-Process` joins `-ArgumentList` **without re-quoting**, so Edge gets the path unquoted and splits it on every space — a tab each for "Mr", "Fraction", "Word", "Problem", and no file. `%20` leaves nothing to split. Same for `dispatch.html`. This cost the user two rounds of "you're opening the wrong index," and it looks identical to a stale or wrong file, so it wastes the debugging on the wrong question.

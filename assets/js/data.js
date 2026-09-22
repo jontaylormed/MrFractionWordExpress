@@ -361,7 +361,7 @@
          audience whose whole difficulty is structural (PEDAGOGY §0) those are
          opposite situations and they were indistinguishable on screen.
 
-         Adopted from the SAAS competency proposal, whose best idea is that
+         Adopted from a competency-based standards proposal, whose best idea is that
          communication is graded for CLARITY and not for CORRECTNESS — a student
          may reason precisely and still be wrong. `reason: 'scale'` directly above
          is the same move made once, for percent-versus-decimal; this generalises

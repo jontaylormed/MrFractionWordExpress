@@ -30,7 +30,7 @@ Anything that must always hold goes in `VERIFICATION.md`. This file points at it
 
 - **Open the site in Edge** with a percent-encoded URL. `Start-Process` joins `-ArgumentList` without re-quoting, so a bare Windows path splits on spaces and opens a tab per word:
   ```
-  Start-Process msedge 'file:///C:/Users/jtayl/.claude/sessions/Mr%20Fraction%20Word%20Problem%20Express/index.html'
+  Start-Process msedge ('file:///' + ((Resolve-Path index.html).Path -replace '\\','/' -replace ' ','%20'))
   ```
   Then `Ctrl+Shift+R` — Edge caches `app.css` and the JS hard.
 - **`MF.validate()`** in the console after any content change. A rule that has never fired is not known to work: plant a defect, confirm it fires, confirm it clears.

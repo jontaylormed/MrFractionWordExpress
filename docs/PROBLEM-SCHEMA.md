@@ -89,7 +89,7 @@ The Hub requires a problem whose **unknown position and context are both unseen 
   "hubEligible": true,            // may this serve as a Terminus Hub assessment?
   "provenance": {
     "source": "teacher-submitted",
-    "author": "J. Taylor",
+    "author": "A. Teacher",
     "addedOn": "2026-07-28"
   },
 

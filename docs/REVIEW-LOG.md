@@ -1432,7 +1432,7 @@ Neither was visible to any check here — `VERIFICATION.md` §5 and the standing
 
 ## Cycle 27 — 2026-08-10 — Published
 
-**The site is live: https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/**
+**The site is live** *(on the previous repository's Pages site, retired 2026-09-22)*
 
 Verified against the deployed URL, not the working folder: stylesheet applied, `MF` defined, **30 problems, 4 hubs, 0 validate errors**, loader clears, five-and-three map rows correct, all ten art files 200, every line and both specials route, all four hubs open, the Challenge card inert. Mobile re-checked on the live origin at 375px — no horizontal scroll, no touch target under 44px, hub rail dots at exactly 44.
 
@@ -2119,7 +2119,7 @@ The first version **grew the header by 24–25px** at 641px and at 375–480px, 
 
 ### The repository
 
-`origin` is now **`https://github.com/jontaylormed/MrFractionWordExpress`**; the `jtaylor-cloud` repo and its Pages site are retired. The new repository was initialised with an **Apache 2.0 `LICENSE`**, which conflicts with the project's **CC BY-NC-SA 4.0**; the merge kept the project's licence and the conflict is flagged in `HANDOFF.md` for the user.
+`origin` is now **`https://github.com/jontaylormed/MrFractionWordExpress`**; the previous repo and its Pages site are retired. The new repository was initialised with an **Apache 2.0 `LICENSE`**, which conflicts with the project's **CC BY-NC-SA 4.0**; the merge kept the project's licence and the conflict is flagged in `HANDOFF.md` for the user.
 
 ### Still not true
 

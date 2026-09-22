@@ -36,7 +36,7 @@ SBI is a well-established approach in the word-problem intervention literature, 
 >
 > **That is a quantitative comparative claim about a research field, and it carried no citation.** Nobody on this project has read the meta-analyses it summarises. It may well be true — it is the sort of thing that is said about SBI — but *"the sort of thing that is said"* is exactly what `VERIFICATION.md` §1 forbids: **no claim without the number, and the number has to come from somewhere.**
 >
-> It mattered more than an ordinary bit of doc rot because this document is the pedagogical justification for the whole site, and the claim is the load-bearing sentence in it. It has also now travelled — the README credits SBI publicly, and this project's author is a teacher who may put these materials in front of a department.
+> It mattered more than an ordinary bit of doc rot because this document is the pedagogical justification for the whole site, and the claim is the load-bearing sentence in it. It has also now travelled — the README credits SBI publicly, and the teachers using these materials may put them in front of colleagues.
 >
 > **To restore it, cite it.** Name the meta-analysis or study, give the effect size it actually reports, and say what it was measured against. A sourced version of this sentence would strengthen the document; the unsourced one was borrowed authority.
 >
