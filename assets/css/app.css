@@ -298,8 +298,45 @@ body::after {
   white-space: nowrap;
 }
 .pill:hover { background: rgba(243,237,225,.12); border-color: var(--ink-on-dark); }
+/* "For Teachers" is a link wearing a pill, and a link brings an underline.
+   And `display: inline-flex` above beats the `hidden` attribute, which is how
+   that pill is kept off every screen but the home map — so say it again. */
+a.pill { text-decoration: none; }
+.pill[hidden] { display: none; }
+/* A third pill costs the title room, so its label sheds words as the width
+   drops — "For Teachers", then "Teachers", then the icon alone. Each part is
+   clipped rather than removed, so the accessible name is "For Teachers" at
+   every width. Breakpoints are measured, not picked: at 641px the full label
+   pushed the header from 84px to 108px, and at 375–480px from 56px to 81px;
+   at 320px it ran off the edge. */
+@media (max-width: 720px) {
+  .teach-for {
+    position: absolute !important; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
+@media (max-width: 500px) {
+  /* Icon alone would be 37px wide — under the 44px target every other
+     control here meets. */
+  #btn-teachers { min-width: var(--target-min); justify-content: center; }
+  .sign-nav { gap: calc(var(--su) * .5); }
+  .teach-word {
+    position: absolute !important; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
 .pill[aria-expanded="true"], .pill.active {
   background: var(--orange-deep); border-color: var(--orange-deep); color: #fff;
+}
+/* 375–440px, home map only: three pills leave the title so little room it
+   wraps one line more (56px header -> 81px at 375). The portrait stands aside
+   while the Teachers pill is showing — the same trade the phone rules below
+   weigh, and here the wordmark stays. Below 375 the wordmark goes instead
+   (see the very-narrow rules), so the portrait comes back there. */
+@media (min-width: 375px) and (max-width: 440px) {
+  .station-sign:has(#btn-teachers:not([hidden])) .sign-mark { display: none; }
 }
 
 main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: calc(var(--su) * 4) calc(var(--su) * 2.5) calc(var(--su) * 9); }

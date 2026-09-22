@@ -79,6 +79,14 @@
                without a sideways scroll. It stays in the accessible name. -->
           <span aria-hidden="true">&#9678;</span> Reading<span class="pill-more"> &amp; Access</span><span class="visually-hidden"> settings</span>
         </button>
+        <!-- A link, not a button: it goes somewhere. New tab, because the site
+             keeps no storage and navigating this tab away would lose the trip
+             in progress and the Reading & Access settings with it.
+             Shown on the home map only — app.js watches #view for .home-hero,
+             so no list of screens has to remember to hide it. -->
+        <a class="pill" id="btn-teachers" href="teachers.html" target="_blank" rel="noopener" hidden>
+          <span aria-hidden="true">&#9998;</span><span class="teach-for"> For</span><span class="teach-word"> Teachers</span><span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
       </div>
     </div>
     <div id="ticker-host"></div>

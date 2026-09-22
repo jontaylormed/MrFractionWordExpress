@@ -1420,6 +1420,26 @@
       A11y.stopSpeaking();
       renderMap();
     });
+
+    /* "For Teachers" belongs on the home map and nowhere else — a student
+       mid-trip has no use for it, and on a phone it costs the header room.
+       Every screen is rendered into #view by a different function, so rather
+       than asking each of them to hide it (and the next one added forgetting),
+       watch #view and show the pill whenever the home hero is what is in it. */
+    var teachers = document.getElementById('btn-teachers');
+    /* Not `var view`: init already assigns the module-level `view`, and a
+       `var` here would hoist over that assignment and leave the module's
+       copy undefined for every renderer. */
+    var viewEl = document.getElementById('view');
+    if (teachers && viewEl && global.MutationObserver) {
+      var syncTeachers = function () {
+        teachers.hidden = !viewEl.querySelector('.home-hero');
+      };
+      new MutationObserver(syncTeachers).observe(viewEl, { childList: true });
+      syncTeachers();
+    } else if (teachers) {
+      teachers.hidden = false;
+    }
     renderMap();
   }
 
