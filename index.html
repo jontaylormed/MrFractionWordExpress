@@ -57,6 +57,20 @@
     </div>
   </div>
 </div>
+<!-- COMING BACK FROM THE TEACHERS PAGE SKIPS THE LOADER. Its "Back to the
+     home page" link lands on `index.html#home`: somebody returning to the home
+     page has already watched the train get up steam, and 2.6 seconds of it
+     again reads as the site starting over. Inline and directly after the
+     loader, so it runs before the first paint and nothing flashes; app.js
+     already copes with the loader being absent (`if (!ls) return`). The hash
+     is then cleared so a reload behaves like any other first visit. -->
+<script>
+  if (location.hash === '#home') {
+    var ls0 = document.getElementById('loading-screen');
+    if (ls0) ls0.parentNode.removeChild(ls0);
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+</script>
 
 <div id="ambient-host"></div>
 
