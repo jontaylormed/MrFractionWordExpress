@@ -126,6 +126,8 @@ Dark `--brown-dark` enamel plate, orange bottom rule, Mr Fraction at 48px on the
 ### Nav pills
 Rounded 24px, 2px `--border-strong`, transparent fill. Active = solid `--orange-deep` with cream text. Direct lift from the reference.
 
+**Three on the home map, two everywhere else.** *Map* and *Reading & Access* are on every screen; *For Teachers* (2026-09-22) is a link wearing a pill, and only the home map shows it. On narrow screens the pills **shed words rather than wrap or scroll**: *Reading & Access* → *Reading* at 640px; *For Teachers* → *Teachers* at 720px → icon alone at 500px, held to the 44px target. The clipped words stay in the accessible name at every width. At 375–440px the header portrait stands aside while the third pill shows, because otherwise the title wraps one line more. **Never let a pill go off-screen behind a sideways scroll:** the one most likely to be lost is *Reading & Access*, the control a struggling reader needs most.
+
 ### Station header (inside a station)
 ```
 [72px thumb]  EYEBROW LABEL IN ORANGE CAPS

@@ -2,7 +2,9 @@
 
 An interactive site that teaches students how to **start** a maths word problem — read it, work out what kind of situation it describes, plan it, solve it, check it. Built around a veteran train conductor whose railway has one line for each way a word problem can be put together.
 
-🔗 **Live site:** **<https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/>**
+🔗 **Live site:** **<https://jontaylormed.github.io/MrFractionWordExpress/>**
+📦 **Source:** <https://github.com/jontaylormed/MrFractionWordExpress>
+👩‍🏫 **Teachers:** the site's learning targets, in Bloom's terms, are on its [For Teachers](teachers.html) page.
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -130,6 +132,16 @@ Five of them, open from the first screen, never gated and never scored. Each is 
 | **The Lighthouse** | Problems with a middle: where a story stops doing one thing and starts another, and what gets carried across |
 
 Visiting one is ordinary navigation, never an admission — which matters for students who have been tracked into remedial classes and can spot the framing instantly.
+
+## For Teachers
+
+A **For Teachers** button sits beside *Reading & Access* in the top bar, on the home map only — a student mid-trip never sees it. It opens [`teachers.html`](teachers.html) in a new tab: **the site's learning targets**, written as student-facing *"I can"* statements with the Bloom's Taxonomy level of each.
+
+- **Fifteen targets** — one per screen of the core trip, two for Crossover Island, and two that run across the whole site (keywords, and percent *of what*).
+- **Three notes on reading them.** The Bloom order is inverted on purpose: *Analyze* is gated before *Apply*. Remember-level targets are almost absent, also on purpose. And these are targets the site **practises, not assesses** — nothing on it produces a score, so assessing a target means doing it off the site.
+- **Alignment** to the Standards for Mathematical Practice: MP7 for targets 2–6, MP1 for 9, MP3 for 10.
+
+It opens in a new tab because the site keeps no storage: sending the student's tab away would lose the trip in progress and the Reading & Access settings with it. Its **Back to the home page** link lands on the home map without replaying the loading screen.
 
 ## Design priorities
 

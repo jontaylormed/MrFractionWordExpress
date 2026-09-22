@@ -2096,6 +2096,39 @@ Recovered with `git checkout aee5dd4 -- .`, verified byte-identical across all 1
 
 ---
 
+## Cycle 31 — 2026-09-22 — For Teachers, and a new repository
+
+**Trigger:** the user — *"What are the learning targets that this site teaches? And can you write them using Bloom's Taxonomy verbiage?"*, then *"add this to the site as a button titled 'For Teachers' on the home page… near Read & Access"*, then *"make sure the teacher page returns you to the homepage not the loading page"*, then a new repository.
+
+### What shipped
+
+| | |
+|---|---|
+| **`teachers.html`** | Fifteen *"I can"* targets with Bloom levels — eleven for the core trip, two for Crossover Island, two cross-cutting — plus three notes (Analyze gated before Apply; almost nothing at Remember; **practised, not assessed**) and MP1/MP3/MP7 alignment. |
+| **The pill** | Beside *Reading & Access*, **home map only**. A link, not a button, into a **new tab** — the site keeps no storage, so taking the student's tab away would lose the trip and the reading settings. |
+| **Home-only, by observation** | A `MutationObserver` on `#view` shows it whenever `.home-hero` is present. The alternative — every renderer hiding it — is a list, and the next screen added would not be on it. |
+| **`index.html#home`** | Skips the loading screen. Inline script directly after the loader, before first paint; clears the hash so a reload is a normal first visit. |
+
+### What the measurements caught
+
+The first version **grew the header by 24–25px** at 641px and at 375–480px, and **ran off the edge at 320px** — on the one screen every student sees first. Found by sweeping widths in iframes, not by a screenshot. Fixed by shedding the label (*For Teachers* → *Teachers* at 720px → icon at 500px) and, at 375–440px, standing the portrait aside while the pill shows. **The icon-only pill then measured 37px wide** — under the 44px target — and was held to 44. Final sweep: **55 widths from 320 to 1440px**; header never taller than without the pill, no sideways scroll, pill never under 44px. The same check had flagged real failures twice, so it can fail.
+
+**A trap avoided in `app.js`:** a `var view` inside `init()` would have hoisted over the module-level `view` that `init()` assigns, leaving every renderer with `undefined`. Renamed to `viewEl` before it ran, and commented.
+
+**`MF.validate()` after the change:** 37 problems, 0 errors, 28 warnings — unchanged. `SWEEP.report()` was not re-run: nothing in the station renderers changed.
+
+### The repository
+
+`origin` is now **`https://github.com/jontaylormed/MrFractionWordExpress`**; the `jtaylor-cloud` repo and its Pages site are retired. The new repository was initialised with an **Apache 2.0 `LICENSE`**, which conflicts with the project's **CC BY-NC-SA 4.0**; the merge kept the project's licence and the conflict is flagged in `HANDOFF.md` for the user.
+
+### Still not true
+
+- **Appearance at phone widths was measured, not seen.** One desktop screenshot did composite this time — the first in a while.
+- **`teachers.html` is a hand-written copy of the station chain.** It reads nothing from `MF` and will not notice a screen being added or removed.
+- **No student has used any of it.**
+
+---
+
 ## Handoff
 
 **Moved to [`HANDOFF.md`](HANDOFF.md).** That is the single entry point for a new session. Keeping a second copy here is how the two drift apart — this log is the cycle history; the handoff is the current state.

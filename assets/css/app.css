@@ -3394,7 +3394,8 @@ input[type="range"] { accent-color: var(--orange-deep); }
      The sister site solves this by refusing to wrap: nav-bar is flex-wrap
      nowrap with overflow-x auto on the links, so the buttons scroll sideways
      instead of stacking. It holds 59px and six buttons at this width. Copied
-     here, where there are only two.
+     here, where there are two — three on the home map, where "For Teachers"
+     joins them (see `.teach-for` / `.teach-word` near `.pill`).
 
      `min-width: 0` on the title block is what makes nowrap survivable — a flex
      item will not shrink below its content's intrinsic width without it, and
@@ -3420,7 +3421,8 @@ input[type="range"] { accent-color: var(--orange-deep); }
      So the label sheds its second half instead. Visually-hidden, not
      display:none, so the button is still "Reading & access settings" to a
      screen reader — the same name at every width. Measured: both pills fit at
-     375px with no horizontal scroll. */
+     375px with no horizontal scroll — and, since 2026-09-22, all three on the
+     home map, from 320 to 1440px. */
   .pill-more {
     position: absolute !important; width: 1px; height: 1px;
     padding: 0; margin: -1px; overflow: hidden;

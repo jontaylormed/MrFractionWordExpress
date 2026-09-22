@@ -1,9 +1,25 @@
 # Handoff — Mr Fraction's Word Problem Express
-### State at the end of 2026-08-17. Read this first, then `../CLAUDE.md`, then `VERIFICATION.md`.
+### State at 2026-09-22. Read this first, then `../CLAUDE.md`, then `VERIFICATION.md`.
 
-# 🚂 THE SITE IS LIVE
+# 🚂 THE REPOSITORY MOVED ON 2026-09-22
 
-## **https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/**
+## **https://github.com/jontaylormed/MrFractionWordExpress** — the `origin` remote, and the ONLY repository to push to
+
+**The old one is retired:** `jtaylor-cloud/MrFractionWordProblemExpress`, and its Pages site `https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/`, will no longer be updated (user, 2026-09-22). Do not push to it, and do not treat what it serves as the current build.
+
+**For the first time this repo has a remote, so `git push` publishes the source.** Whether it also publishes the *site* depends on GitHub Pages being switched on for the new repository (Settings → Pages → deploy from `main`, root). If it is, the site will be at `https://jontaylormed.github.io/MrFractionWordExpress/`. **That URL was not verified when this was written** — load it and check it before quoting it to anyone.
+
+**The new repository was created with an Apache 2.0 `LICENSE`.** The project is **CC BY-NC-SA 4.0** — the README and the whole licence section say so, and Apache would permit commercial use. The first push kept the project's own licence. If the user actually meant to relicense, that is their call and the README must change with it.
+
+## What changed on 2026-09-22
+
+**A For Teachers page** — `teachers.html`: the learning targets in Bloom's terms. A pill beside *Reading & Access* on the home map opens it in a new tab; its link back lands on `index.html#home`, which skips the loading screen. Details in [`SITE-STATE.md`](SITE-STATE.md); history in [`REVIEW-LOG.md`](REVIEW-LOG.md) Cycle 31. **It is a hand-written copy of the station chain** — change a screen and this page has to be edited too.
+
+---
+
+# The previous host — kept for its reasoning, NOT current
+
+## ~~https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/~~ *(retired 2026-09-22)*
 
 **It is public and being shared.** That changes one thing about how you work: from now on **`file://` and the deployed origin are two runtimes and both must keep working**, and *"it works locally"* is no longer evidence about the thing anyone else opens. See `VERIFICATION.md` **§34**, which was written the day the first upload went live completely broken while every local check passed.
 

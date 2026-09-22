@@ -2,7 +2,7 @@
 ### Written 2026-08-08 as seven. **Six of those seven are done; item 6, Challenge Mode, is planned in [`CHALLENGE-MODE.md`](CHALLENGE-MODE.md) and not yet built. Item 8 was added 2026-08-15 on the user's idea and is the only new work on the list.**
 
 > # 🚂 THE SITE IS LIVE
-> ## **https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/**
+> ## ~~https://jtaylor-cloud.github.io/MrFractionWordProblemExpress/~~ — **retired 2026-09-22.** The repository is now `jontaylormed/MrFractionWordExpress`; see `HANDOFF.md`.
 > Published 2026-08-10 and being shared. **`file://` and the deployed origin are two runtimes and both must keep working** — and after any publish, check the live URL rather than the working folder (`VERIFICATION.md` §34, written the day the first upload went live broken while every local check passed).
 
 > `HANDOFF.md` is the state of the build. This is what is *planned*, why it is in this order, and what each piece will cost. When an item ships it moves to `REVIEW-LOG.md` as a cycle and its row here says so.
