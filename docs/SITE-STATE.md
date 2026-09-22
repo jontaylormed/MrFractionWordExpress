@@ -63,7 +63,7 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 
 - **Appearance is unverified.** The in-app browser pane does not composite frames. Nothing shipped on 2026-08-17 has been *looked at*. *(On 2026-09-22 the pane did return one real desktop screenshot of the home map, header included — so it composites at least sometimes. The phone widths of the new header were measured, not seen.)* `tools/zz-drive.js` plus headless Edge is the way to close that — its header carries the two flags that cost an hour each.
 - **The trip report's critique line has never rendered** on a real end-of-trip screen.
-- **`HANDOFF.md` §0.0b describes a `.github/workflows/static.yml` that does not exist in this repository.** Whether Pages deploys from a workflow or a branch is unconfirmed.
+- ~~`.github/workflows/static.yml` does not exist~~ — **it does now (2026-09-22)**: the user enabled Pages with GitHub's standard static workflow, committed on GitHub as `3e3a94c`. It deploys on every push to `main` and uploads `path: '.'` — **the whole repository, including `docs/`, `tools/` and `.claude/`**, so all of it is publicly served.
 - ~~**No remote is configured**~~ — **since 2026-09-22 `origin` is `https://github.com/jontaylormed/MrFractionWordExpress`**, the only repository to push to; the old `jtaylor-cloud` one is retired. **Pages is on**: a push to `main` publishes **https://jontaylormed.github.io/MrFractionWordExpress/**, verified against the deployed origin 2026-09-22.
 - **`docs/cycle-30/` is 3.4MB** of screenshots and would ship with any full upload.
 - **No real student has used any of it.** Every review cycle ends on this sentence and none has yet been able to delete it.
