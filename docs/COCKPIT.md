@@ -121,7 +121,9 @@ Branch: `cockpit-layout`. `main` is the live site and is not touched until the u
 
 Not yet acted on; the user decides. Confirmed independently where marked ✓.
 
-**Mechanical (no teaching change):**
+**Mechanical (no teaching change) — FIXED 2026-10-18**, each re-measured: Grand Tour header names the route in ink; `esc()` and `ModelPicker.why()` leave entities intact (0 literal entities on the four screens that showed them); `focusFeedback` marks its slot newest before focusing, plus a cockpit-wide focus rescue when the focused control disables or hides itself (picker and Arrivals Board land on the verdict); stale work is `inert`; lever reads "Done →" inside tools, takes the first-read label from the chain, and is announced without the arrow; the text-size setting scales rem too (question 18.4 → 25.7px at 150%), docked Mr Fraction is 1rem; under 860px tall the feedback row and lever are pinned to the window bottom (in view from the start at 1366×768); Enter in the Engine Room answer checks it; the Arrivals Board verdict is no longer hidden (one step at a time). Sweep after: 1,756 screens, every check 0. **Still open from this list:** Platform Check focus starts on the question so Tab moves away from the story sentences; picker cards come after "Help me see it" in Tab order (one stop); doubled announcements; "closest of the four" copy; critique grammar.
+
+**The findings as reported:**
 - ✓ **Arrivals Board verdict hidden on all 37** — `relocateStray` moves "Worth remembering" in after `#ckfb`, and newest-slot-wins hides the verdict. Rule to adopt: a verdict on the student's own answer is never hidden by a note.
 - ✓ **Grand Tour header names the line** ("The Compare Line", Compare's colour) above "Which picture fits?". Treat a mixed ride like a percent ride: name the route, ink colour.
 - ✓ **Literal `&mdash;` / `&ndash;` on screen** — `ModelPicker.why()` escapes authored HTML; some content strings too (probably also live on `main`).

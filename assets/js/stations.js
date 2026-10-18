@@ -441,6 +441,7 @@
     var to = phaseAfter(p, from);
     return ({ read2: 'Second read', read3: 'Third read', ticket: 'The Ticket Booth',
               pickModel: 'Which picture fits?', platform: 'Prove it from the story',
+              crossover: 'Find where it changes',
               plan: 'Draw it with the numbers', solve: 'To the Engine Room' }[to] || 'Next') + ' &rarr;';
   }
 
@@ -548,15 +549,37 @@
     return out;
   }
 
+  /* FOCUS GOES TO THE VERDICT — AND THE VERDICT MUST BE SHOWING FIRST. In the
+     cockpit a slot only shows when it is the newest (`data-latest`), and that
+     mark is set by an observer a microtask after the slot is written. Focusing
+     it in the same tick focused a `display:none` element, so focus fell to
+     <body> (Cycle 31, theme-reviewer: Arrivals Board yes/no). The slot is
+     marked newest here, synchronously, before focus moves. */
   function focusFeedback(node) {
     if (!node) return;
+    var slot = node.closest ? node.closest('.feedback') : null;
+    var bar = slot && slot.parentNode;
+    if (slot && bar && bar.id === 'ck-feedback') {
+      [].forEach.call(bar.querySelectorAll('.feedback[data-latest]'), function (n) {
+        if (n !== slot) n.removeAttribute('data-latest');
+      });
+      slot.setAttribute('data-latest', 'yes');
+    }
     node.setAttribute('tabindex', '-1');
     node.focus();
   }
 
   function el(html) { var d = document.createElement('div'); d.innerHTML = html; return d.firstElementChild; }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  /* An `&` that already begins an entity is left alone. Authored copy carries
+     `&mdash;` and `&ndash;` on purpose, and escaping their ampersands put the
+     literal text "Part&ndash;Whole" on 16 screens and into read-aloud
+     (Cycle 31, theme-reviewer). Every other `&`, and every `<`, `>` and `"`, is
+     still escaped. */
+  function esc(s) {
+    return String(s)
+      .replace(/&(?!(?:#\d+|#x[0-9a-f]+|[a-z][a-z0-9]*);)/gi, '&amp;')
+      .replace(/[<>"]/g, function (c) { return { '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  }
 
   /* ============================================================
      Station controller
@@ -756,9 +779,16 @@
        the route key there throws and kills the station. */
     var onPercentRoute = this.asksHiddenLine();
     var paired = !!this.p.pair;
+    /* AND A THIRD TIME, ON THE GRAND TOUR (Cycle 31, teacher agent). The
+       cockpit asks "which picture fits this story?" before anything else, and
+       on a mixed ride the header printed "The Compare Line" in Compare's
+       colour right above it. A mixed ride now names its route and wears ink,
+       exactly as the percent and island rides above do, for the same reason. */
+    var mixed = this.rideLine === MF.MIXED;
     var route = paired ? MF.rideInfo(MF.CHALLENGE)
+              : mixed ? MF.rideInfo(MF.MIXED)
               : onPercentRoute ? MF.rideInfo(MF.PERCENT) : MF.LINES[this.p.line];
-    var colour = paired ? 'var(--ink)'
+    var colour = (paired || mixed) ? 'var(--ink)'
                : onPercentRoute ? 'var(--line-percent)' : 'var(--line-' + this.p.line + ')';
     /* The journey panel sits ABOVE the station title, so the first thing on
        the screen is where you are on the line — not a heading. The picture is
@@ -798,7 +828,7 @@
               ? Scenery.islandLeg(this.p.id, this.legProgress || 0, this.legIndex)
               : Scenery.legMap(Selector.availableLines(), this.p.line, this.legIndex,
                                this.legProgress || 0, this.legIndex,
-                               onPercentRoute ? 'var(--line-percent)' : null)) +
+                               onPercentRoute ? 'var(--line-percent)' : mixed ? 'var(--ink)' : null)) +
           '</div>' +
           '<div class="journey-bar">' +
             '<span class="eyebrow">Stop ' + (this.legIndex + 1) + ' of ' + this.legTotal + '</span>' +
@@ -948,7 +978,13 @@
       work.innerHTML = '';
       [].forEach.call(pics, function (n) { work.appendChild(n); });
     } else {
-      [].forEach.call(work.children, function (n) { n.setAttribute('data-ck-stale', 'yes'); });
+      /* `inert` as well as the mark: the mark hid a stale surface's buttons,
+         but the picture picker's cards are not buttons of that kind, and they
+         stayed clickable and in the tab order through the help tools — one
+         click marked a card wrong and threw (Cycle 31, theme-reviewer). Inert
+         removes the whole carried-over surface from clicks and from Tab while
+         leaving it visible. */
+      [].forEach.call(work.children, function (n) { n.setAttribute('data-ck-stale', 'yes'); n.inert = true; });
     }
     /* A STATION'S ART GOES WHERE THE PICTURE GOES (user, 2026-10-18). The
        Arrivals Board's caboose was a big band at the top of the question
@@ -1058,9 +1094,17 @@
     if (!src) { if (!lever.hidden) lever.hidden = true; return; }
     if (!src.hasAttribute('data-ck-src')) src.setAttribute('data-ck-src', 'yes');
     var label = (src.textContent || '').trim();
+    /* THE LEVER SAYS WHERE IT GOES. Inside a help tool, a step's own "go on"
+       label ("Third read →") describes a chain the tool is no longer part of —
+       `go()` returns the student to where they opened the tool — so any
+       onward label reads "Done" there (Cycle 31, student-tester). */
+    if (this.toolReturn && TOOLS[this.phase] && /→/.test(label)) label = 'Done →';
     var lab = lever.querySelector('.ck-lever-label');
     // Only write what changed: the observer that calls this watches the lever too.
     if (lab.textContent !== label) lab.textContent = label;
+    // Announced without the arrow, which a screen reader reads out as "right arrow".
+    var spoken = label.replace(/[←→]/g, '').trim();
+    if (lever.getAttribute('aria-label') !== spoken) lever.setAttribute('aria-label', spoken);
     if (lever.disabled !== src.disabled) lever.disabled = src.disabled;
     if (lever.hidden) lever.hidden = false;
   };
@@ -1150,8 +1194,31 @@
       setTimeout(function () { lever.removeAttribute('data-pulled'); }, 450);
       src.click();
     });
+    /* FOCUS IS NEVER LEFT ON NOTHING. Many controls here disable or hide
+       themselves once used — a picked card, the Test Track's "Show me", the
+       critique's options — and the browser then drops focus to <body>, so a
+       keyboard or screen-reader student is suddenly nowhere (Cycle 31, both the
+       student and theme reviewers; the same defect this file records above
+       the Read 3 options). Rather than chase every control, the cockpit
+       remembers the last thing focused inside it, and if that thing becomes
+       unusable while focus has fallen to the page, focus goes to the newest
+       feedback — or, if there is none, to the lever. */
+    var lastFocus = null;
+    root.addEventListener('focusin', function (e) { lastFocus = e.target; });
+    function rescueFocus() {
+      if (!lastFocus || document.activeElement !== document.body) return;
+      var gone = !lastFocus.isConnected || lastFocus.disabled || lastFocus.hidden ||
+                 (lastFocus.closest && lastFocus.closest('[hidden], [inert]'));
+      if (!gone || !root.isConnected) return;
+      var fbNow = root.querySelector('#ck-feedback .feedback[data-latest]');
+      var lever = root.querySelector('#ck-lever-btn');
+      if (fbNow && fbNow.textContent.trim()) focusFeedback(fbNow);
+      else if (lever && !lever.hidden) lever.focus();
+    }
+    this.rescueFocus = rescueFocus;
+
     if (!global.MutationObserver) return;
-    new MutationObserver(function () { self.syncLever(); })
+    new MutationObserver(function () { self.syncLever(); setTimeout(rescueFocus, 0); })
       .observe(root.querySelector('.ck-body'), {
         subtree: true, childList: true, characterData: true,
         attributes: true, attributeFilter: ['hidden', 'disabled']
@@ -1234,12 +1301,12 @@
         self.modelPicked = k;
         fb.innerHTML = msg('go', '&#10003;', '<strong>That is the shape.</strong> ' + ModelPicker.why(p, k));
         host.querySelector('#mpgo').hidden = false;
-        A11y.announce('Yes. That is the shape.');
+        focusFeedback(fb);   // the card just disabled itself; focus goes to what it said
       } else {
         b.setAttribute('data-result', 'wrong');
         b.disabled = true;
         fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' + ModelPicker.why(p, k));
-        A11y.announce('Not that one.');
+        focusFeedback(fb);
       }
     });
     host.querySelector('#mpgo').addEventListener('click', function () {
@@ -1374,7 +1441,8 @@
       '<div id="r1checks">' + qs + '</div>' +
       '<div class="feedback" role="status" id="r1fb"></div>' +
       '<div class="btn-row"><button class="btn" id="r1go" type="button">' +
-        (asTool ? 'Done &rarr;' : 'Now show me the proof →') + '</button></div>';
+        // Read off the chain: an unstaffed halt goes to the Engine Room, not to a "proof".
+        (asTool ? 'Done &rarr;' : nextLabel(p, 'read1')) + '</button></div>';
 
     var got = {}, host = this.host(), revealed = false;
 
@@ -2615,6 +2683,15 @@
       b.hidden = false;
       A11y.announce('You can also take the answer you have to the arrivals board and check it against your estimate.');
     }
+
+    /* Enter in the answer box checks the step, as it would in any form —
+       it did nothing, and the lever was four Tabs away (Cycle 31). */
+    this.host().querySelector('#ans').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      var go = self.host().querySelector('#sgo');
+      if (go && !go.disabled) go.click();
+    });
 
     this.host().querySelector('#shint').addEventListener('click', function () {
       var hints = step.hints || [];

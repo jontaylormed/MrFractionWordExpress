@@ -29,7 +29,8 @@
     return '<svg class="mp-svg" viewBox="0 0 160 90" aria-hidden="true" focusable="false">' + body + '</svg>';
   }
   function label(x, y, t, anchor) {
-    return '<text x="' + x + '" y="' + y + '" font-size="9" text-anchor="' + (anchor || 'middle') +
+    // 12 units: at the card's usual scale that is ~9px on screen, up from 6.4.
+    return '<text x="' + x + '" y="' + y + '" font-size="12" text-anchor="' + (anchor || 'middle') +
            '" fill="' + INK + '">' + t + '</text>';
   }
   var box = function (x, y, w, h, fill) {
@@ -120,11 +121,15 @@
     var t = k === correctLine(p) ? tb.whyCorrect
           : ((tb.distractors || []).filter(function (d) { return d.line === k; })[0] || {}).whyWrong;
     if (!t) return '';
-    var safe = String(t).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
+    // Existing entities (&ndash; in "Part–Whole") are left as entities; every
+    // other `&` and all of < > " are escaped. See `esc` in stations.js.
+    var safe = String(t)
+      .replace(/&(?!(?:#\d+|#x[0-9a-f]+|[a-z][a-z0-9]*);)/gi, '&amp;')
+      .replace(/[<>"]/g, function (c) { return { '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
     safe = MF.renderText(safe, p.problem.numbers, true);
-    return safe.replace(/\d+(?:[.,\/]\d+)*%?/g, function (m) {
+    // Entities are matched first and passed through, so `&#8212;` keeps its digits.
+    return safe.replace(/&#?[a-z0-9]+;|\d+(?:[.,\/]\d+)*%?/gi, function (m) {
+      if (m.charAt(0) === '&') return m;
       return '<span class="masked" aria-hidden="true">' + m.replace(/./g, '█') +
              '</span><span class="visually-hidden">some number</span>';
     });
