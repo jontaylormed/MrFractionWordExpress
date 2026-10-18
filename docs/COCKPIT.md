@@ -105,8 +105,22 @@ Branch: `cockpit-layout`. `main` is the live site and is not touched until the u
   - The lever (`syncLever`) stands in for the last visible primary `.btn` in the question panel (else the work panel), via a MutationObserver.
   - Mr Fraction docks in `#ck-say` (companion.js `dock()`); his first line per station is no longer lost to an early flush.
   - Measured with `tools/cockpit-probe.js` at 1366×657: **333 screens, page never scrolls, story never scrolls, 0 errors.** Work and question panels do scroll inside at that height (bar models ~490px vs ~180px). At 1920×1080 nothing scrolls.
-- [ ] S3 — fast path: model picker, new phaseChain, Read 1 cut, help tools, metrics/report
-- [ ] S4 — lever art, Mr Fraction in the feedback bar, stacked layout < 1024
-- [ ] S5 — sweep.js, full verification, docs, merge on the user's word
+- [x] S3 — fast path. **The order changed from the plan:** `read1 → pickModel → platform → plan`, the picture BEFORE the Platform Check, because the Platform Check's reveal names the line and would have given the picture away. Now it confirms the pick instead.
+  - `assets/js/model-picker.js`: five schematic shapes with no numbers; feedback reuses each problem's `ticketBooth.whyCorrect` / `whyWrong` (150 texts, full coverage), with every digit masked.
+  - Read 1 on a single-situation problem is just the masked story and Mr Fraction's retelling. The five-question checklist is the "Run the checklist" tool; Crossover Island keeps it as before.
+  - `TOOLS` (checklist, read2, read3, ticket) open from "Help me see it" on pickModel and plan; `go()` returns to `toolReturn`. Once numbers are seen, tools stop masking.
+  - Question panel holds questions only: `.hint-text` / `.platform-instruction` / `.ck-teach` move to a coaching note in the feedback bar (user, 2026-10-18).
+  - Layout per user: **only the story and illustration on the top row**; work (the picture viewport), pad, question below; feedback + lever along the bottom; narrower question column.
+  - Report: "picked the right picture first try"; lists the tools chosen.
+- [~] S4 — lever (CSS signal lever, pull animation, reduced-motion still) ✓; Mr Fraction docked ✓; stacked layout < 1024 ✓ (375/768/1024: no sideways scroll, no target < 44px, lever kept by its question). **Not done: appearance review** — the browser pane was too small to screenshot; the user must look in Edge.
+- [ ] S5 — docs (SITE-STATE, README screen table, `teachers.html` targets 3–5 → optional tools + a "choose the picture" target), user review, merge on the user's word.
+
+**Verification on this branch, 2026-10-18:** `MF.validate()` 37/0/28. `SWEEP.report()` 1,756 screens (tools now swept): 0 render errors, 0 unfilled tokens, 0 numbers on numberless screens, 0 new leak candidates. **The sweep itself was fixed** — it read only the question panel, so a planted digit on the picker reported 0; it now reads `.ck-body`, and the planted digit fires on all 120 picker screens. `tools/cockpit-probe.js`: 333 screens at 1366×657, page never scrolls.
+
+**Known and open:**
+- On a single-line ride the picture choice is easy: the student chose the line. It is a real question on the Grand Tour and percent rides. Worth the user's call.
+- At 1366×657 the work and question panels scroll inside themselves (bar models ~440–490px). Nothing scrolls at 1920×1080.
+- The Terminus hub problem (`app.js` `renderHubAssessment`) is still the old page layout.
+- Hub pages, map and report are unchanged.
 
 **Baseline on `main` before S1:** `MF.validate()` 37 problems / 0 errors / 28 warnings.
