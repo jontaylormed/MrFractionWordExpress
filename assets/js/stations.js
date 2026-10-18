@@ -1278,7 +1278,12 @@
         return '<li><button class="choice" type="button" data-q="' + qi + '" data-o="' + oi + '">' +
           '<span class="marker" aria-hidden="true">&#9723;</span><span>' + o.text + '</span></button></li>';
       }).join('');
-      return '<div class="card"><span class="eyebrow">' + esc(q.label) + '</span>' +
+      /* ONE QUESTION AT A TIME (user, 2026-10-18, on the Challenge Line). All
+         five stacked in the cockpit's question column made a column ten
+         screens tall. Each card is shown alone and the next replaces it once
+         the student has it right; its reply stays in the feedback viewport. */
+      return '<div class="card r1-card" data-qcard="' + qi + '"' + (qi ? ' hidden' : '') + '>' +
+        '<span class="eyebrow">' + esc(q.label) + ' &middot; ' + (qi + 1) + ' of ' + CHECKS.length + '</span>' +
         '<h3>' + q.ask + '</h3>' +
         '<ul class="choices">' + opts + '</ul>' +
         '<div class="feedback" role="status" id="cf' + qi + '"></div></div>';
@@ -1390,8 +1395,18 @@
         var sib = b.closest('ul').querySelectorAll('[data-q]');
         for (var i = 0; i < sib.length; i++) sib[i].disabled = true;
         // Fills this stop on the rail. Answered, not correct — see app.css.
-        b.closest('.card').classList.add('answered');
+        var card = b.closest('.card');
+        card.classList.add('answered');
         A11y.announce('Yes.');
+        // Next question replaces this one; focus follows, so a keyboard
+        // student is never left on a control that just disappeared.
+        var next = host.querySelector('[data-qcard="' + (qi + 1) + '"]');
+        if (next) {
+          card.hidden = true;
+          next.hidden = false;
+          var nh = next.querySelector('h3');
+          if (nh) { nh.setAttribute('tabindex', '-1'); nh.focus(); }
+        }
       } else {
         b.disabled = true;
         A11y.announce('Not this time.');
