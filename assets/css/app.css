@@ -3498,6 +3498,10 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-scene .scene > svg, .ck-scene .scene > img, .ck-scene .scene > div:not(figcaption) {
   flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
 .ck-scene .scene figcaption { flex: 0 0 auto; margin: 0; }
+/* A station's art band (the Arrivals Board's caboose) sitting in the picture
+   panel: it fits the panel instead of keeping its 240px band height. */
+.ck-scene .art-band { margin: 0; height: 100%; width: 100%; align-items: center; }
+.ck-scene .art-band img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; }
 /* Unit pictures (the quilt) are a grid of SQUARE cells sized from the width,
    so in a 30%-wide panel they grew to 348px and spilled out of a 236px row.
    Cells are capped instead, and the frame sits centred at its own size. */
@@ -3546,6 +3550,19 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 /* The question column holds a question and its answer controls; the site's
    1.3em paragraph rhythm is for reading, and here it only made the column
    (and so the whole working row) taller. */
+/* THE QUESTION PANEL'S TYPE FITS THE PANEL (user, 2026-10-18: "these
+   questions need to be resized for the viewport"). Section heads and card
+   questions kept their full-page display sizes — a 1.4rem heading and a
+   1.22em question in a ~300px column, four words a line. They scale with the
+   window now, and the checklist's rail (a line of stops down the left, one per
+   card) goes: one card at a time has nothing to string together. */
+.ck-ask .section-head { margin: 0 0 calc(var(--su)); }
+.ck-ask .section-head h2 { font-size: clamp(1.05rem, .85rem + .45vw, 1.3rem); }
+.ck-ask .section-head .rule { display: none; }
+.ck-ask h3, .ck-ask #r1checks .card h3 { font-size: clamp(1rem, .9rem + .3vw, 1.15rem); margin-top: 0; }
+.ck-ask .eyebrow { font-size: .72rem; }
+.ck-ask #r1checks::before, .ck-ask #r1checks .card::before, .ck-ask #r1checks .card::after { display: none; }
+.ck-ask #r1checks .card { margin: 0; padding: calc(var(--su) * 1.25); box-shadow: none; }
 .ck-ask p { margin-bottom: .55em; }
 .ck-ask h3 { margin-bottom: .5em; text-align: center; }
 /* A step that is only a question and a lever (the first read) sits in the

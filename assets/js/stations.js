@@ -950,6 +950,22 @@
     } else {
       [].forEach.call(work.children, function (n) { n.setAttribute('data-ck-stale', 'yes'); });
     }
+    /* A STATION'S ART GOES WHERE THE PICTURE GOES (user, 2026-10-18). The
+       Arrivals Board's caboose was a big band at the top of the question
+       panel, pushing its one question below it. It takes the illustration
+       panel instead; `sceneMasked` is cleared so the next phase that shows the
+       story repaints the problem's own picture there. */
+    var art = own('.art-band');
+    if (art.length) {
+      var sb = this.region('scene');
+      if (sb) {
+        sb.innerHTML = '';
+        sb.hidden = false;
+        [].forEach.call(art, function (n) { sb.appendChild(n); });
+        this.sceneMasked = null;
+      }
+    }
+
     fb.innerHTML = '';
     /* THE QUESTION PANEL ASKS; THE FEEDBACK BAR TEACHES (user, 2026-10-18:
        "less instruction… focus primarily on asking the students questions
@@ -1336,7 +1352,11 @@
          screens tall. Each card is shown alone and the next replaces it once
          the student has it right; its reply stays in the feedback viewport. */
       return '<div class="card r1-card" data-qcard="' + qi + '"' + (qi ? ' hidden' : '') + '>' +
-        '<span class="eyebrow">' + esc(q.label) + ' &middot; ' + (qi + 1) + ' of ' + CHECKS.length + '</span>' +
+        /* Progress as DOTS, not "2 of 5": this is a numberless screen, and the
+           sweep flagged the counter's digits on all 28 island first reads the
+           day it was added. */
+        '<span class="eyebrow">' + esc(q.label) + ' <span class="r1-dots" aria-hidden="true">' +
+          CHECKS.map(function (x, j) { return j <= qi ? '&#9679;' : '&#9675;'; }).join('') + '</span></span>' +
         '<h3>' + q.ask + '</h3>' +
         '<ul class="choices">' + opts + '</ul>' +
         '<div class="feedback" role="status" id="cf' + qi + '"></div></div>';
@@ -1635,16 +1655,22 @@
          rather than as this problem's measurement. RE-MEASURE ACROSS ALL SEVEN
          ISLAND PROBLEMS once they exist; the target is a flat-ish spread over
          five positions, not two comfortable numbers. */
-    function lineOpts(stage) {
-      return MF.seededShuffle(Object.keys(MF.LINES), p.id + '|read-' + stage + '|')
-        .map(function (k) {
-          var L = MF.LINES[k];
-          return '<li><button class="choice" type="button" data-k="' + esc(k) + '"' +
-            ' aria-label="' + esc(L.name + '. ' + L.form) + '">' +
-            '<span class="marker" aria-hidden="true">' + L.marker + '</span>' +
-            '<span><strong>' + esc(L.name) + '</strong><small>' + esc(L.form) + '</small></span>' +
-            '</button></li>';
-        }).join('');
+    /* ASKED IN PICTURES (user, 2026-10-18: "could be asked visually to select
+       two different types you are dealing with"). Each half is answered by
+       choosing one of the same five shapes the mainland's picture picker uses
+       — so a student who has met them there recognises them here — instead of
+       a list of line names and formulas. `data-k` is kept, so the handlers
+       below are unchanged. The cards are in the picture panel; the question
+       stays in the question panel. */
+    function pictureOpts(stage) {
+      return '<ul class="mp-grid">' +
+        MF.seededShuffle(Object.keys(MF.LINES), p.id + '|read-' + stage + '|')
+          .filter(function (k) { return ModelPicker.SHAPES[k]; })
+          .map(function (k) {
+            var s = ModelPicker.SHAPES[k];
+            return '<li><button class="mp-card" type="button" data-k="' + esc(k) + '">' +
+              s.art + '<span class="mp-cap">' + s.caption + '</span></button></li>';
+          }).join('') + '</ul>';
     }
 
     this.host().innerHTML =
@@ -1656,28 +1682,31 @@
         'questions on each side of that place.</p>') +
       this.problemHTML(false, true) +
 
-      '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; where it changes</span>' +
-        '<h3>Tap the sentence where the story stops doing one thing and starts doing another.</h3>' +
-        '<div class="rule"></div></div>' +
-      '<p class="hint-text">Not where the numbers are. Where the <em>kind of thing happening</em> changes.</p>' +
+      /* ONE STAGE AT A TIME: the seam, then the first half, then the second.
+         Each stage's heading hides when the next one opens. */
+      '<div id="xr-seam">' +
+        '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; where it changes</span>' +
+          '<h3>Tap the sentence where the story stops doing one thing and starts doing another.</h3>' +
+          '<div class="rule"></div></div>' +
+        '<p class="hint-text">Not where the numbers are. Where the <em>kind of thing happening</em> changes.</p>' +
+      '</div>' +
       '<div class="feedback" role="status" id="xr-fb1"></div>' +
 
       '<div id="xr-half1" hidden>' +
         '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; before the crossover</span>' +
-          '<h3>Run the checklist on the FIRST part. What kind of situation is it?</h3>' +
+          '<h3>Which picture fits the FIRST part of the story?</h3>' +
           '<div class="rule"></div></div>' +
-        '<ul class="choices" id="xr-opts1">' + lineOpts(1) + '</ul>' +
         '<div class="feedback" role="status" id="xr-fb2"></div>' +
       '</div>' +
+      '<div class="ck-to-work" id="xr-opts1" hidden>' + pictureOpts(1) + '</div>' +
 
       '<div id="xr-half2" hidden>' +
         '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; after the crossover</span>' +
-          '<h3>Now the same five questions, on the SECOND part.</h3>' +
+          '<h3>Now which picture fits the SECOND part?</h3>' +
           '<div class="rule"></div></div>' +
-        '<p class="hint-text">The same checklist. A different stretch of the story.</p>' +
-        '<ul class="choices" id="xr-opts2">' + lineOpts(2) + '</ul>' +
         '<div class="feedback" role="status" id="xr-fb3"></div>' +
       '</div>' +
+      '<div class="ck-to-work" id="xr-opts2" hidden>' + pictureOpts(2) + '</div>' +
 
       '<div id="xr-done" hidden>' +
         '<div class="msg msg-go"><span class="ico" aria-hidden="true">&#10003;</span><p>' +
@@ -1722,7 +1751,9 @@
       });
       fb.innerHTML = msg('go', '&#10003;', '<strong>That is the crossover.</strong> ' + esc(pr.crossoverWhy || ''));
       spotlight(0, pr.crossoverSentence);
+      host.querySelector('#xr-seam').hidden = true;
       host.querySelector('#xr-half1').hidden = false;
+      host.querySelector('#xr-opts1').hidden = false;
       focusFeedback(host.querySelector('#xr-half1 h3'));
       A11y.announce('That is the crossover. Now the first part.');
     }
@@ -1771,12 +1802,16 @@
     wireHalf(1, pr.first, pr.firstWhy, function () {
       stage = 3;
       spotlight(pr.crossoverSentence, p.problem.sentences.length);
+      host.querySelector('#xr-half1').hidden = true;
+      host.querySelector('#xr-opts1').hidden = true;
       host.querySelector('#xr-half2').hidden = false;
+      host.querySelector('#xr-opts2').hidden = false;
       focusFeedback(host.querySelector('#xr-half2 h3'));
       A11y.announce('Now the second part.');
     });
     wireHalf(2, pr.second, pr.secondWhy, function () {
       spotlight(0, p.problem.sentences.length);
+      host.querySelector('#xr-half2').hidden = true;
       host.querySelector('#xr-done').hidden = false;
       host.querySelector('#xr-go').addEventListener('click', function () { self.go(phaseAfter(self.p, 'crossover')); });
       focusFeedback(host.querySelector('#xr-done .msg'));
@@ -2984,7 +3019,8 @@
          up. Everything else on the screen is identical — the estimate check is
          the only part of Look Back that needed one. */
       (hasEst
-        ? '<h3>1. Does it match your estimate?</h3>' +
+        ? '<div id="ckest">' +
+          '<h3>1. Does it match your estimate?</h3>' +
           '<p>You estimated <strong>' + esc(this.estimateRaw || est) + '</strong>. ' +
             'The answer is <strong>' + esc(a.answer.exact) + ' ' + esc(a.answer.unit || '') + '</strong>.</p>' +
           '<ul class="choices" id="estck">' +
@@ -2993,31 +3029,86 @@
             '<li><button class="choice" type="button" data-v="no" aria-label="No, they do not match">' +
               '<span><strong>No &mdash; they don&rsquo;t match</strong></span></button></li>' +
           '</ul>' +
-          '<div class="feedback" role="status" id="ckfb"></div>'
+          '<div class="feedback" role="status" id="ckfb"></div>' +
+          '<div class="btn-row"><button class="btn" id="ckestnext" type="button" hidden>Next check &rarr;</button></div>' +
+          '</div>'
         : '<p>The answer is <strong>' + esc(a.answer.exact) + ' ' + esc(a.answer.unit || '') + '</strong>.</p>') +
+      /* ONE QUESTION AT A TIME, THE TEACHING IN THE FEEDBACK VIEWPORT (user,
+         2026-10-18: "there really should be only one question in the question
+         section at a time"). The board used to reveal four checks at once, each
+         with a paragraph of explanation, under a picture — 1,415px in a 334px
+         column. Now each check is its own step: its question here, its
+         explanation written to the feedback viewport as the step opens, and
+         the lever moves on. The last step's button leaves the station. */
       '<div id="rest"' + (hasEst ? ' hidden' : '') + '>' +
-        '<h3>' + n(1) + '. Did you answer the question that was asked?</h3>' +
-        '<p>' + esc(a.questionCheck) + '</p>' +
-        '<h3>' + n(2) + '. Units</h3>' +
-        '<p>The answer is in <strong>' + esc(a.unitsCheck) + '</strong>. Did yours have that label?</p>' +
-        '<h3>' + n(3) + '. Is it reasonable?</h3>' +
-        '<p>' + esc(a.reasonablenessCheck) + '</p>' +
-        (a.reasonablenessFailExample ? '<p class="hint-text">' + esc(a.reasonablenessFailExample) + '</p>' : '') +
+        '<div class="ck-step" data-step="q">' +
+          '<h3>' + n(1) + '. Did you answer the question that was asked?</h3>' +
+          '<div class="btn-row"><button class="btn" type="button" data-next>Next check &rarr;</button></div>' +
+        '</div>' +
+        '<div class="ck-step" data-step="u" hidden>' +
+          '<h3>' + n(2) + '. Units</h3>' +
+          '<p>The answer is in <strong>' + esc(a.unitsCheck) + '</strong>. Did yours have that label?</p>' +
+          '<div class="btn-row"><button class="btn" type="button" data-next>Next check &rarr;</button></div>' +
+        '</div>' +
+        '<div class="ck-step" data-step="r" hidden>' +
+          '<h3>' + n(3) + '. Is it reasonable?</h3>' +
+          '<div class="btn-row"><button class="btn" type="button" data-next>' +
+            (sf ? 'Next check &rarr;' : 'Last look &rarr;') + '</button></div>' +
+        '</div>' +
         /* The `why` stays behind a click on purpose. The prompt is a real
            question, and a student who reads the explanation off the same
            screen has not been asked anything — the same reason the Test
            Track's worked example hides behind "Show me". */
-        (sf ? '<h3>' + n(4) + '. The signal that failed</h3>' +
-              '<p>' + esc(sf.prompt) + '</p>' +
-              '<div class="btn-row">' +
-                '<button class="btn" id="sfgo" type="button" aria-controls="sffb" aria-expanded="false">' +
-                  'Show me why &rarr;</button>' +
-              '</div>' +
-              '<div class="feedback" role="status" id="sffb"></div>'
+        (sf ? '<div class="ck-step" data-step="s" hidden>' +
+                '<h3>' + n(4) + '. The signal that failed</h3>' +
+                '<p>' + esc(sf.prompt) + '</p>' +
+                '<div class="btn-row">' +
+                  '<button class="btn" id="sfgo" type="button" aria-controls="sffb" aria-expanded="false">' +
+                    'Show me why &rarr;</button>' +
+                '</div>' +
+                '<div class="feedback" role="status" id="sffb"></div>' +
+              '</div>'
             : '') +
-        (a.connection ? msg('info', '◆', '<strong>Worth remembering:</strong> ' + esc(a.connection)) : '') +
-        '<div class="btn-row"><button class="btn" id="donebtn" type="button">Leave the station →</button></div>' +
+        '<div class="ck-step" data-step="end" hidden>' +
+          '<h3>That&rsquo;s the arrivals board.</h3>' +
+          '<div class="btn-row"><button class="btn" id="donebtn" type="button">Leave the station →</button></div>' +
+        '</div>' +
+        '<div class="feedback" role="status" id="ckstepfb"></div>' +
       '</div>';
+
+    /* The step controller. Each step's explanation is written to the feedback
+       viewport as the step opens, so it is read beside the question it
+       explains and never before it. */
+    var STEP_TEACH = {
+      q: esc(a.questionCheck),
+      u: '',
+      r: esc(a.reasonablenessCheck) +
+         (a.reasonablenessFailExample ? '<br><br>' + esc(a.reasonablenessFailExample) : ''),
+      end: a.connection ? '<strong>Worth remembering:</strong> ' + esc(a.connection) : ''
+    };
+    function openStep(stepEl) {
+      var host = self.host();
+      [].forEach.call(host.querySelectorAll('#rest .ck-step'), function (s) { s.hidden = s !== stepEl; });
+      var key = stepEl.getAttribute('data-step'), t = STEP_TEACH[key];
+      var fb = host.querySelector('#ckstepfb');
+      if (fb) {
+        fb.innerHTML = t ? msg('info', key === 'end' ? '◆' : '&rarr;', t) : '';
+        // Nothing to say on this step: let the viewport show its empty state.
+        if (!t) fb.removeAttribute('data-latest');
+      }
+      var h = stepEl.querySelector('h3');
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+    }
+    [].forEach.call(this.host().querySelectorAll('#rest [data-next]'), function (b) {
+      b.addEventListener('click', function () {
+        var cur = b.closest('.ck-step'), next = cur.nextElementSibling;
+        while (next && !next.classList.contains('ck-step')) next = next.nextElementSibling;
+        if (next) openStep(next);
+      });
+    });
+    // Without an estimate the board opens on its first check straight away.
+    if (!hasEst) openStep(this.host().querySelector('#rest .ck-step'));
+    this.openCheckStep = openStep;
 
     /* Bound at render time, not inside the #estck handler where #donebtn is
        bound. The node exists from the moment innerHTML is set — it is inside
@@ -3026,6 +3117,14 @@
       this.host().querySelector('#sfgo').addEventListener('click', function () {
         this.disabled = true;
         this.setAttribute('aria-expanded', 'true');
+        // Its question answered, the step offers the way on.
+        var endStep = self.host().querySelector('#rest .ck-step[data-step="end"]');
+        var row = this.closest('.btn-row');
+        if (row && endStep && !row.querySelector('[data-next]')) {
+          var nb = el('<button class="btn" type="button" data-next>Last look &rarr;</button>');
+          nb.addEventListener('click', function () { openStep(endStep); });
+          row.appendChild(nb);
+        }
         var box = self.host().querySelector('#sffb');
         box.innerHTML = msg('info', '◆', esc(sf.why));
         A11y.announce('Explanation shown.');
@@ -3090,9 +3189,15 @@
                  : '<strong>Good catch.</strong> Spotting that your estimate and answer disagree is exactly the skill this station is for. It means you&rsquo;d have known to check.')
         : 'Look at the two numbers again side by side. Are they in the same ballpark or not?';
       self.host().querySelector('#ckfb').innerHTML = msg(correct ? 'go' : 'caution', correct ? '✓' : '→', text);
-      self.host().querySelector('#rest').hidden = false;
+      // The verdict stays on screen in the viewport; the lever offers the next check.
+      self.host().querySelector('#ckestnext').hidden = false;
       A11y.announce(correct ? 'Checked.' : 'Have another look.');
       focusFeedback(self.host().querySelector('#ckfb'));
+    });
+    if (hasEst) this.host().querySelector('#ckestnext').addEventListener('click', function () {
+      self.host().querySelector('#ckest').hidden = true;
+      self.host().querySelector('#rest').hidden = false;
+      openStep(self.host().querySelector('#rest .ck-step'));
     });
 
     if (this.expandAll) {
@@ -3109,6 +3214,12 @@
          that handler does `self.m.selfChecks++` and the sweep passes {}. */
       var rest = this.host().querySelector('#rest');
       if (rest) rest.hidden = false;
+      // Every step's question in view, and every step's explanation written,
+      // so the sweep reads them all — they are otherwise written one at a time.
+      [].forEach.call(this.host().querySelectorAll('#rest .ck-step'), function (s) { s.hidden = false; });
+      var fbx = this.host().querySelector('#ckstepfb');
+      if (fbx) fbx.innerHTML = Object.keys(STEP_TEACH).map(function (k) { return STEP_TEACH[k]; })
+        .filter(Boolean).map(function (t) { return msg('info', '&rarr;', t); }).join('');
       var sfb = this.host().querySelector('#sfgo');
       if (sfb) sfb.click();
     }
