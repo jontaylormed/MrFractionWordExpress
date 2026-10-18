@@ -14,3 +14,7 @@ Mr Fraction Word Express Art/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Claude Code instructions and local config: kept on this computer, never published.
+CLAUDE.md
+.claude/
