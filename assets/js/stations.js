@@ -600,12 +600,26 @@
           ' data-sent="' + i + '" data-speak="' + speak + '">' + body + '</span> '
         : '<span class="' + cls + '" data-speak="' + speak + '">' + body + '</span> ';
     });
-    // The picture sits beside the words, on every screen that shows them.
-    // The picture obeys the same masking as the prose beside it.
-    var scene = (window.Scene && Scene.html(p, masked)) || '';
-    return '<div class="problem-pair' + (scene ? '' : ' no-scene') + '">' +
-             '<div class="problem-well"><p>' + out + '</p></div>' + scene +
-           '</div>';
+    /* THE COCKPIT PAINTS THE STORY INTO ITS OWN PANEL AND RETURNS NOTHING.
+       Every phase still calls this where its markup used to start, so the call
+       sites read the same — but the story no longer travels inside the phase
+       markup, which is what made it jump to the top of a rebuilt page on every
+       screen. It stays put, and only its masking, picking and highlighting
+       change. Phases that query sentences look in `#ck-text`, not the host.
+
+       The picture obeys the same masking as the prose beside it, so it is
+       repainted only when that changes — repainting every phase would restart
+       its animation for nothing. */
+    var text = this.region('text');
+    if (text) text.innerHTML = '<div class="problem-well" id="ck-story"><p>' + out + '</p></div>';
+    var sceneBox = this.region('scene');
+    if (sceneBox && this.sceneMasked !== masked) {
+      this.sceneMasked = masked;
+      var scene = (window.Scene && Scene.html(p, masked)) || '';
+      sceneBox.innerHTML = scene;
+      sceneBox.hidden = !scene;
+    }
+    return '';
   };
 
   /* AN ISLAND STOP IS A PLACE, AND THE HEADER USED TO NAME A DIFFERENT ONE.
@@ -744,28 +758,54 @@
         '</div>';
     }
 
+    /* THE COCKPIT (docs/COCKPIT.md). One screen whose panels never move; only
+       what is in them changes. Teachers found the old page — a header, then a
+       card every phase rebuilt top to bottom, problem text included — meant
+       scrolling between the story and the question on every screen.
+
+       The route's FORM ("Larger − Smaller = Difference") is no longer printed
+       up here. It was always a partial giveaway (see the percent and island
+       notes above), and since the fast path asks the student to pick the model,
+       a formula at the top of the screen would BE the answer. The route name
+       stays: the student chose the ride and already knows it.
+
+       `.ck-body` holds every panel and nothing else, so `tools/sweep.js` can
+       scan what the student is working in without the "Stop 2 of 5" digits in
+       the top strip reading as leaked answers. */
     var html =
-      '<div style="--line-current:' + colour + '">' +
-        leg +
-        '<div class="station-head">' +
-          '<span class="station-thumb" aria-hidden="true">' +
-            Scenery.wheelSVG().replace('<svg', '<svg style="color:' + colour + ';opacity:.85"') +
-          '</span>' +
-          '<div class="station-meta">' +
-            '<span class="eyebrow">' + esc(st.name) + '</span>' +
-            '<h2>' + esc(st.strategy) + '</h2>' +
-            '<p class="station-desc">' + esc(route.name) + ' &middot; ' +
-              esc(route.form) + '</p>' +
+      '<div class="cockpit" style="--line-current:' + colour + '">' +
+        '<div class="ck-top">' +
+          leg +
+          '<div class="ck-title">' +
+            '<span class="eyebrow">' + esc(st.name) + ' &middot; ' + esc(route.name) + '</span>' +
+            '<h2>' + esc(this.p.title || st.strategy) + '</h2>' +
           '</div>' +
         '</div>' +
-        '<div class="card"><div id="phase-host"></div></div>' +
+        '<div class="ck-body">' +
+          '<section class="ck-panel ck-text" id="ck-text" aria-label="The word problem"></section>' +
+          '<section class="ck-panel ck-scene" id="ck-scene"></section>' +
+          '<section class="ck-panel ck-ask" aria-label="Question and answer"><div id="phase-host"></div></section>' +
+          '<section class="ck-panel ck-work" id="ck-work" aria-label="Work area"></section>' +
+          '<section class="ck-panel ck-pad" id="ck-pad">' + Scratch.html('ck-pad-canvas') + '</section>' +
+          '<section class="ck-panel ck-feedback" id="ck-feedback" role="status" aria-live="polite"></section>' +
+          '<div class="ck-lever" id="ck-lever"></div>' +
+        '</div>' +
       '</div>';
     this.root = el(html);
+    this.sceneMasked = null;
     this.renderPhase();
+    /* The pad sizes its canvas from its rendered box, which is all zeros until
+       app.js attaches the root — so it is wired on the next frame, once, and
+       then lives for the whole station. Notes survive moving between steps. */
+    var self = this;
+    (global.requestAnimationFrame || setTimeout)(function () {
+      if (self.root && self.root.isConnected) Scratch.wire(self.root, 'ck-pad-canvas');
+    });
     return this.root;
   };
 
   Station.prototype.host = function () { return this.root.querySelector('#phase-host'); };
+  Station.prototype.region = function (name) { return this.root.querySelector('#ck-' + name); };
 
   Station.prototype.renderPhase = function () {
     var f = {
@@ -1155,7 +1195,7 @@
         'kind, so asking that gets you two answers and neither of them is wrong.</p>' +
         '<p>So read it in two goes. First find the place it changes &mdash; then ask the same five ' +
         'questions on each side of that place.</p>') +
-      '<div id="xr-story">' + this.problemHTML(false, true) + '</div>' +
+      this.problemHTML(false, true) +
 
       '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; where it changes</span>' +
         '<h3>Tap the sentence where the story stops doing one thing and starts doing another.</h3>' +
@@ -1186,7 +1226,8 @@
         '<div class="btn-row"><button class="btn" id="xr-go" type="button">Second read &rarr;</button></div>' +
       '</div>';
 
-    var host = this.host(), stage = 1;
+    // The story lives in the cockpit's text panel now, not in the phase host.
+    var host = this.host(), stage = 1, story = this.root.querySelector('#ck-story');
 
     /* Which sentences belong to which half, decided by the crossover index and
        used to dim the half that is not being asked about. Derived, never
@@ -1194,7 +1235,7 @@
        from it, so a story that gains a sentence cannot leave the highlight
        pointing at the wrong stretch. */
     function spotlight(from, to) {
-      [].forEach.call(host.querySelectorAll('#xr-story [data-sent]'), function (b) {
+      [].forEach.call(story.querySelectorAll('[data-sent]'), function (b) {
         var i = +b.getAttribute('data-sent');
         b.setAttribute('data-half', (i >= from && i < to) ? 'on' : 'off');
       });
@@ -1216,7 +1257,7 @@
       stage = 2;
       b.setAttribute('data-picked', 'yes');
       b.setAttribute('data-result', 'right');
-      [].forEach.call(host.querySelectorAll('#xr-story [data-sent]'), function (x) {
+      [].forEach.call(story.querySelectorAll('[data-sent]'), function (x) {
         x.setAttribute('aria-disabled', 'true');
         x.removeAttribute('tabindex'); x.removeAttribute('role'); x.removeAttribute('aria-pressed');
       });
@@ -1227,10 +1268,10 @@
       A11y.announce('That is the crossover. Now the first part.');
     }
 
-    host.querySelector('#xr-story').addEventListener('click', function (e) {
+    story.addEventListener('click', function (e) {
       pickSentence(e.target.closest('[data-sent]'));
     });
-    host.querySelector('#xr-story').addEventListener('keydown', function (e) {
+    story.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
       var b = e.target.closest('[data-sent]');
       if (!b) return;
@@ -1309,7 +1350,7 @@
       MrFraction.aside('steady',
         '<p><strong>Still the first read.</strong> You have said what kind of situation this is. ' +
         'Now show me where the story says so.</p>') +
-      '<div id="r1story">' + this.problemHTML(false, true) + '</div>' +
+      this.problemHTML(false, true) +
       /* This screen had no section-head at all — a bare h3 at 16.8px, smaller
          than the body text above it, and no display face doing any work until
          after the student had already answered. The two screens also shared
@@ -1348,7 +1389,8 @@
       b.setAttribute('aria-pressed', picked[i] ? 'true' : 'false');
     }
 
-    var story = host.querySelector('#r1story');
+    // The story lives in the cockpit's text panel now, not in the phase host.
+    var story = this.root.querySelector('#ck-story');
     story.addEventListener('click', function (e) {
       toggle(e.target.closest('[data-sent]'));
     });
@@ -1376,7 +1418,7 @@
       /* KEEP THE EVIDENCE. This used to replace the story with plain prose, so
          every pick vanished at the exact moment a table headed "What you found"
          appeared. The sentences stay marked; they just stop being operable. */
-      [].forEach.call(host.querySelectorAll('.pickable'), function (b) {
+      [].forEach.call(story.querySelectorAll('.pickable'), function (b) {
         b.setAttribute('aria-disabled', 'true');
         b.removeAttribute('tabindex');        // out of the tab order, still readable
         b.removeAttribute('role');            // no longer a control, just marked text
