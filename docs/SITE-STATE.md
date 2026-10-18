@@ -25,7 +25,8 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 | | |
 |---|---|
 | **Problems** | **37**, four number sets each = **148 materialisations** |
-| **Rendered screens** | **1,576** (`SWEEP.render()`) |
+| **Rendered screens** | **1,756** (`SWEEP.render()`, branch `cockpit-layout`) — the fast path's chain plus the four help tools, every number set |
+| **Branch** | **`cockpit-layout` is the build under review; `main` is the live site and still has the old layout.** Everything below describes the branch. |
 | **Validation** | 37 problems, **0 errors**, 28 warnings — the warnings are the long-standing `segmentValue is not a value the problem gives` set and are expected |
 | **Lines** | Five schemas — Part–Whole Loop, Ratio & Rate Rail, The Change Line, The Compare Line, Equal Groups Express — plus **Crossover Island** |
 | **Special routes** | The Grand Tour (mixed), The Percent Line (a *surface* across four lines, not a sixth schema), The Challenge Line (crosses to the island) |
@@ -33,16 +34,38 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 | **Teacher page** | `teachers.html` — 15 learning targets with Bloom's levels. Reached by the **For Teachers** pill, which shows on the home map only, and opens in a new tab |
 | **Runtime** | Zero dependencies, no build step, runs from `file://`, no localStorage |
 
+## The screen: one cockpit per station (branch `cockpit-layout`, 2026-10-18)
+
+Full spec and history: [`COCKPIT.md`](COCKPIT.md). A station is **one screen whose panels never move**; only their contents change. At 1024px and up:
+
+```
+map band, full width · Stop N of M · problem title
+[ word problem 70%                    ][ illustration 30%  ]
+[ work area (the picture) ][ sketch pad ][ question + answer ]
+[                          ][           ][ the lever          ]
+[ Mr Fraction docked | FEEDBACK viewport, full width          ]
+```
+
+- **The question panel asks; the feedback viewport teaches.** Every verdict, hint, coaching note and Mr Fraction line goes to the bottom. Instructions (`.hint-text`, `.platform-instruction`, `.ck-teach`, `.est-lead`) become a coaching note there. Empty, the viewport shows Mr Fraction's silhouette.
+- **The lever** stands in for the step's main button (`syncLever`); the step's own button is hidden while it does.
+- **The work area keeps its picture** across steps — the bar model drawn at the Plan stays through the Engine Room.
+- **One sketch pad per station**, mounted once; notes survive between steps.
+- The working row is a set height (`clamp(300px, 44vh, 500px)`); a panel whose content is longer scrolls inside itself. The page itself may scroll.
+- Below 1024px the panels stack, with the lever and feedback straight after the question.
+
 ## A student's journey through one station
 
-`read1 → platform → read2 → read3 → ticket → plan → demo → solve → check → critique`
+`read1 → pickModel → platform → plan → demo → solve → check → critique`
 
-- `read1` and `platform` are the two screens of the first read, and **both are numberless**.
+- **`read1`** on a single-situation problem is the story with numbers covered and one action: read it, pull the lever, see Mr Fraction's retelling.
+- **`pickModel`** (new): five schematic pictures, no numbers — "Which picture fits this story?" Choosing the right one is the recognition step and is recorded as `schemaFirstTry` / `schemaAttempts`.
+- **`platform`** then proves it from the text (tap the sentences), and its reveal confirms the line.
+- **Numberless screens:** `Stations.NUMBERLESS` = read1, platform, crossover, pickModel, checklist.
+- **Help tools**, offered under "Help me see it" on pickModel and plan, returning to where they were opened: **Run the checklist** (the old five-question read 1), **Sort the numbers** (read2), **Find the question** (read3), **Find the missing piece** (ticket). `Stations.TOOLS`. Recorded in `toolsUsed`; the trip report names them.
 - `demo` is the Test Track, on **24 of the 37**.
-- **`critique` is the tenth screen and the newest** (2026-08-17) — see below.
 - **The pre-solve chain is written in exactly one place, `Stations.phaseChain`.** The post-solve chain is written in exactly one place, **`Stations.postSolve`**. If prose anywhere disagrees with those two functions, the functions are right.
 
-**On Crossover Island** the Platform Check is replaced by the **Crossover Read**. An **unstaffed halt** (`fadeLevel: "independent"`) runs `read1` and then the Engine Room — no Crossover Read, no second or third read, no Ticket Booth, **no estimate**. Only the hint ladder stays.
+**On Crossover Island**: `read1` keeps the five checklist questions, then the **Crossover Read**, then `plan` — no help tools. An **unstaffed halt** (`fadeLevel: "independent"`) runs `read1` and then the Engine Room — **no estimate**. Only the hint ladder stays.
 
 ## What shipped on 2026-09-22, and is newest
 
