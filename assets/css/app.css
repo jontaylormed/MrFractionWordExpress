@@ -3544,8 +3544,8 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 .ck-lever { display: flex; }
 .ck-lever-btn {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: calc(var(--su) * 1.5);
-  min-height: 64px; padding: calc(var(--su)) calc(var(--su) * 2);
-  font: inherit; font-weight: 700; font-size: 1.05rem; color: #fff; cursor: pointer;
+  min-height: 52px; padding: calc(var(--su) * .75) calc(var(--su) * 1.5);
+  font: inherit; font-weight: 700; font-size: 1rem; color: #fff; cursor: pointer;
   background: var(--orange-deep); border: 3px solid var(--ink); border-radius: var(--radius);
   box-shadow: 0 4px 0 var(--ink);
 }
@@ -3586,7 +3586,10 @@ body:has(.cockpit) .sign-mark { width: 30px; }
        122px for a bar model that needs 420. Wider prose is shorter prose; the
        picture and the pad stack beside the work instead, which is where a
        student looks while drawing anyway. */
-    grid-template-columns: minmax(0, 1.5fr) minmax(200px, .62fr) minmax(330px, 1fr);
+    /* The question column was 1fr and read as the biggest thing on screen
+       (user, 2026-10-18: "the right box is way too big"). It holds a question
+       and its answer, so it gets a reading column and no more. */
+    grid-template-columns: minmax(0, 1.7fr) minmax(200px, .62fr) minmax(270px, .68fr);
     grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
     grid-template-areas:
       "text text  ask"
