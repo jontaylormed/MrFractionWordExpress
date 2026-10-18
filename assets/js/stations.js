@@ -787,12 +787,35 @@
           '<section class="ck-panel ck-ask" aria-label="Question and answer"><div id="phase-host"></div></section>' +
           '<section class="ck-panel ck-work" id="ck-work" aria-label="Work area"></section>' +
           '<section class="ck-panel ck-pad" id="ck-pad">' + Scratch.html('ck-pad-canvas') + '</section>' +
-          '<section class="ck-panel ck-feedback" id="ck-feedback" role="status" aria-live="polite"></section>' +
-          '<div class="ck-lever" id="ck-lever"></div>' +
+          '<div class="ck-bottom">' +
+            '<div class="ck-say" id="ck-say"></div>' +
+            '<section class="ck-panel ck-feedback" id="ck-feedback" aria-label="Feedback"></section>' +
+          '</div>' +
+          '<div class="ck-lever" id="ck-lever">' +
+            '<button class="ck-lever-btn" id="ck-lever-btn" type="button" hidden>' +
+              '<span class="ck-lever-art" aria-hidden="true"><span class="ck-lever-arm"></span></span>' +
+              '<span class="ck-lever-label"></span>' +
+            '</button>' +
+          '</div>' +
         '</div>' +
       '</div>';
     this.root = el(html);
     this.sceneMasked = null;
+
+    /* EVERY PHASE STILL WRITES INTO #phase-host AND STILL QUERIES IT — and in
+       the cockpit, `distribute()` then moves its picture to the work panel and
+       its feedback slots to the feedback bar. A handler that later asks the
+       host for `#pfb` would get null and the station would silently stop
+       answering. So the host's queries are pointed at the whole cockpit: ids
+       are unique across it, and every existing lookup keeps working without
+       eleven phases being rewritten at once. Writing (`innerHTML`) still goes
+       to the host. No phase or model delegates events through the host itself
+       (checked), which is the one thing this could not carry. */
+    var root = this.root, ph = root.querySelector('#phase-host');
+    ph.querySelector = function (s) { return Element.prototype.querySelector.call(root, s); };
+    ph.querySelectorAll = function (s) { return Element.prototype.querySelectorAll.call(root, s); };
+    this.wireCockpit();
+
     this.renderPhase();
     /* The pad sizes its canvas from its rendered box, which is all zeros until
        app.js attaches the root — so it is wired on the next frame, once, and
@@ -821,14 +844,125 @@
       critique: this.phCritique
     }[this.phase];
     if (f) f.call(this);
+    this.distribute();
     var h = this.host();
-    var focusTarget = h.querySelector('h3');
+    // The real querySelector: the host's own is pointed at the whole cockpit.
+    var focusTarget = Element.prototype.querySelector.call(h, 'h3');
     if (focusTarget) { focusTarget.setAttribute('tabindex', '-1'); focusTarget.focus(); }
-    /* Hand whatever Mr Fraction queued during this phase to the floating
-       companion. Focus has already gone to the phase heading above, and the
-       companion never takes it — he is commentary, not a step, so he announces
-       through aria-live and leaves the student where they were. */
-    if (global.Companion) Companion.flush();
+    /* Hand whatever Mr Fraction queued during this phase to the companion.
+       Focus has already gone to the phase heading above, and the companion
+       never takes it — he is commentary, not a step, so he announces through
+       aria-live and leaves the student where they were.
+
+       ONLY ONCE THE STATION IS ON THE PAGE. `render()` runs the first phase
+       before app.js attaches the root, and flushing then emptied the queue
+       into a station nobody could see — so setView's own flush, a moment later,
+       found nothing and hid him. The first thing he says at every station was
+       being lost. setView flushes as soon as the root is attached. */
+    if (global.Companion && this.root.isConnected) Companion.flush();
+  };
+
+  /* ---------- The cockpit's panels ---------- */
+
+  /* After a phase has written its markup into the host, send each part to its
+     panel. Marked in the markup, not guessed: `.ck-to-work` is a picture or a
+     worked surface, `.feedback` is a status slot.
+
+     THE WORK PANEL KEEPS ITS PICTURE until a phase brings a new one. The bar
+     model drawn at the Plan stays in view through every step of the Engine
+     Room — that is the point of a panel that never moves. What it carries over
+     is marked stale, and a stale surface's own buttons are hidden and never
+     drive the lever: the Platform Check's "Second read" button, still sitting
+     in the map it came with, must not be what the lever pulls two phases on. */
+  Station.prototype.distribute = function () {
+    var host = this.host(), work = this.region('work'), fb = this.region('feedback');
+    var own = function (sel) { return Element.prototype.querySelectorAll.call(host, sel); };
+    var pics = own('.ck-to-work');
+    if (pics.length) {
+      work.innerHTML = '';
+      [].forEach.call(pics, function (n) { work.appendChild(n); });
+    } else {
+      [].forEach.call(work.children, function (n) { n.setAttribute('data-ck-stale', 'yes'); });
+    }
+    fb.innerHTML = '';
+    [].forEach.call(own('.feedback'), function (n) { fb.appendChild(n); });
+    this.syncLever();
+  };
+
+  /* THE LEVER IS ONE CONTROL THAT PULLS WHATEVER THE STEP'S MAIN BUTTON IS.
+     Every phase keeps its own buttons and their handlers exactly as they were;
+     the lever finds the one a student would press next — the last visible
+     primary `.btn` — takes its label, hides it, and clicks it when pulled.
+     Quiet buttons (hints, "take it to the board") stay where they are, beside
+     the thing they belong to. Re-synced on every change, because phases reveal
+     their next button by un-hiding it rather than re-rendering. */
+  Station.prototype.syncLever = function () {
+    var body = this.root.querySelector('.ck-body');
+    var lever = this.root.querySelector('#ck-lever-btn');
+    if (!body || !lever) return;
+    /* The question panel's own button first. A picture can carry buttons of
+       its own — the Plan's bar model has "Split into 4 equal parts" — and those
+       belong to the picture; the lever is "go on", which is the step's. Only a
+       step with no button of its own lends the lever to its picture (the Test
+       Track's "Your turn"). */
+    function lastPrimary(scope) {
+      var all = scope ? scope.querySelectorAll('button.btn') : [], found = null;
+      for (var i = 0; i < all.length; i++) {
+        var b = all[i];
+        if (/\bbtn-(quiet|secondary)\b/.test(b.className)) continue;
+        if (b.hidden || b.closest('[hidden]') || b.closest('[data-ck-stale]')) continue;
+        found = b;
+      }
+      return found;
+    }
+    var src = lastPrimary(this.root.querySelector('.ck-ask')) ||
+              lastPrimary(this.root.querySelector('.ck-work'));
+    if (this.leverSrc && this.leverSrc !== src) this.leverSrc.removeAttribute('data-ck-src');
+    this.leverSrc = src;
+    if (!src) { if (!lever.hidden) lever.hidden = true; return; }
+    if (!src.hasAttribute('data-ck-src')) src.setAttribute('data-ck-src', 'yes');
+    var label = (src.textContent || '').trim();
+    var lab = lever.querySelector('.ck-lever-label');
+    // Only write what changed: the observer that calls this watches the lever too.
+    if (lab.textContent !== label) lab.textContent = label;
+    if (lever.disabled !== src.disabled) lever.disabled = src.disabled;
+    if (lever.hidden) lever.hidden = false;
+  };
+
+  Station.prototype.wireCockpit = function () {
+    var self = this, root = this.root;
+    var lever = root.querySelector('#ck-lever-btn');
+    lever.addEventListener('click', function () {
+      var src = self.leverSrc;
+      if (!src || src.disabled) return;
+      lever.setAttribute('data-pulled', 'yes');
+      setTimeout(function () { lever.removeAttribute('data-pulled'); }, 450);
+      src.click();
+    });
+    if (!global.MutationObserver) return;
+    new MutationObserver(function () { self.syncLever(); })
+      .observe(root.querySelector('.ck-body'), {
+        subtree: true, childList: true, characterData: true,
+        attributes: true, attributeFilter: ['hidden', 'disabled']
+      });
+    /* ONE FEEDBACK BAR, SHOWING THE LATEST THING SAID. Each phase still writes
+       to its own slot; all the slots live in the bar, and only the one written
+       most recently shows. An earlier stage's verdict does not sit under the
+       next stage's question. */
+    var fb = root.querySelector('#ck-feedback');
+    new MutationObserver(function (muts) {
+      var slot = null;
+      muts.forEach(function (m) {
+        var t = m.target.nodeType === 1 ? m.target : m.target.parentNode;
+        var s = t && t.closest && t.closest('.feedback');
+        if (s && fb.contains(s) && s.innerHTML.trim()) slot = s;
+      });
+      if (!slot) return;
+      [].forEach.call(fb.querySelectorAll('.feedback[data-latest]'), function (n) {
+        if (n !== slot) n.removeAttribute('data-latest');
+      });
+      if (!slot.hasAttribute('data-latest')) slot.setAttribute('data-latest', 'yes');
+    }).observe(fb, { subtree: true, childList: true, characterData: true });
   };
 
   Station.prototype.go = function (phase) { this.phase = phase; this.renderPhase(); };
@@ -1367,7 +1501,7 @@
       'Tap again to change your mind.</p>' +
       '<div class="feedback" role="status" id="pcfb"></div>' +
       '<div class="btn-row"><button class="btn" id="pcheck" type="button">Check these</button></div>' +
-      '<div id="pcmap" hidden>' +
+      '<div id="pcmap" class="ck-to-work" hidden>' +
         '<div class="section-head"><span class="eyebrow">Where that puts you</span>' +
           '<h2>The shape decides the line</h2><div class="rule"></div></div>' +
         '<div class="table-scroll"><table class="map-table">' +
@@ -1910,14 +2044,16 @@
       MrFraction.aside('thinking',
         '<p><strong>Before you calculate.</strong> An estimate gives you something to check against. ' +
         'Without one, a wrong answer looks exactly like a right one.</p>') +
-      this.problemHTML(false) + bars +
+      this.problemHTML(false) +
+      // The picture goes to the work panel, and stays there through the Engine Room.
+      (bars ? '<div class="ck-to-work">' + bars + '</div>' : '') +
       '<h3>Commit to an estimate</h3>' +
       '<p>' + esc(est ? est.prompt : 'Roughly what do you think the answer will be?') + '</p>' +
       /* THE GATE IS A BAND ON A LINE NOW, with a typed field beside it and a
          scratch pad that nothing reads. `ROADMAP` §8 and `docs/ESTIMATE-INPUT.md`.
          Everything downstream is unchanged: `this.estimate` is still the parsed
          number and `this.estimateRaw` is still what the student saw. */
-      Estimate.html(this.p) +
+      Estimate.html(this.p, { noPad: true }) +
       '<div class="feedback" role="status" id="pfb"></div>' +
       '<div class="btn-row"><button class="btn" id="pgo" type="button">Lock it in →</button></div>';
 
@@ -1993,7 +2129,7 @@
         '<p><strong>Before you calculate.</strong> You have a rough idea of the size of the answer. ' +
         'Now watch what the move actually does &mdash; then you will do it yourself.</p>') +
       this.problemHTML(false) +
-      TestTrack.html(this.p) +
+      '<div class="ck-to-work">' + TestTrack.html(this.p) + '</div>' +
       '<div class="btn-row" id="drow" hidden>' +
         '<button class="btn" id="dgo" type="button">To the Engine Room →</button></div>';
 
@@ -2078,10 +2214,10 @@
          the same reason: Mr Fraction floats at the viewport's bottom-right, the
          pad is the tall element that reaches him, and moving it costs nothing
          where shrinking it cost a third of its width. */
+      /* THE PAD IS THE COCKPIT'S NOW (docs/COCKPIT.md): one surface, mounted
+         once, beside this field for the whole station. It no longer clears per
+         step — a student's working from step 1 is often what step 2 needs. */
       '<div class="solve-wrap">' +
-        /* No custom label: both pads carry the same one, so a student meets the
-           same surface described the same way on both screens. */
-        Scratch.html('solve-pad') +
         '<div class="field">' +
           '<label for="ans">Your answer' + (step.answer.unit ? ' (' + esc(step.answer.unit) + ')' : '') + '</label>' +
           '<input type="text" id="ans" inputmode="decimal">' +
@@ -2100,7 +2236,6 @@
       '</div>' +
       '<div class="hints" id="hints"></div>';
 
-    Scratch.wire(this.host(), 'solve-pad');
 
     /* Reveal the board route once it has been earned, from either direction —
        the ladder run out, or three wrong answers. Called from both handlers so
@@ -2156,7 +2291,8 @@
 
       if (stepDone) {
         self.stepIndex++;
-        if (self.stepIndex < steps.length) self.phSolve();
+        // Through renderPhase, not phSolve directly, so the cockpit re-routes the panels.
+        if (self.stepIndex < steps.length) self.renderPhase();
         else {
           self.solved = MF.parseAnswer(raw);
           self.solvedRaw = String(raw).trim();

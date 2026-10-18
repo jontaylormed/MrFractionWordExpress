@@ -3475,8 +3475,17 @@ body:has(.cockpit) main { max-width: 1600px; padding: calc(var(--su) * 1.5) calc
 .cockpit { display: grid; gap: calc(var(--su) * 1.25); }
 .ck-top { display: flex; align-items: center; gap: calc(var(--su) * 2); min-width: 0; }
 .cockpit .journey { display: flex; align-items: stretch; margin: 0; flex: 0 1 auto; }
-.cockpit .journey-map { width: clamp(160px, 18vw, 260px); }
-.cockpit .leg-svg { height: 64px; }
+.cockpit .journey-map { width: clamp(150px, 16vw, 240px); }
+.cockpit .leg-svg { height: 46px; }
+/* Height is the cockpit's scarcest thing on a 768px laptop, so the site header
+   gives some back on station screens. Measured, not guessed: see COCKPIT.md. */
+body:has(.cockpit) .sign-inner { padding-top: 4px; padding-bottom: 4px; }
+body:has(.cockpit) .sign-sub { display: none; }   /* the cockpit's own top strip names the stop */
+body:has(.cockpit) .sign-mark { width: 30px; }
+/* The picture must not make the story's row taller than the story. */
+.ck-scene svg, .ck-scene img { max-height: 100%; width: auto; max-width: 100%; }
+.ck-scene .scene { height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.cockpit .ck-panel { font-size: .94em; }
 .cockpit .journey-bar { border-top: 0; border-left: 2px solid var(--border-strong); flex-direction: column;
   justify-content: center; align-items: flex-start; gap: 6px; padding: 6px 14px; }
 .ck-title { min-width: 0; }
@@ -3489,9 +3498,15 @@ body:has(.cockpit) main { max-width: 1600px; padding: calc(var(--su) * 1.5) calc
   border: 2px solid var(--border-strong); border-radius: var(--radius);
   padding: calc(var(--su) * 1.5); min-width: 0; min-height: 0;
   overflow: auto; overscroll-behavior: contain;
+  /* Positioned, so an absolutely placed child (the ratio table has some) is
+     clipped by its panel instead of escaping it and lengthening the page. */
+  position: relative;
 }
 .ck-panel[hidden] { display: none; }
-.ck-text .problem-well { margin: 0; }
+/* The well IS the panel here: its own box inside the panel's box was paying
+   for padding and a border twice. */
+.ck-text { padding: 0; border: 0; background: none; }
+.ck-text .problem-well { margin: 0; height: 100%; }
 .ck-scene { padding: 0; display: flex; align-items: center; justify-content: center; }
 .ck-scene .scene { margin: 0; border: 0; box-shadow: none; width: 100%; }
 .ck-ask #phase-host > :first-child { margin-top: 0; }
@@ -3500,13 +3515,61 @@ body:has(.cockpit) main { max-width: 1600px; padding: calc(var(--su) * 1.5) calc
   content: "Your picture of the problem and your working will appear here.";
   color: var(--ink-muted); font-size: .9em;
 }
-.ck-feedback { padding: calc(var(--su) * 1.25) calc(var(--su) * 1.5); }
-.ck-feedback:empty { display: none; }
+/* The bottom row: Mr Fraction docked on the left, the feedback bar beside him.
+   Only the slot written most recently shows (see wireCockpit). */
+.ck-bottom { display: flex; gap: calc(var(--su) * 1.25); min-width: 0; align-items: stretch; }
+.ck-say { flex: 0 1 44%; min-width: 0; display: flex; }
+.ck-say:empty { display: none; }
+.ck-feedback { flex: 1; padding: calc(var(--su) * 1) calc(var(--su) * 1.5); max-height: 132px; }
+.ck-feedback .feedback { margin: 0; }
+.ck-feedback .feedback:not([data-latest]) { display: none; }
+.ck-feedback:not(:has(.feedback[data-latest])) { display: none; }
+.mf-companion[data-docked] {
+  position: static; z-index: auto; pointer-events: auto;
+  flex-direction: row-reverse; justify-content: flex-end; align-items: center;
+  max-width: none; width: 100%;
+}
+.mf-companion[data-docked] .mf-c-figure img { width: 58px; }
+.mf-companion[data-docked][data-open="no"] .mf-c-figure img { width: 48px; }
+.mf-companion[data-docked] .mf-c-bubble {
+  max-width: none; flex: 1; max-height: 112px; border-radius: 14px 14px 14px 4px;
+  box-shadow: none; animation: none;
+}
+.mf-companion[data-docked] .mf-c-bubble::before, .mf-companion[data-docked] .mf-c-bubble::after { display: none; }
+
+/* THE LEVER. One control for "go on", wherever the step's own button was.
+   The source button is hidden while the lever stands in for it; buttons on a
+   carried-over (stale) picture are hidden outright. */
+.ck-body [data-ck-src], .ck-body [data-ck-stale] .btn { display: none !important; }
+.ck-lever { display: flex; }
+.ck-lever-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: calc(var(--su) * 1.5);
+  min-height: 64px; padding: calc(var(--su)) calc(var(--su) * 2);
+  font: inherit; font-weight: 700; font-size: 1.05rem; color: #fff; cursor: pointer;
+  background: var(--orange-deep); border: 3px solid var(--ink); border-radius: var(--radius);
+  box-shadow: 0 4px 0 var(--ink);
+}
+.ck-lever-btn:hover { filter: brightness(1.07); }
+.ck-lever-btn:active, .ck-lever-btn[data-pulled] { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.ck-lever-btn:disabled { opacity: .55; cursor: not-allowed; }
+.ck-lever-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.ck-lever-btn[hidden] { display: none; }
+/* A signal-box lever: a slot, and an arm that throws forward when pulled. */
+.ck-lever-art { position: relative; width: 28px; height: 42px; flex: 0 0 auto;
+  border-radius: 6px; background: rgba(0,0,0,.28); }
+.ck-lever-arm { position: absolute; left: 50%; bottom: 6px; width: 6px; height: 34px; margin-left: -3px;
+  background: var(--cream-light); border-radius: 3px; transform-origin: 50% 100%;
+  transform: rotate(-22deg); transition: transform .25s ease; }
+.ck-lever-arm::before { content: ""; position: absolute; top: -7px; left: -5px; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--cream-light); border: 2px solid var(--ink); }
+.ck-lever-btn[data-pulled] .ck-lever-arm, .ck-lever-btn:active .ck-lever-arm { transform: rotate(22deg); }
+@media (prefers-reduced-motion: reduce) { .ck-lever-arm { transition: none; } }
+
+.est-wrap.no-pad { grid-template-columns: 1fr; }
 .ck-pad { padding: calc(var(--su) * 1); display: flex; }
 .ck-pad .est-pad-wrap { flex: 1; display: flex; flex-direction: column; margin: 0; min-height: 0; }
-.ck-pad .est-pad-box { flex: 1; min-height: 160px; }
+.ck-pad .est-pad-box { flex: 1; min-height: 0; }
 .ck-pad .est-pad { width: 100%; height: 100%; }
-.ck-lever:empty { display: none; }
 
 @media (min-width: 1024px) {
   /* The whole column from header to bottom edge is the cockpit's to divide. */
@@ -3516,23 +3579,39 @@ body:has(.cockpit) main { max-width: 1600px; padding: calc(var(--su) * 1.5) calc
   .cockpit { flex: 1; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
   .ck-body {
     min-height: 0;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr) minmax(340px, 1fr);
-    grid-template-rows: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    /* The story's row sizes to the story, so it never has to scroll; the work
+       row takes what is left and is the one allowed to scroll inside itself. */
+    /* THE STORY TAKES THE FULL WIDTH OF THE TOP ROW. Beside the picture it
+       wrapped to 267px on a 657px-tall laptop window and left the work panel
+       122px for a bar model that needs 420. Wider prose is shorter prose; the
+       picture and the pad stack beside the work instead, which is where a
+       student looks while drawing anyway. */
+    grid-template-columns: minmax(0, 1.5fr) minmax(200px, .62fr) minmax(330px, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
     grid-template-areas:
-      "text scene ask"
+      "text text  ask"
+      "work scene ask"
       "work pad   ask"
       "fb   fb    lever";
   }
   .ck-text { grid-area: text; }
   .ck-scene { grid-area: scene; }
-  .ck-ask { grid-area: ask; }
-  .ck-work { grid-area: work; }
-  .ck-pad { grid-area: pad; }
-  .ck-feedback { grid-area: fb; }
+  /* `contain: size` because the question panel spans the story's `auto` row,
+     and an auto track grows to fit whatever spans it: a long Ticket Booth
+     stretched the top row and pushed the page 78px past the window. Contained,
+     it takes the space the grid gives it and scrolls inside. */
+  .ck-ask { grid-area: ask; contain: size; }
+  /* Same reason, found the same way: a 677px ratio table in the work panel
+     pushed the page 50px down even inside `minmax(0, 1fr)` rows. */
+  .ck-work { grid-area: work; contain: size; }
+  .ck-pad { grid-area: pad; contain: size; }
+  .ck-scene { contain: size; }
+  .ck-bottom { grid-area: fb; }
   .ck-lever { grid-area: lever; }
-  /* With no picture the story takes the whole top row. */
+  /* With no picture the pad takes its place. */
   .ck-body:has(.ck-scene[hidden]) { grid-template-areas:
       "text text  ask"
+      "work pad   ask"
       "work pad   ask"
       "fb   fb    lever"; }
 }

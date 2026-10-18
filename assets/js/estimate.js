@@ -241,7 +241,10 @@
   }
 
   /* ---------- markup ---------- */
-  function html(p) {
+  /* `opts.noPad`: the cockpit mounts one pad for the whole station, so the
+     estimate brings only its number line and typed field. */
+  function html(p, opts) {
+    var noPad = !!(opts && opts.noPad);
     var w = windowFor(p);
     var est = p.signalBox && p.signalBox.estimate;
     var unit = (est && est.unit) ? est.unit : '';
@@ -288,11 +291,12 @@
        The typed field travels with the line, because "beside the line, not
        behind a toggle" is a settled decision and the two belong together. */
     return '' +
-      '<div class="est-wrap" id="est-wrap">' +
+      '<div class="est-wrap' + (noPad ? ' no-pad' : '') + '" id="est-wrap">' +
 
+        (noPad ? '' :
         '<div class="est-pad-col">' +
           padHTML('est-pad') +
-        '</div>' +
+        '</div>') +
 
         '<div class="est-line-col">' +
           '<p class="est-lead" id="est-lead">Sweep the stretch you think the answer lies in.</p>' +

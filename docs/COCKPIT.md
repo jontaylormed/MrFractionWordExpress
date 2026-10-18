@@ -97,8 +97,14 @@ Every stage leaves the branch working, and `docs/COCKPIT.md` holds the spec plus
 Branch: `cockpit-layout`. `main` is the live site and is not touched until the user says merge.
 
 - [x] S0 — branch, this doc
-- [ ] S1 — shell: cockpit grid, persistent text / scene / pad
-- [ ] S2 — every phase on regions, one feedback slot, the lever
+- [x] S1 — shell: cockpit grid, persistent text / scene / pad
+- [x] S2 — every phase on regions, one feedback slot, the lever — **done generically, not phase by phase:**
+  - `problemHTML()` paints `#ck-text` / `#ck-scene` and returns `''`; Platform Check and Crossover Read query `#ck-story`.
+  - `distribute()` (after every phase) moves `.ck-to-work` nodes to the work panel and `.feedback` slots to the feedback bar. The work panel keeps its last picture, marked `data-ck-stale`.
+  - The host's `querySelector(All)` searches the whole cockpit, so every existing handler still finds its moved nodes.
+  - The lever (`syncLever`) stands in for the last visible primary `.btn` in the question panel (else the work panel), via a MutationObserver.
+  - Mr Fraction docks in `#ck-say` (companion.js `dock()`); his first line per station is no longer lost to an early flush.
+  - Measured with `tools/cockpit-probe.js` at 1366×657: **333 screens, page never scrolls, story never scrolls, 0 errors.** Work and question panels do scroll inside at that height (bar models ~490px vs ~180px). At 1920×1080 nothing scrolls.
 - [ ] S3 — fast path: model picker, new phaseChain, Read 1 cut, help tools, metrics/report
 - [ ] S4 — lever art, Mr Fraction in the feedback bar, stacked layout < 1024
 - [ ] S5 — sweep.js, full verification, docs, merge on the user's word

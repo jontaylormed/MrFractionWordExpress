@@ -164,8 +164,28 @@
   }
 
   /** Show everything queued since the last flush. Called after a render. */
+  /* DOCKED IN THE COCKPIT. A station screen has a place for him — `#ck-say`,
+     beside the feedback bar — so he stops floating over the answer column,
+     where his bubble has covered an input three times on this project. Off a
+     station he goes back to floating after the skip link. The node is the same
+     one throughout: a station view being cleared detaches him, and this puts
+     him back wherever the current screen wants him. */
+  function dock(h) {
+    var d = document.getElementById('ck-say');
+    if (d) {
+      if (h.parentNode !== d) d.appendChild(h);
+      h.setAttribute('data-docked', 'yes');
+    } else if (h.hasAttribute('data-docked') || !h.isConnected) {
+      h.removeAttribute('data-docked');
+      var skip = document.querySelector('.skip-link');
+      if (skip && skip.parentNode === document.body) document.body.insertBefore(h, skip.nextSibling);
+      else document.body.insertBefore(h, document.body.firstChild);
+    }
+  }
+
   function flush() {
     var h = ensure();
+    dock(h);
     if (!queue.length) { hide(); return; }
 
     var lines = queue.slice();
