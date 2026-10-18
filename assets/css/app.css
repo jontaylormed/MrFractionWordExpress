@@ -3648,8 +3648,16 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
    problem: the five shapes to choose from, the Platform Check's map, then the
    bar model, which stays through the Engine Room. */
 .ck-work::before { content: none; }
+/* THREE BY TWO (user, 2026-10-18). Six half-columns, each card spanning two,
+   so the bottom pair can sit centred under the top three instead of leaving a
+   hole at the end of the row. Pictures are capped in height so both rows fit
+   the picture panel without it scrolling. */
 .mp-grid { list-style: none; margin: 0; padding: 0; max-width: none;
-  display: grid; gap: calc(var(--su) * 1); grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+  display: grid; gap: calc(var(--su) * 1); grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.mp-grid > li { grid-column: span 2; }
+.mp-grid > li:nth-child(4) { grid-column: 2 / span 2; }
+.mp-grid .mp-svg { max-height: 64px; }
+.mp-grid .mp-card { justify-content: center; padding: calc(var(--su) * .75); }
 .mp-card {
   width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: calc(var(--su) * 1); font: inherit; font-size: .8em; line-height: 1.3; color: var(--ink);
