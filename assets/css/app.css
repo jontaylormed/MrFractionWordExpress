@@ -3651,6 +3651,11 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
    The source button is hidden while the lever stands in for it; buttons on a
    carried-over (stale) picture are hidden outright. */
 .ck-body [data-ck-src], .ck-body [data-ck-stale] .btn { display: none !important; }
+/* A spent "go on" button in the question panel is hidden, not left faded:
+   the lever already carries whatever comes next, and a disabled main button
+   reads as broken (user, 2026-10-18, on "Show me why"). Quiet buttons keep
+   their disabled look — they are options, not the way on. */
+.ck-ask .btn:disabled:not(.btn-quiet):not(.btn-secondary) { display: none; }
 .ck-lever { display: flex; }
 .ck-lever-btn {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: calc(var(--su) * 1.5);

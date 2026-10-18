@@ -3365,6 +3365,10 @@
     if (sf) {
       this.host().querySelector('#sfgo').addEventListener('click', function () {
         this.disabled = true;
+        /* Used, it goes: left on screen disabled and faded, "Show me why"
+           read as a broken button (user, 2026-10-18). Its answer is in the
+           feedback viewport and the lever has moved on to "Last look". */
+        this.hidden = true;
         this.setAttribute('aria-expanded', 'true');
         // Its question answered, the step offers the way on.
         var endStep = self.host().querySelector('#rest .ck-step[data-step="end"]');
