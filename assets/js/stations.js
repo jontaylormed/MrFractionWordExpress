@@ -966,6 +966,21 @@
     }
     [].forEach.call(own('.feedback'), function (n) { fb.appendChild(n); });
 
+    /* HINTS ARE TEACHING, SO THEY LIVE IN THE FEEDBACK VIEWPORT (user,
+       2026-10-18). The Engine Room's hint ladder (`#hints`) becomes one more
+       slot there — the newest rung shows the way the newest verdict does — and
+       "I'd like a hint" sits in the viewport beside it, always visible, since
+       asking for help is something a student does from where the help appears.
+       Both keep their ids, so the ladder's own handlers find them unchanged. */
+    var hints = own('#hints')[0];
+    if (hints) { hints.classList.add('feedback'); fb.appendChild(hints); }
+    var hintBtn = own('#shint')[0];
+    if (hintBtn) {
+      var tools = el('<div class="ck-fb-tools"></div>');
+      tools.appendChild(hintBtn);
+      fb.appendChild(tools);
+    }
+
     var self = this;
     [].forEach.call(own('[data-tool]'), function (b) {
       b.addEventListener('click', function () {

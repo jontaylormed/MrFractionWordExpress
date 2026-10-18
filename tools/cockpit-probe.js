@@ -25,7 +25,11 @@
     // manifest still has `{{n1}}` tokens in it, which no student ever sees.
     var p = MF.materialize ? MF.materialize(base, 0) : base;
     phases = phases || Stations.phaseChain(p).concat(['solve'], Stations.postSolve(p));
-    var st = new Stations.Station(p, (p.stationRoles && p.stationRoles[0]) || 'reading', {}, function () {});
+    // A real metrics record, shaped like app.js `newMetrics()`: handlers push
+    // into it, and `{}` made the hint button throw in the probe and nowhere else.
+    var metrics = { schemaFirstTry: 0, schemaAttempts: [], estimates: [], hints: [], misconceptions: [],
+                    selfChecks: 0, stationsDone: 0, critiqueFirstTry: 0, critiqueAttempts: [], toolsUsed: [] };
+    var st = new Stations.Station(p, (p.stationRoles && p.stationRoles[0]) || 'reading', metrics, function () {});
     st.legIndex = 0; st.legTotal = 3; st.estimate = 10; st.solved = 10;
     var view = document.getElementById('view');
     view.innerHTML = '';
