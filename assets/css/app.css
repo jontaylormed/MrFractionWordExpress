@@ -3481,8 +3481,9 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .cockpit .journey { display: block; margin: 0; width: 100%; }
 .cockpit .journey-map { width: 100%; }
 /* Taller, so more of the map shows; stations.js frames the leg to this
-   band's shape, using the same numbers (20vh, 110–230px). */
-.cockpit .leg-svg { width: 100%; height: clamp(110px, 20vh, 230px); }
+   band's shape, using the same numbers (16vh, 88–184px). Every vertical size
+   in the cockpit was pulled back 20% after "too vertical" (user, 2026-10-18). */
+.cockpit .leg-svg { width: 100%; height: clamp(88px, 16vh, 184px); }
 /* (The site header was compressed here while the cockpit had to fit one
    window height. It does not any more — see "think vertically" below — so
    the header is its ordinary self on station screens too.) */
@@ -3497,6 +3498,11 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-scene .scene > svg, .ck-scene .scene > img, .ck-scene .scene > div:not(figcaption) {
   flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
 .ck-scene .scene figcaption { flex: 0 0 auto; margin: 0; }
+/* Unit pictures (the quilt) are a grid of SQUARE cells sized from the width,
+   so in a 30%-wide panel they grew to 348px and spilled out of a 236px row.
+   Cells are capped instead, and the frame sits centred at its own size. */
+.ck-scene .scene > .unit-frame { flex: 0 0 auto; width: auto; height: auto; margin: auto; }
+.ck-scene .unit-grid { grid-template-columns: repeat(var(--u-cols), minmax(0, 30px)); }
 .cockpit .journey-bar { flex-wrap: wrap; gap: calc(var(--su) * 1) calc(var(--su) * 2.5);
   padding: calc(var(--su) * .75) calc(var(--su) * 2); }
 .ck-title { min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px calc(var(--su) * 2);
@@ -3537,6 +3543,28 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-scene { padding: 0; display: flex; align-items: center; justify-content: center; }
 .ck-scene .scene { margin: 0; border: 0; box-shadow: none; width: 100%; }
 .ck-ask #phase-host > :first-child { margin-top: 0; }
+/* The question column holds a question and its answer controls; the site's
+   1.3em paragraph rhythm is for reading, and here it only made the column
+   (and so the whole working row) taller. */
+.ck-ask p { margin-bottom: .55em; }
+.ck-ask h3 { margin-bottom: .5em; }
+.ck-ask .est-wrap { margin: .5em 0; gap: calc(var(--su)); grid-template-columns: 1fr; }
+/* THE COMPANION RESERVATIONS COME OFF IN THE COCKPIT. The estimate line and
+   the Engine Room's answer box each kept up to 200px clear on their right for
+   Mr Fraction floating at the window's corner — and in a 430px question column
+   that left the line ~110px wide, one word per line ("oddly aligned", user,
+   2026-10-18). He is docked in the feedback bar here, so there is nothing to
+   keep clear of. */
+.ck-ask .est-line-col, .ck-ask .solve-wrap { margin-right: 0; }
+/* The Engine Room's wrap was two columns, pad and field; the pad lives in the
+   cockpit now, so the field takes the width (it measured 65px). */
+.ck-ask .solve-wrap { display: block; }
+/* The estimate line spans its panel and is centred in it ("should be centre
+   and scaled to the viewport", user, 2026-10-18). */
+.ck-ask .est-line-col { width: 100%; text-align: center; }
+.ck-ask .est-track, .ck-ask .est-ticks { width: 100%; max-width: none; margin-left: auto; margin-right: auto; }
+.ck-ask .est-typed { text-align: left; }
+.ck-ask .solve-wrap .field input { width: 100%; max-width: none; }
 /* Empty panels say what they are for rather than sitting blank. */
 .ck-work:empty::before {
   content: "Your picture of the problem and your working will appear here.";
@@ -3550,7 +3578,19 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-feedback { flex: 1; padding: calc(var(--su) * 1) calc(var(--su) * 1.5); max-height: 132px; }
 .ck-feedback .feedback { margin: 0; }
 .ck-feedback .feedback:not([data-latest]) { display: none; }
-.ck-feedback:not(:has(.feedback[data-latest])) { display: none; }
+/* A FEEDBACK VIEWPORT, ALWAYS THERE (user, 2026-10-18). It used to vanish
+   when there was nothing to say, so the place where the teaching happens kept
+   appearing and disappearing under the work. It is a fixed panel now, named,
+   and says what it is for until the first thing arrives. */
+.ck-feedback { min-height: 102px; display: flex; flex-direction: column; gap: 6px; }
+.ck-feedback::before {
+  content: "Feedback"; font-family: var(--font-display); font-size: .78rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-muted);
+}
+.ck-feedback:not(:has(.feedback[data-latest]))::after {
+  content: "What you got right, what to look at again, and why \2014 it all appears here.";
+  color: var(--ink-muted); font-size: .92em;
+}
 .mf-companion[data-docked] {
   position: static; z-index: auto; pointer-events: auto;
   flex-direction: row-reverse; justify-content: flex-end; align-items: center;
@@ -3664,21 +3704,35 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
     grid-template-columns: minmax(0, 48fr) minmax(0, 22fr) minmax(0, 6fr) minmax(250px, 24fr);
     /* Minimums, not limits: the top row is at least tall enough for the
        picture to read, the working row at least tall enough to draw in. */
-    grid-template-rows: minmax(240px, auto) minmax(460px, auto) auto;
+    /* THE FEEDBACK VIEWPORT RUNS ALONG THE BOTTOM, FULL WIDTH (user,
+       2026-10-18: "there should be a feedback viewport… at the bottom"), with
+       Mr Fraction docked at its left — the two places the teaching happens,
+       together. The lever moves up to sit directly under the question and its
+       answer, which is where the sketch puts it. */
+    /* THE WORKING ROW HAS A SET HEIGHT, tied to the window. Sized to its
+       content it swung both ways in one afternoon: "too vertical" when a long
+       question column stretched it, "too much space" when that stretch left
+       the work area and pad as tall empty boxes beside it. Now the row is the
+       same comfortable height on every step, and only a panel whose content is
+       genuinely longer scrolls inside itself. */
+    grid-template-rows: minmax(192px, auto) clamp(300px, 44vh, 500px) auto auto;
     grid-template-areas:
       "text text scene scene"
       "work pad  pad   ask"
-      "fb   fb   fb    lever";
+      "work pad  pad   lever"
+      "fb   fb   fb    fb";
   }
   .ck-text { grid-area: text; }
-  .ck-ask { grid-area: ask; }
-  .ck-work { grid-area: work; }
-  .ck-pad { grid-area: pad; }
+  /* Contained so their content cannot set the row's height (above). */
+  /* `both-edges` so a scrollbar, when there is one, does not push the
+     content 15px off centre. */
+  .ck-ask { grid-area: ask; contain: size; overflow: auto; scrollbar-gutter: stable both-edges; }
+  .ck-work { grid-area: work; contain: size; overflow: auto; }
+  .ck-pad { grid-area: pad; contain: size; }
   /* The picture alone stays size-contained: it should match the story's
      height, never set it. */
   .ck-scene { grid-area: scene; contain: size; }
-  .ck-panel { overflow: visible; }
-  .ck-pad .est-pad-box { min-height: 380px; }
+  .ck-pad .est-pad-box { min-height: 0; }
   .ck-feedback { max-height: none; }
   .ck-bottom { grid-area: fb; }
   .ck-lever { grid-area: lever; }
@@ -3686,7 +3740,9 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
   .ck-body:has(.ck-scene[hidden]) { grid-template-areas:
       "text text text  text"
       "work pad  pad   ask"
-      "fb   fb   fb    lever"; }
+      "work pad  pad   lever"
+      "fb   fb   fb    fb"; }
+  .ck-say { flex-basis: 34%; }
 }
 
 /* ---------- Print ---------- */

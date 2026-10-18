@@ -769,7 +769,7 @@
        is the CSS clamp on `.cockpit .leg-svg`, repeated here because the root
        is built detached and cannot be measured yet. */
     var bandW = Math.max(600, (global.innerWidth || 1366) - 40);
-    var bandH = Math.max(110, Math.min(230, (global.innerHeight || 768) * 0.2));
+    var bandH = Math.max(88, Math.min(184, (global.innerHeight || 768) * 0.16));
     if (window.Scenery && Scenery.setLegAspect) Scenery.setLegAspect(bandW / bandH);
     if (typeof this.legIndex === 'number' && window.Scenery && Scenery.legMap) {
       var dots = '';
@@ -953,7 +953,10 @@
        bar, which shows until the first real feedback replaces it. Marked by
        class, never guessed from `<p>`: the Plan's estimate prompt is a <p> and
        it is the question. */
-    var teach = own('.hint-text, .platform-instruction, .ck-teach');
+    /* `.est-lead` ("Sweep the stretch you think the answer lies in") is the
+       estimate's instruction, and it also labels the number line for a screen
+       reader — `aria-labelledby` still finds it by id in the feedback bar. */
+    var teach = own('.hint-text, .platform-instruction, .ck-teach, .est-lead');
     if (teach.length) {
       var coach = el('<div class="feedback ck-coach" data-latest="yes"><div class="msg">' +
         '<span class="ico" aria-hidden="true">&#9432;</span><div class="ck-coach-body"></div></div></div>');
