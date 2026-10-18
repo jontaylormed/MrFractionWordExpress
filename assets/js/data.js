@@ -262,7 +262,9 @@
                  String(n.value).replace(/./g, '█') +
                '</span><span class="visually-hidden">some number</span>';
       }
-      return '<span class="num">' + n.value + '</span>';
+      // `data-n` names the slot, so the Plan can ask a student to tap a given
+      // number and know which one they tapped (cockpit, change c).
+      return '<span class="num" data-n="' + key + '">' + n.value + '</span>';
     });
   }
 

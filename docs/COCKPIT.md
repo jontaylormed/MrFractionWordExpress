@@ -136,7 +136,15 @@ Not yet acted on; the user decides. Confirmed independently where marked ✓.
 - **Lever labels lie in tools** ("Third read →" returns to the plan; "Now show me the proof →" at a halt goes to the Engine Room).
 - Minor: doubled announcements; picker SVG labels 6.4px; "closest of the four" with five pictures; critique grammar ("telling they"); content that assumes order ("two problems ago").
 
-**Teaching (the user's call):**
+**Teaching — ALL FIVE BUILT 2026-10-18 on the user's word ("do all of them"):**
+- **(a)** `ModelPicker.modeFor(p, rideLine)`: a single-line ride asks *"Which picture shows what is missing?"* with that line's picture drawn with the `?` in each place (`VARIANTS`); Grand Tour, percent and island keep the five-shape question. The slot comes from the problem's `unknownCar` (plus `unknownCarAnswer` for ratio "for one" and compare "referent"); all 30 single-situation problems map, none fall back.
+- **(b)** Mr Fraction's retelling no longer shows at Read 1; it arrives with a correct pick. Never on the island (it names the seam).
+- **(c)** The Plan opens with the picture empty: tap each number the picture needs in the story (`read2.quantities[].needed`); scenery numbers are turned away with their `describe`; then the model and estimate appear (`wireLoad` / `finishLoad`). `offerTool()` highlights — never opens — the checklist / Find the question after a second wrong pick, and Sort the numbers after a second scenery tap. Not done: misconception-specific offers in the Engine Room (no tools there).
+- **(d)** Picker feedback is safe by construction: a wrong pick is told what the shape *it* chose means and asked whether the story does that (`SHAPE_ASK`); no line names, operations or number words. The Ticket Booth keeps its own texts, as a tool.
+- **(e)** Shapes redrawn: Compare shows the smaller amount measured against the larger (works for times-as-many), Change is before/after, Ratio's rows have different spacing; no words inside pictures; captions name the distinguishing feature.
+- Also: staffed island stops dropped the five-question checklist (now a tool); "The Platform Check · part two" is just "The Platform Check".
+
+**The teaching findings as reported:**
 - **Single-line rides: the pick isn't recognition** (header + colour + same answer every stop). Teacher's proposal: on those rides show 3–4 variants of that line's diagram with `?` in different places (which quantity is missing); keep the five-shape pick for percent / Grand Tour.
 - **Mr Fraction's Read 1 retelling does the recognising** one screen early — move it to after the pick; give Read 1 one tapped, numberless action.
 - **Optional tools go unopened by the students who need them** — make the Plan's first act *placing the story's numbers into the chosen picture* (read2 + ticket inside the model); auto-*offer* (highlight, never open) a tool after a second wrong pick or by misconception.

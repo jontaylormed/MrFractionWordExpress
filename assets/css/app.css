@@ -3705,6 +3705,26 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .mp-card[data-result="wrong"] .mp-cap::before { content: "\2715  "; font-weight: 700; }
 .mp-card:disabled { cursor: default; }
 
+/* LOAD THE PICTURE: the story's numbers, tappable at the start of the Plan. */
+.ck-text .num-pick {
+  cursor: pointer; border-radius: 6px; padding: 0 .2em;
+  outline: 2px dashed var(--orange-deep); outline-offset: 1px;
+}
+.ck-text .num-pick:hover, .ck-text .num-pick:focus-visible { background: rgba(168,84,19,.14); }
+.ck-text .num-pick[data-picked] { outline-style: solid; background: rgba(46,125,50,.16); }
+.ck-text .num-pick[data-result="wrong"] { outline-color: var(--ink-muted); text-decoration: line-through; opacity: .7; }
+.ck-chips { list-style: none; margin: calc(var(--su)) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; max-width: none; }
+.ck-chip { background: var(--cream); border: 1.5px solid var(--border-strong); border-radius: var(--radius-xs);
+  padding: 6px 10px; font-size: .92em; }
+.plan-shape { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.plan-shape .mp-svg { width: min(100%, 420px); height: auto; max-height: 75%; }
+.plan-shape-cap { color: var(--ink-muted); margin: 0; }
+/* A tool being suggested: highlighted, never opened for the student. */
+.ck-tools .ck-offer { border-color: var(--orange-deep); border-width: 2px; background: rgba(168,84,19,.08); }
+.ck-offer-tag { font-size: .78em; font-weight: 700; color: var(--orange-deep); text-transform: uppercase; letter-spacing: .06em; }
+.mp-slots { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important; }
+.mp-slots > li, .mp-slots > li:nth-child(4) { grid-column: auto !important; }
+
 /* "Help me see it" — the optional steps, folded away until asked for. */
 .ck-tools { margin-top: calc(var(--su) * 1.5); border-top: 1px dashed var(--border); padding-top: calc(var(--su)); }
 .ck-tools summary { cursor: pointer; font-weight: 700; color: var(--ink-mid); min-height: var(--target-min);

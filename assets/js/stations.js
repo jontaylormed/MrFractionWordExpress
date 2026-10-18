@@ -1170,6 +1170,11 @@
     [].forEach.call(Element.prototype.querySelectorAll.call(host, '.msg'), function (m) {
       if (m.closest('.feedback') || m.closest('[hidden]')) return;
       var slot = el('<div class="feedback ck-moved" role="status"></div>');
+      /* Where it came from, so a checker that excludes a block by id (the
+         sweep drops the Ticket Booth's #carq on the hidden-line screen) still
+         excludes it once it has moved. */
+      var from = m.parentNode && m.parentNode.closest && m.parentNode.closest('[id]');
+      if (from && from.id !== 'phase-host') slot.setAttribute('data-ck-from', from.id);
       fb.appendChild(slot);
       slot.appendChild(m);
     });
@@ -1271,20 +1276,38 @@
       }).join('') + '</div></details>';
   };
 
+  /* Point at a help tool without opening it: the "Help me see it" fold opens
+     and that one button is marked. The student still chooses whether to use it. */
+  Station.prototype.offerTool = function (key) {
+    var b = this.root.querySelector('[data-tool="' + key + '"]');
+    if (!b) return;
+    var d = b.closest('details');
+    if (d) d.open = true;
+    b.classList.add('ck-offer');
+    if (!b.querySelector('.ck-offer-tag')) b.insertAdjacentHTML('beforeend', ' <span class="ck-offer-tag">try this</span>');
+  };
+
   /* ---------- Fast path: pick the picture ---------- */
   Station.prototype.phPickModel = function () {
-    var self = this, p = this.p, want = ModelPicker.correctLine(p), tries = 0, done = false;
+    var self = this, p = this.p, ride = this.rideLine;
+    /* Two questions, chosen by the ride — see model-picker.js. A single-line
+       ride asks where the missing piece is; any other ride asks which shape. */
+    var slotMode = ModelPicker.modeFor(p, ride) === 'slot';
+    var want = ModelPicker.answerFor(p, ride), tries = 0, done = false;
     this.host().innerHTML =
       MrFraction.aside('thinking',
         /* No number words on this screen — not even "the five situations".
            The sweep flagged it the day it shipped: on rr-van-hours set 2 the
            answer IS five, and the rule is about what the student reads, not
            about what the writer meant. */
-        '<p><strong>Find the shape.</strong> Each picture is one of the situations on this railway. Pick the one ' +
-        'that shows how the amounts in this story are related. No numbers yet &mdash; just the shape.</p>') +
+        slotMode
+          ? '<p><strong>Find the missing piece.</strong> Every picture is this line&rsquo;s shape. Pick the one ' +
+            'with the question mark where this story leaves something out.</p>'
+          : '<p><strong>Find the shape.</strong> Each picture is one of the situations on this railway. Pick the one ' +
+            'that shows how the amounts in this story are related. No numbers yet &mdash; just the shape.</p>') +
       this.problemHTML(false) +
-      '<h3>Which picture fits this story?</h3>' +
-      '<div class="ck-to-work">' + ModelPicker.html(p) + '</div>' +
+      '<h3>' + (slotMode ? 'Which picture shows what is missing?' : 'Which picture fits this story?') + '</h3>' +
+      '<div class="ck-to-work">' + ModelPicker.html(p, ride) + '</div>' +
       this.toolsHTML() +
       '<div class="feedback" role="status" id="mpfb"></div>' +
       '<div class="btn-row"><button class="btn" id="mpgo" type="button" hidden>Prove it from the story &rarr;</button></div>';
@@ -1307,14 +1330,27 @@
           self.m.schemaAttempts.push(tries);
         }
         self.schemaRecorded = true;
-        self.modelPicked = k;
-        fb.innerHTML = msg('go', '&#10003;', '<strong>That is the shape.</strong> ' + ModelPicker.why(p, k));
+        // The line is known after either question: the slot question is asked on its own line.
+        self.modelPicked = slotMode ? p.line : k;
+        /* MR FRACTION'S RETELLING COMES NOW, AFTER THE CHOICE (change b). As
+           the last thing read before the picture it did the recognising for
+           the student ("every crate has the same number of bottles"); after a
+           correct pick it confirms a reading they have just made. */
+        var retell = p.threeReads && p.threeReads.read1 && p.threeReads.read1.modelAnswer;
+        fb.innerHTML = msg('go', '&#10003;',
+          '<strong>' + (slotMode ? 'Yes &mdash; that is what is missing.' : 'That is the shape.') + '</strong> ' +
+          esc(ModelPicker.why(p, k, ride)) +
+          (retell && !p.pair ? '<br><br><strong>Mr Fraction read it as:</strong> ' + esc(retell) : ''));
         host.querySelector('#mpgo').hidden = false;
         focusFeedback(fb);   // the card just disabled itself; focus goes to what it said
       } else {
         b.setAttribute('data-result', 'wrong');
         b.disabled = true;
-        fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' + ModelPicker.why(p, k));
+        fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' + esc(ModelPicker.why(p, k, ride)));
+        /* After a second miss, OFFER the checklist — highlighted and opened,
+           never run for them (change c; non-negotiable 5: help is reachable,
+           never imposed). */
+        if (tries >= 2) self.offerTool(slotMode ? 'read3' : 'checklist');
         focusFeedback(fb);
       }
     });
@@ -1377,23 +1413,22 @@
         '</div>' +
         '<div class="feedback" role="status" id="r1fb"></div>' +
         '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
-      var seen = false, h = this.host();
-      /* Not on the island: an island retelling names where the story turns
-         ("Then a second office…"), which is the very thing the Crossover Read
-         asks the student to find next. */
+      var h = this.host();
+      /* NO RETELLING HERE ANY MORE (Cycle 31, teacher agent, change b).
+         Mr Fraction's reading of the story is structural — "every crate has
+         the same number of bottles" — so shown as the last thing before the
+         picture choice it made the choice for the student. It now arrives
+         with a correct pick, as confirmation. (On the island it is not shown
+         at all: it names where the story turns, which the Crossover Read asks
+         the student to find.) */
       h.querySelector('#r1go').addEventListener('click', function () {
-        if (!island && !seen && p.threeReads && p.threeReads.read1 && p.threeReads.read1.modelAnswer) {
-          seen = true;
-          h.querySelector('#r1fb').innerHTML = msg('info', '&rarr;',
-            '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
-          h.querySelector('#r1prompt').textContent =
-            'Compare your reading with Mr Fraction’s, in the feedback below. Then pull the lever to choose a picture.';
-          this.textContent = 'Which picture fits? →';
-          return;
-        }
         self.go(phaseAfter(self.p, 'read1'));
       });
-      if (this.expandAll) h.querySelector('#r1go').click();
+      /* No `expandAll` click here. There is nothing on this screen to reveal,
+         and clicking the lever NAVIGATED — so the sweep's station ran on
+         through the picker, picked the picture, and every later screen it
+         rendered was in a state the student's would not be in. The hidden-line
+         check reported 40 giveaways that were that cascade, not the site. */
       return;
     }
     var asTool = this.phase === 'checklist';
@@ -1939,7 +1974,8 @@
          after the student had already answered. The two screens also shared
          their first ~1050px verbatim, so they read as the same screen twice
          rather than one phase in two parts. The step eyebrow says which. */
-      '<div class="section-head"><span class="eyebrow">The Platform Check &middot; part two</span>' +
+      // "part two" no longer: on the fast path there is no part one before it.
+      '<div class="section-head"><span class="eyebrow">The Platform Check</span>' +
         '<h2>Now show me where it says so</h2><div class="rule"></div></div>' +
       '<h3>' + L.ask + '</h3>' +
       /* "there may be more than a single one" read as a promise that there
@@ -2482,6 +2518,89 @@
 
   /* ---------- Phase 3: Plan (bar model + estimate) ---------- */
 
+  /* The picture the student chose at the picker, drawn large while it waits
+     for its numbers. The slot picture when they chose a missing piece, the
+     line's shape otherwise. */
+  Station.prototype.chosenShapeArt = function () {
+    var p = this.p, slot = ModelPicker.modeFor(p, this.rideLine) === 'slot' && ModelPicker.slotOf(p);
+    var V = ModelPicker.VARIANTS[p.line], S = ModelPicker.SHAPES[p.line];
+    return (slot && V && V[slot] ? V[slot].art : S ? S.art : '');
+  };
+
+  /* Tap the story's numbers into the picture. See the note in phPlan. */
+  Station.prototype.wireLoad = function (needed, qs) {
+    var self = this, root = this.root, story = root.querySelector('#ck-story');
+    var byTok = {}; qs.forEach(function (x) { byTok[x.token] = x; });
+    var nums = story ? [].slice.call(story.querySelectorAll('.num[data-n]')) : [];
+    // A needed number that is not in the text cannot be tapped: skip the stage.
+    var present = {}; nums.forEach(function (n) { present[n.getAttribute('data-n')] = 1; });
+    if (needed.some(function (x) { return !present[x.token]; })) { this.finishLoad(); return; }
+
+    var got = {}, misses = 0;
+    nums.forEach(function (n) {
+      if (!byTok[n.getAttribute('data-n')]) return;
+      n.classList.add('num-pick');
+      n.setAttribute('role', 'button');
+      n.setAttribute('tabindex', '0');
+      n.setAttribute('aria-label', 'Number ' + n.textContent + '. Tap to put it in your picture.');
+    });
+    function tap(n) {
+      if (!n || !n.classList.contains('num-pick') || n.getAttribute('aria-disabled') === 'true') return;
+      var tok = n.getAttribute('data-n'), q = byTok[tok], fb = root.querySelector('#plfb');
+      if (!q) return;
+      if (q.needed) {
+        if (got[tok]) return;
+        got[tok] = 1;
+        n.setAttribute('data-picked', 'yes');
+        n.setAttribute('aria-disabled', 'true');
+        root.querySelector('#plan-chips').insertAdjacentHTML('beforeend',
+          '<li class="ck-chip"><strong>' + esc(n.textContent) + '</strong> ' + esc(q.describe || '') + '</li>');
+        fb.innerHTML = msg('go', '&#10003;', '<strong>That one belongs.</strong> It is ' + esc(q.describe || '') + '.');
+      } else {
+        misses++;
+        n.setAttribute('data-result', 'wrong');
+        n.setAttribute('aria-disabled', 'true');
+        fb.innerHTML = msg('caution', '&rarr;', '<strong>That one is scenery.</strong> It is ' +
+          esc(q.describe || '') + ', and the question does not need it. Leave it out.');
+        if (misses >= 2) self.offerTool('read2');
+      }
+      focusFeedback(fb);
+      if (needed.every(function (x) { return got[x.token]; })) self.finishLoad();
+    }
+    story.addEventListener('click', function (e) { tap(e.target.closest('.num-pick')); });
+    story.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      var n = e.target.closest('.num-pick');
+      if (!n) return;
+      e.preventDefault();
+      tap(n);
+    });
+    if (this.expandAll) needed.forEach(function (x) {
+      var n = story.querySelector('.num[data-n="' + x.token + '"]'); if (n) tap(n);
+    });
+  };
+
+  Station.prototype.finishLoad = function () {
+    var root = this.root;
+    this.planLoaded = true;
+    [].forEach.call(root.querySelectorAll('#ck-story .num-pick'), function (n) {
+      n.classList.remove('num-pick'); n.removeAttribute('role'); n.removeAttribute('tabindex');
+      n.removeAttribute('aria-label');
+    });
+    var load = root.querySelector('#plan-load'), shape = root.querySelector('#plan-shape');
+    var model = root.querySelector('#plan-model'), est = root.querySelector('#plan-est');
+    if (load) load.hidden = true;
+    if (shape) shape.hidden = true;
+    if (model) model.hidden = false;
+    if (est) est.hidden = false;
+    var fb = root.querySelector('#plfb');
+    if (fb && load) fb.innerHTML = msg('go', '&#10003;',
+      '<strong>That is everything the picture needs.</strong> Look at where the question mark sits &mdash; ' +
+      'that is the number you are going to find.');
+    var h = est && est.querySelector('h3');
+    if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+  };
+
   Station.prototype.phPlan = function () {
     var self = this, sb = this.p.signalBox;
     /* Ask the MODEL LAYER whether there is a picture, rather than testing for
@@ -2494,26 +2613,58 @@
     var bars = bar ? Model.html(this.p) : '';
 
     var est = sb && sb.estimate;
+
+    /* LOAD THE PICTURE FIRST (Cycle 31, teacher agent, change c). The Plan
+       used to arrive with the givens already placed, the scenery number
+       already dropped and the `?` already on the unknown — so "which numbers
+       matter", the second read's whole job, was never the student's decision
+       unless they opened a tool, and the students who most need it are the
+       least likely to. Now the picture starts empty: the student taps each
+       number in the story that belongs in it, and a scenery number is turned
+       away with what it actually is. Driven entirely by `read2.quantities`
+       (`needed`, `describe`), which every single-situation problem already
+       carries. Skipped on the island, and wherever a needed number is not in
+       the story text to be tapped. */
+    var qs = (this.p.threeReads && this.p.threeReads.read2 && this.p.threeReads.read2.quantities) || [];
+    var needed = qs.filter(function (x) { return x.needed; });
+    var loading = !this.p.pair && !this.planLoaded && needed.length > 0;
+
     this.host().innerHTML =
       MrFraction.aside('thinking',
-        '<p><strong>Before you calculate.</strong> An estimate gives you something to check against. ' +
-        'Without one, a wrong answer looks exactly like a right one.</p>') +
+        loading
+          ? '<p><strong>Build the picture.</strong> Find the numbers it needs in the story. Some numbers in a ' +
+            'story are only there to set the scene.</p>'
+          : '<p><strong>Before you calculate.</strong> An estimate gives you something to check against. ' +
+            'Without one, a wrong answer looks exactly like a right one.</p>') +
       this.problemHTML(false) +
       // The picture goes to the work panel, and stays there through the Engine Room.
-      (bars ? '<div class="ck-to-work">' + bars + '</div>' : '') +
-      '<h3>Commit to an estimate</h3>' +
-      '<p>' + esc(est ? est.prompt : 'Roughly what do you think the answer will be?') + '</p>' +
-      /* THE GATE IS A BAND ON A LINE NOW, with a typed field beside it and a
-         scratch pad that nothing reads. `ROADMAP` §8 and `docs/ESTIMATE-INPUT.md`.
-         Everything downstream is unchanged: `this.estimate` is still the parsed
-         number and `this.estimateRaw` is still what the student saw. */
-      Estimate.html(this.p, { noPad: true }) +
+      (bars ? '<div class="ck-to-work" id="plan-model"' + (loading ? ' hidden' : '') + '>' + bars + '</div>' : '') +
+      (loading
+        ? '<div class="ck-to-work" id="plan-shape"><div class="plan-shape">' + this.chosenShapeArt() +
+            '<p class="plan-shape-cap">Your picture is waiting for its numbers.</p></div></div>' +
+          '<div id="plan-load">' +
+            '<h3>Which numbers does your picture need?</h3>' +
+            '<p class="ck-prompt">Tap each number in the story that belongs in the picture.</p>' +
+            '<ul class="ck-chips" id="plan-chips" aria-label="Numbers in your picture"></ul>' +
+          '</div>'
+        : '') +
+      '<div id="plan-est"' + (loading ? ' hidden' : '') + '>' +
+        '<h3>Commit to an estimate</h3>' +
+        '<p>' + esc(est ? est.prompt : 'Roughly what do you think the answer will be?') + '</p>' +
+        /* THE GATE IS A BAND ON A LINE NOW, with a typed field beside it and a
+           scratch pad that nothing reads. `ROADMAP` §8 and `docs/ESTIMATE-INPUT.md`.
+           Everything downstream is unchanged: `this.estimate` is still the parsed
+           number and `this.estimateRaw` is still what the student saw. */
+        Estimate.html(this.p, { noPad: true }) +
+        '<div class="btn-row"><button class="btn" id="pgo" type="button">Lock it in →</button></div>' +
+      '</div>' +
       this.toolsHTML() +
-      '<div class="feedback" role="status" id="pfb"></div>' +
-      '<div class="btn-row"><button class="btn" id="pgo" type="button">Lock it in →</button></div>';
+      '<div class="feedback" role="status" id="plfb"></div>' +
+      '<div class="feedback" role="status" id="pfb"></div>';
 
     if (bar) Model.wire(this.host(), this.p);
     Estimate.wire(this.host(), this.p);
+    if (loading) this.wireLoad(needed, qs);
 
     var locked = false;
     this.host().querySelector('#pgo').addEventListener('click', function () {

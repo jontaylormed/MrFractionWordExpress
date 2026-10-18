@@ -146,7 +146,7 @@
      pre-solve. A check encodes the question its author was asking that day
      (VERIFICATION.md §28); this one has to ask the newer question too. */
   var PRE_SOLVE = { read1: 1, platform: 1, read2: 1, read3: 1, ticket: 1, plan: 1, demo: 1,
-                    solve: 1, 'check-unsure': 1, 'ticket-hidden': 1,
+                    solve: 1, 'check-unsure': 1, 'ticket-hidden': 1, 'pickModel-line': 1,
                     /* The Crossover Read. It renders four authored strings and
                        the whole story, before anything has been computed, so it
                        is exactly the kind of screen this scan exists for. */
@@ -225,6 +225,7 @@
         var toolKeys = Stations.toolsFor ? Stations.toolsFor(p)
                      : (!isPaired(p) && Stations.TOOLS ? Object.keys(Stations.TOOLS) : []);
         toolKeys.forEach(function (t) { if (phases.indexOf(t) < 0) phases.push(t); });
+        if (!isPaired(p) && phases.indexOf('pickModel') >= 0) phases.push('pickModel-line');
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         /* `['solve', 'check']` used to be written literally here, which meant a
@@ -325,6 +326,12 @@
               var clone2 = r2.cloneNode(true);
               var oo = clone2.querySelector('#hidden-line'); if (oo) oo.remove();
               var cq = clone2.querySelector('#carq'); if (cq) cq.remove();
+              /* The booth's line box, once revealed, is moved into the feedback
+                 viewport (relocateStray) and remembers where it came from.
+                 Excluded by that, or this check counts the answer it is SUPPOSED
+                 to show after the question as a giveaway — 40 false hits. */
+              [].forEach.call(clone2.querySelectorAll('[data-ck-from="carq"], [data-ck-from="hidden-line"]'),
+                function (n) { n.remove(); });
               var blob2 = (clone2.textContent || '') + ' ' +
                 [].map.call(clone2.querySelectorAll('[aria-label]'), function (n) {
                   return n.getAttribute('aria-label');
@@ -365,8 +372,14 @@
                never equal a problem's own line, so setting it turns the hidden
                question on; clearing it restores the ordinary booth for every
                other phase of this same station object. */
-            st.rideLine = (ph === 'ticket-hidden') ? MF.PERCENT : null;
+            /* `pickModel-line` is the picker AS A SINGLE-LINE RIDE SEES IT — the
+               "where is the missing piece?" pictures. With no ride set the
+               station asks the five-shape question, so without this the sweep
+               would never render the version most students meet. */
+            st.rideLine = (ph === 'ticket-hidden') ? MF.PERCENT
+                        : (ph === 'pickModel-line') ? p.line : null;
             st.phase = (ph === 'ticket-hidden') ? 'ticket'
+                     : (ph === 'pickModel-line') ? 'pickModel'
                      : (ph === 'check-unsure')  ? 'check'
                      : atStep                   ? 'solve' : ph;
             st.renderPhase();
