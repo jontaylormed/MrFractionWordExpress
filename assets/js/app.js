@@ -1104,7 +1104,9 @@
     var att = m.schemaAttempts;
     if (att.length) {
       var firsts = m.schemaFirstTry;
-      lines.push(['◆', 'You spotted the line first try ' + firsts + ' time' + (firsts === 1 ? '' : 's') +
+      // Since the cockpit's fast path this is the picture choice: picking the
+      // shape that fits IS spotting the line.
+      lines.push(['◆', 'You picked the right picture first try ' + firsts + ' time' + (firsts === 1 ? '' : 's') +
         ' out of ' + att.length + '.',
         att.length > 1 && att[att.length - 1] <= att[0]
           ? 'It took you fewer goes by the end than at the start.'
@@ -1117,6 +1119,19 @@
     if (m.estimates.length) {
       lines.push(['≈', 'You committed to ' + m.estimates.length + ' estimate' + (m.estimates.length > 1 ? 's' : '') + '.',
         'Estimating first is what gives you something to check against.']);
+    }
+
+    /* The help tools a student chose to open. Described as a choice they made,
+       never as a cost — the point of offering them was autonomy. */
+    var tools = m.toolsUsed || [];
+    if (tools.length) {
+      var names = {};
+      tools.forEach(function (t) { names[(Stations.TOOLS || {})[t.tool] || t.tool] = 1; });
+      lines.push(['?', 'You chose to use: ' + Object.keys(names).join(', ') + '.',
+        'Picking the help you need, when you need it, is part of the skill.']);
+    } else if (m.stationsDone > 0) {
+      lines.push(['?', 'You saw the shape without opening any of the help tools.',
+        'They are there whenever a story is harder to see.']);
     }
 
     var rungs = m.hints.map(function (h) { return h.rung; });

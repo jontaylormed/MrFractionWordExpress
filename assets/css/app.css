@@ -3493,6 +3493,12 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 .ck-title h2 { margin: 0; font-size: 1.3rem; }
 
 .ck-body { display: grid; gap: calc(var(--su) * 1.25); }
+/* Stacked (under 1024px): the answer, what was said about it and the lever
+   stay together, straight after the question — measured at 375px the lever
+   was otherwise 900px below it, under the picture and the pad. The grid
+   areas at 1024px+ place everything explicitly, so this order is ignored there. */
+.ck-text { order: 1; } .ck-scene { order: 2; } .ck-ask { order: 3; }
+.ck-bottom { order: 4; } .ck-lever { order: 5; } .ck-work { order: 6; } .ck-pad { order: 7; }
 .ck-panel {
   background: var(--cream-light);
   border: 2px solid var(--border-strong); border-radius: var(--radius);
