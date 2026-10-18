@@ -945,6 +945,25 @@
     // The real querySelector: the host's own is pointed at the whole cockpit.
     var focusTarget = Element.prototype.querySelector.call(h, 'h3');
     if (focusTarget) { focusTarget.setAttribute('tabindex', '-1'); focusTarget.focus(); }
+
+    /* TAB FROM THE QUESTION GOES INTO THE STORY when the story is what the
+       question asks you to tap (Cycle 31, theme-reviewer). The story panel
+       sits BEFORE the question panel in the document, so a keyboard student
+       focused on "Tap every sentence you need" pressed Tab and went forward,
+       away from every sentence, into the tools and the lever. Now the first
+       Tab lands on the first tappable sentence (or number, at the Plan); Tab
+       after the last one carries on to the question's controls as normal,
+       and Shift+Tab is untouched. Looked up at keypress, so a stage that makes
+       the story tappable later (the Crossover Read's seam) is covered. */
+    var root = this.root;
+    var PICKS = '#ck-story [data-sent][tabindex="0"], #ck-story .num-pick[tabindex="0"]';
+    if (focusTarget) focusTarget.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || e.shiftKey) return;
+      var first = root.querySelector(PICKS);
+      if (!first) return;
+      e.preventDefault();
+      first.focus();
+    });
     /* Hand whatever Mr Fraction queued during this phase to the companion.
        Focus has already gone to the phase heading above, and the companion
        never takes it — he is commentary, not a step, so he announces through

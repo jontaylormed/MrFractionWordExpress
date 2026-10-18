@@ -15,7 +15,7 @@
 
 **Stations are now one fixed screen with a shorter question path**, built from three teachers' feedback and a layout sketch, reviewed by three agents (Cycle 31) and fixed the same day. **Read [`COCKPIT.md`](COCKPIT.md) before touching `stations.js`** — the panel routing (`distribute`, `relocateStray`, `syncLever`, the host's redirected `querySelector`) changes how every phase's markup reaches the screen. Build facts are in [`SITE-STATE.md`](SITE-STATE.md). Layout probe: `tools/cockpit-probe.js`.
 
-**Still open:** Platform Check tab order (focus starts on the question, so Tab moves away from the story sentences); doubled announcements; misconception-specific tool offers in the Engine Room; real teachers and students have not used it yet.
+**Still open:** doubled announcements; misconception-specific tool offers in the Engine Room; real teachers and students have not used it yet.
 
 ## What changed on 2026-09-22
 
