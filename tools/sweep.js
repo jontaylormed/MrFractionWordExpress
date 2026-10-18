@@ -219,9 +219,12 @@
            those four went quiet. Discovered from `Stations.TOOLS`, not listed,
            so a fifth tool is swept the day it exists. Only where the app
            offers them: never on a paired problem. */
-        if (!isPaired(p) && Stations.TOOLS) {
-          Object.keys(Stations.TOOLS).forEach(function (t) { if (phases.indexOf(t) < 0) phases.push(t); });
-        }
+        /* Which tools a problem offers is the station's decision
+           (`Stations.toolsFor`): all four on the mainland, the checklist at a
+           staffed island stop, none at a halt. */
+        var toolKeys = Stations.toolsFor ? Stations.toolsFor(p)
+                     : (!isPaired(p) && Stations.TOOLS ? Object.keys(Stations.TOOLS) : []);
+        toolKeys.forEach(function (t) { if (phases.indexOf(t) < 0) phases.push(t); });
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         /* `['solve', 'check']` used to be written literally here, which meant a

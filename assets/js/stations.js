@@ -1254,10 +1254,19 @@
 
   /* "Help me see it": the optional steps, offered rather than imposed — the
      teacher's suggestion that a student choose the scaffolding they need. */
+  /* Which tools a problem offers. The mainland gets all four; a staffed island
+     stop gets the checklist (its old first read); an unstaffed halt gets none.
+     The one place this is decided — `tools/sweep.js` reads it too. */
+  function toolsFor(p) {
+    if (!p || !p.pair) return Object.keys(TOOLS);
+    return p.fadeLevel === 'independent' ? [] : ['checklist'];
+  }
+
   Station.prototype.toolsHTML = function () {
-    if (this.p.pair) return '';
+    var keys = toolsFor(this.p);
+    if (!keys.length) return '';
     return '<details class="ck-tools"><summary>Help me see it</summary><div class="ck-tools-row">' +
-      Object.keys(TOOLS).map(function (k) {
+      keys.map(function (k) {
         return '<button class="btn btn-quiet" type="button" data-tool="' + k + '">' + TOOLS[k] + '</button>';
       }).join('') + '</div></details>';
   };
@@ -1347,7 +1356,14 @@
        the picture choice that follows does the classifying. The five questions
        are still here, unchanged, as the "Run the five questions" tool — and on
        Crossover Island, where they are the one aid an unstaffed halt keeps. */
-    if (!p.pair && this.phase !== 'checklist') {
+    /* STAFFED ISLAND STOPS TOO (user, 2026-10-18: "drop the five question
+       checklist"). A staffed Crossover Island stop now reads the story and
+       goes straight to the Crossover Read, where the two halves are chosen in
+       pictures; the checklist is its "Run the checklist" tool. An UNSTAFFED
+       halt keeps the five questions — they are the one aid a halt gives
+       (CHALLENGE-MODE §4), and taking them away would leave it none. */
+    var island = !!p.pair, halt = island && p.fadeLevel === 'independent';
+    if (!halt && this.phase !== 'checklist') {
       this.host().innerHTML =
         MrFraction.aside('steady',
           '<p><strong>First read.</strong> The numbers are covered on purpose. Read it for what is ' +
@@ -1362,8 +1378,11 @@
         '<div class="feedback" role="status" id="r1fb"></div>' +
         '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
       var seen = false, h = this.host();
+      /* Not on the island: an island retelling names where the story turns
+         ("Then a second office…"), which is the very thing the Crossover Read
+         asks the student to find next. */
       h.querySelector('#r1go').addEventListener('click', function () {
-        if (!seen && p.threeReads && p.threeReads.read1 && p.threeReads.read1.modelAnswer) {
+        if (!island && !seen && p.threeReads && p.threeReads.read1 && p.threeReads.read1.modelAnswer) {
           seen = true;
           h.querySelector('#r1fb').innerHTML = msg('info', '&rarr;',
             '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
@@ -1775,6 +1794,8 @@
         '<div class="feedback" role="status" id="xr-fb3"></div>' +
       '</div>' +
       '<div class="ck-to-work" id="xr-opts2" hidden>' + pictureOpts(2) + '</div>' +
+      // The five questions that used to be this stop's first read, on request.
+      this.toolsHTML() +
 
       '<div id="xr-done" hidden>' +
         '<div class="msg msg-go"><span class="ico" aria-hidden="true">&#10003;</span><p>' +
@@ -3319,7 +3340,8 @@
                       /* Exported so `tools/sweep.js` renders the phases a
                          student can actually reach rather than keeping its own
                          copy of the fork. See `phaseChain`. */
-                      phaseChain: phaseChain, phaseAfter: phaseAfter, TOOLS: TOOLS, NUMBERLESS: NUMBERLESS,
+                      phaseChain: phaseChain, phaseAfter: phaseAfter, TOOLS: TOOLS, toolsFor: toolsFor,
+                      NUMBERLESS: NUMBERLESS,
                       /* Exported so `tools/sweep.js` reads the post-solve
                          sequence rather than keeping its own copy of it. */
                       postSolve: postSolve, critiqueOf: critiqueOf,
