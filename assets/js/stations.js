@@ -795,8 +795,15 @@
           '<div class="journey-bar">' +
             '<span class="eyebrow">Stop ' + (this.legIndex + 1) + ' of ' + this.legTotal + '</span>' +
             '<ol class="journey-dots" aria-label="Progress along this trip">' + dots + '</ol>' +
+            '%%TITLE%%' +
           '</div>' +
         '</div>';
+      /* THE MAP RUNS THE WHOLE WIDTH OF THE WINDOW (user, 2026-10-18: "Title
+         and Map needs to be larger and extend the whole window"). `slice` so
+         the leg fills the band instead of sitting letterboxed in the middle of
+         it; the stop and the problem's name share the bar underneath, so the
+         strip grows by one band and not by two rows. */
+      leg = leg.replace(/<svg class="leg-svg"/, '<svg class="leg-svg" preserveAspectRatio="xMidYMid slice"');
     }
 
     /* THE COCKPIT (docs/COCKPIT.md). One screen whose panels never move; only
@@ -813,21 +820,23 @@
        `.ck-body` holds every panel and nothing else, so `tools/sweep.js` can
        scan what the student is working in without the "Stop 2 of 5" digits in
        the top strip reading as leaked answers. */
+    var title =
+      '<div class="ck-title">' +
+        '<span class="eyebrow">' + esc(st.name) + ' &middot; ' + esc(route.name) + '</span>' +
+        '<h2>' + esc(this.p.title || st.strategy) + '</h2>' +
+      '</div>';
     var html =
       '<div class="cockpit" style="--line-current:' + colour + '">' +
         '<div class="ck-top">' +
-          leg +
-          '<div class="ck-title">' +
-            '<span class="eyebrow">' + esc(st.name) + ' &middot; ' + esc(route.name) + '</span>' +
-            '<h2>' + esc(this.p.title || st.strategy) + '</h2>' +
-          '</div>' +
+          (leg ? leg.replace('%%TITLE%%', title) : title) +
         '</div>' +
         '<div class="ck-body">' +
           '<section class="ck-panel ck-text" id="ck-text" aria-label="The word problem"></section>' +
           '<section class="ck-panel ck-scene" id="ck-scene"></section>' +
           '<section class="ck-panel ck-ask" aria-label="Question and answer"><div id="phase-host"></div></section>' +
           '<section class="ck-panel ck-work" id="ck-work" aria-label="Work area"></section>' +
-          '<section class="ck-panel ck-pad" id="ck-pad">' + Scratch.html('ck-pad-canvas') + '</section>' +
+          '<section class="ck-panel ck-pad" id="ck-pad">' +
+            Scratch.html('ck-pad-canvas', 'Sketch Pad &middot; notes, sums, drawings') + '</section>' +
           '<div class="ck-bottom">' +
             '<div class="ck-say" id="ck-say"></div>' +
             '<section class="ck-panel ck-feedback" id="ck-feedback" aria-label="Feedback"></section>' +

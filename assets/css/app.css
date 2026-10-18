@@ -3470,27 +3470,49 @@ input[type="range"] { accent-color: var(--orange-deep); }
    page scrolls as it always has. */
 body:has(.cockpit) .rail-foot,
 body:has(.cockpit) #ticker-host { display: none; }
-body:has(.cockpit) main { max-width: 1600px; padding: calc(var(--su) * 1.5) calc(var(--su) * 2); }
+/* No width cap: the cockpit uses the whole window (user, 2026-10-18). */
+body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(var(--su) * 2); }
 
 .cockpit { display: grid; gap: calc(var(--su) * 1.25); }
-.ck-top { display: flex; align-items: center; gap: calc(var(--su) * 2); min-width: 0; }
-.cockpit .journey { display: flex; align-items: stretch; margin: 0; flex: 0 1 auto; }
-.cockpit .journey-map { width: clamp(150px, 16vw, 240px); }
-.cockpit .leg-svg { height: 46px; }
+/* The top strip spans the window: the map as a full-width band, and under it
+   one bar holding the stop, its dots and the problem's name (user, 2026-10-18:
+   "Title and Map needs to be larger and extend the whole window"). */
+.ck-top { min-width: 0; }
+.cockpit .journey { display: block; margin: 0; width: 100%; }
+.cockpit .journey-map { width: 100%; }
+.cockpit .leg-svg { width: 100%; height: clamp(56px, 9vh, 110px); }
 /* Height is the cockpit's scarcest thing on a 768px laptop, so the site header
    gives some back on station screens. Measured, not guessed: see COCKPIT.md. */
 body:has(.cockpit) .sign-inner { padding-top: 4px; padding-bottom: 4px; }
 body:has(.cockpit) .sign-sub { display: none; }   /* the cockpit's own top strip names the stop */
 body:has(.cockpit) .sign-mark { width: 30px; }
 /* The picture must not make the story's row taller than the story. */
-.ck-scene svg, .ck-scene img { max-height: 100%; width: auto; max-width: 100%; }
-.ck-scene .scene { height: 100%; display: flex; flex-direction: column; justify-content: center; }
+/* The picture fills its 30% of the top row at the story's height, rather than
+   sitting small in the middle of it ("better align and scale", user,
+   2026-10-18). The row is exactly as tall as the story (the panel is
+   size-contained), and the drawing grows to fill what is left above its
+   caption, keeping its own proportions. */
+.ck-scene .scene { height: 100%; display: flex; flex-direction: column; justify-content: center;
+  padding: calc(var(--su) * .75); gap: 4px; }
+.ck-scene .scene > svg, .ck-scene .scene > img, .ck-scene .scene > div:not(figcaption) {
+  flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
+.ck-scene .scene figcaption { flex: 0 0 auto; margin: 0; }
 .cockpit .ck-panel { font-size: .94em; }
-.cockpit .journey-bar { border-top: 0; border-left: 2px solid var(--border-strong); flex-direction: column;
-  justify-content: center; align-items: flex-start; gap: 6px; padding: 6px 14px; }
-.ck-title { min-width: 0; }
-.ck-title .eyebrow { margin: 0 0 2px; }
-.ck-title h2 { margin: 0; font-size: 1.3rem; }
+.cockpit .journey-bar { flex-wrap: wrap; gap: calc(var(--su) * 1) calc(var(--su) * 2.5);
+  padding: calc(var(--su) * .75) calc(var(--su) * 2); }
+.ck-title { min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px calc(var(--su) * 2);
+  padding-left: calc(var(--su) * 2.5); border-left: 2px solid var(--border-strong); }
+.ck-title .eyebrow { margin: 0; }
+.ck-title h2 { margin: 0; font-size: clamp(1.35rem, 1.05rem + .8vw, 1.85rem); line-height: 1.15; }
+/* No map (a trip-less station): the title stands on its own, full width. */
+.ck-top > .ck-title { border-left: 0; padding-left: 0; }
+
+/* THE TOUCH PAD, BIGGER (user, 2026-10-18). Its label was the estimate's long
+   one, "Sketch Pad: For Notes, Calculations, and/or Drawings", which wrapped
+   to three lines in this column and left the drawing surface a dashed strip.
+   One line of label and the rest is surface. */
+.ck-pad .est-pad-head { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 72px; }
+.ck-pad .est-pad-box { min-height: 120px; }
 
 .ck-body { display: grid; gap: calc(var(--su) * 1.25); }
 /* Stacked (under 1024px): the answer, what was said about it and the lever
@@ -3632,12 +3654,19 @@ body:has(.cockpit) .sign-mark { width: 30px; }
        The question column was 1fr and read as the biggest thing on screen
        ("the right box is way too big"), so it gets a reading column and no
        more. */
-    grid-template-columns: minmax(0, 1.55fr) minmax(170px, .55fr) minmax(260px, .68fr);
+    /* FOUR TRACKS SO TWO ROWS CAN SPLIT DIFFERENTLY AND STILL LINE UP.
+       The top row is 70% story, 30% picture (user, 2026-10-18: "the Word
+       Problem should take up 70% of the line and the Illustration… 30%").
+       The row below is work 48%, pad 28% — the user found the pad too small
+       to draw in — and the question column 24%, which keeps it from becoming
+       "way too big" again. 48+22 = 70 and 6+24 = 30, so the top row's split
+       falls on a real column edge and nothing is out of line. */
+    grid-template-columns: minmax(0, 48fr) minmax(0, 22fr) minmax(0, 6fr) minmax(250px, 24fr);
     grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "text text  scene"
-      "work pad   ask"
-      "fb   fb    lever";
+      "text text scene scene"
+      "work pad  pad   ask"
+      "fb   fb   fb    lever";
   }
   .ck-text { grid-area: text; }
   .ck-scene { grid-area: scene; }
@@ -3655,9 +3684,9 @@ body:has(.cockpit) .sign-mark { width: 30px; }
   .ck-lever { grid-area: lever; }
   /* With no picture the story takes the whole top row. */
   .ck-body:has(.ck-scene[hidden]) { grid-template-areas:
-      "text text  text"
-      "work pad   ask"
-      "fb   fb    lever"; }
+      "text text text  text"
+      "work pad  pad   ask"
+      "fb   fb   fb    lever"; }
 }
 
 /* ---------- Print ---------- */
