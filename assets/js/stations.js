@@ -659,6 +659,7 @@
       var scene = (window.Scene && Scene.html(p, masked)) || '';
       sceneBox.innerHTML = scene;
       sceneBox.hidden = !scene;
+      fitScene(sceneBox);    // new picture, same panel: the ResizeObserver will not fire
     }
     return '';
   };
@@ -878,10 +879,15 @@
     /* The pad sizes its canvas from its rendered box, which is all zeros until
        app.js attaches the root — so it is wired on the next frame, once, and
        then lives for the whole station. Notes survive moving between steps. */
+    /* A plain timer, not requestAnimationFrame: rAF and ResizeObserver both
+       wait for a rendered frame, and a hidden pane or an off-screen frame never
+       renders one — the picture fit and the pad were both left undone there. */
     var self = this;
-    (global.requestAnimationFrame || setTimeout)(function () {
-      if (self.root && self.root.isConnected) Scratch.wire(self.root, 'ck-pad-canvas');
-    });
+    setTimeout(function () {
+      if (!self.root || !self.root.isConnected) return;
+      Scratch.wire(self.root, 'ck-pad-canvas');
+      fitScene(self.root.querySelector('#ck-scene'));
+    }, 0);
     return this.root;
   };
 
@@ -1043,6 +1049,49 @@
     if (lever.hidden) lever.hidden = false;
   };
 
+  /* THE PICTURE SCALES TO ITS PANEL (user, 2026-10-18: Part–Whole pictures
+     "need to be re-scaled to visually match the word problem"). Icon pictures
+     are a row of fixed-size items that wrap, so in the 30% panel ten boxes sat
+     tiny, nine on one line and one stranded under them, with the rest of the
+     panel empty. This picks the row/column split that makes each item as big
+     as the panel allows and lays them out centred. Unit pictures (the quilt's
+     square cells) get the same fit. Re-run whenever the panel changes size —
+     the panel is size-contained, so fitting its content cannot resize it and
+     loop. */
+  function fitScene(box) {
+    if (!box || box.hidden || !box.isConnected) return;
+    var cap = box.querySelector('figcaption');
+    var W = box.clientWidth - 28, H = box.clientHeight - 28 - (cap ? cap.offsetHeight + 6 : 0);
+    if (W <= 0 || H <= 0) return;
+    function best(n, gap) {
+      var size = 0, cols = 1;
+      for (var c = 1; c <= n; c++) {
+        var r = Math.ceil(n / c);
+        var s = Math.min((W - gap * (c - 1)) / c, (H - gap * (r - 1)) / r);
+        if (s > size) { size = s; cols = c; }
+      }
+      return { size: Math.floor(size), cols: cols };
+    }
+    var grid = box.querySelector('.sc-grid');
+    if (grid) {
+      var items = grid.querySelectorAll('.sc-item');
+      if (items.length) {
+        var g = 6, b = best(items.length, g), s = Math.max(14, Math.min(b.size, 96));
+        grid.style.cssText += ';display:grid;grid-template-columns:repeat(' + b.cols + ',' + s + 'px);' +
+          'gap:' + g + 'px;justify-content:center;align-content:center;';
+        [].forEach.call(items, function (it) { it.style.width = s + 'px'; it.style.height = s + 'px'; });
+      }
+    }
+    var ug = box.querySelector('.unit-grid');
+    if (ug) {
+      var cells = ug.children.length;
+      var cols = parseInt(getComputedStyle(ug).getPropertyValue('--u-cols'), 10) || cells;
+      var rows = Math.ceil(cells / cols);
+      var cs = Math.floor(Math.min((W - 16 - 3 * (cols - 1)) / cols, (H - 16 - 3 * (rows - 1)) / rows));
+      if (cs > 6) ug.style.gridTemplateColumns = 'repeat(' + cols + ',' + Math.min(cs, 64) + 'px)';
+    }
+  }
+
   /* FEEDBACK WRITTEN OUTSIDE A SLOT STILL GOES TO THE FEEDBACK VIEWPORT
      (user, 2026-10-18: "feedback is still happening in the Question and
      Answer box"). Every phase's status slot is routed by `distribute`, but some
@@ -1068,6 +1117,10 @@
 
   Station.prototype.wireCockpit = function () {
     var self = this, root = this.root;
+    var sceneBox = root.querySelector('#ck-scene');
+    if (global.ResizeObserver && sceneBox) {
+      new ResizeObserver(function () { fitScene(sceneBox); }).observe(sceneBox);
+    }
     if (global.MutationObserver) {
       new MutationObserver(function () { self.relocateStray(); })
         .observe(root.querySelector('#phase-host'),

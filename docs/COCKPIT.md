@@ -117,6 +117,31 @@ Branch: `cockpit-layout`. `main` is the live site and is not touched until the u
 
 **Verification on this branch, 2026-10-18:** `MF.validate()` 37/0/28. `SWEEP.report()` 1,756 screens (tools now swept): 0 render errors, 0 unfilled tokens, 0 numbers on numberless screens, 0 new leak candidates. **The sweep itself was fixed** — it read only the question panel, so a planted digit on the picker reported 0; it now reads `.ck-body`, and the planted digit fires on all 120 picker screens. `tools/cockpit-probe.js`: 333 screens at 1366×657, page never scrolls.
 
+## Cycle 31 reviews (2026-10-18) — teacher FAIL, theme-reviewer FAIL, student-tester SHIP-WITH-FIXES
+
+Not yet acted on; the user decides. Confirmed independently where marked ✓.
+
+**Mechanical (no teaching change):**
+- ✓ **Arrivals Board verdict hidden on all 37** — `relocateStray` moves "Worth remembering" in after `#ckfb`, and newest-slot-wins hides the verdict. Rule to adopt: a verdict on the student's own answer is never hidden by a note.
+- ✓ **Grand Tour header names the line** ("The Compare Line", Compare's colour) above "Which picture fits?". Treat a mixed ride like a percent ride: name the route, ink colour.
+- ✓ **Literal `&mdash;` / `&ndash;` on screen** — `ModelPicker.why()` escapes authored HTML; some content strings too (probably also live on `main`).
+- **Focus drops to `<body>`** after picker cards, Arrivals Board yes/no, critique options, Test Track — controls disable themselves; call `focusFeedback`.
+- **Tab order ≠ screen order**: Platform Check skips the story sentences; picker cards after the tools; Enter in `#ans` does nothing.
+- **Stale picker cards stay clickable during tools** (throws) — use `inert` on stale work, not a class.
+- **Feedback/lever below the fold at 1366×768**; verdicts don't scroll into view (only the Engine Room does).
+- **Text size 150% misses rem-sized text** (question h3, choices, lever, Mr Fraction); docked Mr Fraction text is 13.76px (< 16).
+- **Question column overflows** (island checklist was 2,821px before one-at-a-time; Arrivals Board 1,415px) while the work panel sits empty.
+- **Lever labels lie in tools** ("Third read →" returns to the plan; "Now show me the proof →" at a halt goes to the Engine Room).
+- Minor: doubled announcements; picker SVG labels 6.4px; "closest of the four" with five pictures; critique grammar ("telling they"); content that assumes order ("two problems ago").
+
+**Teaching (the user's call):**
+- **Single-line rides: the pick isn't recognition** (header + colour + same answer every stop). Teacher's proposal: on those rides show 3–4 variants of that line's diagram with `?` in different places (which quantity is missing); keep the five-shape pick for percent / Grand Tour.
+- **Mr Fraction's Read 1 retelling does the recognising** one screen early — move it to after the pick; give Read 1 one tapped, numberless action.
+- **Optional tools go unopened by the students who need them** — make the Plan's first act *placing the story's numbers into the chosen picture* (read2 + ticket inside the model); auto-*offer* (highlight, never open) a tool after a second wrong pick or by misconception.
+- **14–17 of 120 `whyWrong` texts name the correct line; 33 name an operation** before the Plan — need picker-specific text or a validator rule; route to math-reviewer.
+- **Compare picture is additive only** — misleads on times-as-many / percent-more problems. Captions repeat story words ("total", "whole") → keyword matching; Change picture reads as "more" on decreases.
+- Help tools opened from the Plan are hollow (the model already shows the answer to the tool's question).
+
 **Known and open:**
 - On a single-line ride the picture choice is easy: the student chose the line. It is a real question on the Grand Tour and percent rides. Worth the user's call.
 - At 1366×657 the work and question panels scroll inside themselves (bar models ~440–490px). Nothing scrolls at 1920×1080.

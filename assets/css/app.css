@@ -3570,10 +3570,13 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-ask .est-track, .ck-ask .est-ticks { width: 100%; max-width: none; margin-left: auto; margin-right: auto; }
 .ck-ask .est-typed { text-align: left; }
 .ck-ask .solve-wrap .field input { width: 100%; max-width: none; }
-/* Empty panels say what they are for rather than sitting blank. */
+/* EMPTY, THE WORK PANEL SHOWS MR FRACTION'S SILHOUETTE, as the feedback
+   viewport does (user, 2026-10-18) — one empty state for the cockpit, not a
+   sentence in one panel and a figure in another. Same art, same filter. */
 .ck-work:empty::before {
-  content: "Your picture of the problem and your working will appear here.";
-  color: var(--ink-muted); font-size: .9em;
+  content: ""; position: absolute; inset: 16px;
+  background: url("../art/Conductor_Mr_Fraction_(Front).png") center / contain no-repeat;
+  filter: brightness(0); opacity: .1; pointer-events: none;
 }
 /* The bottom row: Mr Fraction docked on the left, the feedback bar beside him.
    Only the slot written most recently shows (see wireCockpit). */
@@ -3652,7 +3655,6 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 /* The picture panel — the work area is the cockpit's viewport for seeing the
    problem: the five shapes to choose from, the Platform Check's map, then the
    bar model, which stays through the Engine Room. */
-.ck-work::before { content: none; }
 /* THREE BY TWO (user, 2026-10-18). Six half-columns, each card spanning two,
    so the bottom pair can sit centred under the top three instead of leaving a
    hole at the end of the row. Pictures are capped in height so both rows fit
