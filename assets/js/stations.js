@@ -990,6 +990,7 @@
         self.go(k);
       });
     });
+    this.relocateStray();
     if (this.toolReturn && TOOLS[this.phase]) {
       var back = el('<div class="btn-row ck-back-row"><button class="btn btn-quiet" type="button">' +
         '&larr; Back to where I was</button></div>');
@@ -1042,8 +1043,36 @@
     if (lever.hidden) lever.hidden = false;
   };
 
+  /* FEEDBACK WRITTEN OUTSIDE A SLOT STILL GOES TO THE FEEDBACK VIEWPORT
+     (user, 2026-10-18: "feedback is still happening in the Question and
+     Answer box"). Every phase's status slot is routed by `distribute`, but some
+     phases build a verdict straight into their markup — the Crossover Read's
+     "That is the shape of it", the Ticket Booth's line box, parts of the
+     Arrivals Board. Any `.msg` left in the question panel is moved into a slot
+     of its own in the viewport.
+
+     ONLY ONCE IT IS VISIBLE. Several sit inside a block that is `hidden` until
+     the student earns it; moving one out early would put a verdict — and on
+     the Crossover Read, the answer — on screen before it was asked. So this
+     runs again whenever anything in the panel is un-hidden. */
+  Station.prototype.relocateStray = function () {
+    var host = this.host(), fb = this.region('feedback');
+    if (!host || !fb) return;
+    [].forEach.call(Element.prototype.querySelectorAll.call(host, '.msg'), function (m) {
+      if (m.closest('.feedback') || m.closest('[hidden]')) return;
+      var slot = el('<div class="feedback ck-moved" role="status"></div>');
+      fb.appendChild(slot);
+      slot.appendChild(m);
+    });
+  };
+
   Station.prototype.wireCockpit = function () {
     var self = this, root = this.root;
+    if (global.MutationObserver) {
+      new MutationObserver(function () { self.relocateStray(); })
+        .observe(root.querySelector('#phase-host'),
+                 { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
+    }
     var lever = root.querySelector('#ck-lever-btn');
     lever.addEventListener('click', function () {
       var src = self.leverSrc;
@@ -1188,7 +1217,12 @@
           '<p><strong>First read.</strong> The numbers are covered on purpose. Read it for what is ' +
           'happening, not for what to work out.</p>') +
         this.problemHTML(false) +
-        '<h3>What is happening in this story?</h3>' +
+        /* Centred, and it says what to do next (user, 2026-10-18): the lever is
+           the one control on this screen, so the screen points at it. */
+        '<div class="ck-center">' +
+          '<h3>What is happening in this story?</h3>' +
+          '<p class="ck-prompt" id="r1prompt">Read the story all the way through. When you have, pull the lever.</p>' +
+        '</div>' +
         '<div class="feedback" role="status" id="r1fb"></div>' +
         '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
       var seen = false, h = this.host();
@@ -1197,6 +1231,8 @@
           seen = true;
           h.querySelector('#r1fb').innerHTML = msg('info', '&rarr;',
             '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
+          h.querySelector('#r1prompt').textContent =
+            'Compare your reading with Mr Fraction’s, in the feedback below. Then pull the lever to choose a picture.';
           this.textContent = 'Which picture fits? →';
           return;
         }

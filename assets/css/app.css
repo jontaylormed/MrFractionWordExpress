@@ -3547,7 +3547,12 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
    1.3em paragraph rhythm is for reading, and here it only made the column
    (and so the whole working row) taller. */
 .ck-ask p { margin-bottom: .55em; }
-.ck-ask h3 { margin-bottom: .5em; }
+.ck-ask h3 { margin-bottom: .5em; text-align: center; }
+/* A step that is only a question and a lever (the first read) sits in the
+   middle of its panel rather than at the top-left of an empty box. */
+#phase-host:has(> .ck-center) { min-height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.ck-center { text-align: center; }
+.ck-prompt { color: var(--ink-mid); max-width: 32ch; margin: 0 auto; }
 .ck-ask .est-wrap { margin: .5em 0; gap: calc(var(--su)); grid-template-columns: 1fr; }
 /* THE COMPANION RESERVATIONS COME OFF IN THE COCKPIT. The estimate line and
    the Engine Room's answer box each kept up to 200px clear on their right for
