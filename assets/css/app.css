@@ -3579,42 +3579,44 @@ body:has(.cockpit) .sign-mark { width: 30px; }
   .cockpit { flex: 1; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
   .ck-body {
     min-height: 0;
-    /* The story's row sizes to the story, so it never has to scroll; the work
-       row takes what is left and is the one allowed to scroll inside itself. */
-    /* THE STORY TAKES THE FULL WIDTH OF THE TOP ROW. Beside the picture it
-       wrapped to 267px on a 657px-tall laptop window and left the work panel
-       122px for a bar model that needs 420. Wider prose is shorter prose; the
-       picture and the pad stack beside the work instead, which is where a
-       student looks while drawing anyway. */
-    /* The question column was 1fr and read as the biggest thing on screen
-       (user, 2026-10-18: "the right box is way too big"). It holds a question
-       and its answer, so it gets a reading column and no more. */
-    grid-template-columns: minmax(0, 1.7fr) minmax(200px, .62fr) minmax(270px, .68fr);
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+    /* THE TOP ROW IS THE PROBLEM AND NOTHING ELSE (user, 2026-10-18: "only
+       the Word Problem and Illustration should be at the top, everything else
+       below it"). Everything the student works with sits underneath, as in the
+       sketch: work area, touch pad, then the question and its answer, with the
+       feedback bar and the lever along the bottom.
+
+       The story's row sizes to the story, so it never scrolls; the row below
+       takes what is left and is the one allowed to scroll inside a panel. The
+       story spans two columns because wider prose is shorter prose — beside
+       the picture in one column it wrapped to 267px on a 657px window.
+
+       The question column was 1fr and read as the biggest thing on screen
+       ("the right box is way too big"), so it gets a reading column and no
+       more. */
+    grid-template-columns: minmax(0, 1.55fr) minmax(170px, .55fr) minmax(260px, .68fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "text text  ask"
-      "work scene ask"
+      "text text  scene"
       "work pad   ask"
       "fb   fb    lever";
   }
   .ck-text { grid-area: text; }
   .ck-scene { grid-area: scene; }
-  /* `contain: size` because the question panel spans the story's `auto` row,
-     and an auto track grows to fit whatever spans it: a long Ticket Booth
-     stretched the top row and pushed the page 78px past the window. Contained,
-     it takes the space the grid gives it and scrolls inside. */
+  /* `contain: size` on every panel except the story: without it a panel's
+     content sizes the grid's tracks. A long Ticket Booth stretched the top row
+     78px past the window, and a 677px ratio table did the same through
+     `minmax(0, 1fr)` rows. Contained, a panel takes the space the grid gives
+     it and scrolls inside. The picture is contained too, so the top row is
+     exactly as tall as the story and no taller. */
   .ck-ask { grid-area: ask; contain: size; }
-  /* Same reason, found the same way: a 677px ratio table in the work panel
-     pushed the page 50px down even inside `minmax(0, 1fr)` rows. */
   .ck-work { grid-area: work; contain: size; }
   .ck-pad { grid-area: pad; contain: size; }
   .ck-scene { contain: size; }
   .ck-bottom { grid-area: fb; }
   .ck-lever { grid-area: lever; }
-  /* With no picture the pad takes its place. */
+  /* With no picture the story takes the whole top row. */
   .ck-body:has(.ck-scene[hidden]) { grid-template-areas:
-      "text text  ask"
-      "work pad   ask"
+      "text text  text"
       "work pad   ask"
       "fb   fb    lever"; }
 }

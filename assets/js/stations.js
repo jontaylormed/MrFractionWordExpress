@@ -915,7 +915,10 @@
       }
       return found;
     }
+    // Some phases put their "go on" button inside the feedback message
+    // (the Ticket Booth's "On to the plan"), so the bar is searched second.
     var src = lastPrimary(this.root.querySelector('.ck-ask')) ||
+              lastPrimary(this.root.querySelector('#ck-feedback')) ||
               lastPrimary(this.root.querySelector('.ck-work'));
     if (this.leverSrc && this.leverSrc !== src) this.leverSrc.removeAttribute('data-ck-src');
     this.leverSrc = src;
