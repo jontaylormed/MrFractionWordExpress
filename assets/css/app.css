@@ -3590,9 +3590,16 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 /* "I'd like a hint" lives in the viewport, under whatever is being said. */
 .ck-fb-tools { display: flex; justify-content: flex-start; gap: calc(var(--su)); margin-top: auto; order: 99; }
 .ck-feedback .hints { margin: 0; }
+/* EMPTY, THE VIEWPORT SHOWS MR FRACTION'S SILHOUETTE (user, 2026-10-18) —
+   the conductor's shape, waiting, rather than a blank box or a line of
+   placeholder copy. The existing art, flattened to a soft shadow by a filter,
+   so there is no second image to keep in step. Decorative: a pseudo-element
+   carries no text, and the panel's own label still says what it is. */
+.ck-feedback { position: relative; }
 .ck-feedback:not(:has(.feedback[data-latest]))::after {
-  content: "What you got right, what to look at again, and why \2014 it all appears here.";
-  color: var(--ink-muted); font-size: .92em;
+  content: ""; position: absolute; inset: 10px 0 10px 0;
+  background: url("../art/Conductor_Mr_Fraction_(Front).png") center / contain no-repeat;
+  filter: brightness(0); opacity: .1; pointer-events: none;
 }
 .mf-companion[data-docked] {
   position: static; z-index: auto; pointer-events: auto;
