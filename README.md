@@ -16,24 +16,24 @@ An interactive site that teaches students how to **start** a maths word problem 
 
 Students who struggle with word problems usually are not bad at arithmetic. They are stuck earlier — at understanding what the story says, representing it, and knowing whether their answer makes sense. So the site spends nearly all its effort *before* the arithmetic starts.
 
-A **trip** is a run of stations along one line. Each station teaches a different strategy, and each problem is worked through up to ten screens:
+A **trip** is a run of stations along one line, and each problem is worked on **one screen whose panels never move** — only what is in them changes. The word problem and its illustration sit along the top; below them are the picture of the problem, a sketch pad, and the question with its answer; along the bottom, Mr Fraction and the feedback. The question panel asks **one question at a time**; the teaching happens in the feedback. A single **lever** moves the student on.
 
-| Screen | What the student does |
+| Step | What the student does |
 |---|---|
-| **Read 1** | Says what the story is about — with every number hidden |
-| **Platform Check** | Taps the sentences carrying the evidence, then sees where the problem sits on the map |
-| **Read 2** | Picks out which quantities matter and which are scenery |
-| **Read 3** | Names what the question is actually asking for |
-| **Ticket Booth** | Works out which piece of the problem is missing |
-| **Plan** | Builds a picture of the relationship — a bar, a ratio table, a train, a tray, a number line |
+| **Read** | Reads the story with every number hidden |
+| **Which picture?** | Picks the picture that fits. On a ride of one line, the pictures are that line's shape with the missing piece in different places — *which piece is missing?* On the Grand Tour and the Percent Line they are the five shapes — *which situation is this?* Mr Fraction's own reading of the story comes after the choice |
+| **Platform Check** | Taps the sentences that prove it, then sees where the problem sits on the map |
+| **Plan** | Taps the numbers the picture needs into it — scenery numbers are turned away — then commits to an estimate |
 | **Test Track** | Watches the strategy demonstrated on different numbers, then answers two questions about their own — on 24 of the 37 |
-| **Engine Room** | Does the arithmetic, one step at a time, with a hint ladder. A near miss is told apart from a wrong turn: land close and it says the plan is probably right and the working slipped, and points at the calculation rather than back at the plan |
-| **Arrivals Board** | Checks the answer against their own estimate, the question, the units and common sense |
+| **Engine Room** | Does the arithmetic, one step at a time, with a hint ladder. A near miss is told apart from a wrong turn |
+| **Arrivals Board** | Checks the answer, one check at a time: against their estimate, the question, the units and common sense |
 | **Critique** | Reads somebody else's wrong answer and works out which mistake produced it — the student diagnosing, instead of being diagnosed |
+
+**Help tools** sit under *Help me see it*, for a student who wants them: **Run the checklist** (five questions about the story's shape), **Sort the numbers**, **Find the question** and **Find the missing piece**. They are never required. After repeated misses the site highlights the one that would help — it never opens it for them — and the trip report names the tools a student chose.
 
 Every trip ends at a **Terminus Hub**: one fresh problem with no scaffolding at all, where the student chooses their own approach and says why.
 
-On [Crossover Island](#crossover-island) the Platform Check is replaced by the **Crossover Read**, which runs the same five questions twice — once on each half of a two-situation problem.
+On [Crossover Island](#crossover-island) the Platform Check is replaced by the **Crossover Read**: find the sentence where the story changes, then pick the picture for each half.
 
 ## The five lines
 
@@ -114,7 +114,7 @@ That is also where the marks go missing. Working the first half out correctly an
 
 | | |
 |---|---|
-| **The Crossover Read** | Replaces the Platform Check. Find the seam where the story changes what it is doing, then run **the same five questions on each half** and get two different answers |
+| **The Crossover Read** | Replaces the Platform Check. Find the seam where the story changes what it is doing, then **pick the picture for each half** — and get two different shapes. The five-question checklist is a help tool at staffed stops, and the whole first read at an unstaffed halt |
 | **A two-picture Plan phase** | The first model, a slot naming what crosses, then the second model drawn *waiting* — because until the transfer exists, nothing in it can be known |
 | **Five stops, all open** | Three staffed platforms and two unstaffed halts. Nothing is locked and nothing is scored; the halts differ only in how much scaffolding they give |
 | **Pooling** | Two stops hold two problems each and draw at random, so a second visit differs by problem and not only by numbers |
@@ -139,7 +139,7 @@ Visiting one is ordinary navigation, never an admission — which matters for st
 
 A **For Teachers** button sits beside *Reading & Access* in the top bar, on the home map only — a student mid-trip never sees it. It opens [`teachers.html`](teachers.html) in a new tab: **the site's learning targets**, written as student-facing *"I can"* statements with the Bloom's Taxonomy level of each.
 
-- **Fifteen targets** — one per screen of the core trip, two for Crossover Island, and two that run across the whole site (keywords, and percent *of what*).
+- **Eighteen targets** — ten for the steps of the core trip, four for the help tools a student can choose, two for Crossover Island, and two that run across the whole site (keywords, and percent *of what*).
 - **Three notes on reading them.** The Bloom order is inverted on purpose: *Analyze* is gated before *Apply*. Remember-level targets are almost absent, also on purpose. And these are targets the site **practises, not assesses** — nothing on it produces a score, so assessing a target means doing it off the site.
 - **Alignment** to the Standards for Mathematical Practice: MP7 for targets 2–6, MP1 for 9, MP3 for 10.
 

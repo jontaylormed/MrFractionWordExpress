@@ -25,18 +25,18 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 | | |
 |---|---|
 | **Problems** | **37**, four number sets each = **148 materialisations** |
-| **Rendered screens** | **1,756** (`SWEEP.render()`, branch `cockpit-layout`) — the fast path's chain plus the four help tools, every number set |
-| **Branch** | **`cockpit-layout` is the build under review; `main` is the live site and still has the old layout.** Everything below describes the branch. |
+| **Rendered screens** | **1,896** (`SWEEP.render()`) — the fast path's chain, the help tools, the single-line picker (`pickModel-line`), every number set |
+| **Layout** | **The cockpit** — merged to `main` 2026-10-18 from branch `cockpit-layout` |
 | **Validation** | 37 problems, **0 errors**, 28 warnings — the warnings are the long-standing `segmentValue is not a value the problem gives` set and are expected |
 | **Lines** | Five schemas — Part–Whole Loop, Ratio & Rate Rail, The Change Line, The Compare Line, Equal Groups Express — plus **Crossover Island** |
 | **Special routes** | The Grand Tour (mixed), The Percent Line (a *surface* across four lines, not a sixth schema), The Challenge Line (crosses to the island) |
 | **Learning Hubs** | **5**, including the Lighthouse on the island |
-| **Teacher page** | `teachers.html` — 15 learning targets with Bloom's levels. Reached by the **For Teachers** pill, which shows on the home map only, and opens in a new tab |
+| **Teacher page** | `teachers.html` — 18 learning targets with Bloom's levels (core trip, help tools, island, site-wide). Reached by the **For Teachers** pill, which shows on the home map only, and opens in a new tab |
 | **Runtime** | Zero dependencies, no build step, runs from `file://`, no localStorage |
 
-## The screen: one cockpit per station (branch `cockpit-layout`, 2026-10-18)
+## The screen: one cockpit per station (2026-10-18)
 
-Full spec and history: [`COCKPIT.md`](COCKPIT.md). A station is **one screen whose panels never move**; only their contents change. At 1024px and up:
+Full spec, history and the Cycle 31 review findings: [`COCKPIT.md`](COCKPIT.md). A station is **one screen whose panels never move**; only their contents change. At 1024px and up:
 
 ```
 map band, full width · Stop N of M · problem title
@@ -46,28 +46,36 @@ map band, full width · Stop N of M · problem title
 [ Mr Fraction docked | FEEDBACK viewport, full width          ]
 ```
 
-- **The question panel asks; the feedback viewport teaches.** Every verdict, hint, coaching note and Mr Fraction line goes to the bottom. Instructions (`.hint-text`, `.platform-instruction`, `.ck-teach`, `.est-lead`) become a coaching note there. Empty, the viewport shows Mr Fraction's silhouette.
-- **The lever** stands in for the step's main button (`syncLever`); the step's own button is hidden while it does.
-- **The work area keeps its picture** across steps — the bar model drawn at the Plan stays through the Engine Room.
-- **One sketch pad per station**, mounted once; notes survive between steps.
-- The working row is a set height (`clamp(300px, 44vh, 500px)`); a panel whose content is longer scrolls inside itself. The page itself may scroll.
+- **One question at a time; the question panel asks, the feedback viewport teaches.** Every verdict, hint, coaching note and Mr Fraction line goes to the bottom. Instructions (`.hint-text`, `.platform-instruction`, `.ck-teach`, `.est-lead`) become a coaching note there; any other visible `.msg` is moved there by `relocateStray`. Empty, the viewport (and the empty work area) show Mr Fraction's silhouette.
+- **The lever** stands in for the step's main button (`syncLever`); spent main buttons are hidden. Inside a tool it reads "Done →".
+- **The work area keeps its picture** across steps (marked stale and `inert`) — the bar model drawn at the Plan stays through the Engine Room.
+- **One sketch pad per station**, mounted once; notes survive between steps. Pictures scale to their panel (`fitScene`).
+- The working row is a set height (`clamp(300px, 44vh, 500px)`); a panel whose content is longer scrolls inside itself. **Under 860px tall** the feedback row and lever are pinned to the bottom of the window (slim, ~90px).
 - Below 1024px the panels stack, with the lever and feedback straight after the question.
 
 ## A student's journey through one station
 
 `read1 → pickModel → platform → plan → demo → solve → check → critique`
 
-- **`read1`** on a single-situation problem is the story with numbers covered and one action: read it, pull the lever, see Mr Fraction's retelling.
-- **`pickModel`** (new): five schematic pictures, no numbers — "Which picture fits this story?" Choosing the right one is the recognition step and is recorded as `schemaFirstTry` / `schemaAttempts`.
-- **`platform`** then proves it from the text (tap the sentences), and its reveal confirms the line.
-- **Numberless screens:** `Stations.NUMBERLESS` = read1, platform, crossover, pickModel, checklist.
-- **Help tools**, offered under "Help me see it" on pickModel and plan, returning to where they were opened: **Run the checklist** (the old five-question read 1), **Sort the numbers** (read2), **Find the question** (read3), **Find the missing piece** (ticket). `Stations.TOOLS`. Recorded in `toolsUsed`; the trip report names them.
+- **`read1`** on a single-situation problem: the story with numbers covered, and the lever. Nothing else.
+- **`pickModel`**: the picture choice, numberless. **On a single-line ride** (`rideLine === p.line`) it asks *"Which picture shows what is missing?"* with that line's picture and the `?` in each place (`ModelPicker.VARIANTS`, slot from `unknownCar` via `ModelPicker.slotOf`). **Otherwise** (Grand Tour, percent route, no ride) it asks *"Which picture fits this story?"* with the five shapes. Feedback is shape-based and names no line, operation or number. Mr Fraction's retelling arrives with a correct pick. Recorded as `schemaFirstTry` / `schemaAttempts`.
+- **`platform`** proves it from the text (tap the sentences); its reveal confirms the line.
+- **`plan`** opens with the picture empty: the student taps the numbers it needs (`read2.quantities[].needed`); scenery numbers are turned away; then the model and the estimate appear.
+- **Arrivals Board** (`check`) runs its checks one at a time; each check's explanation goes to the feedback viewport; the caboose sits in the picture panel.
+- **Numberless screens:** `Stations.NUMBERLESS` = read1, platform, crossover, pickModel, checklist (a tool opened after the numbers are out stops masking).
+- **Help tools** (`Stations.TOOLS`, offered per problem by `Stations.toolsFor`) under "Help me see it" on pickModel and plan, returning to where they were opened: **Run the checklist**, **Sort the numbers** (read2), **Find the question** (read3), **Find the missing piece** (ticket). `offerTool()` highlights one after repeated misses — never opens it. Recorded in `toolsUsed`; the trip report names them.
 - `demo` is the Test Track, on **24 of the 37**.
 - **The pre-solve chain is written in exactly one place, `Stations.phaseChain`.** The post-solve chain is written in exactly one place, **`Stations.postSolve`**. If prose anywhere disagrees with those two functions, the functions are right.
 
-**On Crossover Island**: `read1` keeps the five checklist questions, then the **Crossover Read**, then `plan` — no help tools. An **unstaffed halt** (`fadeLevel: "independent"`) runs `read1` and then the Engine Room — **no estimate**. Only the hint ladder stays.
+**On Crossover Island**: a **staffed stop** runs `read1` (story only) → **Crossover Read** (tap the seam, then pick the picture for each half, one stage at a time) → `plan`; its only tool is the checklist. An **unstaffed halt** (`fadeLevel: "independent"`) keeps the five checklist questions, one at a time, then goes to the Engine Room — **no estimate**, no tools. Only the hint ladder stays.
 
-## What shipped on 2026-09-22, and is newest
+## What shipped on 2026-10-18, and is newest
+
+- **The cockpit and the fast path** (above). Built in response to three teachers' review — too much reading, scrolling between story and questions, too many questions before the picture — and the user's sketch.
+- **Cycle 31** (teacher, theme-reviewer, student-tester agents) found 7 blocking-class defects and a set of teaching changes; all mechanical fixes and all five teaching changes (a)–(e) were made the same day. See `COCKPIT.md`.
+- **Instrument fixes in `tools/sweep.js`:** it scans `.ck-body` (it had been scanning only the question panel), reads numberless and pre-solve screens and tools from the station, sweeps the single-line picker, and excludes relocated line boxes by origin. Each was proven with a planted defect.
+
+## What shipped on 2026-09-22
 
 - **A For Teachers page.** `teachers.html`, a static page on the site's own stylesheet: the learning targets in Bloom's terms, notes on reading them, and MP alignment. Content, not machinery — it reads nothing from `MF`, so **it will not notice if a screen is added, renamed or removed.** When the station chain changes, this page is a copy that has to be edited by hand.
 - **The pill is shown by observation, not by list.** `app.js` watches `#view` and shows `#btn-teachers` whenever `.home-hero` is in it, so no renderer has to remember to hide it.

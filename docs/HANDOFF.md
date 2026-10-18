@@ -11,6 +11,12 @@
 
 **The new repository was created with an Apache 2.0 `LICENSE`.** The project is **CC BY-NC-SA 4.0** — the README and the whole licence section say so, and Apache would permit commercial use. The first push kept the project's own licence. If the user actually meant to relicense, that is their call and the README must change with it.
 
+## What changed on 2026-10-18 — the cockpit
+
+**Stations are now one fixed screen with a shorter question path**, built from three teachers' feedback and a layout sketch, reviewed by three agents (Cycle 31) and fixed the same day. **Read [`COCKPIT.md`](COCKPIT.md) before touching `stations.js`** — the panel routing (`distribute`, `relocateStray`, `syncLever`, the host's redirected `querySelector`) changes how every phase's markup reaches the screen. Build facts are in [`SITE-STATE.md`](SITE-STATE.md). Layout probe: `tools/cockpit-probe.js`.
+
+**Still open:** Platform Check tab order (focus starts on the question, so Tab moves away from the story sentences); doubled announcements; misconception-specific tool offers in the Engine Room; real teachers and students have not used it yet.
+
 ## What changed on 2026-09-22
 
 **A For Teachers page** — `teachers.html`: the learning targets in Bloom's terms. A pill beside *Reading & Access* on the home map opens it in a new tab; its link back lands on `index.html#home`, which skips the loading screen. Details in [`SITE-STATE.md`](SITE-STATE.md); history in [`REVIEW-LOG.md`](REVIEW-LOG.md) Cycle 31. **It is a hand-written copy of the station chain** — change a screen and this page has to be edited too.
