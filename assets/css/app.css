@@ -3829,7 +3829,9 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
       "text text scene scene"
       "work pad  pad   ask"
       "fb   fb   fb    lever";
-    grid-template-rows: minmax(160px, auto) clamp(260px, 40vh, 460px) auto;
+    /* The working row gets the height the slimmer bar gives back ("more of
+       the page should go to the other viewports", user, 2026-10-18). */
+    grid-template-rows: minmax(160px, auto) clamp(300px, 46vh, 520px) auto;
   }
   .ck-body:has(.ck-scene[hidden]) { grid-template-areas:
       "text text text  text"
@@ -3837,11 +3839,23 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
       "fb   fb   fb    lever"; }
   .ck-bottom, .ck-lever {
     position: sticky; bottom: 0; z-index: 5;
-    background: var(--cream); padding-top: calc(var(--su) * .75);
+    background: var(--cream); padding: 6px 0;
     box-shadow: 0 -10px 12px -10px rgba(44,34,20,.25);
   }
-  .ck-feedback { min-height: 0; max-height: 34vh; overflow: auto; }
-  .ck-lever { align-items: stretch; }
+  /* A SLIM BAR (user, 2026-10-18: "the bottom static line seems too thick").
+     It measured 97–167px, mostly Mr Fraction's docked speech wrapping and the
+     feedback panel's minimum height. Each part is capped at a couple of lines
+     and scrolls inside itself if a message is longer; the label sits inline. */
+  .ck-feedback { min-height: 0; max-height: 84px; overflow: auto; padding: 6px 12px; gap: 2px; }
+  .ck-feedback::before { font-size: .7rem; }
+  .ck-feedback .msg { padding: 4px 8px; }
+  .ck-say { flex-basis: 30%; }
+  .mf-companion[data-docked] .mf-c-figure img { width: 40px; }
+  .mf-companion[data-docked] .mf-c-bubble { max-height: 84px; padding: 6px 10px; font-size: .95rem; line-height: 1.35; }
+  .ck-lever { align-items: center; }
+  .ck-lever-btn { min-height: 48px; }
+  /* The empty-state silhouette fits the slimmer box. */
+  .ck-feedback:not(:has(.feedback[data-latest]))::after { inset: 4px 0; }
 }
 
 /* ---------- Print ---------- */
