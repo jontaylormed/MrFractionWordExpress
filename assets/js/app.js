@@ -22,6 +22,9 @@
                 per stop, so the report can say "first go, n times out of m"
                 without ever holding a score. */
              critiqueFirstTry: 0, critiqueAttempts: [],
+             /* Help tools a student chose to open (cockpit fast path). A
+                description of how they travelled, never a mark against them. */
+             toolsUsed: [],
              hubStrategyOk: null, hubSchemaFirstTry: null, hubCorrect: null,
              hubCarFirstTry: null };
   }

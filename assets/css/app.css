@@ -3566,6 +3566,39 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 @media (prefers-reduced-motion: reduce) { .ck-lever-arm { transition: none; } }
 
 .est-wrap.no-pad { grid-template-columns: 1fr; }
+
+/* The picture panel — the work area is the cockpit's viewport for seeing the
+   problem: the five shapes to choose from, the Platform Check's map, then the
+   bar model, which stays through the Engine Room. */
+.ck-work::before { content: none; }
+.mp-grid { list-style: none; margin: 0; padding: 0; max-width: none;
+  display: grid; gap: calc(var(--su) * 1); grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+.mp-card {
+  width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: calc(var(--su) * 1); font: inherit; font-size: .8em; line-height: 1.3; color: var(--ink);
+  background: var(--cream); border: 2px solid var(--border-strong); border-radius: var(--radius-sm);
+  cursor: pointer; text-align: center; min-height: var(--target-min);
+}
+.mp-card:hover:not(:disabled) { border-color: var(--ink); background: var(--cream-light); }
+.mp-card:focus-visible { outline: 3px solid var(--orange-deep); outline-offset: 2px; }
+.mp-svg { width: 100%; max-width: 160px; height: auto; color: var(--ink); }
+.mp-card[data-result="right"] { border-color: var(--go); border-width: 3px; background: var(--cream-light); }
+.mp-card[data-result="right"] .mp-cap::before { content: "\2713  "; font-weight: 700; }
+.mp-card[data-result="wrong"] { opacity: .55; border-style: dashed; }
+.mp-card[data-result="wrong"] .mp-cap::before { content: "\2715  "; font-weight: 700; }
+.mp-card:disabled { cursor: default; }
+
+/* "Help me see it" — the optional steps, folded away until asked for. */
+.ck-tools { margin-top: calc(var(--su) * 1.5); border-top: 1px dashed var(--border); padding-top: calc(var(--su)); }
+.ck-tools summary { cursor: pointer; font-weight: 700; color: var(--ink-mid); min-height: var(--target-min);
+  display: flex; align-items: center; }
+.ck-tools-row { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+.ck-tools-row .btn { justify-content: flex-start; }
+.ck-back-row { margin: 0 0 calc(var(--su)); }
+
+/* The coaching note: a step's instructions, moved out of the question panel. */
+.ck-coach .ck-coach-body > * { margin: 0 0 4px; font-size: inherit; color: inherit; }
+.ck-coach .ck-coach-body > :last-child { margin-bottom: 0; }
 .ck-pad { padding: calc(var(--su) * 1); display: flex; }
 .ck-pad .est-pad-wrap { flex: 1; display: flex; flex-direction: column; margin: 0; min-height: 0; }
 .ck-pad .est-pad-box { flex: 1; min-height: 0; }

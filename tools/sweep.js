@@ -158,7 +158,24 @@
      depends on the problem. A literal list would exempt step 4 the day someone
      writes a problem with four steps — which is this project's most expensive
      recorded defect class, seven files and counting. */
-  function preSolve(phase) { return !!PRE_SOLVE[phase] || /^solve@\d+$/.test(phase); }
+  /* The cockpit's picture picker and its tools are pre-solve screens the map
+     above never named (2026-10-18). Read from the station's own lists, so the
+     next tool or numberless screen is scanned without being remembered here. */
+  function preSolve(phase) {
+    return !!PRE_SOLVE[phase] || /^solve@\d+$/.test(phase) ||
+      !!(global.Stations && Stations.TOOLS && Stations.TOOLS[phase]) ||
+      !!(global.Stations && Stations.NUMBERLESS && Stations.NUMBERLESS.indexOf(phase) >= 0);
+  }
+
+  /* WHAT THE STUDENT SEES IS THE WHOLE COCKPIT, NOT THE PHASE HOST. Since
+     2026-10-18 a phase's picture moves to the work panel and its feedback to
+     the feedback bar, so scanning `st.host()` alone scanned the question
+     panel and nothing else. Proven the hard way: a digit planted on the
+     picture picker came back "0 numbers visible". `.ck-body` holds every panel
+     and not the top strip, whose "Stop 2 of 3" would read as leaked digits. */
+  function screenOf(st) {
+    return (st.root && st.root.querySelector('.ck-body')) || st.host();
+  }
 
   /* A Challenge problem is one carrying a `pair`. Nothing else on the site has
      one, which is what keeps every change below OFF the existing 30 — see the
@@ -195,6 +212,16 @@
            app. */
         var unaided = isPaired(p) && p.fadeLevel === 'independent';
         var phases = Stations.phaseChain(p).slice();
+        /* THE COCKPIT'S HELP TOOLS ARE SCREENS TOO. Read 2, Read 3, the Ticket
+           Booth and the five-question checklist left the chain on 2026-10-18
+           and became optional tools — and this sweep, reading only the chain,
+           stopped seeing them: 1,576 screens fell to 1,276 and every scan of
+           those four went quiet. Discovered from `Stations.TOOLS`, not listed,
+           so a fifth tool is swept the day it exists. Only where the app
+           offers them: never on a paired problem. */
+        if (!isPaired(p) && Stations.TOOLS) {
+          Object.keys(Stations.TOOLS).forEach(function (t) { if (phases.indexOf(t) < 0) phases.push(t); });
+        }
         // Visit a phase only if the real app would — nextAfterPlan decides this.
         if (global.TestTrack && TestTrack.applies(p)) phases.push('demo');
         /* `['solve', 'check']` used to be written literally here, which meant a
@@ -305,9 +332,9 @@
                 tells2.push('shows the line form "' + own2.form + '"');
 
               res.push({ id: id, set: i + 1, phase: ph, p: p, tells: tells2,
-                         text: st2.host().innerText || '',
-                         all: st2.host().textContent || '',
-                         labels: [].map.call(st2.host().querySelectorAll('[aria-label]'),
+                         text: screenOf(st2).innerText || '',
+                         all: screenOf(st2).textContent || '',
+                         labels: [].map.call(screenOf(st2).querySelectorAll('[aria-label]'),
                            function (n) { return n.getAttribute('aria-label'); }).join(' ') });
               r2.remove();
               return;
@@ -366,11 +393,13 @@
               ? [].map.call(comp.querySelectorAll('[aria-label]'), function (n) { return n.getAttribute('aria-label'); }).join(' ')
               : '';
             res.push({ id: id, set: i + 1, phase: ph, p: p,
-                       text: (st.host().innerText || '') + ' ' + compText,        // what is SEEN
-                       all:  (st.host().textContent || '') + ' ' + compText,      // + what is hidden
+                       // Asked of the station, not inferred from the phase name.
+                       numberless: typeof st.masked === 'function' ? st.masked() : undefined,
+                       text: (screenOf(st).innerText || '') + ' ' + compText,        // what is SEEN
+                       all:  (screenOf(st).textContent || '') + ' ' + compText,      // + what is hidden
                        // + what is ANNOUNCED. innerText excludes aria-label,
                        // and that gap hid four scene leaks for a whole cycle.
-                       labels: [].map.call(st.host().querySelectorAll('[aria-label]'),
+                       labels: [].map.call(screenOf(st).querySelectorAll('[aria-label]'),
                          function (n) { return n.getAttribute('aria-label'); }).join(' ') + ' ' + compLabels });
           } catch (e) { res.push({ id: id, set: i + 1, phase: ph, err: String(e) }); }
         });
@@ -402,7 +431,12 @@
          the same reason, so it is scanned by the same rule. A phase absent from
          this test is a numberless screen nothing is checking — and this list
          has already been the place where a whole screen went unscanned once. */
-      if (r.err || (r.phase !== 'read1' && r.phase !== 'platform' && r.phase !== 'crossover')) return;
+      /* Read from the station's own list now (2026-10-18). The literal three
+         phases here missed the cockpit's picture picker and checklist tool,
+         both numberless, and this check reported 0 on screens it never read. */
+      var NL = (Stations.NUMBERLESS || ['read1', 'platform', 'crossover']);
+      var isNL = typeof r.numberless === 'boolean' ? r.numberless : NL.indexOf(r.phase) >= 0;
+      if (r.err || !isNL) return;
       /* `text` is innerText, and innerText DOES NOT INCLUDE aria-label. This
          check was written to catch the quilt's picture leaking its fractions,
          reported 0, and was believed — while four other scenes were reading

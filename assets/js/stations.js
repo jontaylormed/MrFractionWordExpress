@@ -417,11 +417,40 @@
      `solve` and `check` are appended by the caller rather than listed here,
      because every route ends in them and a chain that could omit them would be
      a chain that could strand a student. */
+  /* THE FAST PATH (docs/COCKPIT.md, 2026-10-18). Teachers found too many
+     questions stood between a student and the picture. The chain is now:
+     read the story, pick the picture that fits, prove it from the text, draw
+     it with the numbers. Recognition still comes before calculation — the
+     picture choice IS the recognition — it is just asked once, visually.
+
+     The second read, third read and Ticket Booth are not gone: they are TOOLS
+     (`TOOLS` below), opened from the question panel when a student wants them
+     and returning to where they were. The five-question checklist that used
+     to be the whole first read is a tool too. Crossover Island keeps its own
+     read, because seeing two situations in one story is the island's lesson. */
   function phaseChain(p) {
-    if (!p || !p.pair) return ['read1', 'platform', 'read2', 'read3', 'ticket', 'plan'];
+    if (!p || !p.pair) return ['read1', 'pickModel', 'platform', 'plan'];
     if (p.fadeLevel === 'independent') return ['read1'];
-    return ['read1', 'crossover', 'read2', 'read3', 'ticket', 'plan'];
+    return ['read1', 'crossover', 'plan'];
   }
+
+  /* A "go on" button names where it goes, read off the chain — so changing
+     the chain cannot leave "Second read →" on a button that no longer leads
+     to one. */
+  function nextLabel(p, from) {
+    var to = phaseAfter(p, from);
+    return ({ read2: 'Second read', read3: 'Third read', ticket: 'The Ticket Booth',
+              pickModel: 'Which picture fits?', platform: 'Prove it from the story',
+              plan: 'Draw it with the numbers', solve: 'To the Engine Room' }[to] || 'Next') + ' &rarr;';
+  }
+
+  /* Phases a student opens by choice. Leaving one returns to `toolReturn`. */
+  var TOOLS = {
+    checklist: 'Run the checklist',     // not "the five questions": no number words pre-solve
+    read2: 'Sort the numbers',
+    read3: 'Find the question',
+    ticket: 'Find the missing piece'
+  };
 
   /** The phase that follows `from`, or 'solve' when the chain runs out. */
   function phaseAfter(p, from) {
@@ -558,8 +587,20 @@
        student who can see the numbers will find the seam by spotting where the
        arithmetic changes, which is the one route to the answer that teaches
        nothing about reading. */
-    return this.phase === 'read1' || this.phase === 'platform' || this.phase === 'crossover';
+    /* A tool opened after the numbers are out stops hiding them: the student
+       has seen them, the bar model beside the story shows them, and a covered
+       story next to a numbered picture is only contradictory. Found by the
+       sweep the day its numberless check was widened — 84 checklist screens,
+       every one opened after the Plan. */
+    if (this.numbersSeen && TOOLS[this.phase]) return false;
+    return NUMBERLESS.indexOf(this.phase) >= 0;
   };
+
+  /* THE NUMBERLESS SCREENS, WRITTEN ONCE. `tools/sweep.js` checks every one of
+     them for a visible digit, and it used to keep its own list of three — so
+     when the picture picker and the checklist tool became numberless screens,
+     the sweep's "0 numbers visible" covered neither, and said 0 anyway. */
+  var NUMBERLESS = ['read1', 'platform', 'crossover', 'pickModel', 'checklist'];
 
   /**
    * @param highlightQ  outline the question sentence (Read 3 and the Hub)
@@ -838,12 +879,14 @@
          which is the same silent-omission failure `model.js` records across
          its three dispatches. */
       crossover: this.phCrossover,
+      pickModel: this.phPickModel, checklist: this.phRead1,
       read2: this.phRead2, read3: this.phRead3,
       ticket: this.phTicket, plan: this.phPlan, demo: this.phDemo,
       solve: this.phSolve, check: this.phCheck,
       critique: this.phCritique
     }[this.phase];
     if (f) f.call(this);
+    if (!this.masked()) this.numbersSeen = true;
     this.distribute();
     var h = this.host();
     // The real querySelector: the host's own is pointed at the whole cockpit.
@@ -885,7 +928,39 @@
       [].forEach.call(work.children, function (n) { n.setAttribute('data-ck-stale', 'yes'); });
     }
     fb.innerHTML = '';
+    /* THE QUESTION PANEL ASKS; THE FEEDBACK BAR TEACHES (user, 2026-10-18:
+       "less instruction… focus primarily on asking the students questions
+       and inputs for answers. The teaching should happen in the Feedback box
+       and Mr Fraction Dialogue"). A phase's instructions — marked `hint-text`,
+       `platform-instruction` or `ck-teach` — move into a coaching note in the
+       bar, which shows until the first real feedback replaces it. Marked by
+       class, never guessed from `<p>`: the Plan's estimate prompt is a <p> and
+       it is the question. */
+    var teach = own('.hint-text, .platform-instruction, .ck-teach');
+    if (teach.length) {
+      var coach = el('<div class="feedback ck-coach" data-latest="yes"><div class="msg">' +
+        '<span class="ico" aria-hidden="true">&#9432;</span><div class="ck-coach-body"></div></div></div>');
+      var cb = coach.querySelector('.ck-coach-body');
+      [].forEach.call(teach, function (n) { cb.appendChild(n); });
+      fb.appendChild(coach);
+    }
     [].forEach.call(own('.feedback'), function (n) { fb.appendChild(n); });
+
+    var self = this;
+    [].forEach.call(own('[data-tool]'), function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-tool');
+        self.toolReturn = self.phase;
+        if (self.m) (self.m.toolsUsed = self.m.toolsUsed || []).push({ id: self.p.id, tool: k });
+        self.go(k);
+      });
+    });
+    if (this.toolReturn && TOOLS[this.phase]) {
+      var back = el('<div class="btn-row ck-back-row"><button class="btn btn-quiet" type="button">' +
+        '&larr; Back to where I was</button></div>');
+      back.querySelector('button').addEventListener('click', function () { self.go(self.toolReturn); });
+      host.insertBefore(back, host.firstChild);
+    }
     this.syncLever();
   };
 
@@ -968,7 +1043,80 @@
     }).observe(fb, { subtree: true, childList: true, characterData: true });
   };
 
-  Station.prototype.go = function (phase) { this.phase = phase; this.renderPhase(); };
+  /* Leaving a tool goes back to wherever it was opened from, whatever the
+     tool's own button asked for — read2's "go to read3" was written for a
+     chain it is no longer part of. */
+  Station.prototype.go = function (phase) {
+    if (this.toolReturn && TOOLS[this.phase]) { phase = this.toolReturn; this.toolReturn = null; }
+    this.phase = phase;
+    this.renderPhase();
+  };
+
+  /* "Help me see it": the optional steps, offered rather than imposed — the
+     teacher's suggestion that a student choose the scaffolding they need. */
+  Station.prototype.toolsHTML = function () {
+    if (this.p.pair) return '';
+    return '<details class="ck-tools"><summary>Help me see it</summary><div class="ck-tools-row">' +
+      Object.keys(TOOLS).map(function (k) {
+        return '<button class="btn btn-quiet" type="button" data-tool="' + k + '">' + TOOLS[k] + '</button>';
+      }).join('') + '</div></details>';
+  };
+
+  /* ---------- Fast path: pick the picture ---------- */
+  Station.prototype.phPickModel = function () {
+    var self = this, p = this.p, want = ModelPicker.correctLine(p), tries = 0, done = false;
+    this.host().innerHTML =
+      MrFraction.aside('thinking',
+        /* No number words on this screen — not even "the five situations".
+           The sweep flagged it the day it shipped: on rr-van-hours set 2 the
+           answer IS five, and the rule is about what the student reads, not
+           about what the writer meant. */
+        '<p><strong>Find the shape.</strong> Each picture is one of the situations on this railway. Pick the one ' +
+        'that shows how the amounts in this story are related. No numbers yet &mdash; just the shape.</p>') +
+      this.problemHTML(false) +
+      '<h3>Which picture fits this story?</h3>' +
+      '<div class="ck-to-work">' + ModelPicker.html(p) + '</div>' +
+      this.toolsHTML() +
+      '<div class="feedback" role="status" id="mpfb"></div>' +
+      '<div class="btn-row"><button class="btn" id="mpgo" type="button" hidden>Prove it from the story &rarr;</button></div>';
+
+    var host = this.host();
+    host.querySelector('#mp-grid').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-line]');
+      if (!b || b.disabled || done) return;
+      var k = b.getAttribute('data-line'), fb = host.querySelector('#mpfb');
+      tries++;
+      if (k === want) {
+        done = true;
+        b.setAttribute('data-result', 'right');
+        [].forEach.call(host.querySelectorAll('#mp-grid [data-line]'), function (x) { x.disabled = true; });
+        /* The schema metric is recorded HERE now: picking the picture is the
+           recognition. The Ticket Booth, if opened as a tool later, does not
+           record it a second time. */
+        if (!self.schemaRecorded && self.m && self.m.schemaAttempts) {
+          if (tries === 1) self.m.schemaFirstTry++;
+          self.m.schemaAttempts.push(tries);
+        }
+        self.schemaRecorded = true;
+        self.modelPicked = k;
+        fb.innerHTML = msg('go', '&#10003;', '<strong>That is the shape.</strong> ' + ModelPicker.why(p, k));
+        host.querySelector('#mpgo').hidden = false;
+        A11y.announce('Yes. That is the shape.');
+      } else {
+        b.setAttribute('data-result', 'wrong');
+        b.disabled = true;
+        fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' + ModelPicker.why(p, k));
+        A11y.announce('Not that one.');
+      }
+    });
+    host.querySelector('#mpgo').addEventListener('click', function () {
+      self.go(phaseAfter(self.p, 'pickModel'));
+    });
+    if (this.expandAll) {
+      var right = host.querySelector('#mp-grid [data-line="' + want + '"]');
+      if (right) right.click();
+    }
+  };
 
   /* ---------- Phase 1: Three Reads ---------- */
 
@@ -990,6 +1138,39 @@
      the second makes you prove it, and only the second one needs reading. */
   Station.prototype.phRead1 = function () {
     var self = this, p = this.p;
+
+    /* THE FAST PATH'S FIRST READ IS A READ, NOT A QUIZ. The five checklist
+       questions below were the whole first read, and they are the "amount of
+       questions" teachers said was too much before a student saw a picture.
+       On a single-situation problem the first read is now just the story, with
+       the numbers covered, and Mr Fraction's retelling once they have read it;
+       the picture choice that follows does the classifying. The five questions
+       are still here, unchanged, as the "Run the five questions" tool — and on
+       Crossover Island, where they are the one aid an unstaffed halt keeps. */
+    if (!p.pair && this.phase !== 'checklist') {
+      this.host().innerHTML =
+        MrFraction.aside('steady',
+          '<p><strong>First read.</strong> The numbers are covered on purpose. Read it for what is ' +
+          'happening, not for what to work out.</p>') +
+        this.problemHTML(false) +
+        '<h3>What is happening in this story?</h3>' +
+        '<div class="feedback" role="status" id="r1fb"></div>' +
+        '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
+      var seen = false, h = this.host();
+      h.querySelector('#r1go').addEventListener('click', function () {
+        if (!seen && p.threeReads && p.threeReads.read1 && p.threeReads.read1.modelAnswer) {
+          seen = true;
+          h.querySelector('#r1fb').innerHTML = msg('info', '&rarr;',
+            '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
+          this.textContent = 'Which picture fits? →';
+          return;
+        }
+        self.go(phaseAfter(self.p, 'read1'));
+      });
+      if (this.expandAll) h.querySelector('#r1go').click();
+      return;
+    }
+    var asTool = this.phase === 'checklist';
     /* `var line = p.line` used to live here and both call sites keyed off it.
        Deleted rather than left unused: a problem's line is no longer the whole
        answer key (see `optionTrue`), and a local called `line` sitting beside
@@ -1043,7 +1224,8 @@
         'Nothing is marked, and a wrong tap will tell you what it would have meant.</p>' +
       '<div id="r1checks">' + qs + '</div>' +
       '<div class="feedback" role="status" id="r1fb"></div>' +
-      '<div class="btn-row"><button class="btn" id="r1go" type="button">Now show me the proof →</button></div>';
+      '<div class="btn-row"><button class="btn" id="r1go" type="button">' +
+        (asTool ? 'Done &rarr;' : 'Now show me the proof →') + '</button></div>';
 
     var got = {}, host = this.host(), revealed = false;
 
@@ -1167,7 +1349,8 @@
     });
 
     host.querySelector('#r1go').addEventListener('click', function () {
-      if (Object.keys(got).length < CHECKS.length) {
+      // A tool is the student's to leave whenever they like.
+      if (!asTool && Object.keys(got).length < CHECKS.length) {
         host.querySelector('#r1fb').innerHTML = msg('caution', '!',
           'Have a go at all of them first. Nothing is being marked &mdash; a wrong tap just tells you ' +
           'what that answer would have meant.');
@@ -1290,7 +1473,7 @@
      the seam by arithmetic and learn nothing about reading. */
   Station.prototype.phCrossover = function () {
     var self = this, p = this.p, pr = p.pair;
-    if (!pr) { this.go('read2'); return; }
+    if (!pr) { this.go(phaseAfter(this.p, 'crossover')); return; }
 
     /* The five, in a stable shuffled order, built from `MF.LINES` so a sixth
        schema would appear here automatically — and so the Challenge route,
@@ -1360,7 +1543,7 @@
       '<div id="xr-done" hidden>' +
         '<div class="msg msg-go"><span class="ico" aria-hidden="true">&#10003;</span><p>' +
         '<strong>That is the shape of it.</strong> ' + esc(pr.readWhy || '') + '</p></div>' +
-        '<div class="btn-row"><button class="btn" id="xr-go" type="button">Second read &rarr;</button></div>' +
+        '<div class="btn-row"><button class="btn" id="xr-go" type="button">' + nextLabel(p, 'crossover') + '</button></div>' +
       '</div>';
 
     // The story lives in the cockpit's text panel now, not in the phase host.
@@ -1456,7 +1639,7 @@
     wireHalf(2, pr.second, pr.secondWhy, function () {
       spotlight(0, p.problem.sentences.length);
       host.querySelector('#xr-done').hidden = false;
-      host.querySelector('#xr-go').addEventListener('click', function () { self.go('read2'); });
+      host.querySelector('#xr-go').addEventListener('click', function () { self.go(phaseAfter(self.p, 'crossover')); });
       focusFeedback(host.querySelector('#xr-done .msg'));
     });
   };
@@ -1465,7 +1648,7 @@
     var self = this, p = this.p;
     var pc = (p.threeReads.read1 || {}).platformCheck;
     var L = PLATFORM[p.line];
-    if (!pc || !L) { this.go('read2'); return; }
+    if (!pc || !L) { this.go(phaseAfter(this.p, 'platform')); return; }
 
     var rows = Object.keys(MF.LINES).map(function (k) {
       var PL = PLATFORM[k], LN = MF.LINES[k], here = k === p.line;
@@ -1512,7 +1695,7 @@
             '<th scope="col">Why it has to be</th></tr></thead>' +
           '<tbody>' + rows + '</tbody>' +
         '</table></div>' +
-        '<div class="btn-row"><button class="btn" id="pcgo" type="button">Second read →</button></div>' +
+        '<div class="btn-row"><button class="btn" id="pcgo" type="button">' + nextLabel(p, 'platform') + '</button></div>' +
       '</div>';
 
     var host = this.host(), want = pc.sentences.slice().sort(), done = false;
@@ -1568,7 +1751,7 @@
         esc(MF.LINES[p.line].name) + '.</strong>');
       host.querySelector('#pcheck').hidden = true;
       host.querySelector('#pcmap').hidden = false;
-      host.querySelector('#pcgo').addEventListener('click', function () { self.go('read2'); });
+      host.querySelector('#pcgo').addEventListener('click', function () { self.go(phaseAfter(self.p, 'platform')); });
       /* MAKE THE REVEAL LAND. Measured before this: the map's top sat at
          y=1430 on a document 2003px tall, with the student's fold around
          y=1300 — so the payoff of the whole screen rendered below the fold and
@@ -1874,7 +2057,8 @@
     // Balanced by construction, same as read 3 — see `balancedOrder`.
     var carOpts = tb.unknownCarOptions || [];
     var choices = balancedOrder(carOpts, tb.unknownCarAnswer, this.p, 'car');
-    var hidden = this.asksHiddenLine();
+    // Once the picture is picked the line is known; the booth does not ask it twice.
+    var hidden = this.asksHiddenLine() && !this.modelPicked;
 
     var opts = choices.map(function (c, i) {
       return '<li><button class="choice" type="button" data-car="' + i + '"' +
@@ -2001,14 +2185,18 @@
       self.schemaTries++;
 
       if (picked === tb.unknownCarAnswer) {
-        if (self.schemaTries === 1) self.m.schemaFirstTry++;
-        self.m.schemaAttempts.push(self.schemaTries);
+        // Recorded at the picture choice on the fast path; never twice.
+        if (!self.schemaRecorded) {
+          if (self.schemaTries === 1) self.m.schemaFirstTry++;
+          self.m.schemaAttempts.push(self.schemaTries);
+        }
         b.setAttribute('data-result', 'right');
         var all = self.host().querySelectorAll('[data-car]');
         for (var i = 0; i < all.length; i++) all[i].disabled = true;
         self.host().querySelector('#tbfb').innerHTML =
           msg('go', '✓', '<strong>That&rsquo;s the one.</strong> ' + esc(tb.unknownCarWhy || '')) +
           '<div class="btn-row"><button class="btn" id="tbgo" type="button">On to the plan →</button></div>';
+        // As a tool, `go` returns the student to where they opened it.
         self.host().querySelector('#tbgo').addEventListener('click', function () { self.go('plan'); });
         A11y.announce('Correct. That is the missing car.');
       } else {
@@ -2057,6 +2245,7 @@
          Everything downstream is unchanged: `this.estimate` is still the parsed
          number and `this.estimateRaw` is still what the student saw. */
       Estimate.html(this.p, { noPad: true }) +
+      this.toolsHTML() +
       '<div class="feedback" role="status" id="pfb"></div>' +
       '<div class="btn-row"><button class="btn" id="pgo" type="button">Lock it in →</button></div>';
 
@@ -2803,7 +2992,7 @@
                       /* Exported so `tools/sweep.js` renders the phases a
                          student can actually reach rather than keeping its own
                          copy of the fork. See `phaseChain`. */
-                      phaseChain: phaseChain, phaseAfter: phaseAfter,
+                      phaseChain: phaseChain, phaseAfter: phaseAfter, TOOLS: TOOLS, NUMBERLESS: NUMBERLESS,
                       /* Exported so `tools/sweep.js` reads the post-solve
                          sequence rather than keeping its own copy of it. */
                       postSolve: postSolve, critiqueOf: critiqueOf,
