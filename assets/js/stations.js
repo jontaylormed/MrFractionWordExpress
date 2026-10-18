@@ -764,6 +764,13 @@
        a zoom-in on the leg you are travelling right now; the numbered stops
        beneath it are the accessible equivalent. */
     var leg = '';
+    /* The cockpit's map band spans the window, so the leg is framed to the
+       band's own shape (see `setLegAspect` in scenery.js). The band's height
+       is the CSS clamp on `.cockpit .leg-svg`, repeated here because the root
+       is built detached and cannot be measured yet. */
+    var bandW = Math.max(600, (global.innerWidth || 1366) - 40);
+    var bandH = Math.max(110, Math.min(230, (global.innerHeight || 768) * 0.2));
+    if (window.Scenery && Scenery.setLegAspect) Scenery.setLegAspect(bandW / bandH);
     if (typeof this.legIndex === 'number' && window.Scenery && Scenery.legMap) {
       var dots = '';
       // NB: not `st` — that is the station object above, and `var` would hoist
@@ -805,6 +812,7 @@
          strip grows by one band and not by two rows. */
       leg = leg.replace(/<svg class="leg-svg"/, '<svg class="leg-svg" preserveAspectRatio="xMidYMid slice"');
     }
+    if (window.Scenery && Scenery.setLegAspect) Scenery.setLegAspect(null);   // back to 2.6 for everyone else
 
     /* THE COCKPIT (docs/COCKPIT.md). One screen whose panels never move; only
        what is in them changes. Teachers found the old page — a header, then a

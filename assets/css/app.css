@@ -3480,12 +3480,12 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-top { min-width: 0; }
 .cockpit .journey { display: block; margin: 0; width: 100%; }
 .cockpit .journey-map { width: 100%; }
-.cockpit .leg-svg { width: 100%; height: clamp(56px, 9vh, 110px); }
-/* Height is the cockpit's scarcest thing on a 768px laptop, so the site header
-   gives some back on station screens. Measured, not guessed: see COCKPIT.md. */
-body:has(.cockpit) .sign-inner { padding-top: 4px; padding-bottom: 4px; }
-body:has(.cockpit) .sign-sub { display: none; }   /* the cockpit's own top strip names the stop */
-body:has(.cockpit) .sign-mark { width: 30px; }
+/* Taller, so more of the map shows; stations.js frames the leg to this
+   band's shape, using the same numbers (20vh, 110–230px). */
+.cockpit .leg-svg { width: 100%; height: clamp(110px, 20vh, 230px); }
+/* (The site header was compressed here while the cockpit had to fit one
+   window height. It does not any more — see "think vertically" below — so
+   the header is its ordinary self on station screens too.) */
 /* The picture must not make the story's row taller than the story. */
 /* The picture fills its 30% of the top row at the story's height, rather than
    sitting small in the middle of it ("better align and scale", user,
@@ -3497,7 +3497,6 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 .ck-scene .scene > svg, .ck-scene .scene > img, .ck-scene .scene > div:not(figcaption) {
   flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
 .ck-scene .scene figcaption { flex: 0 0 auto; margin: 0; }
-.cockpit .ck-panel { font-size: .94em; }
 .cockpit .journey-bar { flex-wrap: wrap; gap: calc(var(--su) * 1) calc(var(--su) * 2.5);
   padding: calc(var(--su) * .75) calc(var(--su) * 2); }
 .ck-title { min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px calc(var(--su) * 2);
@@ -3560,7 +3559,7 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 .mf-companion[data-docked] .mf-c-figure img { width: 58px; }
 .mf-companion[data-docked][data-open="no"] .mf-c-figure img { width: 48px; }
 .mf-companion[data-docked] .mf-c-bubble {
-  max-width: none; flex: 1; max-height: 112px; border-radius: 14px 14px 14px 4px;
+  max-width: none; flex: 1; max-height: none; border-radius: 14px 14px 14px 4px;
   box-shadow: none; animation: none;
 }
 .mf-companion[data-docked] .mf-c-bubble::before, .mf-companion[data-docked] .mf-c-bubble::after { display: none; }
@@ -3633,13 +3632,14 @@ body:has(.cockpit) .sign-mark { width: 30px; }
 .ck-pad .est-pad { width: 100%; height: 100%; }
 
 @media (min-width: 1024px) {
-  /* The whole column from header to bottom edge is the cockpit's to divide. */
-  body:has(.cockpit) .shell { height: 100vh; min-height: 0; }
-  body:has(.cockpit) main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  body:has(.cockpit) #view { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  .cockpit { flex: 1; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
+  /* THINK VERTICALLY (user, 2026-10-18: "there needs to be more space for
+     every element but don't give on position"). The first cockpit squeezed
+     every panel into one window height, and on a laptop that left the picture
+     picker, the sketch pad and the question each a strip ~130px tall with a
+     scrollbar inside. The POSITIONS stay exactly as they were; what changed is
+     that rows now grow downward to fit what they hold, with generous minimums,
+     and the page scrolls when it has to. No panel scrolls inside itself. */
   .ck-body {
-    min-height: 0;
     /* THE TOP ROW IS THE PROBLEM AND NOTHING ELSE (user, 2026-10-18: "only
        the Word Problem and Illustration should be at the top, everything else
        below it"). Everything the student works with sits underneath, as in the
@@ -3662,24 +3662,24 @@ body:has(.cockpit) .sign-mark { width: 30px; }
        "way too big" again. 48+22 = 70 and 6+24 = 30, so the top row's split
        falls on a real column edge and nothing is out of line. */
     grid-template-columns: minmax(0, 48fr) minmax(0, 22fr) minmax(0, 6fr) minmax(250px, 24fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    /* Minimums, not limits: the top row is at least tall enough for the
+       picture to read, the working row at least tall enough to draw in. */
+    grid-template-rows: minmax(240px, auto) minmax(460px, auto) auto;
     grid-template-areas:
       "text text scene scene"
       "work pad  pad   ask"
       "fb   fb   fb    lever";
   }
   .ck-text { grid-area: text; }
-  .ck-scene { grid-area: scene; }
-  /* `contain: size` on every panel except the story: without it a panel's
-     content sizes the grid's tracks. A long Ticket Booth stretched the top row
-     78px past the window, and a 677px ratio table did the same through
-     `minmax(0, 1fr)` rows. Contained, a panel takes the space the grid gives
-     it and scrolls inside. The picture is contained too, so the top row is
-     exactly as tall as the story and no taller. */
-  .ck-ask { grid-area: ask; contain: size; }
-  .ck-work { grid-area: work; contain: size; }
-  .ck-pad { grid-area: pad; contain: size; }
-  .ck-scene { contain: size; }
+  .ck-ask { grid-area: ask; }
+  .ck-work { grid-area: work; }
+  .ck-pad { grid-area: pad; }
+  /* The picture alone stays size-contained: it should match the story's
+     height, never set it. */
+  .ck-scene { grid-area: scene; contain: size; }
+  .ck-panel { overflow: visible; }
+  .ck-pad .est-pad-box { min-height: 380px; }
+  .ck-feedback { max-height: none; }
   .ck-bottom { grid-area: fb; }
   .ck-lever { grid-area: lever; }
   /* With no picture the story takes the whole top row. */

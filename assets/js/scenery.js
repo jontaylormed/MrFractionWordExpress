@@ -1051,7 +1051,17 @@
      overrides only the colour, because the colour is the part a student can
      read off at a glance, and on that ride which line they are on is the
      question they are about to be asked. */
+  /* THE LEG FRAME'S SHAPE. 2.6:1 is the journey panel's own letterbox, and it
+     stays the default. The cockpit's map is a band across the whole window —
+     about 10:1 — and a 2.6:1 frame sliced to fit it showed a 41-unit sliver of
+     the map (user, 2026-10-18: "We need to see more of the Map"). So a caller
+     can ask for its band's shape; the frame then widens toward the whole
+     world's width instead of being cropped. Set around a call and reset. */
+  var LEG_ASPECT = 2.6;
+  function setLegAspect(a) { LEG_ASPECT = (a && isFinite(a) && a > 1) ? a : 2.6; }
+
   function legMap(counts, line, i, progress, cars, tint) {
+    var A = LEG_ASPECT;
     var stops = STOPS[line];
     var from = stops[Math.max(0, Math.min(stops.length - 1, i))];
     var to   = stops[Math.max(0, Math.min(stops.length - 1, i + 1))];
@@ -1080,8 +1090,8 @@
     var y1 = Math.min.apply(null, ys) - padY, y2 = Math.max.apply(null, ys) + padY;
     var vw = x2 - x1, vh = y2 - y1;
     // keep a wide, letterbox-ish shape so the line runs across the panel
-    if (vw / vh < 2.6) { var need = vh * 2.6; x1 -= (need - vw) / 2; vw = need; }
-    else { var needH = vw / 2.6; y1 -= (needH - vh) / 2; vh = needH; }
+    if (vw / vh < A) { var need = vh * A; x1 -= (need - vw) / 2; vw = need; }
+    else { var needH = vw / A; y1 -= (needH - vh) / 2; vh = needH; }
 
     /* Then aim the frame at the TERRITORY the student is riding through.
 
@@ -1133,9 +1143,13 @@
       if (needW > vw) vw = needW;
       if (needH > vh) vh = needH;
       // Restore the letterbox shape, then keep the frame inside the world.
-      if (vw / vh < 2.6) vw = vh * 2.6; else vh = vw / 2.6;
-      vw = Math.min(vw, MAP_W); vh = Math.min(vh, MAP_H);
+      if (vw / vh < A) vw = vh * A; else vh = vw / A;
     }
+    /* Inside the world, AND still the band's shape: a wide band hits the
+       world's full width first, and the frame then shortens to match rather
+       than becoming a squarer frame the band would have to crop. */
+    vw = Math.min(vw, MAP_W); vh = Math.min(vh, MAP_H);
+    if (vw / vh < A - 0.01) vh = vw / A;
 
     /* Now place the frame. Two hard requirements bracket it on each axis — the
        whole section stays inside the frame, and the frame stays inside the
@@ -1872,10 +1886,12 @@
     var y1 = Math.min.apply(null, ys) - padY, y2 = Math.max.apply(null, ys) + padY;
     var vw = x2 - x1, vh = y2 - y1;
     // The same letterbox the mainland leg uses, so the two panels are one shape.
-    if (vw / vh < 2.6) { var need = vh * 2.6; x1 -= (need - vw) / 2; vw = need; }
-    else { var needH = vw / 2.6; y1 -= (needH - vh) / 2; vh = needH; }
+    var A = LEG_ASPECT;
+    if (vw / vh < A) { var need = vh * A; x1 -= (need - vw) / 2; vw = need; }
+    else { var needH = vw / A; y1 -= (needH - vh) / 2; vh = needH; }
     // And kept inside the world, or the frame shows sea where the island ends.
     vw = Math.min(vw, ISL_W); vh = Math.min(vh, ISL_H);
+    if (vw / vh < A - 0.01) vh = vw / A;
     x1 = Math.max(0, Math.min(ISL_W - vw, x1));
     y1 = Math.max(0, Math.min(ISL_H - vh, y1));
 
@@ -1894,6 +1910,7 @@
        below it come to disagree about what exists. */
     islandStops: function () { return ISL_STOPS.slice(); },
     legMap: legMap,
+    setLegAspect: setLegAspect,
     stopsOn: function (line) { return (STOPS[line] || []).length; },
     ticker: ticker,
     wheelSVG: wheelSVG,
