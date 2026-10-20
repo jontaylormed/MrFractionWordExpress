@@ -1654,6 +1654,19 @@ select {
   border-radius: var(--radius-xs); padding: calc(var(--su) * 1.25);
 }
 .cmp-row:hover:not(:disabled) { border-color: var(--line-compare); }
+/* Narrow phones: both label columns shrink BY THE SAME AMOUNT, so every
+   track still starts and ends at the same x (the rule above) — at 7.5em a row
+   needed 333px and pushed a 320px screen sideways (island Plan, 2026-10-20). */
+@media (max-width: 420px) {
+  /* Label and value on one line, the bar full width under them. Shrinking
+     the label columns instead left a 37px bar at 320px. Every row uses the
+     same layout, so every track still spans the same x. */
+  .cmp-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "lab val" "bar bar";
+    row-gap: 6px; column-gap: 8px; font-size: .92em; }
+  .cmp-row > :nth-child(1) { grid-area: lab; }
+  .cmp-row > :nth-child(2) { grid-area: bar; }
+  .cmp-row > :nth-child(3) { grid-area: val; text-align: right; }
+}
 .cmp-name { font-weight: 700; }
 .cmp-track {
   position: relative; height: 26px; border-radius: 3px;
@@ -3528,12 +3541,48 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-pad .est-pad-box { min-height: 120px; }
 
 .ck-body { display: grid; gap: calc(var(--su) * 1.25); }
-/* Stacked (under 1024px): the answer, what was said about it and the lever
-   stay together, straight after the question — measured at 375px the lever
-   was otherwise 900px below it, under the picture and the pad. The grid
-   areas at 1024px+ place everything explicitly, so this order is ignored there. */
+/* Stacked (under 1024px), in the order a student works down a phone: the
+   story and its picture, the question, the thing they answer with (picture
+   cards, the model), the lever, then what was said about it. The picture
+   cards used to come after the feedback and the lever, ~700px below their
+   own question. The grid areas at 1024px+ place everything explicitly, so
+   this order is ignored there. */
 .ck-text { order: 1; } .ck-scene { order: 2; } .ck-ask { order: 3; }
-.ck-bottom { order: 4; } .ck-lever { order: 5; } .ck-work { order: 6; } .ck-pad { order: 7; }
+.ck-work { order: 4; } .ck-lever { order: 5; } .ck-bottom { order: 6; } .ck-pad { order: 7; }
+.ck-pad-toggle { display: none; }
+
+/* ---------- The cockpit on a phone or tablet (under 1024px) ----------
+   ONE SCROLL, THE PAGE'S (user, 2026-10-20: "the scroll barely works; the
+   dialogue and Feedback are oddly shaped and hard to read"). Measured at
+   375px: the feedback was a 174px column scrolling inside itself (603px of
+   text in a 113px box), Mr Fraction's speech a 78px-wide column 802px tall,
+   and the sketch pad a 308x268 surface that took every touch for drawing.
+   Any swipe that started on one of those scrolled it, or drew, instead of
+   moving the page. Here nothing scrolls inside itself, the feedback and Mr
+   Fraction run the full width, one above the other, and the pad starts
+   closed behind a button. Desktop is untouched. */
+/* `.cockpit` on every selector: the base panel rules sit later in this file,
+   and at equal specificity they won — the feedback kept scrolling inside
+   itself (128px showing of 329). */
+@media (max-width: 1023px) {
+  .cockpit .ck-panel { overflow: visible; overscroll-behavior: auto; }
+  .cockpit .ck-bottom { flex-direction: column; gap: calc(var(--su)); }
+  .cockpit .ck-feedback { order: 1; max-height: none; min-height: 72px; overflow: visible; }
+  .cockpit .ck-say { order: 2; flex-basis: auto; width: 100%; }
+  .mf-companion[data-docked] { flex-direction: row; align-items: flex-start; gap: 10px; }
+  .mf-companion[data-docked] .mf-c-figure { flex: 0 0 auto; order: -1; }
+  .mf-companion[data-docked] .mf-c-figure img { width: 44px; }
+  .mf-companion[data-docked] .mf-c-bubble { flex: 1 1 auto; min-width: 0; max-height: none; overflow: visible;
+    font-size: 1rem; line-height: 1.5; }
+  .ck-lever-btn { min-height: 52px; }
+  /* The pad, on request. Open, it is a fixed, comfortable size. */
+  /* The stop's eyebrow wraps on a phone instead of running 17px off it. */
+  .cockpit .journey-bar .eyebrow { white-space: normal; }
+  .cockpit .ck-pad-toggle { display: inline-flex; width: 100%; justify-content: center; }
+  .cockpit .ck-pad:not([data-open]) .est-pad-wrap { display: none; }
+  .cockpit .ck-pad[data-open] .est-pad-box { height: 260px; flex: 0 0 auto; }
+  .cockpit .ck-pad { flex-direction: column; gap: 8px; }
+}
 .ck-panel {
   background: var(--cream-light);
   border: 2px solid var(--border-strong); border-radius: var(--radius);

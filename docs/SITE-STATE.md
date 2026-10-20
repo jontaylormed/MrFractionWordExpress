@@ -51,7 +51,7 @@ map band, full width · Stop N of M · problem title
 - **The work area keeps its picture** across steps (marked stale and `inert`) — the bar model drawn at the Plan stays through the Engine Room.
 - **One sketch pad per station**, mounted once; notes survive between steps. Pictures scale to their panel (`fitScene`).
 - The working row is a set height (`clamp(300px, 44vh, 500px)`); a panel whose content is longer scrolls inside itself. **Under 860px tall** the feedback row and lever are pinned to the bottom of the window (slim, ~90px).
-- Below 1024px the panels stack, with the lever and feedback straight after the question.
+- **Below 1024px (phones, tablets) the page does all the scrolling** (2026-10-20): panels stack as story → picture → question → answer surface (cards / model) → lever → feedback → Mr Fraction → pad; **nothing scrolls inside itself**; feedback and Mr Fraction run full width, one above the other; the **sketch pad starts closed** behind "Open the sketch pad" so it cannot catch scrolling swipes. Measured 320–414px: 48 screens, 0 inner scrollers, 0 sideways scroll. On narrow phones the Compare bars stack (label/value above, bar full width) and stay aligned.
 
 ## A student's journey through one station
 

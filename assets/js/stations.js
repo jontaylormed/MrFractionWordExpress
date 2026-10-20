@@ -875,6 +875,11 @@
           '<section class="ck-panel ck-ask" aria-label="Question and answer"><div id="phase-host"></div></section>' +
           '<section class="ck-panel ck-work" id="ck-work" aria-label="Work area"></section>' +
           '<section class="ck-panel ck-pad" id="ck-pad">' +
+            /* On a phone the pad starts closed (CSS shows this button only
+               there): a drawing surface takes every touch, and a pad open
+               across the page caught the swipes a student meant as scrolling. */
+            '<button class="btn btn-quiet ck-pad-toggle" type="button" aria-expanded="false" aria-controls="ck-pad">' +
+              'Open the sketch pad</button>' +
             Scratch.html('ck-pad-canvas', 'Sketch Pad &middot; notes, sums, drawings') + '</section>' +
           '<div class="ck-bottom">' +
             '<div class="ck-say" id="ck-say"></div>' +
@@ -913,9 +918,26 @@
        wait for a rendered frame, and a hidden pane or an off-screen frame never
        renders one — the picture fit and the pad were both left undone there. */
     var self = this;
+    /* The pad is wired once, when it is actually showing — its canvas sizes
+       itself from its rendered box, so wiring it while it is closed (a phone)
+       would fix it at the wrong scale and the ink would land off the finger. */
+    function wirePadOnce() {
+      if (self.padWired || !self.root) return;
+      var c = self.root.querySelector('#ck-pad-canvas');
+      if (!c || !c.getBoundingClientRect().width) return;
+      self.padWired = true;
+      Scratch.wire(self.root, 'ck-pad-canvas');
+    }
+    var padBox = this.root.querySelector('#ck-pad');
+    this.root.querySelector('.ck-pad-toggle').addEventListener('click', function () {
+      var open = padBox.toggleAttribute('data-open');
+      this.setAttribute('aria-expanded', open ? 'true' : 'false');
+      this.textContent = open ? 'Close the sketch pad' : 'Open the sketch pad';
+      if (open) setTimeout(wirePadOnce, 0);
+    });
     setTimeout(function () {
       if (!self.root || !self.root.isConnected) return;
-      Scratch.wire(self.root, 'ck-pad-canvas');
+      wirePadOnce();
       fitScene(self.root.querySelector('#ck-scene'));
     }, 0);
     return this.root;
