@@ -2335,6 +2335,18 @@ select {
   background: var(--orange-deep); color: var(--cream-light);
   border: 2px solid var(--ink); font-weight: 700;
 }
+/* Since 2026-10-20 each row leads with the trip's own picture for that question
+   (hub.js `asksetHTML`) instead of a number, accented in its line's colour. */
+.hub-cl-pic { display: block; width: 88px; padding: 4px; background: var(--cream);
+  border: 1.5px solid var(--border-strong); border-top: 4px solid var(--line-current, var(--border-strong));
+  border-radius: var(--radius-xs); align-self: start; }
+.hub-cl-pic .mp-svg { display: block; width: 100%; height: auto; color: var(--ink); }
+/* Phones: the picture ABOVE its question. Beside it, the text column at 320px
+   was about a hundred pixels wide and the list measured 2,246px tall. */
+@media (max-width: 600px) {
+  .hub-cl-row { grid-template-columns: 1fr; gap: calc(var(--su) * .75); }
+  .hub-cl-pic { width: 72px; }
+}
 .hub-cl-row h4 { margin: 0 0 calc(var(--su) * .5); }
 .hub-cl-row p { margin: 0 0 calc(var(--su) * .5); }
 .hub-cl-tell { font-size: .92em; opacity: .85; }

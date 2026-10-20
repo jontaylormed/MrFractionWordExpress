@@ -7,7 +7,8 @@
    concatenated, then a quiz — which made the page we point students at to learn
    how to read the single densest wall of text on the site. On the user's
    instruction: a section per page, a rail showing the whole shape, a diagram and
-   something to DO on every topic, the checklist visible as one object, and a
+   something to DO on every topic, the process visible as one object (the
+   checklist then, "Ask yourself" since 2026-10-20), and a
    vocabulary section. Renderer is `assets/js/hub.js`.
 
    NOTHING WAS DROPPED IN THE MOVE. All seven old quiz stems are still here —
@@ -26,30 +27,30 @@ MF.registerHub({
   blurb: "What each line means, how to tell them apart, and the words that trip people up. Work through it a page at a time.",
   welcome: "Every word problem you meet is describing something happening to a set of amounts. There are only five somethings, and each one has a picture — the same pictures you pick between on a trip. Learn to see which one you're being told, and you're most of the way to solving it.",
 
-  /* The checklist, as one object. This is the process we point students at, so
+  /* "Ask yourself", as one object. This is the process we point students at, so
      it has to be readable in one go rather than remembered from five pages. The
-     questions are the same five the Platform Check asks on every trip — if these
-     ever drift apart, the hub is teaching a process the site does not run. */
-  checklist: {
-    note: "<strong>You will not always get a clean answer to all five, and that is fine.</strong> " +
-      "Two or three of them are usually enough to settle it. The point is to ask <em>something</em> about " +
-      "the structure before you reach for a number.",
+     questions are the same five the trip shows beside the pictures
+     (`ModelPicker.askHTML`) — if these ever drift apart, the hub is teaching a
+     process the site does not run. Each `line` names the picture drawn beside
+     it. This was the five-question checklist until 2026-10-20; its fifth
+     question (does one situation cover the whole story?) lives on in the note.
+     Drafted and approved with the user before it went in. */
+  askset: {
+    note: "<strong>You will not always get a clean yes, and that is fine.</strong> Often a single yes settles " +
+      "it. If two of them say yes about different parts of the story, it may have a middle &mdash; that is what " +
+      "the Lighthouse is about. And if none of them fits, that is a real answer too: some problems are not " +
+      "one of the five, and noticing is better than forcing it.",
     questions: [
-      { label: "Kinds",
-        ask: "What is being counted — one kind of thing, or different kinds locked together?",
-        tells: "Different kinds that drag each other along means Ratio & Rate. Everything else counts a single kind of thing." },
-      { label: "Moments",
-        ask: "Does any amount end up different from how it started?",
-        tells: "Yes means the Change Line. Careful: things can be busy without any amount changing — a train can run all day at the same speed." },
-      { label: "Things",
-        ask: "How many separate things is the story keeping track of?",
-        tells: "Separate things held up against each other means Compare. A single thing means Change, Equal Groups or Part–Whole." },
-      { label: "Shape",
-        ask: "Is anything being cut up, or repeated?",
-        tells: "Cut into shares that add back up means Part–Whole. The same amount repeated to build a total means Equal Groups." },
-      { label: "Fit",
-        ask: "Does one kind of situation cover the whole story?",
-        tells: "Sometimes two are stacked, and sometimes none of the five fits. Both are real answers, and noticing is better than forcing it." }
+      { line: "change", ask: "Does an amount change?",
+        tells: "The Change Line. Careful: things can be busy without any amount changing — a train can run all day at the same speed." },
+      { line: "compare", ask: "Are amounts compared?",
+        tells: "Compare: amounts that both exist at once, side by side, and the gap between them." },
+      { line: "groups", ask: "Is an amount repeated?",
+        tells: "Equal Groups: the same amount again and again, building a total. Careful: a rate repeats too — if the repeating amount links two different kinds, it is Ratio & Rate." },
+      { line: "partwhole", ask: "Is a whole split up?",
+        tells: "Part–Whole: parts that add back up to a named total." },
+      { line: "ratio", ask: "Are different kinds linked?",
+        tells: "Ratio & Rate: change one and the other follows, at any size." }
     ]
   },
 
@@ -261,25 +262,25 @@ MF.registerHub({
     },
 
     {
-      short: "The checklist",
-      kind: "checklist",
+      short: "Ask yourself",
+      kind: "askset",
       eyebrow: "The process",
-      heading: "The five questions, all in one place",
+      heading: "The questions, all in one place",
       body:
-        "<p>These five questions are how you tell the pictures apart. On a trip they are the " +
-        "<strong>Run the checklist</strong> help tool, one question at a time, whenever a story is hard " +
-        "to place &mdash; here they are together, so you can see the shape of what you are doing.</p>" +
+        "<p>These five questions are how you tell the pictures apart. On a trip they sit beside the " +
+        "pictures in the feedback box while you choose &mdash; here they are together, with what a " +
+        "<em>yes</em> points to, so you can see the shape of what you are doing.</p>" +
         "<p><strong>Ask them about the story, not about the numbers.</strong> Every one of them can be " +
         "answered with the numbers blanked out, which is exactly how choosing the picture works.</p>",
       tap: {
         ask: "Which question would settle \"Maya's rope is 7/8 m, Sam's is 1/2 m\" fastest?",
         options: [
-          { text: "Things — how many separate things is the story tracking?", correct: true,
-            why: "Two ropes, held up against each other. That answer alone puts you on Compare, and it took no arithmetic at all." },
-          { text: "Shape — is anything cut up or repeated?", correct: false,
-            why: "It would help — nothing is cut and nothing repeats — but that rules out only Part–Whole and Equal Groups. Things gets you there in one." },
-          { text: "Moments — does any amount end up different?", correct: false,
-            why: "Also useful: nothing changes, so it is not the Change Line. But it still leaves you choosing between three lines." }
+          { text: "Are amounts compared?", correct: true,
+            why: "Two ropes, held up against each other. A yes there puts you on Compare, and it took no arithmetic at all." },
+          { text: "Is a whole split up?", correct: false,
+            why: "It would help — nothing is cut — but a no only rules out Part–Whole. \"Are amounts compared?\" gets you there in one." },
+          { text: "Does an amount change?", correct: false,
+            why: "Also useful: nothing changes, so it is not the Change Line. But a no still leaves you choosing between four." }
         ]
       }
     },

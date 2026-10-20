@@ -14,9 +14,9 @@
      - a RAIL across the top, showing every page at once and letting a student
        jump. They can see the whole shape of what they are being taught, which
        is the thing a scroll hides.
-     - `checklist`  the five questions AS A WHOLE, on their own page and
-       reachable from every page. This hub is what we point students at to learn
-       the process, so the process has to be visible as one object.
+     - `askset`     the five "Ask yourself" questions AS A WHOLE, on their own
+       page (the checklist until 2026-10-20). This hub is what we point students
+       at to learn the process, so the process has to be visible as one object.
      - `vocab`      the words, in the three tiers of PEDAGOGY.md §2.2.
 
    BACKWARDS COMPATIBLE ON PURPOSE. A hub with `pages` renders here; a hub with
@@ -498,19 +498,25 @@
       }).join('') + '</ul></div>';
   };
 
-  /* ---------- the checklist, as one object ----------
-     Built from `stations.js`'s own CHECK if it is loaded, so the hub cannot
-     drift from the questions the trip actually asks. That drift is the whole
-     risk of teaching a process on one screen and running it on another. */
-  function checklistHTML(cl) {
-    var rows = (cl.questions || []).map(function (q, i) {
-      return '<li class="hub-cl-row" style="--cl-i:' + i + '">' +
-        '<span class="hub-cl-n" aria-hidden="true">' + (i + 1) + '</span>' +
-        '<div><h4>' + esc(q.label) + '</h4><p>' + esc(q.ask) + '</p>' +
-        '<p class="hub-cl-tell"><strong>What it tells you:</strong> ' + esc(q.tells) + '</p></div></li>';
+  /* ---------- "Ask yourself", as one object ----------
+     The five questions the trip shows beside the pictures, each with what a
+     yes points to, drawn beside THE SAME PICTURE the trip uses
+     (`ModelPicker.SHAPES`) so the hub and the platform teach one set. This was
+     the five-question checklist until the checklist was removed (2026-10-20);
+     the numbers 1–5 it was drawn with became the pictures. */
+  function asksetHTML(a) {
+    var S = global.ModelPicker && ModelPicker.SHAPES;
+    var rows = (a.questions || []).map(function (q, i) {
+      var pic = S && S[q.line]
+        ? '<span class="hub-cl-pic" aria-hidden="true" style="--line-current:var(--line-' + q.line + ')">' +
+            S[q.line].art + '</span>'
+        : '<span class="hub-cl-n" aria-hidden="true">' + (i + 1) + '</span>';
+      return '<li class="hub-cl-row" style="--cl-i:' + i + '">' + pic +
+        '<div><h4>' + esc(q.ask) + '</h4>' +
+        '<p class="hub-cl-tell"><strong>What a yes points to:</strong> ' + esc(q.tells) + '</p></div></li>';
     }).join('');
-    return '<ol class="hub-checklist">' + rows + '</ol>' +
-      (cl.note ? '<p class="hub-note">' + cl.note + '</p>' : '');
+    return '<ul class="hub-checklist">' + rows + '</ul>' +
+      (a.note ? '<p class="hub-note">' + a.note + '</p>' : '');
   }
 
   /* ---------- vocabulary ----------
@@ -685,7 +691,7 @@
     var s = '';
     if (p.art && ART[p.art]) s += ART[p.art]();
     if (p.body) s += p.body;
-    if (p.kind === 'checklist' && h.checklist) s += checklistHTML(h.checklist);
+    if (p.kind === 'askset' && h.askset) s += asksetHTML(h.askset);
     if (p.kind === 'vocab' && h.vocab) s += vocabHTML(h.vocab, p.tier);
     if (p.kind === 'tool') s += TOOL.html();
     if (p.kind === 'checks' && h.checks) s += checksHTML(h.checks);
