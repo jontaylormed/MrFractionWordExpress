@@ -139,9 +139,9 @@ Visiting one is ordinary navigation, never an admission — which matters for st
 
 A **For Teachers** button sits beside *Reading & Access* in the top bar, on the home map only — a student mid-trip never sees it. It opens [`teachers.html`](teachers.html) in a new tab: **the site's learning targets**, written as student-facing *"I can"* statements with the Bloom's Taxonomy level of each.
 
-- **Eighteen targets** — ten for the steps of the core trip, four for the help tools a student can choose, two for Crossover Island, and two that run across the whole site (keywords, and percent *of what*).
+- **Seventeen targets** — ten for the steps of the core trip, three for the help tools a student can choose, two for Crossover Island, and two that run across the whole site (keywords, and percent *of what*).
 - **Three notes on reading them.** The Bloom order is inverted on purpose: *Analyze* is gated before *Apply*. Remember-level targets are almost absent, also on purpose. And these are targets the site **practises, not assesses** — nothing on it produces a score, so assessing a target means doing it off the site.
-- **Alignment** to the Standards for Mathematical Practice: MP7 for targets 2–6, MP1 for 9, MP3 for 10.
+- **Alignment** to the Standards for Mathematical Practice: MP7 for targets 2–5 and 11–13, MP4 for 2, 4 and 5, MP1 for 8, MP3 for 9.
 
 It opens in a new tab because the site keeps no storage: sending the student's tab away would lose the trip in progress and the Reading & Access settings with it. Its **Back to the home page** link lands on the home map without replaying the loading screen.
 
