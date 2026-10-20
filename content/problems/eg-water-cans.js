@@ -113,48 +113,6 @@ MF.registerProblem({
         why: "Between them those sentences give the size of a watering can and the amount of water in the tank. Notice what is missing: nothing states how many cans that fills, and that is what the question wants.",
         kinds: "Everything measured here is water, in litres."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story measures water and counts cans, and it also counts the flower beds. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Cans are just what the water is being put into. Everything being measured is water.",
-                         no:  "That would mean water and flower beds were pinned to each other, so that filling a can dug a bed. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the water scaled with the flower beds. How many beds are along the platform says nothing about how big a can is." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "The story gives you a tank and a can size and asks how they fit together. Neither amount is changed while it does.", no: "" },
-            changed: { yes: "", no: "The most tempting choice on this problem, because a tank being emptied into cans really does sound like something happening. But the question is not what is LEFT in the tank — it is how many cans the water makes, and both the tank and the can size are fixed amounts the story hands you." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single thing, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single tank of water, poured into cans that are all the same.", no: "" },
-            separate: { yes: "", no: "That would mean amounts set side by side and measured against each other, with the story interested in the gap between them. The can is not being compared to the tank — it is being taken out of it, over and over." },
-            paired:   { yes: "", no: "That would mean a fixed pairing you could scale to any size. The story gives a set amount of water, not a rule about tanks in general." }
-          }
-        },
-        shape: {
-          ask: "Is anything being cut up, or repeated?",
-          options: {
-            repeat:  { yes: "The same canful, over and over, until the tank runs dry.", no: "" },
-            cut:     { yes: "", no: "The hardest call on this line, and it is worth sitting with. The tank does get divided up — but Part–Whole cuts a whole into DIFFERENT named shares, like the water for the roses and the water for the beans. Here every share is identical, and that sameness is the only reason a single division answers the question." },
-            neither: { yes: "", no: "Look again at the cans. They all hold the same amount, and the story fills them in a row — that is something repeating." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the tank, the cans, and how much each holds?",
-          options: {
-            onekind: { yes: "The same amount repeated, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a repeated amount and a question about how many times it goes in, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Equal cans filled in a row is squarely Equal Groups, even though the arithmetic is the hardest on the site." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

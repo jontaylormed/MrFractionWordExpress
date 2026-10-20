@@ -182,21 +182,6 @@ MF.registerProblem({
         why: "The earlier ones follow a single shelf through a day — what it started with, what left, what arrived. The last brings in another station entirely and stops the clock. Notice what is never stated: what Cold Halt has at closing time, which is the amount Marsh Halt is being measured against.",
         kinds: "Umbrellas throughout, first on a shelf across a day and then at separate stations at a single moment."
       },
-
-      /* THE CHECKLIST IS THE ONE AID THIS STOP KEEPS, so the `fit` question is
-         tailored here as carefully as on the staffed platforms — arguably more
-         so, because nothing after this screen will help. Everything the student
-         gets about the SHAPE of this problem, they get here. */
-      questions: {
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the day at Cold Halt, and the offices at closing time?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it follows a shelf through a day, and after that it sets the stations against each other at a single moment. Read it again and find the sentence where it changes." },
-            stacked: { yes: "An amount ending up different from how it started is a kind of situation. Amounts at separate places set against each other is a different kind. This story runs the day first and compares afterwards — and the day is what produces the amount being compared.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here, and at this stop it is yours." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

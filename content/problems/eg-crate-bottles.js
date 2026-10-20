@@ -129,52 +129,6 @@ MF.registerProblem({
         why: "Between them those sentences give the size of a crate and how many crates go on the train. Notice what is missing: nothing states how many bottles that comes to, and that is what the question wants.",
         kinds: "Everything counted here is bottles, held in crates."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts bottles and crates, and it also counts the trolleys on the platform. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Crates are just how the bottles are held. Everything being counted is bottles.",
-                         no:  "That would mean bottles and trolleys were pinned to each other, so that loading a bottle produced a trolley. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the bottles scaled with the trolleys. How many trolleys are waiting says nothing about how full a crate is." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "The crates are being moved, but no crate gains or loses a bottle. Moving something is not changing it.", no: "" },
-            changed: { yes: "", no: "Tempting, because the crates are going onto a train and that feels like something happening. But look for an AMOUNT that ends up different — no crate is filled or emptied, and the number of bottles in each stays exactly what it was." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single thing, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single load of crates, all alike, and the story is asking what it comes to.", no: "" },
-            separate: { yes: "", no: "That would mean amounts set side by side and measured against each other, with the story interested in the gap between them. Nothing here is being compared to anything." },
-            paired:   { yes: "", no: "That would mean a fixed pairing you could scale to any size. The story gives a set number of crates, not a rule about crates in general." }
-          }
-        },
-        shape: {
-          /* Keyed `repeat`, and this is the FIRST content on the site where
-             that is the right answer. Its `no` copy for `cut` has to hold
-             against Part–Whole, and the whole option has to stay arguable in
-             the opposite direction from cp-parking-spaces. */
-          ask: "Is anything being cut up, or repeated?",
-          options: {
-            repeat:  { yes: "The same crate-load, over and over. You could act it out: load a crate, then another the same, then another.", no: "" },
-            cut:     { yes: "", no: "That would mean a whole thing divided into shares that add back up to it. Nothing here starts as a whole and gets carved — the load is BUILT by putting equal crates together." },
-            neither: { yes: "", no: "Look again at the crates. They all hold the same amount, and the story lays them down in a row — that is something repeating." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the crates, what is in them, and what the porter loads?",
-          options: {
-            onekind: { yes: "The same amount repeated, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a repeated amount and a question about what it comes to, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Equal crates loaded in a row is squarely Equal Groups." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

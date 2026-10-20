@@ -116,51 +116,6 @@ MF.registerProblem({
         why: "Between them they give the minutes the press ran and the posters it turned out — the pairing you split down to a single minute. Worth noticing too, the line about a press that never pauses is what makes that rate trustworthy, though it hands you no number to work with.",
         kinds: "Posters and minutes — different kinds of thing, locked together by a press that never pauses."
       },
-
-      /* `shape.repeat.no` validates the student instead of denying them: a rate
-         IS the same amount over and over, which is why this line and Equal
-         Groups are the two that get mixed up. Saying "nothing here repeats"
-         would be false, and the manifests say so themselves elsewhere. */
-      questions: {
-        kinds: {
-          ask: "This story counts posters and it counts minutes, and it also mentions the hour the shop opens. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Posters and minutes are different sorts of thing, and the press pins them to each other &mdash; more minutes always means proportionally more posters.", no: "" },
-            same:      { yes: "", no: "That would mean everything here was measured in the same stuff. Posters and minutes are not the same stuff, and the question is precisely about how they go together." }
-          }
-        },
-        moments: {
-          ask: "The press runs and the pile of posters grows. Does any amount end up different from how it started, or does the press hold the same relationship from beginning to end?",
-          options: {
-            steady:  { yes: "The pile grows, but nothing about the relationship changes: the press turns out the same number of posters every minute, start to finish. That steadiness is what you are being asked about.", no: "" },
-            changed: { yes: "", no: "It is true that the pile grows &mdash; the press is busy. But nothing is being tracked from a before to an after. The question wants the rate the press holds, and that rate is the same at every moment." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate amounts being measured against each other, or of posters and minutes travelling together?",
-          options: {
-            paired:   { yes: "Not really separate things at all. Posters and minutes travel together, and that pairing is the thing you are asked to find.", no: "" },
-            single:   { yes: "", no: "That would mean the story only ever counted the same stuff. There are posters here and there are minutes, and the question needs both." },
-            separate: { yes: "", no: "That would mean posters and minutes were rivals, with the question asking which is bigger. They are not being compared &mdash; they are being paired." }
-          }
-        },
-        shape: {
-          ask: "Are the posters being shared out into parts, or is the same amount printed over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and the question is not counting identical batches. It asks what goes with what.", no: "" },
-            repeat:  { yes: "", no: "Genuinely close, and this is the mix-up worth understanding. A steady press does turn out the same amount minute after minute, so it feels like repeating groups. The difference is what the question wants: Equal Groups counts how many identical batches there are, and this asks how posters and minutes are paired." },
-            cut:     { yes: "", no: "That would mean the print run divided into shares that add back up to it. Nothing here is being divided." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the run the press did, and the posters that belong to a single minute of it?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a steady rate and nothing else &mdash; no second kind of situation stacked on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Posters per minute is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -113,50 +113,6 @@ MF.registerProblem({
         why: "\"of the whole band\" ties the brass players to the band they came out of. That makes the band the whole, and the brass players a share of it.",
         kinds: "Everything counted here is students in the same band."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts students in the band, and it also counts the concerts the band plays each year. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The concerts are the band's diary. Everything the question is about is students in the same band.",
-                         no:  "That would mean students and concerts were locked at a fixed rate &mdash; so many players for every concert, scaling together. Nothing in the story pairs them off." },
-            different: { yes: "", no: "That would mean adding a concert added players in proportion. The concerts tell you nothing about who plays what." }
-          }
-        },
-        moments: {
-          ask: "Does the band get bigger or smaller during this story, or is the story describing how a fixed band splits by what people play?",
-          options: {
-            changed: { text: "The band changes size", yes: "",
-                       no:  "That would mean players joining or leaving between the start and the end of the story. Nobody arrives and nobody goes &mdash; the band is the band throughout." },
-            steady:  { text: "A fixed band splits into groups",
-                       yes: "Nobody joins and nobody leaves. A fixed group is being divided by the instrument each person plays.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just this band, or this band and a rival held up beside it?",
-          options: {
-            single:   { yes: "A single band, divided by instrument.", no: "" },
-            separate: { yes: "", no: "That would mean a second band set beside this to measure the gap between them. There is only the Northgate Wind Ensemble here." },
-            paired:   { yes: "", no: "That would mean players locked to something else and scaled up or down. The band is a fixed group, not a rate." }
-          }
-        },
-        shape: {
-          ask: "Is the band being shared out into parts, or is the same group repeating, or neither?",
-          options: {
-            cut:     { yes: "Brass players and everyone else are shares of the same band, and between them they account for all of it.", no: "" },
-            repeat:  { yes: "", no: "That would mean the same group of players appearing again and again, with the question counting how many groups. The band exists once, split by instrument." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the brass players are a part of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the brass players, the whole band, and everyone who is not brass?",
-          options: {
-            onekind: { yes: "A whole cut into shares, the whole way through. Reaching the answer takes more than a single step, and each of those steps is the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "Worth asking, and you are right that it takes more than a single step &mdash; you go through the whole band to reach the players who are not brass. But both steps are the same kind of situation. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A band divided by instrument is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

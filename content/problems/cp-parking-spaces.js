@@ -128,56 +128,6 @@ MF.registerProblem({
         why: "Between them those sentences give how many times bigger the car park is, and the size of the car park. Notice what is missing: nothing states the bike rack's spaces, and that is what the question wants.",
         kinds: "Everything counted here is a space to leave something in."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts parking spaces and bike rack spaces, and it also counts the station's entrances. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "A space for a bike and a space for a car are both spaces. The entrances are somewhere else entirely.",
-                         no:  "That would mean spaces and entrances were pinned to each other, so that adding a space built a doorway. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the spaces scaled with the entrances. How many ways into the station there are says nothing about how many vehicles fit outside it." }
-          }
-        },
-        moments: {
-          ask: "Does the bike rack or the car park end up with a different number of spaces from how it started?",
-          options: {
-            steady:  { yes: "Nothing is built and nothing is closed off. Both simply have the spaces they have, and the story sets them side by side.", no: "" },
-            changed: { yes: "", no: "That would mean spaces being added or taken away partway through. A car park can be busy all day without the number of spaces in it changing." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single place to park, or separate places held up against each other?",
-          options: {
-            separate: { yes: "The bike rack and the car park, both there at once, with the story measuring how their sizes compare.", no: "" },
-            single:   { yes: "", no: "That would mean only a single place was ever in view. Count how many places the story gives you space numbers about." },
-            paired:   { yes: "", no: "That would mean spaces locked to something else and scaling with it. The relationship here is between fixed places outside the station, not a rate you could apply to any size of station." }
-          }
-        },
-        shape: {
-          /* The genuinely hard question on this problem, and the first place on
-             the site where "the same amount over and over" is a fair reading.
-             It is answered on the Check's own criterion — repeated TO BUILD A
-             TOTAL — not by asserting that the student is wrong. */
-          /* The token came out of this question. `{{n1}}` renders as a digit,
-             and read1 is a numberless screen — the validator caught it, which is
-             the rule working exactly as the memory of this project says it must.
-             "A number of times" says the same thing and states nothing. */
-          ask: "The car park is a number of times the size of the bike rack. Is that the same amount being repeated to build a total, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and nothing is being repeated to build a total. There are separate places, and the story measures how their sizes compare.", no: "" },
-            repeat:  { yes: "", no: "The closest call on this line, because the car park really is that many rack-loads. But repeating builds a TOTAL out of separate groups — that would be several car parks, with the question asking what they come to. Here there is a rack and a car park, and \"times as many\" is how their sizes compare." },
-            cut:     { yes: "", no: "That would mean a single whole divided into shares that add back up to it. The bike rack is not a piece of the car park — they are separate places outside the station." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the bike rack, the car park, and how many times bigger the car park is?",
-          options: {
-            onekind: { yes: "Amounts side by side, and a relationship between their sizes, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there are amounts side by side and a relationship between their sizes, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A car park measured against a bike rack is squarely the Compare Line — the measuring is just done in times rather than in spaces." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

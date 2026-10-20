@@ -105,48 +105,6 @@ MF.registerProblem({
         why: "Between them those sentences give the queue you are told about and how much bigger the other queue is than it. Neither queue turns into the other — they are both standing there at the same moment, which is what makes this a comparison.",
         kinds: "Everything counted here is people standing in a queue."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts people in queues, and it also counts the hall's ticket machines. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The machines are furniture. Everything being compared is people standing in a line.",
-                         no:  "That would mean people and machines were pinned to each other, so that another machine put another person in the queue. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the queue grew in proportion to the machines. How many machines the hall has says nothing about how many people turned up." }
-          }
-        },
-        moments: {
-          ask: "Does either queue end up a different length from how it started?",
-          options: {
-            steady:  { yes: "Nobody joins and nobody leaves. Both queues are simply standing there at the same moment, and the story compares them.", no: "" },
-            changed: { yes: "", no: "That would mean a queue growing or shrinking between the start of the story and the end of it. Read it again — the morning rush is when you are looking, not something happening to the numbers." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single queue, or separate queues held up against each other?",
-          options: {
-            separate: { yes: "The window queue and the machine queue, both there at once, with the story measuring the gap between them.", no: "" },
-            single:   { yes: "", no: "That would mean only a single line of people was ever in view. Count how many places the story says people are queuing." },
-            paired:   { yes: "", no: "That would mean people locked to something else and scaled up or down. Nothing here is being scaled — separate amounts are set beside each other." }
-          }
-        },
-        shape: {
-          ask: "Are the people being shared out into parts, or is the same queue repeating, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares and nothing repeats. The story puts separate amounts side by side.", no: "" },
-            cut:     { yes: "", no: "That would mean a single crowd divided into shares that add back up to it. The queues are not shares of a total the story ever names." },
-            repeat:  { yes: "", no: "That would mean the same queue forming again and again, with the question counting how many. Each queue is there once." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the machine queue, the gap, and the window queue?",
-          options: {
-            onekind: { yes: "Amounts side by side and the gap between them, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a queue, a gap and another queue, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A queue measured against another queue is squarely the Compare Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

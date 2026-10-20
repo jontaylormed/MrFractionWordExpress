@@ -130,47 +130,6 @@ MF.registerProblem({
         why: "\"For every\" is the lock: it fixes flour against water, so the pairing holds at any batch size, and the question hands you the batch you are scaling to. Worth noticing too — the line before says the same thing in plainer words, which is a good sign you have read it right.",
         kinds: "Flour and water — different things, tied together by the recipe."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts kilograms of flour and litres of water, and it also mentions the temperature the oven is set to. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Flour and water are different things, and the recipe pins them to each other. Use more flour and the water goes up in proportion.", no: "" },
-            same:      { yes: "", no: "That would mean everything was measured in the same stuff. Flour is weighed and water is poured, and the recipe is precisely a statement about how they go together. The oven temperature is the only real scenery here." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started, or does the recipe hold the same relationship however much the baker makes?",
-          options: {
-            steady:  { yes: "Nothing is added to or taken from an existing amount. The recipe holds the same pairing whether she makes a small batch or a large batch.", no: "" },
-            changed: { yes: "", no: "That would mean an amount ending up different from how it started &mdash; a bowl being added to or emptied. Making a bigger batch is not the same as changing an amount you already had; it is the same recipe at a different size." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate amounts being measured against each other, or of flour and water going together?",
-          options: {
-            paired:   { yes: "Not really separate things at all. Flour and water go together in a fixed pairing, and the question stretches that pairing to a bigger batch.", no: "" },
-            single:   { yes: "", no: "That would mean everything counted was the same stuff. There is flour here and there is water, and the recipe needs both." },
-            separate: { yes: "", no: "That would mean flour and water being compared to see which is greater. The recipe does not compare them &mdash; it locks them together." }
-          }
-        },
-        shape: {
-          ask: "Is the dough being shared out into parts, or is the same measure repeated over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and no identical batch is being counted. The question asks what amount of water belongs with a given amount of flour.", no: "" },
-            repeat:  { yes: "", no: "Close, and the arithmetic overlaps &mdash; a bigger batch is the recipe taken several times over. But Equal Groups would be counting the batches. Here the pairing of flour with water is the situation, and the batch size is just how far you stretch it." },
-            cut:     { yes: "", no: "That would mean a fixed amount of dough divided into shares that add back up to it. Nothing is being divided into parts of a whole." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the recipe as written, and the bigger batch she wants to make?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled up, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a fixed recipe and nothing else &mdash; no second kind of situation stacked on top." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Water that goes with flour is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

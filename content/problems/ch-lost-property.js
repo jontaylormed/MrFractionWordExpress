@@ -97,54 +97,6 @@ MF.registerProblem({
         why: "Between them those sentences give the before and the event. The office starts the week holding an amount, and then \"during the week\" more arrive — so the pile stops being the size it started at.",
         kinds: "Everything counted here is umbrellas."
       },
-
-      // Per-problem questions — see ch-water-tank for why these exist.
-      questions: {
-        kinds: {
-          ask: "This story counts umbrellas, and it also counts the shelves in the office. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The shelves are furniture. Everything the question is about is umbrellas.",
-                         no:  "That would mean umbrellas and shelves were pinned to each other &mdash; that handing in another umbrella built another shelf. The story never says anything like that." },
-            different: { yes: "", no: "That would mean the shelves grew as the umbrellas did. They are just what the office keeps them on." }
-          }
-        },
-        moments: {
-          /* Was "The rail at the start of the week, and the rail now." — user-found.
-             "Rail" appears once in the stem as scene-setting, every other string in
-             this problem says "the pile", and on a site with a Ratio & Rate RAIL the
-             word means a train line. Never name a story object with a word the map
-             already uses for a schema. */
-          ask: "The umbrellas at the start of the week, and the umbrellas now. Does any amount end up different from how it started?",
-          options: {
-            changed: { yes: "Umbrellas were handed in during the week, so the pile now is not the pile then.", no: "" },
-            steady:  { yes: "", no: "That would mean the office had the same number of umbrellas all week. But more were handed in partway through, and the pile grew." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just the pile of umbrellas, or the pile and something else measured against it?",
-          options: {
-            single:   { yes: "A single pile, at different moments in the week.", no: "" },
-            separate: { yes: "", no: "That would mean a second pile set beside it so you could measure the gap. There is only the office's own umbrellas here." },
-            paired:   { yes: "", no: "That would mean umbrellas locked to something else, so changing either moved the other. Nothing scales here; things are simply handed in." }
-          }
-        },
-        shape: {
-          ask: "Are the umbrellas being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            cut:     { yes: "", no: "That would mean the pile divided into shares that add back up to it. Nothing is being divided &mdash; things are being added." },
-            repeat:  { yes: "", no: "That would mean an identical batch arriving again and again, with the question counting the batches. The story tells you the whole week's arrivals in a lump." },
-            neither: { yes: "Nothing is cut into shares and nothing repeats. The pile just gets bigger.", no: "" }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; from the start of the week, through the handing-in, to what the office has now?",
-          options: {
-            onekind: { yes: "A starting pile, things arriving, a finishing pile. The same kind of situation throughout.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here it is a pile growing and nothing else &mdash; no second kind of situation on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This is a pile with a before and an after, which is the Change Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

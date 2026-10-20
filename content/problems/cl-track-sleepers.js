@@ -141,17 +141,6 @@ MF.registerProblem({
         why: "The earlier ones build the section: how many lengths there are, and what sits under each. The later ones stop building anything and describe a winter's work done to the section that is already there. Notice what is never stated: how many sleepers the section has to begin with, which is the amount the winter happens to.",
         kinds: "Sleepers throughout, first as the same helping under every length and then as an amount being changed."
       },
-
-      questions: {
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the lengths and their sleepers, and the winter's work?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it builds a section out of the same amount over and over, and after that it takes sleepers out of the section and puts others in. Read it again and find the sentence where it changes." },
-            stacked: { yes: "The same amount laid down again and again is a kind of situation. An amount ending up different from how it started is a different kind. This story builds the section first and works on it afterwards — and what it builds is the very thing the winter changes.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -100,50 +100,6 @@ MF.registerProblem({
         why: "\"of all the shots she took\" ties the shots she made to the total she attempted. Every shot in the story belongs to that same set of attempts — the made ones are a share of it.",
         kinds: "Everything counted here is shots at the same hoop."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts shots at the hoop, and it also counts the minutes practice lasted. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The minutes tell you how long Nia was there, not how many shots she took. Everything the question is about is shots at the same hoop.",
-                         no:  "That would mean shots and minutes were locked at a fixed rate &mdash; so many shots every minute, holding steady the whole session. The story never says she shot at a steady rate." },
-            different: { yes: "", no: "That would mean stretching the practice would stretch the shots with it, in fixed proportion. Nothing in the story pairs them off like that." }
-          }
-        },
-        moments: {
-          ask: "Nia takes shots and some go in. Does the question follow an amount changing over time, or does it ask how her shots split between the ones that went in and the ones that did not?",
-          options: {
-            changed: { text: "It follows an amount changing", yes: "",
-                       no:  "A fair reading &mdash; shots do pile up as practice goes on. But the question is not about any moment during practice. Every shot she took is already counted, and you are dividing them." },
-            steady:  { text: "It asks how the shots split",
-                       yes: "Every shot she took is already in the story. The question splits them into the ones that went in and the ones that did not.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just Nia's shots, or Nia's shots and a teammate's held up beside them?",
-          options: {
-            single:   { yes: "A single set of attempts, divided by what happened to each shot.", no: "" },
-            separate: { yes: "", no: "That would mean another player's shots set beside Nia's to measure the gap. There is only her practice here." },
-            paired:   { yes: "", no: "That would mean shots locked to something else and scaled. Nothing scales &mdash; a fixed set of attempts is being divided." }
-          }
-        },
-        shape: {
-          ask: "Are the shots being shared out into parts, or is the same set of shots repeated over and over, or neither?",
-          options: {
-            cut:     { yes: "Every shot she took is the whole, and the ones that went in are a share of it. Watch this problem carefully though &mdash; the whole is not the number you were handed.", no: "" },
-            repeat:  { yes: "", no: "That would mean an identical set of shots taken again and again, with the question counting the sets. Practice happened once." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the shots she made are a part of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the shots she made, and all the shots she took?",
-          options: {
-            onekind: { yes: "A whole cut into shares the whole way through &mdash; even though this problem runs the division backwards.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a set of attempts being divided and nothing else stacked on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Shots that went in, out of all the shots taken, is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

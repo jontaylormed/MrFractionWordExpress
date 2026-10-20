@@ -126,47 +126,6 @@ MF.registerProblem({
         why: "That sentence pairs miles with hours on the short run, and the question gives you the distance you are stretching it to. Worth noticing too — the line about holding a steady speed is what makes the pairing travel to a longer trip at all, even though it hands you no number.",
         kinds: "Miles and hours — different kinds of thing, tied together by a steady speed."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts miles and it counts hours, and it also counts the parcels the van can hold. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Miles and hours are different sorts of thing, tied to each other by a speed the driver holds. Drive for longer and the distance grows in proportion.", no: "" },
-            same:      { yes: "", no: "That would mean everything was measured in the same stuff. Miles are not hours, and the question is about how they go together. The parcels are the scenery here." }
-          }
-        },
-        moments: {
-          ask: "The van drives between the depots. Does any amount end up different from how it started, or does the van hold the same relationship the whole way?",
-          options: {
-            steady:  { yes: "The van moves, but no amount turns into a different amount. Miles and hours keep the same relationship for the whole drive, which is what a steady speed means.", no: "" },
-            changed: { yes: "", no: "Understandable, because the van is plainly moving. But look for an amount that ENDS UP different from how it started. Nothing is added or taken away here &mdash; the van simply covers ground at a rate that never varies." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate amounts being measured against each other, or of miles and hours travelling together?",
-          options: {
-            paired:   { yes: "Not really separate things at all. Miles and hours travel together, and the question stretches that pairing to a much longer trip.", no: "" },
-            single:   { yes: "", no: "That would mean the story only ever counted the same stuff. There are miles here and there are hours, and you need both." },
-            separate: { yes: "", no: "That would mean the short run and the long run being compared to see which is bigger. They are the same relationship at different sizes, not rivals." }
-          }
-        },
-        shape: {
-          ask: "Is the drive being shared out into parts, or is the same stretch repeated over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and the question is not counting identical stretches for their own sake. It asks what time goes with a given distance.", no: "" },
-            repeat:  { yes: "", no: "Close, and the arithmetic does overlap &mdash; you can picture the long trip as a run of equal hours. But Equal Groups would make the identical group the point. Here the point is that miles and hours are paired at a fixed rate." },
-            cut:     { yes: "", no: "That would mean a fixed distance divided into shares adding back up to it. Nothing is being divided into parts of a whole." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the short run you are given, and the long run you are asked about?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled, the whole way through. Reaching the answer takes more than a single step, and every step is the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "Worth asking, and you are right that it takes more than a single step &mdash; you find the speed before you can find the time. Both steps are the same kind of situation, though: a fixed rate being used. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Miles that go with hours is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

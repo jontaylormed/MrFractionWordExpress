@@ -143,17 +143,6 @@ MF.registerProblem({
         why: "The earlier ones give the shed's speed and how long the shift runs, which together say how much it gets through without ever stating it. The last stops describing the present and applies a rise to it. Notice what is never stated: how many carriages the shift cleans now, which is the amount the rise is a share of.",
         kinds: "Carriages against hours in the shed, and then carriages before and after a rise."
       },
-
-      questions: {
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the shed's speed, and next month's rise?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it gives a speed that would hold for a shift of any length, and after that it takes what the shift gets through and makes it bigger. Read it again and find the sentence where it changes." },
-            stacked: { yes: "A relationship between carriages and hours is a kind of situation. An amount ending up different from how it started is a different kind. This story scales the shed's speed up to the shift first and raises the result afterwards — and the rise is a share of the very number the scaling produced.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

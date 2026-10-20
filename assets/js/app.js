@@ -434,7 +434,7 @@
       var kindWord = st.kind === 'staffed' ? 'Staffed platform' : 'Unstaffed halt';
       var kindNote = st.kind === 'staffed'
         ? 'The crossover is taught here.'
-        : 'No one on the platform. The five-situations checklist is the only thing to hand.';
+        : 'No one on the platform. You pick the pictures yourself.';
       /* SAID OUT LOUD WHEN A STOP HOLDS MORE THAN ONE, because a student who
          rides Thorne Bridge twice and gets a different story deserves to know
          that is the stop working rather than the site being inconsistent. It

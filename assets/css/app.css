@@ -637,53 +637,8 @@ footer.rail-foot .foot-lead strong { color: #E8DFCE; }
   .map-table .row-here td:first-child { box-shadow: none; }
 }
 
-/* The five Platform Check cards.
-   Scoped to #r1checks so nothing else on the site moves.
-
-   The question was set at 16.8px — SMALLER than the 19px story it asks about,
-   which made each card's question read as a caption. And the cards had three
-   competing left edges: the card border, the eyebrow, and the options indented
-   a further ~89px by an un-reset list padding, with ~105px of dead space on the
-   right. Nothing aligned with anything.
-
-   The rail is the railway motif doing work the theme already owns: five stops
-   on a line rather than five identical boxes. No numerals — both screens of the
-   first read are numberless, so a digit here would be a masking defect, and the
-   spelled-out forms are barred for the same reason. */
-#r1checks { position: relative; }
-#r1checks::before {
-  content: ''; position: absolute; left: 9px; top: 1.4em; bottom: 1.4em;
-  width: 3px; background: var(--border-strong); border-radius: 2px;
-}
-#r1checks .card { position: relative; margin-left: calc(var(--su) * 4); }
-#r1checks .card::before {
-  content: ''; position: absolute; left: calc(var(--su) * -4 + 4px); top: 1.55em;
-  width: 13px; height: 13px; border-radius: 50%;
-  background: var(--cream-light); border: 3px solid var(--border-strong);
-  z-index: 1;
-}
-/* The tick from the stop to the platform. Without it the rail read as a line
-   NEAR some boxes rather than stops ON a line — a measured 21.5px of unbridged
-   gutter between rail centre and card edge. */
-#r1checks .card::after {
-  content: ''; position: absolute; left: calc(var(--su) * -4 + 17px); top: 2.05em;
-  width: calc(var(--su) * 4 - 17px); height: 3px; background: var(--border-strong);
-}
-/* ANSWERED, not "current" — all five questions live on one screen, so there is
-   no current one, and answered is the state a student can act on. Filled the
-   instant the card is answered, with no transition: this is a state-carrying
-   property and the codebase has a scar about animating those. It is never the
-   only signal (the chosen option is already marked), and it says nothing about
-   whether the answer was right. */
-#r1checks .card.answered::before {
-  background: var(--line-current, var(--line-partwhole));
-  border-color: var(--ink);
-}
-/* Was 1.06em — 20.1px against 18.05px body, a ratio of 1.12 that is "raised"
-   arithmetically and not perceptually. The question a student has to decode
-   should outrank the story it is about. */
-#r1checks .card h3 { font-size: 1.22em; margin-top: .15em; }
-#r1checks .choices { padding-left: 0; margin-left: 0; }
+/* (The five checklist cards' rail, `#r1checks`, lived here. The checklist was
+   removed 2026-10-20.) */
 
 /* `.hint-text` is 14px, which is fine for chrome and wrong for instructions.
    On these two screens it carries the actual task — "Tap every sentence that
@@ -3650,10 +3605,8 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-ask .section-head { margin: 0 0 calc(var(--su)); }
 .ck-ask .section-head h2 { font-size: clamp(1.05rem, .85rem + .45vw, 1.3rem); }
 .ck-ask .section-head .rule { display: none; }
-.ck-ask h3, .ck-ask #r1checks .card h3 { font-size: clamp(1rem, .9rem + .3vw, 1.15rem); margin-top: 0; }
+.ck-ask h3 { font-size: clamp(1rem, .9rem + .3vw, 1.15rem); margin-top: 0; }
 .ck-ask .eyebrow { font-size: .72rem; }
-.ck-ask #r1checks::before, .ck-ask #r1checks .card::before, .ck-ask #r1checks .card::after { display: none; }
-.ck-ask #r1checks .card { margin: 0; padding: calc(var(--su) * 1.25); box-shadow: none; }
 .ck-ask p { margin-bottom: .55em; }
 .ck-ask h3 { margin-bottom: .5em; text-align: center; }
 /* A step that is only a question and a lever (the first read) sits in the

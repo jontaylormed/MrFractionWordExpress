@@ -130,48 +130,6 @@ MF.registerProblem({
         why: "Between them those sentences give the whole trainful of seats and the share of it that is spoken for. The seats divide into a part and a rest, and those pieces together are the trainful.",
         kinds: "Everything counted here is a seat on the same train."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts seats, and it also counts carriages. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Everything the question is about is seats on the same train &mdash; the reserved ones and the rest.",
-                         no:  "That would mean the seats and the carriages were pinned to each other, so that reserving a seat added a carriage. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the seats scaled with the carriages. How the train is made up says nothing about how much of it is spoken for." }
-          }
-        },
-        moments: {
-          ask: "Does the number of seats, or the number reserved, end up different from how it started?",
-          options: {
-            steady:  { yes: "The train has the seats it has, and a share of them is already spoken for. The story never changes either &mdash; it describes them at a single moment, before the train leaves.", no: "" },
-            changed: { yes: "", no: "Worth thinking about, because reserving really is something happening. But the story does not show it happening: it hands you a train with a share already reserved and asks about the rest." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; a single trainful, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single trainful of seats, described as a share and the rest of itself. Both parts are the same seats.", no: "" },
-            separate: { yes: "", no: "That would mean a second train, counted alongside so you could measure the gap between them. The reserved seats are not a separate thing from the trainful &mdash; they are some of it." },
-            paired:   { yes: "", no: "That would mean seats pinned to something else and dragged along by it. Nothing here moves with anything." }
-          }
-        },
-        shape: {
-          ask: "Is the trainful being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            cut:     { yes: "The seats divide into the reserved ones and the rest, and those pieces add back up to the whole trainful. That is a whole being cut into parts.", no: "" },
-            repeat:  { yes: "", no: "That would mean the same amount of seats again and again, with the question counting how many. There is a single trainful here, divided up." },
-            neither: { yes: "", no: "The closest call on this screen, because nothing is physically being cut. But a share and its rest that add back to a named total is exactly what cutting into parts means here." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the trainful, the share reserved, and the rest?",
-          options: {
-            onekind: { yes: "A whole, a part of it, and what is left. The same kind of situation the whole way through &mdash; the part just happens to be described in per cent.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time, and per cent does feel like a second idea on top. But it is only how the share is written. Say the same share in seats instead and nothing about the shape of the story moves." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A trainful divided into a reserved share and a rest is squarely the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

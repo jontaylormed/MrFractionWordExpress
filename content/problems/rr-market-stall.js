@@ -159,54 +159,6 @@ MF.registerProblem({
         why: "Each of those pairs bags with dollars, and there is a pairing per stall. Neither stall's price is stated in a form you can set beside the other's — the sign above the stall is not evidence of anything.",
         kinds: "Bags and dollars — different kinds of thing, and the price is what ties them together."
       },
-
-      /* `things.separate.no` is the important one. The generic copy used to say
-         "that is not what is going on here", which is FALSE on this problem —
-         two stalls ARE set side by side and compared, and this manifest's own
-         compare distractor says "a comparison genuinely happens at the end".
-         Flagged by the math agent. The reply now agrees with the student and
-         then draws the real distinction: what gets compared is two rates, and
-         a rate has to be found before it can be compared. */
-      questions: {
-        kinds: {
-          ask: "This story counts bags of rice and it counts dollars, and it also counts how many stalls the market has. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Bags and dollars are different sorts of thing, and each stall's price ties them together. Buy more bags at that stall and you pay in proportion.", no: "" },
-            same:      { yes: "", no: "That would mean everything was counted in the same stuff. Bags are not dollars, and the question is about what a bag costs &mdash; which is exactly those paired." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started, or do both stalls hold their prices while you work out which is better value?",
-          options: {
-            steady:  { yes: "Nothing is added or taken away. Both stalls stand there with fixed prices, and you are working out what each stall really charges.", no: "" },
-            changed: { yes: "", no: "That would mean a price rising or an amount being spent, with a before and an after. Nothing moves here &mdash; the stalls simply are what they are." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate things being measured against each other, or of bags and dollars going together?",
-          options: {
-            paired:   { yes: "Each stall pairs bags with dollars, and that pairing is what you have to find before anything can be compared.", no: "" },
-            separate: { yes: "", no: "You are right that a comparison happens &mdash; the question asks which stall is better value, so they do get held up against each other at the end. But you cannot compare them yet: each stall states its price in a different sized lot. What gets compared is a RATE from each stall, and a rate is a pairing of bags with dollars. Find those first." },
-            single:   { yes: "", no: "That would mean the story counted only the same stuff throughout. There are bags here and there are dollars, and the price needs both." }
-          }
-        },
-        shape: {
-          ask: "Are the bags being shared out into parts, or is the same lot sold over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and the question is not counting identical lots. It asks what a single bag costs.", no: "" },
-            repeat:  { yes: "", no: "Bags do come in lots, which sounds like groups. But Equal Groups would count how many lots there are. Here the question is the price attached to each bag &mdash; a pairing, not a count." },
-            cut:     { yes: "", no: "That would mean a fixed amount of rice or money divided into shares. Nothing is being divided into parts of a whole." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; both stalls, and the price of a single bag at whichever stall is better?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled, at each stall, the whole way through. It takes more than a single step, and every step is the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "The best case on the site for this answer, and worth arguing for &mdash; you find a rate, then you compare. But finding each stall's rate and setting them side by side are the same kind of situation seen at each stall, not different kinds stacked. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A price per bag is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

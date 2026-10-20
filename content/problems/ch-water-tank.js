@@ -122,56 +122,6 @@ MF.registerProblem({
         why: "Between them those sentences give the event and what it left behind. The tanker arrives, and afterwards the tank holds something different. A single amount, at a before and an after — that is the shape of it.",
         kinds: "Everything counted here is litres of water."
       },
-
-      /* PER-PROBLEM PLATFORM CHECK QUESTIONS — first of three, Change Line.
-         The shared questions ask in the abstract, so their answers are the same
-         for every problem on a line and a student can take them off the station
-         header without reading. These name this story's own quantities, so they
-         cannot be. Note `kinds` uses the DISTRACTOR — the taps — as the thing
-         to rule out, which turns an irrelevant number into the teaching.
-         No digits and no number words: this screen is numberless. */
-      questions: {
-        kinds: {
-          ask: "This story counts litres of water, and it also counts taps on the platform. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The taps are scenery. Everything the question is about is water, measured in litres, in the same tank.",
-                         no:  "That would mean the litres and the taps were pinned to each other &mdash; that filling the tank changed how many taps the platform has. Nothing in the story ties them together." },
-            different: { yes: "", no: "That would mean pumping water in changed the number of taps. The taps sit there whatever the tank is doing." }
-          }
-        },
-        moments: {
-          ask: "The tank on Monday morning, and the tank after the tanker had been. Does any amount end up different from how it started?",
-          options: {
-            changed: { yes: "The tanker put water in, so the tank afterwards is not the tank before. That gap is the whole problem.",
-                       no:  "" },
-            steady:  { yes: "", no: "That would mean the tank held the same amount all through. But a tanker arrives partway, and after it the tank holds something else." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just the tank, or the tank and something else being measured against it?",
-          options: {
-            single:   { yes: "A single tank, at different moments. Everything else in the story is about that tank.", no: "" },
-            separate: { yes: "", no: "That would mean a second tank, or a second amount, set beside it so you could measure the gap between them. There is only the tank here." },
-            paired:   { yes: "", no: "That would mean litres pinned to something else, so that changing either moved the other. The tanker changes the water and nothing else." }
-          }
-        },
-        shape: {
-          ask: "Is the water being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            cut:     { yes: "", no: "That would mean the tank's water divided into shares that add back up to the tankful. Nothing here is being divided." },
-            repeat:  { yes: "", no: "That would mean the same delivery arriving again and again, with the question counting how many. The tanker comes and goes, and that is that." },
-            neither: { yes: "Nothing is cut into shares and nothing repeats. The water simply ends up at a different level.", no: "" }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; from Monday morning, through the tanker, to what the tank held after?",
-          options: {
-            onekind: { yes: "A starting amount, something happening to it, and a finishing amount. The same kind of situation the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a tank changing amount and nothing else &mdash; no second kind of situation stacked on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This is a tank with a before and an after, which sits squarely on the Change Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

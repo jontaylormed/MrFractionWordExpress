@@ -25,7 +25,7 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 | | |
 |---|---|
 | **Problems** | **37**, four number sets each = **148 materialisations** |
-| **Rendered screens** | **1,896** (`SWEEP.render()`) — the fast path's chain, the help tools, the single-line picker (`pickModel-line`), every number set |
+| **Rendered screens** | **1,764** (`SWEEP.render()`; 1,896 before the checklist was removed on 2026-10-20) — the fast path's chain, the help tools, the single-line picker (`pickModel-line`), every number set |
 | **Layout** | **The cockpit** — merged to `main` 2026-10-18 from branch `cockpit-layout` |
 | **Validation** | 37 problems, **0 errors**, 28 warnings — the warnings are the long-standing `segmentValue is not a value the problem gives` set and are expected |
 | **Lines** | Five schemas — Part–Whole Loop, Ratio & Rate Rail, The Change Line, The Compare Line, Equal Groups Express — plus **Crossover Island** |
@@ -58,16 +58,17 @@ map band, full width · Stop N of M · problem title
 `read1 → pickModel → platform → plan → demo → solve → check → critique`
 
 - **`read1`** on a single-situation problem: the story with numbers covered, and the lever. Nothing else.
-- **`pickModel`**: the picture choice, numberless. **On a single-line ride** (`rideLine === p.line`) it asks *"Which picture shows what is missing?"* with that line's picture and the `?` in each place (`ModelPicker.VARIANTS`, slot from `unknownCar` via `ModelPicker.slotOf`). **Otherwise** (Grand Tour, percent route, no ride) it asks *"Which picture fits this story?"* with the five shapes. Feedback is shape-based and names no line, operation or number. Mr Fraction's retelling arrives with a correct pick. Recorded as `schemaFirstTry` / `schemaAttempts`.
+- **`pickModel`**: the picture choice, numberless. **On a single-line ride** (`rideLine === p.line`) it asks *"Which picture shows what is missing?"* with that line's picture and the `?` in each place (`ModelPicker.VARIANTS`, slot from `unknownCar` via `ModelPicker.slotOf`). **Otherwise** (Grand Tour, percent route, no ride) it asks *"Which picture fits this story?"* with the five shapes. Feedback is shape-based and names no line, operation or number. Until the first pick, the feedback viewport shows **"Ask yourself"** (`ModelPicker.askHTML`): with the five shapes, a short question beside each one ("Does an amount change?" …); with the missing-piece pictures, three questions ("What does the story give you?" …). It asks; it never says which answer this story gives. Mr Fraction's retelling arrives with a correct pick. Recorded as `schemaFirstTry` / `schemaAttempts`.
 - **`platform`** proves it from the text (tap the sentences); its reveal confirms the line.
 - **`plan`** opens with the picture empty: the student taps the numbers it needs (`read2.quantities[].needed`); scenery numbers are turned away; then the model and the estimate appear.
 - **Arrivals Board** (`check`) runs its checks one at a time; each check's explanation goes to the feedback viewport; the caboose sits in the picture panel.
-- **Numberless screens:** `Stations.NUMBERLESS` = read1, platform, crossover, pickModel, checklist (a tool opened after the numbers are out stops masking).
-- **Help tools** (`Stations.TOOLS`, offered per problem by `Stations.toolsFor`) under "Help me see it" on pickModel and plan, returning to where they were opened: **Run the checklist**, **Sort the numbers** (read2), **Find the question** (read3), **Find the missing piece** (ticket). `offerTool()` highlights one after repeated misses — never opens it. Recorded in `toolsUsed`; the trip report names them.
+- **Numberless screens:** `Stations.NUMBERLESS` = read1, platform, crossover, pickModel (a tool opened after the numbers are out stops masking).
+- **Help tools** (`Stations.TOOLS`, offered per problem by `Stations.toolsFor`) under "Help me see it" on pickModel and plan, mainland only, returning to where they were opened: **Sort the numbers** (read2), **Find the question** (read3), **Find the missing piece** (ticket). `offerTool()` highlights one after repeated misses — never opens it: Find the question after a second wrong missing-piece pick, Sort the numbers after a second scenery tap. (A second wrong shape pick used to offer the checklist; nothing is offered there now.) Recorded in `toolsUsed`; the trip report names them.
+- **The five-question checklist was removed on 2026-10-20** (user: the heaviest screen for cognitive load), from the mainland tools, the staffed island stops and the unstaffed halts, with its table, answer key, per-problem wording (`read1.questions`, now refused by the validator) and CSS. The hubs and the For Teachers page still describe it — **their rewording is waiting on a discussion with the user.**
 - `demo` is the Test Track, on **24 of the 37**.
 - **The pre-solve chain is written in exactly one place, `Stations.phaseChain`.** The post-solve chain is written in exactly one place, **`Stations.postSolve`**. If prose anywhere disagrees with those two functions, the functions are right.
 
-**On Crossover Island**: a **staffed stop** runs `read1` (story only) → **Crossover Read** (tap the seam, then pick the picture for each half, one stage at a time) → `plan`; its only tool is the checklist. An **unstaffed halt** (`fadeLevel: "independent"`) keeps the five checklist questions, one at a time, then goes to the Engine Room — **no estimate**, no tools. Only the hint ladder stays.
+**On Crossover Island**: a **staffed stop** runs `read1` (story only) → **Crossover Read** (tap the seam, then pick the picture for each half, one stage at a time) → `plan`; no tools. An **unstaffed halt** (`fadeLevel: "independent"`) runs `read1` → the Crossover Read **unaided** (user, 2026-10-20: "picture picks, no coaching"): pick a picture for the first part and one for the rest — no seam to tap, no half lit up, replies of only "Yes." / "Not that one." — then the Engine Room. **No estimate**, no tools. Only the hint ladder stays.
 
 ## What shipped on 2026-10-18, and is newest
 

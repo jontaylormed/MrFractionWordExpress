@@ -115,51 +115,6 @@ MF.registerProblem({
         why: "Between them those sentences give the delays the question compares. Notice that neither of them changes into the other — they are separate measurements of separate trains, which is what makes this a comparison rather than a story about something happening.",
         kinds: "Everything counted here is minutes of lateness."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts minutes of lateness, and it also counts the station's platforms. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The platforms are part of the station, not part of the question. Everything being compared is minutes.",
-                         no:  "That would mean minutes and platforms were pinned to each other, so that running later somehow built another platform. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the platforms and the delays scaled together. How many platforms the station has says nothing about how late a train is." }
-          }
-        },
-        moments: {
-          /* The Change/Compare discrimination, on the problem where it is most
-             tempting to get wrong: the story really does run from morning to
-             evening. Time passing is not an amount changing. */
-          ask: "The story runs from the morning through to the evening. Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "Time passes, but neither delay ever changes. The morning train's lateness does not turn into the evening train's lateness — they are separate measurements that both just sit there.", no: "" },
-            changed: { yes: "", no: "The most tempting answer here, because the story really does travel from morning to evening. But look for an AMOUNT that ends up different from how it started. The morning delay is still the morning delay at the end of the day; a second delay has simply appeared beside it." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single train, or separate trains held up against each other?",
-          options: {
-            separate: { yes: "Both trains were late, neither of them changing, and the question is about the gap between them.", no: "" },
-            single:   { yes: "", no: "That would mean only a single amount was ever in view. Read it again and count how many trains the story gives you a delay for." },
-            paired:   { yes: "", no: "That would mean minutes locked to something else and scaled up or down. Nothing is being scaled here — separate amounts are being set beside each other." }
-          }
-        },
-        shape: {
-          ask: "Are the minutes being shared out into parts, or is the same delay repeating, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares and nothing repeats. The story simply puts separate amounts side by side.", no: "" },
-            cut:     { yes: "", no: "That would mean a single total divided into shares that add back up to it. There is no total here to divide — the delays belong to different trains." },
-            repeat:  { yes: "", no: "That would mean the same delay happening again and again, with the question counting how many. Each train was late once, by its own amount." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — both delays, and the gap the question asks for?",
-          options: {
-            onekind: { yes: "Amounts side by side and a gap between them, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there are the delays and the space between them, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Amounts measured against each other is squarely the Compare Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -107,50 +107,6 @@ MF.registerProblem({
         why: "\"percent of all the orders for the day\" ties the morning's work to the day's whole job. The day is the whole, and the morning is a share of it.",
         kinds: "Everything counted here is orders packed in the same warehouse."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts orders, and it also counts the warehouse's loading bays. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The bays are part of the building. Everything the question is about is orders packed on the same day.",
-                         no:  "That would mean orders and bays were pinned to each other, so that packing more built another bay. Nothing in the story links them." },
-            different: { yes: "", no: "That would mean orders were locked to bays at a fixed rate, so many orders for every bay. The bays are scenery." }
-          }
-        },
-        moments: {
-          ask: "The worker packs orders before lunch. Does the question follow a pile growing through the day, or does it ask how the day's whole job divides up?",
-          options: {
-            changed: { text: "It follows a pile growing", yes: "",
-                       no:  "A fair reading &mdash; the pile does grow through the morning. But you are not asked what the pile was at any moment. You are asked how big the whole day's job is, given that the morning was a share of it." },
-            steady:  { text: "It asks how the day's job divides",
-                       yes: "The day's work is a fixed amount, and the morning is a share of it. You are dividing a total, not following it through the day.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just this day's orders, or this day and another day held up beside it?",
-          options: {
-            single:   { yes: "A single day's work, split into the morning and the rest.", no: "" },
-            separate: { yes: "", no: "That would mean another day's orders set beside this to measure the gap. There is only the day the story describes." },
-            paired:   { yes: "", no: "That would mean orders locked to something else and scaled up or down. The morning is a share of a fixed day, not a rate." }
-          }
-        },
-        shape: {
-          ask: "Is the day's work being shared out into parts, or is the same batch packed over and over, or neither?",
-          options: {
-            cut:     { yes: "The morning is a share of the day, and the afternoon is the rest of it. Together they account for all of the day's orders.", no: "" },
-            repeat:  { yes: "", no: "That would mean identical batches packed again and again, with the question counting how many batches. The morning is a share of the day, not a repeated batch." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the morning's work is a part of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the morning's work, and the day it came out of?",
-          options: {
-            onekind: { yes: "A whole cut into shares, all the way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a day's work being divided and nothing else &mdash; no second kind of situation on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A morning that is a share of a day is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

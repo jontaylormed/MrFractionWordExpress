@@ -139,48 +139,6 @@ MF.registerProblem({
         why: "Between them those sentences give the rate the barrow sells at and the size of Saturday's crowd. Notice the first of them does not mention Saturday at all — it is true of any day, and any crowd, which is what makes it a rate.",
         kinds: "Different things are being counted here: people walking past, and hot drinks sold."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts people walking past and hot drinks sold, and it also counts kinds of biscuit. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "People and hot drinks are not the same thing at all, and the story pins them together: more people past the barrow means more drinks sold, at a fixed rate.",
-                         no:  "" },
-            same:      { yes: "", no: "It is tempting, because both are counts of something. But a drink is not a person, and the whole story is about how they go together &mdash; which only means anything if they are different kinds." }
-          }
-        },
-        moments: {
-          ask: "Does the crowd, or the number of drinks, end up different from how it started?",
-          options: {
-            steady:  { yes: "The rate the barrow sells at holds all day, and Saturday's crowd is a finished count. Nothing here starts at some amount and finishes somewhere else.", no: "" },
-            changed: { yes: "", no: "Worth thinking about, because selling really is something happening. But the story never gives you an amount and then changes it &mdash; it gives you a rate that holds, and a day's crowd." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of, and how are they held together?",
-          options: {
-            paired:   { yes: "People and drinks, pinned to each other so that changing the crowd drags the drinks along with it. That is what \"in every hundred\" does &mdash; it locks them.", no: "" },
-            single:   { yes: "", no: "That would mean only a single kind of thing was ever in view. Count the kinds the story gives you a figure about: the people passing, and the drinks sold." },
-            separate: { yes: "", no: "Closer, because there really are separate things being counted. But separate means set SIDE BY SIDE to be measured against each other, and these are locked together instead &mdash; each drags the other along." }
-          }
-        },
-        shape: {
-          ask: "Is something being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is carved up and nothing repeats. There is a relationship that holds at any size, and a crowd to apply it to.", no: "" },
-            cut:     { yes: "", no: "The closest call on this screen, and worth taking seriously. A share of the crowd does buy a drink &mdash; but a cut needs the pieces to add back up to a named whole, and drinks and people never add up to anything. The rate would still hold if nobody had walked past at all." },
-            repeat:  { yes: "", no: "That would mean the same amount arriving again and again, with the question counting how many. The crowd is counted once, for a single Saturday." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the rate she sells at, and Saturday's crowd?",
-          options: {
-            onekind: { yes: "A fixed relationship between a pair of quantities, scaled up to the size of the day. The same kind of situation the whole way through &mdash; the relationship just happens to be written in per cent.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time, and per cent does feel like an extra idea on top. But it is only how the rate is written. Say the same rate as a fraction instead and nothing about the shape of the story moves." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A fixed rate scaled to a bigger crowd is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

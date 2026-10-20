@@ -143,6 +143,7 @@ Not yet acted on; the user decides. Confirmed independently where marked ✓.
 - **(d)** Picker feedback is safe by construction: a wrong pick is told what the shape *it* chose means and asked whether the story does that (`SHAPE_ASK`); no line names, operations or number words. The Ticket Booth keeps its own texts, as a tool.
 - **(e)** Shapes redrawn: Compare shows the smaller amount measured against the larger (works for times-as-many), Change is before/after, Ratio's rows have different spacing; no words inside pictures; captions name the distinguishing feature.
 - Also: staffed island stops dropped the five-question checklist (now a tool); "The Platform Check · part two" is just "The Platform Check".
+- **2026-10-20: the checklist is removed altogether.** "Ask yourself" (short questions beside each picture, `ModelPicker.askHTML`) shows in the feedback viewport until the first pick. `TOOLS` is read2, read3, ticket, mainland only; a second wrong shape pick offers nothing (it offered the checklist); a second wrong missing-piece pick still offers Find the question. Unstaffed halts run `read1` → the Crossover Read unaided (pictures only). Hub and For Teachers rewording is waiting on the user.
 
 **The teaching findings as reported:**
 - **Single-line rides: the pick isn't recognition** (header + colour + same answer every stop). Teacher's proposal: on those rides show 3–4 variants of that line's diagram with `?` in different places (which quantity is missing); keep the five-shape pick for percent / Grand Tour.

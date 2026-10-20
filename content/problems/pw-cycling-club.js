@@ -115,50 +115,6 @@ MF.registerProblem({
         why: "\"percent of the whole club\" ties the road cyclists to the club they belong to. The club is the whole, and a percent is a share of it.",
         kinds: "Everything counted here is members of the same club."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts members of the club, and it also counts how many times a week the club meets. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The meetings are the club's timetable. Everything the question is about is members of the same club.",
-                         no:  "That would mean members and meetings were locked at a fixed rate, scaling together. Meeting more often would not sign anybody up." },
-            different: { yes: "", no: "That would mean the meetings and the membership moved in proportion. Nothing in the story ties them." }
-          }
-        },
-        moments: {
-          ask: "Does the club gain or lose members during this story, or is the story describing how a fixed club splits by what people ride?",
-          options: {
-            changed: { text: "The club changes size", yes: "",
-                       no:  "That would mean members joining or leaving between the start of the story and the end of it. Nobody does &mdash; the club is the club throughout." },
-            steady:  { text: "A fixed club splits into groups",
-                       yes: "Nobody joins and nobody leaves. A fixed group is being divided by the sort of bike each member rides.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just this club, or this club and a rival club held up beside it?",
-          options: {
-            single:   { yes: "A single club, divided by the bikes people ride.", no: "" },
-            separate: { yes: "", no: "That would mean a rival club set beside this to measure the gap. There are only the Ridgeway Riders here." },
-            paired:   { yes: "", no: "That would mean members locked to something else and scaled. The club is a fixed group, not a rate." }
-          }
-        },
-        shape: {
-          ask: "Is the club being shared out into parts, or is the same group repeating, or neither?",
-          options: {
-            cut:     { yes: "Road riders and everyone else are shares of the same club, and between them they account for all of it.", no: "" },
-            repeat:  { yes: "", no: "That would mean the same set of members appearing again and again, with the question counting the sets. The club exists once, split by bike." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the road riders are a part of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the road riders, the whole club, and everyone who rides something else?",
-          options: {
-            onekind: { yes: "A whole cut into shares, all the way through. It takes more than a single step to get there, and every step is the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "Worth asking, and it does take more than a single step here &mdash; you go through the whole club to reach the rest. Both steps are the same kind of situation, though. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A club divided by what people ride is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

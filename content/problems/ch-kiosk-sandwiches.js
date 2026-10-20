@@ -99,51 +99,6 @@ MF.registerProblem({
         why: "Between them those sentences give the before and the after. Opening time and closing time, the same counter at both — and something happened to the stack in between.",
         kinds: "Everything counted here is sandwiches, and nothing else."
       },
-
-      /* Per-problem questions — see ch-water-tank. This one carries the extra
-         weight of the line: BOTH ends are given and the middle is missing, so
-         `moments` says the change is the thing you cannot see. */
-      questions: {
-        kinds: {
-          ask: "This story counts sandwiches, and it also counts the days a week the kiosk opens. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The opening days are background. Everything the question is about is sandwiches on a single counter.",
-                         no:  "That would mean sandwiches and opening days were pinned to each other, so that selling more changed the opening hours. The story never links them." },
-            different: { yes: "", no: "That would mean the days and the sandwiches scaled together. How often the kiosk opens has nothing to do with this particular day." }
-          }
-        },
-        moments: {
-          ask: "The counter when the kiosk opened, and the counter at closing time. Does any amount end up different from how it started?",
-          options: {
-            changed: { yes: "The stack shrank across the day. Notice that the story never says what happened in between &mdash; the change is the part you cannot see.", no: "" },
-            steady:  { yes: "", no: "That would mean the same sandwiches sat there all day. Opening and closing are given as different amounts, so something happened between them." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just the kiosk's counter, or the counter and something else measured against it?",
-          options: {
-            single:   { yes: "A single counter, at the start of the day and at the end of it.", no: "" },
-            separate: { yes: "", no: "That would mean a second kiosk set beside it so you could compare them. There is only this counter, earlier and later." },
-            paired:   { yes: "", no: "That would mean sandwiches locked to something else and scaled. Nothing here is being scaled &mdash; things are being sold." }
-          }
-        },
-        shape: {
-          ask: "Are the sandwiches being shared out into parts, or is the same amount sold over and over, or neither?",
-          options: {
-            cut:     { yes: "", no: "That would mean the stack divided into shares that add back up to it. The story is not dividing anything." },
-            repeat:  { yes: "", no: "That would mean identical batches going out, with the question counting the batches. You are told the start and the end, not a repeating amount." },
-            neither: { yes: "Nothing is cut into shares and nothing repeats. The stack simply ends up smaller.", no: "" }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; from opening, through the day, to what was left at closing?",
-          options: {
-            onekind: { yes: "A starting stack, a day of selling, a finishing stack. The same kind of situation all the way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here it is a counter changing amount and nothing else &mdash; no second kind of situation on top." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This is a counter with a before and an after, which is the Change Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -82,186 +82,15 @@
     }
   };
 
-  /* The five questions. Each option declares the lines it is TRUE of, so the
-     answer key is the schema itself and cannot drift from it. `no` is what a
-     student reads on a wrong tap: it says what that choice would have meant,
-     which sends them back to the story rather than handing over the answer.
-
-     Same no-number-words rule as everything else on these two screens — no
-     "one whole", no "the five lines". See the note above PLATFORM. */
-  var CHECK = [
-    {
-      id: 'kinds', label: 'Kinds',
-      ask: 'What is being counted in this story?',
-      options: [
-        /* `all` — "a SINGLE kind", i.e. everything in the story. One of the four
-           universal claims; see the quantifier note above `optionTrue`. */
-        { id: 'same', text: 'A single kind of thing', lines: ['change', 'compare', 'groups', 'partwhole'], all: true,
-          yes: 'Everything here is measured in the same stuff.',
-          no: 'That would mean the story counts the same stuff all the way through. Look again at what is being measured, and whether it is all the same sort of thing.' },
-        { id: 'different', text: 'Different kinds, locked together', lines: ['ratio'],
-          yes: 'Change either and the other follows. That is a relationship, not an amount.',
-          no: 'That would mean different sorts of thing are pinned to each other, so changing either drags the other with it. Check whether the story really does that.' }
-      ]
-    },
-    {
-      /* Reworded 2026-08-04. It used to ask "Does anything happen to it?" and
-         key every rate problem to "Nothing happens — it all sits still", while
-         confirming "Nothing moves." The user hit this on a train problem —
-         "something IS happening as the train is moving" — and the teacher and
-         math agents raised it independently the same day. Three findings, one
-         defect.
-
-         The KEYING was never wrong: no quantity in a rate problem acquires a
-         before-value and an after-value. The WORDING was false about the story
-         and told a careful reader to distrust what they had just read. The
-         right criterion was already in the file, in the sibling response — "an
-         amount is different by the end than it was at the start" — so the fix
-         is to ask that, and to say out loud that motion is not change. */
-      id: 'moments', label: 'Moments',
-      ask: 'Does any amount end up different from how it started?',
-      options: [
-        { id: 'changed', text: 'Yes &mdash; something was added or taken away', lines: ['change'],
-          yes: 'The story runs through time, and an amount is not what it was.',
-          no: 'That would mean an amount ends up different from how it started. Read it again and check whether any amount actually changes.' },
-        /* `all` — "the amounts", every one of them. A negative universal: false
-           of the story if EITHER half changes an amount. */
-        { id: 'steady', text: 'No &mdash; the amounts stay as they are, even if something is moving', lines: ['compare', 'groups', 'partwhole', 'ratio'], all: true,
-          yes: 'Things can be busy without any amount changing. A train can run all day and still be running at the same rate.',
-          no: 'That would mean every amount is still what it was at the start. Look again for something being added or taken away.' }
-      ]
-    },
-    {
-      id: 'things', label: 'Things',
-      ask: 'How many separate things is the story keeping track of?',
-      options: [
-        /* `all` — "JUST a single thing" is a claim about the whole story, and a
-           paired story that compares two things anywhere is not keeping one. */
-        { id: 'single', text: 'Just a single thing', lines: ['change', 'groups', 'partwhole'], all: true,
-          yes: 'A single thing, and everything else in the story is about it.',
-          no: 'That would mean only a single thing is ever in view. Look again at what the story is holding up beside what.' },
-        { id: 'separate', text: 'Separate things, held up against each other', lines: ['compare'],
-          yes: 'Both exist at once, and the story is interested in the gap between them.',
-          /* Was "That is not what is going on here." — false on rr-market-stall,
-             which sets two stalls side by side and asks which is better value.
-             Generic copy must not assert a fact about a particular story. */
-          no: 'That would mean separate things sitting side by side and measured against each other, with neither of them changing.' },
-        { id: 'paired', text: 'Amounts that always go together', lines: ['ratio'],
-          yes: 'Not really separate things at all &mdash; a relationship that holds at any size.',
-          no: 'That would mean a fixed pairing you could scale up or down. Check whether the story pairs anything off like that.' }
-      ]
-    },
-    {
-      id: 'shape', label: 'Shape',
-      ask: 'Is anything being cut up, or repeated?',
-      options: [
-        { id: 'cut', text: 'A whole thing, cut into shares', lines: ['partwhole'],
-          yes: 'The shares belong to it, and between them they account for all of it.',
-          no: 'That would mean a single whole being divided, with the pieces adding back up to it. Is there a whole here to cut?' },
-        { id: 'repeat', text: 'The same amount, over and over', lines: ['groups'],
-          yes: 'You could act it out: make a group, then another the same, then another.',
-          no: 'That would mean an identical amount repeating, and the question counting how many of them there are.' },
-        /* `all` — "NOTHING is being carved up or repeated". The clearest of the
-           four, and the one that shipped P and not-P on the same screen. */
-        { id: 'neither', text: 'Neither &mdash; nothing is being carved up or repeated', lines: ['change', 'compare', 'ratio'], all: true,
-          /* Was "nothing repeats", which is false of a rate — a rate is the same
-             amount per unit, over and over, and the manifests say so themselves
-             ("Bags do come in lots, which sounds like groups"). Narrowed to the
-             thing that actually separates the lines. */
-          yes: 'Nothing is being carved into shares, and no fixed amount is being repeated to build a total.',
-          no: 'Something here is being cut or repeated. Have another look before ruling it out.' }
-      ]
-    },
-    {
-      /* The option below used to read "there is a step in between" and was keyed
-         always-wrong, with a reply claiming "a single move from what you are
-         given". SIX problems declare steps: 2 — pw-helmet-savings, pw-band-brass,
-         pw-cycling-club, pw-quilt-colors, rr-van-hours, rr-market-stall — so the
-         option was TRUE and the reply FALSE on more than a third of the bank.
-         Found by teacher and math independently.
-
-         The root cause was mine and it was in the spec: PEDAGOGY §3.7 verdict 2
-         read "Two lines, stacked. Multi-step." Those are different things. A
-         problem can take several steps inside a single situation. The question
-         is about situations, so the option and its reply now are too — and the
-         reply teaches the distinction rather than denying the student's reading. */
-      id: 'fit', label: 'Question',
-      ask: 'Does a single kind of situation cover this whole story?',
-      options: [
-        /* `pairs` is the answer key for THIS question and it inverts the whole
-           thing on a Challenge problem. See `optionTrue`. `false` is stated
-           rather than left off: an option here that is silent about pairing is
-           an option nobody decided about, and `optionTrue` would fall through
-           to the either-half rule and quietly call it correct. */
-        /* EACH OF THESE FOUR STRINGS HAS EXACTLY ONE AUDIENCE, which is why
-           none of them has to hedge. `onekind` is true on all five lines and
-           false on every paired problem, so its `yes` is only ever read on the
-           mainland and its `no` is only ever read on the island — and the
-           reverse for `stacked`. Check that before editing either: the moment
-           an option is true in both places, both replies acquire a second
-           reader and stop being able to say anything definite. */
-        { id: 'onekind', text: 'Yes &mdash; the same kind of situation all the way through', lines: ['change', 'compare', 'groups', 'partwhole', 'ratio'], pairs: false,
-          yes: 'Everything the question needs is the same kind of situation &mdash; even where it takes more than a single move to get there.',
-          /* WRITTEN 2026-08-16, and the hard part is not the correction.
-             A student who says "one kind" here has read carefully and applied
-             a rule that is right nearly everywhere on this site. Telling them
-             flatly that they are wrong teaches them to distrust the reading,
-             which is the one thing that must survive. So it opens by agreeing
-             with the reasoning and then says where the reasoning runs out.
-
-             THREE THINGS IT DELIBERATELY DOES NOT DO:
-             - It does not name the two situations. This screen is numberless
-               and comes BEFORE the passes that ask which two — naming them
-               here would answer the next three questions (VERIFICATION.md §3).
-             - It does not claim anything about what the student has ridden.
-               The island is open: they may have arrived here first, so "on
-               every trip you have taken" would be a lie to some readers.
-             - It gives no word to look for. It points at STRUCTURE — the
-               place the story changes — because a word here would be a tier-3
-               keyword rule arriving on the one screen built to refute them
-               (PEDAGOGY.md §2.2).
-
-             And it ends by handing over the next move rather than the answer:
-             the pass that follows this one is "find the crossover". */
-          /* THE RENDERER SUPPLIES THE NEGATION. Every one of these strings is
-             printed after a bold "Not this time." — so a reply that also opens
-             by saying no says it twice. The first draft read "Not this time.
-             Good reading … Not here." — three negations in two lines, and it
-             was only visible on the rendered screen. Look at `stacked.no`: it
-             opens by AGREEING, and the prefix does the disagreeing. */
-          /* NO NUMBER WORDS. This renders on read1, which is numberless, and
-             "one", "two" and "half" are all refused there — a spelled-out
-             number leaks structure exactly as a digit does. The first draft
-             said "one kind of thing" and "the second half cannot start until
-             the first half is finished" and would have been refused on all
-             three. The site already had the vocabulary: `ask` says "a single
-             kind", `onekind` says "the same kind all the way through". */
-          no: 'Good reading, and nearly everywhere else it would be the right answer. Here, though, the story stops being a single kind of thing partway through and starts being another &mdash; and the later part cannot start until the earlier part is finished. Read it again and find the place where it changes.' },
-        /* "one after another" and "This one does" — both pre-existing, both
-           refused the moment the shared table came under the numberless scan
-           (2026-08-16), and both are the word "one" doing a pronoun's job
-           rather than counting anything. The regex cannot tell the difference
-           and must not be taught to: the exemption on this rule is a data tag,
-           never a reading of intent. So the copy moves instead, which costs a
-           word and keeps the rule blunt enough to trust. */
-        { id: 'stacked', text: 'No &mdash; it stacks different kinds of situation, in turn', lines: [], pairs: true,
-          /* The only reply on this question a student reads as a correct
-             answer on the island. It confirms, names the structure without
-             naming the two situations, and states the payoff — which is the
-             whole argument for Challenge Mode: two lines together is not a
-             harder kind of problem, it is two problems you can already do. */
-          /* Does not open with "Yes" — the renderer already printed one, and
-             the first draft rendered as "Yes. Yes — and that is what makes…".
-             None of the other replies here opens with the verdict; they all
-             start straight into the reason. */
-          yes: 'That is what makes this a challenge. A kind of situation, and then a different kind, joined at the point where the story changes. Find that point and a hard problem turns into problems you already know how to do.',
-          no: 'Worth asking every time, and often the right answer &mdash; plenty of problems do stack different kinds of situation. This story stays inside a single kind the whole way, even where the working takes more than a single step. Steps and situations are not the same thing.' },
-        { id: 'nofit', text: 'None of them really fits', lines: [], pairs: false,
-          yes: '',
-          no: 'That is a real answer and you should keep it in your pocket &mdash; not every problem you meet fits these lines. This story does, though. Look at the shape you just described.' }
-      ]
-    }
-  ];
+  /* THE FIVE-QUESTION CHECKLIST IS GONE (user, 2026-10-20: the heaviest
+     screen on the site for cognitive load — five multiple-choice cards with a
+     reply after every tap). Its table (`CHECK`), its per-problem rewording
+     (`tailor`, `read1.questions`) and its answer key (`optionTrue`, with the
+     quantifier rule for paired problems) lived here. The picture choice does
+     the classifying now, beside "Ask yourself" in the feedback viewport
+     (`ModelPicker.askHTML`). If a checklist ever comes back, read this file's
+     history first: the `all` quantifier and the inverted `fit` key on paired
+     problems were each a shipped defect. */
 
   /* A control that disables itself on activation drops focus to <body>.
      Measured across the site: pressing an option in the Platform Check, Read 3
@@ -273,118 +102,6 @@
 
      Send focus to the feedback panel. Every one of them is now role="status",
      so it is both the teaching and the right place to be standing. */
-  /* PER-PROBLEM QUESTIONS — `read1.platformCheck.questions`.
-
-     The shared CHECK table asks in the abstract: "What is being counted in this
-     story?" That question has the same answer for all seven Part–Whole problems,
-     and the station header names the line above it, so a student two stations
-     into a line can answer all five without reading. Shuffling fixed the
-     POSITIONS; it could not fix that.
-
-     A problem may therefore replace the question text and any option's text,
-     `yes` or `no` with copy that NAMES ITS OWN QUANTITIES — "litres of water,
-     and taps on the platform". That cannot be answered off the header, because
-     it cannot be answered without knowing what is in the story.
-
-     Overrides are keyed by stable ids (`kinds`/`moments`/`things`/`shape`/`fit`,
-     and the option ids), never by position, so reordering CHECK cannot silently
-     repoint them. `lines` is NEVER overridable: correctness stays the schema's,
-     so authored copy can be wrong about tone but never about the answer. */
-  function tailor(q, over) {
-    if (!over) return q;
-    return {
-      id: q.id, label: q.label, ask: over.ask || q.ask,
-      options: q.options.map(function (o) {
-        var ov = over.options && over.options[o.id];
-        if (!ov) return o;
-        /* `pairs` is copied for the same reason `lines` is: this function
-           REBUILDS the option rather than extending it, so a field it does not
-           name is silently dropped on any problem that carries an override.
-           That is not hypothetical — it is the shape of the defect in
-           `data.js` that let `signalFailure` reach a student as four literal
-           braces. Adding a key to a CHECK option means adding it here. */
-        return { id: o.id, lines: o.lines, pairs: o.pairs,
-                 text: ov.text || o.text, yes: ov.yes || o.yes, no: ov.no || o.no };
-      })
-    };
-  }
-
-  /* ---------- THE ANSWER KEY, IN ONE PLACE ----------
-
-     `o.lines.indexOf(p.line) >= 0` was the whole key, written in two places,
-     and it cannot express a problem that is two situations. A Challenge
-     problem has no single `line` — it has `pair.first` and `pair.second` — so
-     the key has to be asked a different question about it.
-
-     TWO SHAPES, AND WHICH ONE APPLIES IS DECIDED BY THE PROBLEM:
-
-     - An option that declares `pairs` is answering the question ABOUT pairing
-       (`fit`: does this stay one kind of situation, or stack two?). On a
-       paired problem its own declaration is the answer and `lines` is not
-       consulted — which is what INVERTS `stacked` from never-correct to
-       correct, and `onekind` from correct to distractor.
-     - Every other option on a paired problem is true if it is true of EITHER
-       HALF. Both halves are in the story, so both halves' answers are honest
-       readings of it.
-
-     THE SECOND RULE MEANS A QUESTION CAN HAVE TWO TRUE ANSWERS — SETTLED
-     2026-08-16, and it needed no new copy at all. Measured on
-     `cl-signal-delay`: `kinds` accepts both "same" and "different" and
-     `things` accepts both "separate" and "paired", each reply correct about
-     one half of the story. That was written up here as an open decision across
-     five questions and it was the wrong frame. A story that answers this
-     checklist two ways IS a story made of two situations, which is what the
-     fifth question on the same screen goes on to ask — so `phRead1` names the
-     other true answer and says why both hold, and the apparent inconsistency
-     becomes the reason for the next question.
-
-     Declared as data on the option, never as `if (challenge)` at the call
-     site: a renderer branch is an exemption, and this project has seven files
-     of what hand-kept exemptions do. */
-/* ---- THE QUANTIFIER, and why `all` exists (Cycle 30, a math CRITICAL) ----
-
-     The rule below used to be a bare disjunction: true of either half, true of
-     the story. That is SOUND FOR AN EXISTENTIAL CLAIM and UNSOUND FOR A
-     UNIVERSAL OR NEGATIVE ONE, and four of the eleven options are the latter.
-
-     "A whole thing, cut into shares" is existential — if either half cuts
-     something up, the story cuts something up, and either-half is right.
-     "Neither — nothing is being carved up or repeated" is a claim about the
-     WHOLE STORY. It is true only if it holds of BOTH halves. Applied
-     disjunctively it was confirmed by whichever half happened to satisfy it,
-     while the other half sat on screen doing the opposite.
-
-     What that shipped: on cl-season-tickets (compare + partwhole) the site
-     marked "nothing is being carved up" CORRECT while the second half cut 57
-     into 38 and 19 — and marked "A whole thing, cut into shares" correct on the
-     same screen, so the rider rendered P and not-P together, both ticked. 13
-     such cells across 6 of the 7 island problems. Random tapping scored 57.1%
-     on the island checklist against 40% on the mainland.
-
-     It was worst exactly where the student had least help. `unaided` suppresses
-     the rider at an unstaffed halt, so on cl-lost-umbrellas and cl-buffet-crates
-     the false confirmation arrived ALONE and unqualified, on the only aided
-     screen those stops have. On cl-buffet-crates a student reading the story as
-     an ordinary Part-Whole problem collected four green ticks out of four.
-
-     No checker could see it: tools/sweep.js asks `optionTrue` the same question
-     the screen asks, so instrument and subject agreed by construction.
-
-     THE QUANTIFIER IS DECLARED ON THE OPTION, never as `if (challenge)` at the
-     call site — same reason as the note above. A renderer branch would be an
-     exemption, and a fix keyed to the six known problems would be a hand-kept
-     list, which is the defect class this project already has seven files of.
-     Tag the claim, and every problem that ever pairs those lines is covered. */
-  function optionTrue(o, p) {
-    if (!p || !p.pair) return o.lines.indexOf(p && p.line) >= 0;
-    if (typeof o.pairs === 'boolean') return o.pairs;
-    var inFirst  = o.lines.indexOf(p.pair.first)  >= 0;
-    var inSecond = o.lines.indexOf(p.pair.second) >= 0;
-    // `all`: the option claims something about the whole story, so both halves
-    // must satisfy it. Absent: an ordinary existential claim, either half does.
-    return o.all ? (inFirst && inSecond) : (inFirst || inSecond);
-  }
-
   /* ============================================================
      THE FADE LADDER — the one place the phase chain is written.
 
@@ -406,10 +123,14 @@
 
        mainland      read1 · platform · read2 · read3 · ticket · plan
        staffed pair  read1 · crossover · read2 · read3 · ticket · plan
-       unstaffed     read1
+       unstaffed     read1 · crossover (pictures only, unaided)
 
-     The unstaffed halt runs the checklist and then goes to the Engine Room.
-     No Crossover Read, no second or third read, no Ticket Booth, AND NO
+     The unstaffed halt reads the story, picks a picture for each part of it
+     with nothing explained, and then goes to the Engine Room (user,
+     2026-10-20, when the checklist that used to be its first read was
+     removed: "picture picks, no coaching"). No seam to tap and no half lit
+     up, because finding where the story changes is the halt's own job. No
+     second or third read, no Ticket Booth, AND NO
      ESTIMATE — user, 2026-08-16: "a student who wants to go straight to hard
      and get the bare minimum." The problem is presented plainly, the way the
      last problem of an ordinary line is.
@@ -425,14 +146,16 @@
 
      The second read, third read and Ticket Booth are not gone: they are TOOLS
      (`TOOLS` below), opened from the question panel when a student wants them
-     and returning to where they were. The five-question checklist that used
-     to be the whole first read is a tool too. Crossover Island keeps its own
-     read, because seeing two situations in one story is the island's lesson. */
+     and returning to where they were. Crossover Island keeps its own read,
+     because seeing two situations in one story is the island's lesson. */
   function phaseChain(p) {
     if (!p || !p.pair) return ['read1', 'pickModel', 'platform', 'plan'];
-    if (p.fadeLevel === 'independent') return ['read1'];
+    if (p.fadeLevel === 'independent') return ['read1', 'crossover'];
     return ['read1', 'crossover', 'plan'];
   }
+
+  /* An unstaffed halt: a paired problem with nobody on the platform. */
+  function isHalt(p) { return !!(p && p.pair && p.fadeLevel === 'independent'); }
 
   /* A "go on" button names where it goes, read off the chain — so changing
      the chain cannot leave "Second read →" on a button that no longer leads
@@ -441,13 +164,12 @@
     var to = phaseAfter(p, from);
     return ({ read2: 'Second read', read3: 'Third read', ticket: 'The Ticket Booth',
               pickModel: 'Which picture fits?', platform: 'Prove it from the story',
-              crossover: 'Find where it changes',
+              crossover: isHalt(p) ? 'Which pictures fit?' : 'Find where it changes',
               plan: 'Draw it with the numbers', solve: 'To the Engine Room' }[to] || 'Next') + ' &rarr;';
   }
 
   /* Phases a student opens by choice. Leaving one returns to `toolReturn`. */
   var TOOLS = {
-    checklist: 'Run the checklist',     // not "the five questions": no number words pre-solve
     read2: 'Sort the numbers',
     read3: 'Find the question',
     ticket: 'Find the missing piece'
@@ -621,9 +343,10 @@
 
   /* THE NUMBERLESS SCREENS, WRITTEN ONCE. `tools/sweep.js` checks every one of
      them for a visible digit, and it used to keep its own list of three — so
-     when the picture picker and the checklist tool became numberless screens,
-     the sweep's "0 numbers visible" covered neither, and said 0 anyway. */
-  var NUMBERLESS = ['read1', 'platform', 'crossover', 'pickModel', 'checklist'];
+     when the picture picker and the (since removed) checklist tool became
+     numberless screens, the sweep's "0 numbers visible" covered neither, and
+     said 0 anyway. */
+  var NUMBERLESS = ['read1', 'platform', 'crossover', 'pickModel'];
 
   /**
    * @param highlightQ  outline the question sentence (Read 3 and the Hub)
@@ -954,7 +677,7 @@
          which is the same silent-omission failure `model.js` records across
          its three dispatches. */
       crossover: this.phCrossover,
-      pickModel: this.phPickModel, checklist: this.phRead1,
+      pickModel: this.phPickModel,
       read2: this.phRead2, read3: this.phRead3,
       ticket: this.phTicket, plan: this.phPlan, demo: this.phDemo,
       solve: this.phSolve, check: this.phCheck,
@@ -1300,12 +1023,12 @@
 
   /* "Help me see it": the optional steps, offered rather than imposed — the
      teacher's suggestion that a student choose the scaffolding they need. */
-  /* Which tools a problem offers. The mainland gets all four; a staffed island
-     stop gets the checklist (its old first read); an unstaffed halt gets none.
+  /* Which tools a problem offers. The mainland gets all of them; Crossover
+     Island gets none — its only tool was the checklist, removed 2026-10-20.
      The one place this is decided — `tools/sweep.js` reads it too. */
   function toolsFor(p) {
     if (!p || !p.pair) return Object.keys(TOOLS);
-    return p.fadeLevel === 'independent' ? [] : ['checklist'];
+    return [];
   }
 
   Station.prototype.toolsHTML = function () {
@@ -1395,10 +1118,11 @@
         b.setAttribute('data-result', 'wrong');
         b.disabled = true;
         fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' + esc(ModelPicker.why(p, k, ride)));
-        /* After a second miss, OFFER the checklist — highlighted and opened,
-           never run for them (change c; non-negotiable 5: help is reachable,
-           never imposed). */
-        if (tries >= 2) self.offerTool(slotMode ? 'read3' : 'checklist');
+        /* After a second miss on a missing-piece choice, OFFER Find the
+           question — highlighted and opened, never run for them (change c;
+           non-negotiable 5: help is reachable, never imposed). A shape choice
+           used to offer the checklist; nothing replaces that offer yet. */
+        if (tries >= 2 && slotMode) self.offerTool('read3');
         focusFeedback(fb);
       }
     });
@@ -1413,349 +1137,46 @@
 
   /* ---------- Phase 1: Three Reads ---------- */
 
-  /* ---------- First read, across two screens ----------
+  /* ---------- First read ----------
 
-     read1      the five questions — WHAT KIND of situation is this?
-     platform   prove it from the text, then see where it sits on the map
-
-     The free-text retelling that used to open Read 1 was replaced by the five
-     questions on the user's instruction (2026-08-03). Mr Fraction's reading of
-     the story is still shown, at the end of the five — so the comprehension
-     anchor and the sixteen authored `modelAnswer`s stay live rather than
-     becoming content nothing renders (VERIFICATION.md §9).
-
-     Why the split is two screens and not one: the five questions can be part
-     answered from the station header, which prints the line and its equation
-     above every phase. The EVIDENCE cannot — the sentences that carry the
-     signal move from problem to problem. So the first screen classifies and
-     the second makes you prove it, and only the second one needs reading. */
+     THE FIRST READ IS A READ, NOT A QUIZ. It is the story with the numbers
+     covered, and nothing to answer: the picture choice that follows does the
+     classifying (the Crossover Read, on the island). It used to be the
+     five-question checklist — the "amount of questions" teachers said was too
+     much before a student saw a picture. The checklist went from the mainland
+     and staffed island stops on 2026-10-18, and from everywhere, unstaffed
+     halts included, on 2026-10-20 (user: the heaviest screen for cognitive
+     load). Every route now opens with this same screen. */
   Station.prototype.phRead1 = function () {
-    var self = this, p = this.p;
-
-    /* THE FAST PATH'S FIRST READ IS A READ, NOT A QUIZ. The five checklist
-       questions below were the whole first read, and they are the "amount of
-       questions" teachers said was too much before a student saw a picture.
-       On a single-situation problem the first read is now just the story, with
-       the numbers covered, and Mr Fraction's retelling once they have read it;
-       the picture choice that follows does the classifying. The five questions
-       are still here, unchanged, as the "Run the five questions" tool — and on
-       Crossover Island, where they are the one aid an unstaffed halt keeps. */
-    /* STAFFED ISLAND STOPS TOO (user, 2026-10-18: "drop the five question
-       checklist"). A staffed Crossover Island stop now reads the story and
-       goes straight to the Crossover Read, where the two halves are chosen in
-       pictures; the checklist is its "Run the checklist" tool. An UNSTAFFED
-       halt keeps the five questions — they are the one aid a halt gives
-       (CHALLENGE-MODE §4), and taking them away would leave it none. */
-    var island = !!p.pair, halt = island && p.fadeLevel === 'independent';
-    if (!halt && this.phase !== 'checklist') {
-      this.host().innerHTML =
-        MrFraction.aside('steady',
-          '<p><strong>First read.</strong> The numbers are covered on purpose. Read it for what is ' +
-          'happening, not for what to work out.</p>') +
-        this.problemHTML(false) +
-        /* Centred, and it says what to do next (user, 2026-10-18): the lever is
-           the one control on this screen, so the screen points at it. */
-        '<div class="ck-center">' +
-          '<h3>What is happening in this story?</h3>' +
-          '<p class="ck-prompt" id="r1prompt">Read the story all the way through. When you have, pull the lever.</p>' +
-        '</div>' +
-        '<div class="feedback" role="status" id="r1fb"></div>' +
-        '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
-      var h = this.host();
-      /* NO RETELLING HERE ANY MORE (Cycle 31, teacher agent, change b).
-         Mr Fraction's reading of the story is structural — "every crate has
-         the same number of bottles" — so shown as the last thing before the
-         picture choice it made the choice for the student. It now arrives
-         with a correct pick, as confirmation. (On the island it is not shown
-         at all: it names where the story turns, which the Crossover Read asks
-         the student to find.) */
-      h.querySelector('#r1go').addEventListener('click', function () {
-        self.go(phaseAfter(self.p, 'read1'));
-      });
-      /* No `expandAll` click here. There is nothing on this screen to reveal,
-         and clicking the lever NAVIGATED — so the sweep's station ran on
-         through the picker, picked the picture, and every later screen it
-         rendered was in a state the student's would not be in. The hidden-line
-         check reported 40 giveaways that were that cascade, not the site. */
-      return;
-    }
-    var asTool = this.phase === 'checklist';
-    /* `var line = p.line` used to live here and both call sites keyed off it.
-       Deleted rather than left unused: a problem's line is no longer the whole
-       answer key (see `optionTrue`), and a local called `line` sitting beside
-       a key that no longer consults it is the next person's wrong turn. */
-
-    /* SHUFFLE. Source order shipped unshuffled and "tap the first option every
-       time" scored 57.5% against a 40% baseline — 4 of 5 on Part–Whole, which
-       is seven of the sixteen problems. The student agent then rode five
-       Part–Whole stations on a fixed tap pattern and scored 5/5 without
-       reading a word.
-
-       phRead3 has shuffled since it was written, fifty lines below this, above
-       a comment explaining why. That is VERIFICATION §15 exactly: the working
-       fix was already in the file and was not read.
-
-       `data-o` carries the ORIGINAL index, so the answer key is unaffected —
-       correctness is decided by the option's own `lines`, never by position.
-
-       This kills the positional shortcut. What kills the DEEPER one — the
-       header naming the line, so the answers are constant within a line — is
-       `platformCheck.questions`, which lets a problem ask in terms of its own
-       quantities. See `tailor()`. */
-    /* `read1.questions`, a sibling of `platformCheck` rather than a child of it,
-       because they drive different screens: these five questions are screen
-       one, and `platformCheck.sentences/why/kinds` is screen two. */
-    var over = (p.threeReads.read1 || {}).questions || {};
-    var CHECKS = CHECK.map(function (q) { return tailor(q, over[q.id]); });
-
-    var qs = CHECKS.map(function (q, qi) {
-      var order = shuffled(q.options.map(function (o, i) { return i; }),
-                           seedFrom(self.p.id + '|check|' + q.id));
-      var opts = order.map(function (oi) {
-        var o = q.options[oi];
-        return '<li><button class="choice" type="button" data-q="' + qi + '" data-o="' + oi + '">' +
-          '<span class="marker" aria-hidden="true">&#9723;</span><span>' + o.text + '</span></button></li>';
-      }).join('');
-      /* ONE QUESTION AT A TIME (user, 2026-10-18, on the Challenge Line). All
-         five stacked in the cockpit's question column made a column ten
-         screens tall. Each card is shown alone and the next replaces it once
-         the student has it right; its reply stays in the feedback viewport. */
-      return '<div class="card r1-card" data-qcard="' + qi + '"' + (qi ? ' hidden' : '') + '>' +
-        /* Progress as DOTS, not "2 of 5": this is a numberless screen, and the
-           sweep flagged the counter's digits on all 28 island first reads the
-           day it was added. */
-        '<span class="eyebrow">' + esc(q.label) + ' <span class="r1-dots" aria-hidden="true">' +
-          CHECKS.map(function (x, j) { return j <= qi ? '&#9679;' : '&#9675;'; }).join('') + '</span></span>' +
-        '<h3>' + q.ask + '</h3>' +
-        '<ul class="choices">' + opts + '</ul>' +
-        '<div class="feedback" role="status" id="cf' + qi + '"></div></div>';
-    }).join('');
-
+    var self = this;
     this.host().innerHTML =
-      /* Two voices for one screen: as the "Run the checklist" tool he offers it
-         as help; at an unstaffed halt it is the first read, the one aid there. */
-      MrFraction.aside('steady', asTool
-        ? '<p><strong>The checklist.</strong> A handful of questions about the shape of the story, a question ' +
-          'at a time. Ask them about what happens, not about the numbers &mdash; they are covered for that reason.</p>'
-        : '<p><strong>First read.</strong> The numbers are covered up on purpose &mdash; you cannot work ' +
-          'anything out yet, and you are not meant to. Read it for what <em>kind</em> of thing is going on.</p>') +
+      MrFraction.aside('steady',
+        '<p><strong>First read.</strong> The numbers are covered on purpose. Read it for what is ' +
+        'happening, not for what to work out.</p>') +
       this.problemHTML(false) +
-      '<div class="section-head"><span class="eyebrow">The Platform Check &middot; part one</span>' +
-        '<h2>What kind of situation is this?</h2><div class="rule"></div></div>' +
-      '<p class="hint-text">Kinds &middot; Moments &middot; Things &middot; Shape &middot; Question. ' +
-        'Nothing is marked, and a wrong tap will tell you what it would have meant.</p>' +
-      '<div id="r1checks">' + qs + '</div>' +
+      /* Centred, and it says what to do next (user, 2026-10-18): the lever is
+         the one control on this screen, so the screen points at it. */
+      '<div class="ck-center">' +
+        '<h3>What is happening in this story?</h3>' +
+        '<p class="ck-prompt" id="r1prompt">Read the story all the way through. When you have, pull the lever.</p>' +
+      '</div>' +
       '<div class="feedback" role="status" id="r1fb"></div>' +
-      '<div class="btn-row"><button class="btn" id="r1go" type="button">' +
-        // Read off the chain: an unstaffed halt goes to the Engine Room, not to a "proof".
-        (asTool ? 'Done &rarr;' : nextLabel(p, 'read1')) + '</button></div>';
-
-    var got = {}, host = this.host(), revealed = false;
-
-    /* Bind to the freshly-built container, NOT to the persistent phase host.
-       `renderPhase()` replaces the host's children but keeps the host itself,
-       so a listener on the host survives every re-render and they stack up.
-       The stacked copies are not merely wasteful: the first one disables the
-       buttons, and every later copy starts with `if (b.disabled) return`, so
-       the CURRENT render's handler never records the answer. The phase looked
-       dead while the previous render quietly did the work.
-       `App.rerender()` re-renders the live phase whenever a student toggles
-       "always show numbers", so this was reachable, not just a sweep artifact. */
-    host.querySelector('#r1checks').addEventListener('click', function (e) {
-      var b = e.target.closest('[data-q]');
-      if (!b || b.disabled) return;
-      var qi = +b.getAttribute('data-q'), oi = +b.getAttribute('data-o');
-      var q = CHECKS[qi], o = q.options[oi];
-      var ok = optionTrue(o, self.p);
-
-      /* TWO TRUE ANSWERS IS NOT A BUG HERE, IT IS THE EVIDENCE.
-
-         On a paired problem `optionTrue` accepts an option that is true of
-         EITHER half, so a question can have two right answers. Measured on
-         `cl-signal-delay`: `kinds` accepts both "same" and "different", and
-         `things` accepts both "separate" and "paired". Both replies are
-         correct — "everything is measured in the same stuff" is true of the
-         compare half, "change either and the other follows" is true of the
-         rate half. Neither is wrong; each describes one end of the story.
-
-         This was recorded as an open copy decision across five questions, on
-         the assumption it would need five rewritten replies per problem. It
-         does not. A story that answers this checklist two ways IS a story made
-         of two situations, and the fifth question on this very screen asks
-         exactly that. So the screen says so, and the note turns an apparent
-         inconsistency into the reason for the next question.
-
-         Derived from the option set, never authored: it fires wherever a
-         question genuinely has more than one true answer, so a new pair whose
-         halves collide on `shape` gets the same treatment with nothing added.
-         It cannot fire on the mainland — all 30 problems there were measured
-         at exactly one true option per question. */
-      /* AN UNSTAFFED HALT CONFIRMS; IT DOES NOT EXPLAIN. User-found,
-         2026-08-16: riding Marsh Halt "with No Assistance" produced a full
-         rundown of the read and the reasoning, which is the one thing
-         `CHALLENGE-MODE.md` §4 says a halt does not do — nobody walks the
-         student to the seam.
-
-         The Crossover Read was correctly skipped. Its TEACHING was arriving
-         anyway, through three strings on `read1`, none of which consulted
-         `fadeLevel`:
-
-           1. the `fit` question's authored `yes` — which names both halves, in
-              order, and what produces what. On `cl-buffet-crates` that is
-              "the scaling is what produces the total being cut": the seam AND
-              the transfer, handed over before the student has looked for
-              either;
-           2. the note below, which says in as many words that one answer fits
-              the first part and one fits the rest;
-           3. Mr Fraction's retelling at the end of the five.
-
-         So a halt keeps the checklist — it is the aid a halt keeps, and it
-         still marks right and wrong — and loses the prose that does the
-         finding for them. The other four questions keep their replies: those
-         are about the checklist itself, not about where this story turns. */
-      var unaided = !!(self.p.pair && self.p.fadeLevel === 'independent');
-
-      var alsoTrue = self.p.pair
-        ? q.options.filter(function (x) { return x !== o && optionTrue(x, self.p); })
-        : [];
-      var both = (!unaided && ok && alsoTrue.length)
-        ? '<br><br><strong>And so is &ldquo;' + alsoTrue[0].text + '&rdquo;.</strong> ' +
-          'Both are true, because this story is doing two different things &mdash; one of them fits ' +
-          'the first part and one fits the rest. That is worth holding on to: the last question ' +
-          'down there asks about exactly that.'
-        : '';
-
-      /* The fifth question is the one that gives the seam away, so at a halt it
-         is confirmed rather than explained. It still marks correct — the
-         student is told they are right, and left to say why themselves. */
-      var yesText = (unaided && q.id === 'fit')
-        ? 'Two situations, joined. Finding where &mdash; and what crosses &mdash; is yours from here.'
-        : o.yes;
-
-      b.setAttribute('data-result', ok ? 'right' : 'wrong');
-      b.querySelector('.marker').innerHTML = '&#9724;';
-      host.querySelector('#cf' + qi).innerHTML = ok
-        ? msg('go', '&#10003;', '<strong>Yes.</strong> ' + yesText + both)
-        : msg('caution', '&rarr;', '<strong>Not this time.</strong> ' + o.no);
-      if (ok) {
-        got[qi] = 1;
-        var sib = b.closest('ul').querySelectorAll('[data-q]');
-        for (var i = 0; i < sib.length; i++) sib[i].disabled = true;
-        // Fills this stop on the rail. Answered, not correct — see app.css.
-        var card = b.closest('.card');
-        card.classList.add('answered');
-        A11y.announce('Yes.');
-        // Next question replaces this one; focus follows, so a keyboard
-        // student is never left on a control that just disappeared.
-        var next = host.querySelector('[data-qcard="' + (qi + 1) + '"]');
-        if (next) {
-          card.hidden = true;
-          next.hidden = false;
-          var nh = next.querySelector('h3');
-          if (nh) { nh.setAttribute('tabindex', '-1'); nh.focus(); }
-        }
-      } else {
-        b.disabled = true;
-        A11y.announce('Not this time.');
-      }
-      focusFeedback(host.querySelector('#cf' + qi));
-      if (Object.keys(got).length === CHECKS.length && !revealed) {
-        revealed = true;
-        /* The retelling is gone, so this is now the only place the student
-           hears the story said back to them. It lands after the five rather
-           than before, because by here they have described the shape and this
-           confirms the content.
-
-           NOT AT AN UNSTAFFED HALT. `modelAnswer` is a retelling that names
-           where the story turns — on `cl-lost-umbrellas`, "Then a second office
-           at another station is mentioned". Read out at a halt it does the
-           second read's work and the crossover's, on a screen the student
-           reached by choosing to be unaided. */
-        host.querySelector('#r1fb').innerHTML = unaided
-          ? msg('info', '&rarr;',
-              'All five done. Now read it again for yourself &mdash; where does this story stop ' +
-              'doing one thing and start doing another?')
-          : msg('info', '&rarr;',
-              '<strong>Mr Fraction read it as:</strong> ' + esc(p.threeReads.read1.modelAnswer));
-        A11y.announce('All five done.');
-      }
-    });
-
-    host.querySelector('#r1go').addEventListener('click', function () {
-      // A tool is the student's to leave whenever they like.
-      if (!asTool && Object.keys(got).length < CHECKS.length) {
-        host.querySelector('#r1fb').innerHTML = msg('caution', '!',
-          'Have a go at all of them first. Nothing is being marked &mdash; a wrong tap just tells you ' +
-          'what that answer would have meant.');
-        A11y.announce('Answer all of them first.');
-        return;
-      }
-      /* THREE DESTINATIONS, AND THE THIRD IS AN UNSTAFFED HALT.
-
-         A paired problem goes to the Crossover Read and everything else to the
-         Platform Check — the Crossover Read is the Platform Check's
-         replacement, not an extra stop after it, so the two can never both run.
-
-         And a paired problem at `fadeLevel: "independent"` goes to NEITHER.
-         That is Crossover Island's unstaffed halt (`CHALLENGE-MODE.md` §4): no
-         one on the platform, so nobody walks the student to the seam. They
-         have just run the checklist on this screen — which is the one aid an
-         unstaffed halt keeps — and finding where the story changes is now
-         their own job.
-
-         `fadeLevel` is the mechanism rather than a new flag because it is the
-         mechanism this site already has for exactly this, and `ROADMAP` §6
-         said so before any of it was built: the teaching stops and the unaided
-         ones differ by how much scaffolding they give, not by whether they are
-         unlocked. Nothing here is gated. */
-      /* AN UNSTAFFED HALT NOW GOES STRAIGHT FROM THE CHECKLIST TO THE
-         CALCULATION — user, 2026-08-16: "they should be able to go to an
-         unstaffed station, receive the checklist, and then be asked to
-         calculate without any guidance."
-
-         THIS REVERSES A RULING RECORDED IN `CHALLENGE-MODE.md` §4, and the
-         reversal is deliberate rather than a drift, so the old reasoning is
-         kept here where anyone changing it back will read it. That section
-         settled that the Three Reads STAY at a halt, because read3 is where a
-         student names the question and this island's whole trap is answering
-         the wrong one — stopping at the transfer, which is a correct number
-         for a question nobody asked. Cutting read3 removes the last screen
-         standing between a student and exactly that.
-
-         The counter-argument, which is the one the user has taken: a halt that
-         still walks you through two reads and the Ticket Booth is not an
-         unaided stop, it is a staffed one with less commentary. If "no
-         assistance" is to mean anything, this is where it has to mean it.
-
-         THE ESTIMATE GOES TOO — second ruling, same day, after riding it. The
-         first version of this kept `plan` because the estimate is a gate and
-         Look Back compares against it. The user's answer: that is still
-         scaffolding, and this stop is for "a student who wants to go straight
-         to hard and get the bare minimum".
-
-         What that costs, so nobody has to rediscover it: the Arrivals Board
-         drops its first question rather than asking about a dash, and the
-         "take it to the arrivals board" route out of the Engine Room cannot
-         appear, because it exists to compare a wrong answer against an
-         estimate that no longer exists. The hint ladder still ends every step
-         by stating that step's answer, so nobody is stranded — that guarantee
-         never depended on the estimate.
-
-         The destination is not written here. `phaseAfter` owns the ladder, so
-         this fork and the sweep's cannot drift again. */
+      '<div class="btn-row"><button class="btn" id="r1go" type="button">I have read it</button></div>';
+    /* NO RETELLING HERE ANY MORE (Cycle 31, teacher agent, change b).
+       Mr Fraction's reading of the story is structural — "every crate has
+       the same number of bottles" — so shown as the last thing before the
+       picture choice it made the choice for the student. It now arrives
+       with a correct pick, as confirmation. (On the island it is not shown
+       at all: it names where the story turns, which the Crossover Read asks
+       the student to find.) */
+    this.host().querySelector('#r1go').addEventListener('click', function () {
       self.go(phaseAfter(self.p, 'read1'));
     });
-
-    if (this.expandAll) {
-      /* Test scaffolding: land every correct option so the sweep sees the
-         revealed state. See phPlatform and VERIFICATION.md §2. */
-      CHECKS.forEach(function (q, qi) {
-        var oi = 0;
-        q.options.forEach(function (o, i) { if (optionTrue(o, self.p)) oi = i; });
-        var b = host.querySelector('[data-q="' + qi + '"][data-o="' + oi + '"]');
-        if (b) b.click();
-      });
-    }
+    /* No `expandAll` click here. There is nothing on this screen to reveal,
+       and clicking the lever NAVIGATED — so the sweep's station ran on
+       through the picker, picked the picture, and every later screen it
+       rendered was in a state the student's would not be in. The hidden-line
+       check reported 40 giveaways that were that cascade, not the site. */
   };
 
   /* Second screen of the first read: prove it from the text, then see the map.
@@ -1767,7 +1188,8 @@
   /* ---------- THE CROSSOVER READ ----------
      `CHALLENGE-MODE.md` §3, and the user's own amendment to the plan: a new
      reading protocol that runs the EXISTING five-situations checklist twice,
-     once on each half of the story.
+     once on each half of the story. (Since 2026-10-18 each half is answered
+     with a picture instead; the checklist itself was removed 2026-10-20.)
 
      IT REPLACES THE PLATFORM CHECK RATHER THAN FOLLOWING IT, and that is the
      whole design decision in this file.
@@ -1847,34 +1269,46 @@
           }).join('') + '</ul>';
     }
 
+    /* AN UNSTAFFED HALT GETS THE PICTURES AND NOTHING ELSE (user, 2026-10-20,
+       when the checklist that was its first read was removed: "picture picks,
+       no coaching"). No seam to tap and no half lit up — finding where the
+       story changes is the halt's own job — no reply beyond yes or not that
+       one, and no authored `why`, because each of those names the seam or the
+       transfer. Then straight to the Engine Room, as before. */
+    var halt = isHalt(p);
+
     this.host().innerHTML =
-      MrFraction.aside('steady',
+      MrFraction.aside('steady', halt
+        // No number words here either: this screen is numberless.
+        ? '<p><strong>No one on the platform.</strong> Pick a picture for the first part of this story, ' +
+          'and a picture for the rest. Where it changes is yours to find.</p>'
         /* Updated for the picture choice (2026-10-20): the halves are now
            answered with the same pictures the mainland uses, not five questions. */
         // No number words ("one thing, then another"): this screen is numberless.
-        '<p><strong>This story is not a single situation.</strong> It does something, then something ' +
-        'different, so no single picture fits all of it.</p>' +
-        '<p>First find the place it changes &mdash; then pick the picture for each side of that place. ' +
-        'They are the same pictures you choose between on every line.</p>') +
-      this.problemHTML(false, true) +
+        : '<p><strong>This story is not a single situation.</strong> It does something, then something ' +
+          'different, so no single picture fits all of it.</p>' +
+          '<p>First find the place it changes &mdash; then pick the picture for each side of that place. ' +
+          'They are the same pictures you choose between on every line.</p>') +
+      this.problemHTML(false, !halt) +
 
       /* ONE STAGE AT A TIME: the seam, then the first half, then the second.
          Each stage's heading hides when the next one opens. */
+      (halt ? '' :
       '<div id="xr-seam">' +
         '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; where it changes</span>' +
           '<h3>Tap the sentence where the story stops doing one thing and starts doing another.</h3>' +
           '<div class="rule"></div></div>' +
         '<p class="hint-text">Not where the numbers are. Where the <em>kind of thing happening</em> changes.</p>' +
       '</div>' +
-      '<div class="feedback" role="status" id="xr-fb1"></div>' +
+      '<div class="feedback" role="status" id="xr-fb1"></div>') +
 
-      '<div id="xr-half1" hidden>' +
+      '<div id="xr-half1"' + (halt ? '' : ' hidden') + '>' +
         '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; before the crossover</span>' +
           '<h3>Which picture fits the FIRST part of the story?</h3>' +
           '<div class="rule"></div></div>' +
         '<div class="feedback" role="status" id="xr-fb2"></div>' +
       '</div>' +
-      '<div class="ck-to-work" id="xr-opts1" hidden>' + pictureOpts(1) + '</div>' +
+      '<div class="ck-to-work" id="xr-opts1"' + (halt ? '' : ' hidden') + '>' + pictureOpts(1) + '</div>' +
 
       '<div id="xr-half2" hidden>' +
         '<div class="section-head"><span class="eyebrow">The Crossover Read &middot; after the crossover</span>' +
@@ -1883,17 +1317,15 @@
         '<div class="feedback" role="status" id="xr-fb3"></div>' +
       '</div>' +
       '<div class="ck-to-work" id="xr-opts2" hidden>' + pictureOpts(2) + '</div>' +
-      // The five questions that used to be this stop's first read, on request.
-      this.toolsHTML() +
 
       '<div id="xr-done" hidden>' +
         '<div class="msg msg-go"><span class="ico" aria-hidden="true">&#10003;</span><p>' +
-        '<strong>That is the shape of it.</strong> ' + esc(pr.readWhy || '') + '</p></div>' +
+        '<strong>That is the shape of it.</strong> ' + (halt ? '' : esc(pr.readWhy || '')) + '</p></div>' +
         '<div class="btn-row"><button class="btn" id="xr-go" type="button">' + nextLabel(p, 'crossover') + '</button></div>' +
       '</div>';
 
     // The story lives in the cockpit's text panel now, not in the phase host.
-    var host = this.host(), stage = 1, story = this.root.querySelector('#ck-story');
+    var host = this.host(), stage = halt ? 2 : 1, story = this.root.querySelector('#ck-story');
 
     /* Which sentences belong to which half, decided by the crossover index and
        used to dim the half that is not being asked about. Derived, never
@@ -1901,6 +1333,7 @@
        from it, so a story that gains a sentence cannot leave the highlight
        pointing at the wrong stretch. */
     function spotlight(from, to) {
+      if (halt) return;   // lighting a half would show where the seam is
       [].forEach.call(story.querySelectorAll('[data-sent]'), function (b) {
         var i = +b.getAttribute('data-sent');
         b.setAttribute('data-half', (i >= from && i < to) ? 'on' : 'off');
@@ -1963,16 +1396,16 @@
         var k = b.getAttribute('data-k'), fb = host.querySelector('#xr-fb' + (n + 1));
         if (k !== want) {
           b.setAttribute('data-result', 'wrong');
-          fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong> ' +
+          fb.innerHTML = msg('caution', '&rarr;', '<strong>Not that one.</strong>' + (halt ? '' : ' ' +
             esc(MF.LINES[k].name) + ' is ' + esc(MF.LINES[k].form) + ' &mdash; ' +
             esc(MF.LINES[k].desc.charAt(0).toLowerCase() + MF.LINES[k].desc.slice(1)) +
-            ' Read that part of the story again and ask whether that is what it is doing.');
+            ' Read that part of the story again and ask whether that is what it is doing.'));
           A11y.announce('Not that one.');
           return;
         }
         [].forEach.call(wrap.querySelectorAll('[data-k]'), function (x) { x.disabled = true; });
         b.setAttribute('data-result', 'right');
-        fb.innerHTML = msg('go', '&#10003;', '<strong>Yes.</strong> ' + esc(why || ''));
+        fb.innerHTML = msg('go', '&#10003;', '<strong>Yes.</strong>' + (halt ? '' : ' ' + esc(why || '')));
         next();
       });
     }
@@ -3542,13 +2975,7 @@
     return '<div class="msg ' + cls + '"><span class="ico" aria-hidden="true">' + ico + '</span><p>' + html + '</p></div>';
   }
 
-  /* CHECK and optionTrue are exported for the CHECKERS, not for the app —
-     `data.js` gates a paired problem on the `fit` replies being written, and
-     the sweep needs to ask the same answer-key question the student's screen
-     asks. A checker that reimplements the key is a checker that can disagree
-     with the thing it is checking (VERIFICATION.md §33). */
   global.Stations = { Station: Station, msg: msg, esc: esc, el: el,
-                      CHECK: CHECK, optionTrue: optionTrue,
                       /* Exported so `tools/sweep.js` renders the phases a
                          student can actually reach rather than keeping its own
                          copy of the fork. See `phaseChain`. */

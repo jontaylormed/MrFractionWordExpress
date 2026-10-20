@@ -99,50 +99,6 @@ MF.registerProblem({
         why: "\"of her savings\" ties what she spends to the jar it comes out of. The savings are the whole, and the helmet takes a share of them.",
         kinds: "Everything counted here is dollars from the same jar."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts dollars, and it also counts the weeks Maya spent saving them. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The weeks tell you how long it took, not how much there is. Everything the question is about is dollars in the same jar.",
-                         no:  "That would mean dollars and weeks were locked at a fixed rate &mdash; the same amount saved every week, so that more weeks always meant proportionally more money. The story never fixes a rate like that." },
-            different: { yes: "", no: "That would mean the weeks and the dollars scaled together. You are told a total, not a weekly rate." }
-          }
-        },
-        moments: {
-          ask: "Maya spends part of her savings. Does the question follow the jar's amount as it changes, or does it ask how the savings split between the helmet and what is left?",
-          options: {
-            changed: { text: "It follows the amount changing", yes: "",
-                       no:  "A fair reading &mdash; money really does leave the jar. But you are handed a share of the savings and asked for the rest of that same amount, which is a split rather than a journey through time." },
-            steady:  { text: "It asks how the savings split",
-                       yes: "The savings are a fixed amount. The helmet takes a share, and what is left is the other share of the same jar.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just Maya's savings, or her savings and someone else's held up beside them?",
-          options: {
-            single:   { yes: "A single jar, cut into what was spent and what is left.", no: "" },
-            separate: { yes: "", no: "That would mean somebody else's savings set beside Maya's so you could measure the gap. There is only her jar." },
-            paired:   { yes: "", no: "That would mean dollars pinned to something else and scaled. Nothing here scales &mdash; a fixed amount is being divided." }
-          }
-        },
-        shape: {
-          ask: "Are the savings being shared out into parts, or is the same purchase made over and over, or neither?",
-          options: {
-            cut:     { yes: "The helmet takes a share and the rest stays in the jar. The shares account for all of it.", no: "" },
-            repeat:  { yes: "", no: "That would mean the same purchase made again and again, with the question counting how many. She buys the helmet once." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the helmet is being paid for out of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the savings, the helmet, and the money left over?",
-          options: {
-            onekind: { yes: "A whole cut into shares, the whole way through. Reaching the answer takes more than a single step, and each of those steps is still the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "Worth asking, and you are right that it takes more than a single step here &mdash; you work out what was spent before you can find what is left. But both steps are the same kind of situation: a whole being cut into shares. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A jar divided into what went and what stayed is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

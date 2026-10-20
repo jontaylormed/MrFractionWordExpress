@@ -141,50 +141,6 @@ MF.registerProblem({
         why: "Between them those sentences name the coloured shares, and both are shares of the same quilt. Worth noticing too — \"the rest of it is white\" is what tells you the colours have to account for the whole quilt between them, though it hands you no number of its own.",
         kinds: "Everything counted here is fabric in the same quilt."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts the coloured fabric that makes up the quilt, and it also counts the hours the quilt takes to sew. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The sewing time is how long it takes to make, not what it is made of. Everything the question is about is fabric in the same quilt.",
-                         no:  "That would mean the fabric and the hours were locked at a fixed rate, scaling together. The story never pairs them off." },
-            different: { yes: "", no: "That would mean a bigger quilt took proportionally longer in a fixed way. The hours are background here." }
-          }
-        },
-        moments: {
-          ask: "Does the quilt change during this story, or is the story describing what a finished quilt is made of?",
-          options: {
-            changed: { text: "The quilt changes", yes: "",
-                       no:  "That would mean fabric being added or taken away between a before and an after. The quilt is finished and sitting there; you are being told what it is made of." },
-            steady:  { text: "It describes what the quilt is made of",
-                       yes: "Nothing is happening to the quilt. The story is describing the colours it is already made from.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just this quilt, or this quilt and a second quilt held up beside it?",
-          options: {
-            single:   { yes: "A single quilt, divided by colour.", no: "" },
-            separate: { yes: "", no: "That would mean a second quilt set beside this to measure the gap between them. There is only the raffle quilt." },
-            paired:   { yes: "", no: "That would mean fabric locked to something else and scaled up or down. A finished quilt is a fixed whole, not a rate." }
-          }
-        },
-        shape: {
-          ask: "Is the quilt being shared out into parts, or is the same patch repeated over and over, or neither?",
-          options: {
-            cut:     { yes: "Blue, red and white are shares of the same quilt, and between them they have to account for all of it. That is what \"the rest\" means.", no: "" },
-            repeat:  { yes: "", no: "That would mean an identical patch appearing again and again, with the question counting the patches. The colours are shares of the quilt, not repeats of a unit." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what the blue and the red are parts of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the blue, the red, and the white that is left?",
-          options: {
-            onekind: { yes: "A whole cut into shares, all the way through. Getting to the white takes more than a single step, and every step is the same kind of situation.", no: "" },
-            stacked: { yes: "", no: "Worth asking, and it does take more than a single step &mdash; you put the coloured shares together before you can find what is left. Both steps are the same kind of situation. Steps and situations are not the same thing." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A quilt divided by colour is the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

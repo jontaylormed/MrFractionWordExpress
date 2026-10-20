@@ -105,55 +105,6 @@ MF.registerProblem({
         why: "\"of the pot\" ties what they served to the pot it came out of. The pot is the whole, and lunch takes a share of it — nobody is filling it back up and starting again.",
         kinds: "Everything counted here is soup from the same pot."
       },
-
-      /* Per-problem questions. NOTE the `moments` option TEXT is overridden, not
-         just the copy around it: soup does leave the pot, so "the amounts stay
-         as they are" reads as false on this story. The real distinction is
-         whether the question follows a level through time or divides a fixed
-         amount — say that, and the keyed answer stops being a lie. */
-      questions: {
-        kinds: {
-          ask: "This story counts cups of soup, and it also counts the cafe's wobbly tables. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The tables are furniture. Everything the question is about is soup, measured in cups, out of the same pot.",
-                         no:  "That would mean the soup and the tables were pinned to each other, so that serving more soup changed the furniture. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean cups of soup were locked to tables at a fixed rate. The tables are scenery; nothing scales with them." }
-          }
-        },
-        moments: {
-          ask: "Lunch happens and soup leaves the pot. Does the question follow the pot's level as it changes, or does it ask how a single potful divides up?",
-          options: {
-            changed: { text: "It follows the level changing", yes: "",
-                       no:  "Fair reading &mdash; soup really does leave the pot. But the question does not want the level afterwards. It wants the size of the share that went out, which is a slice of the potful." },
-            steady:  { text: "It asks how a potful divides up",
-                       yes: "The potful is fixed, and lunch takes a share of it. You are cutting an amount up, not tracking it through time.", no: "" }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just this pot of soup, or this pot and a second pot held up beside it?",
-          options: {
-            single:   { yes: "A single pot, divided into what was served and what was not.", no: "" },
-            separate: { yes: "", no: "That would mean a second pot set beside this to measure the gap between them. The cafe makes the same pot the story started with." },
-            paired:   { yes: "", no: "That would mean cups locked to something else and scaled up or down. Nothing here scales &mdash; a fixed potful is being shared out." }
-          }
-        },
-        shape: {
-          ask: "Is the soup being shared out into parts, or is the same helping served over and over, or neither?",
-          options: {
-            cut:     { yes: "Lunch takes a share of the potful, and what stays behind is the rest of it. Between them the shares account for the whole pot.", no: "" },
-            repeat:  { yes: "", no: "Genuinely close, and this is where soup problems get mixed up. Identical helpings repeating would be Equal Groups, and the question would be counting how many. This question wants a share OF the pot, not a count of servings." },
-            neither: { yes: "", no: "Something here is being divided &mdash; look at what lunch takes it out of." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the full pot, the lunch service, and the cups that went out?",
-          options: {
-            onekind: { yes: "A whole cut into shares, all the way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a potful being divided and nothing else &mdash; no second kind of situation stacked on top." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A share taken out of a fixed whole is squarely the Part&ndash;Whole Loop." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

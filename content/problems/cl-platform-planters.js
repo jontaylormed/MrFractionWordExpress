@@ -157,17 +157,6 @@ MF.registerProblem({
         why: "The earlier ones account for the delivery — the total, and the pieces that go to named places. The last stops accounting for anything and shares what survives into equal helpings. Notice what is never stated: how many planters are left over, which is the amount being shared.",
         kinds: "Planters throughout, first as pieces of a delivery and then as equal helpings for the platforms."
       },
-
-      questions: {
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the delivery being split up, and the sharing between platforms?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it takes named pieces out of a total, and after that it shares what is left into equal helpings. Read it again and find the sentence where it changes." },
-            stacked: { yes: "Pieces coming out of a stated total is a kind of situation. The same amount going to every platform is a different kind. This story accounts for the delivery first and shares afterwards — and what is left over from the accounting is the very thing that gets shared.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

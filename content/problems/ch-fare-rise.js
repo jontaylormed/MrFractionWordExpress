@@ -139,49 +139,6 @@ MF.registerProblem({
         why: "Between them those sentences give what the pass used to cost and the size of the rise. A single amount, at a before and an after, with something in between that moved it.",
         kinds: "Everything counted here is money, in pounds, for the same pass."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts pounds, and it also counts rows of slats on the board. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The board is furniture. Everything the question is about is money &mdash; what the pass cost, and what it costs now.",
-                         no:  "That would mean the price and the slats were pinned to each other, so that a dearer fare grew the board another row. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the price scaled with the board. How many rows of slats it has says nothing about what a pass costs." }
-          }
-        },
-        moments: {
-          ask: "The pass before January, and the pass since. Does any amount end up different from how it started?",
-          options: {
-            changed: { yes: "The railway put the fare up, so the price after January is not the price before it. That gap is the whole problem.",
-                       no:  "" },
-            steady:  { yes: "", no: "That would mean the pass cost the same all along. But the story has a moment where somebody changed it, and after that it costs something else." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just the pass, or the pass and something else being held up against it?",
-          options: {
-            single:   { yes: "A single pass, priced at different moments. Everything else in the story is about that price.", no: "" },
-            separate: { yes: "", no: "That would mean a second ticket, or a rival railway, priced beside it so you could measure the gap. Only a single pass is priced here." },
-            paired:   { yes: "", no: "That would mean pounds pinned to something else and dragged along by it. The rise changes the price and nothing else." }
-          }
-        },
-        shape: {
-          ask: "Is the money being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            cut:     { yes: "", no: "Worth asking, because a percentage sounds like a slice. But a share is part of a named whole that the pieces add back up to, and nothing here is being divided among anybody." },
-            repeat:  { yes: "", no: "That would mean the same charge again and again, with the question counting how many. The fare goes up the once and stays there." },
-            neither: { yes: "Nothing is cut into shares and nothing repeats. A price simply ends up higher than it was.", no: "" }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the old price, January, and the price since?",
-          options: {
-            onekind: { yes: "A starting amount, something happening to it, and a finishing amount. The same kind of situation the whole way through &mdash; the size of the change just happens to be written in per cent.", no: "" },
-            stacked: { yes: "", no: "The best wrong answer here, and worth taking seriously: per cent does feel like an extra idea sitting on top. But a percentage is a way of WRITING how big the rise was, not a second situation. Say the same rise in pounds instead and nothing about the shape of the story moves." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This is a price with a before and an after, which sits squarely on the Change Line whatever units the rise is written in." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

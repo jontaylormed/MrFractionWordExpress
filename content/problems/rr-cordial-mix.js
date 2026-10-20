@@ -121,51 +121,6 @@ MF.registerProblem({
         why: "\"The recipe never changes\", and then \"for every\" — that is the lock. Syrup and water keep their pairing however big the urn gets.",
         kinds: "Syrup and water — different things, even though both are measured in litres. It is the kinds that matter, not the units."
       },
-
-      /* The one problem on the site where a ratio has MATCHING units, so its
-         `kinds` question is the place to teach that a ratio needs different
-         KINDS, not different units. `same.no` validates the reading first,
-         because reading "both are litres" is careful, not careless. */
-      questions: {
-        kinds: {
-          ask: "This story measures syrup in litres and water in litres, and it also counts the glasses waiting on the counter. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Both are litres, but syrup and water are different things, and the recipe pins them to each other. It is the KINDS that matter here, not the units they happen to be measured in.", no: "" },
-            same:      { yes: "", no: "A careful reading, and the units really are the same &mdash; litres of each. But syrup and water are still different things, and the recipe fixes how much of each goes with the other. A ratio needs different kinds, not different units." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started, or does the recipe hold the same relationship however big the urn is?",
-          options: {
-            steady:  { yes: "Nothing is added to or taken from an amount you already had. The recipe holds the same pairing whatever size batch the cafe mixes.", no: "" },
-            changed: { yes: "", no: "That would mean an amount ending up different from how it started. Mixing a bigger batch is not a before-and-after &mdash; it is the same recipe at a larger size." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate amounts being measured against each other, or of syrup and water going together?",
-          options: {
-            paired:   { yes: "Not really separate things at all. Syrup and water go together in a pairing the recipe never changes.", no: "" },
-            single:   { yes: "", no: "Both are litres, which makes this tempting. But there are different liquids here and the recipe needs both of them." },
-            separate: { yes: "", no: "That would mean syrup and water compared to see which there is more of. The recipe locks them together instead." }
-          }
-        },
-        shape: {
-          ask: "Is the drink being shared out into parts, or is the same measure repeated over and over, or neither?",
-          options: {
-            neither: { yes: "The question asks what goes with what, not how a whole splits or how many identical measures there are.", no: "" },
-            repeat:  { yes: "", no: "Close &mdash; a big urn is the recipe taken over and over. But Equal Groups would be counting how many recipes went in. Here the pairing itself is the situation." },
-            cut:     { yes: "", no: "Tempting, because the finished drink IS made of syrup and water together. But you are not given the finished amount and asked for a share of it &mdash; you are given a fixed pairing and asked to scale it." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the recipe, the water they used this time, and the drink that came out?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a fixed recipe being scaled and nothing else stacked on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Syrup that goes with water is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

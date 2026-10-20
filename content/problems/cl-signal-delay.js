@@ -223,25 +223,6 @@ MF.registerProblem({
         why: "The earlier sentences set the trains' journey times side by side, which is a comparison. The last stops comparing and gives a relationship that holds at any size, which is a rate. Both are in this story, in turn, and the sentence about carriages sits between them without belonging to either.",
         kinds: "Minutes on a journey first, and then miles against minutes."
       },
-
-      questions: {
-        /* Only `fit` is tailored. The other four are asked in the abstract on
-           purpose here: on a paired problem several of them have TWO true
-           options — this story genuinely has one moment in one half and a
-           fixed relationship in the other — and rewriting them to name this
-           story's quantities would force a choice between the halves before
-           the student has been asked to find the seam. That is the open copy
-           decision recorded on `optionTrue` in stations.js; it should be
-           settled before the second island problem, not worked around here. */
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the journey times, and the miles the express covers afterwards?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it sets amounts side by side, and after that it gives a relationship that holds at any size. Read it again and find the sentence where it changes." },
-            stacked: { yes: "Amounts set side by side is a kind of situation. Miles measured against minutes, holding at any size, is a different kind. This story does the side-by-side part first and the rate afterwards — and the earlier part hands the later part a number.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

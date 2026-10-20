@@ -29,7 +29,7 @@ A **trip** is a run of stations along one line, and each problem is worked on **
 | **Arrivals Board** | Checks the answer, one check at a time: against their estimate, the question, the units and common sense |
 | **Critique** | Reads somebody else's wrong answer and works out which mistake produced it — the student diagnosing, instead of being diagnosed |
 
-**Help tools** sit under *Help me see it*, for a student who wants them: **Run the checklist** (five questions about the story's shape), **Sort the numbers**, **Find the question** and **Find the missing piece**. They are never required. After repeated misses the site highlights the one that would help — it never opens it for them — and the trip report names the tools a student chose.
+While a student chooses the picture, the feedback box asks rather than tells: **Ask yourself** — *Does an amount change? Are amounts compared? Is an amount repeated? Is a whole split up? Are different kinds linked?* — each beside its picture. **Help tools** sit under *Help me see it*, for a student who wants them: **Sort the numbers**, **Find the question** and **Find the missing piece**. They are never required. After repeated misses the site highlights the one that would help — it never opens it for them — and the trip report names the tools a student chose.
 
 Every trip ends at a **Terminus Hub**: one fresh problem with no scaffolding at all, where the student chooses their own approach and says why.
 
@@ -114,7 +114,7 @@ That is also where the marks go missing. Working the first half out correctly an
 
 | | |
 |---|---|
-| **The Crossover Read** | Replaces the Platform Check. Find the seam where the story changes what it is doing, then **pick the picture for each half** — and get two different shapes. The five-question checklist is a help tool at staffed stops, and the whole first read at an unstaffed halt |
+| **The Crossover Read** | Replaces the Platform Check. Find the seam where the story changes what it is doing, then **pick the picture for each half** — and get two different shapes. At an unstaffed halt it is the picture picks alone: no seam to tap, nothing explained |
 | **A two-picture Plan phase** | The first model, a slot naming what crosses, then the second model drawn *waiting* — because until the transfer exists, nothing in it can be known |
 | **Five stops, all open** | Three staffed platforms and two unstaffed halts. Nothing is locked and nothing is scored; the halts differ only in how much scaffolding they give |
 | **Pooling** | Two stops hold two problems each and draw at random, so a second visit differs by problem and not only by numbers |

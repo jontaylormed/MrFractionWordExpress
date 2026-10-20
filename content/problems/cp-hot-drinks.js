@@ -141,48 +141,6 @@ MF.registerProblem({
         why: "Between them those sentences give the cold drinks and the percentage the hot drinks run above them. Notice what is missing: nothing states the hot drinks, and that is what the question wants.",
         kinds: "Everything counted here is a drink sold at the buffet."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts hot drinks and cold drinks, and it also counts the buffet's tables. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "A hot drink and a cold drink are both drinks sold at the buffet. The tables are furniture.",
-                         no:  "That would mean drinks and tables were pinned to each other, so that selling a drink built a table. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the drinks scaled with the tables. How many tables the buffet has says nothing about how much it sells." }
-          }
-        },
-        moments: {
-          ask: "Does the number of hot drinks sold, or the number of cold ones, end up different from how it started?",
-          options: {
-            steady:  { yes: "Both are counts of what was sold that day. The story never changes either of them — it sets them side by side.", no: "" },
-            changed: { yes: "", no: "Worth thinking about, because selling really is something happening. But the story does not give you a count and then change it. It gives you a finished day's sales for each." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single kind of drink, or separate kinds held up against each other?",
-          options: {
-            separate: { yes: "The hot drinks and the cold drinks, both counted for the same day, with the story measuring how they stand against each other.", no: "" },
-            single:   { yes: "", no: "That would mean only a single kind of drink was ever in view. Count how many kinds the story gives you a figure about." },
-            paired:   { yes: "", no: "Tempting, because a percentage does hold whatever the size. But a pairing would mean the drinks locked to something else and dragged along by it. These are separate counts from a finished day." }
-          }
-        },
-        shape: {
-          ask: "Is anything being cut into shares here, or repeated to build a total, or neither?",
-          options: {
-            neither: { yes: "Nothing is carved up and nothing repeats. There is a count, and another count measured against it.", no: "" },
-            cut:     { yes: "", no: "The closest call on this problem, because a percentage sounds like a slice of something. But a share is part of a named whole that the pieces add back up to, and the hot drinks are not a piece of the cold drinks — they are a separate count that runs above them." },
-            repeat:  { yes: "", no: "That would mean an identical amount repeating, with the question counting how many of them. Each kind of drink is counted once, for the same day." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the cold drinks, the hot drinks, and the percentage between them?",
-          options: {
-            onekind: { yes: "Amounts side by side and a relationship between them, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time, and a fair question here — a percentage feels like a second idea on top. But it is only how the gap is described. There is still just a pair of amounts and the relationship between them." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Drinks measured against drinks is squarely the Compare Line — the measuring is done in per cent rather than in drinks." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -121,48 +121,6 @@ MF.registerProblem({
         why: "Between them those sentences give the gap between the platforms and the size of the bigger platform. Notice what is missing: nothing states the local platform's benches, and that is what the question wants.",
         kinds: "Everything counted here is benches on a platform."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts benches, and it also counts the station's waiting rooms. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The waiting rooms are elsewhere on the station. Everything being compared is benches.",
-                         no:  "That would mean benches and waiting rooms were pinned to each other, so that adding a bench built a room. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the benches scaled with the waiting rooms. How many rooms the station has says nothing about how many benches a platform has." }
-          }
-        },
-        moments: {
-          ask: "Does either platform end up with a different number of benches from how it started?",
-          options: {
-            steady:  { yes: "No bench is added or taken away. Both platforms simply have what they have, and the story compares them.", no: "" },
-            changed: { yes: "", no: "That would mean benches arriving or being removed partway through. Read it again — nothing is done to either platform, they are just described." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single platform, or separate platforms held up against each other?",
-          options: {
-            separate: { yes: "The express platform and the local platform, both standing there, with the story measuring the gap between them.", no: "" },
-            single:   { yes: "", no: "That would mean only a single platform was ever in view. Count how many the story gives you bench numbers about." },
-            paired:   { yes: "", no: "That would mean benches locked to something else and scaled. The gap here is a fixed number of benches, not a relationship that grows." }
-          }
-        },
-        shape: {
-          ask: "Are the benches being shared out into parts, or is the same number repeating, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares and nothing repeats. Separate amounts are set side by side.", no: "" },
-            cut:     { yes: "", no: "Tempting, because the express benches do split into \"as many as the local has\" and \"the extra\". But the story never names a whole that both platforms are parts of — the express platform is not made up of the local platform." },
-            repeat:  { yes: "", no: "That would mean the same run of benches over and over, with the question counting how many. Each platform has its benches once." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the gap, the express platform, and the local platform?",
-          options: {
-            onekind: { yes: "Amounts side by side and a gap between them, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a gap and the amounts it sits between, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. A platform measured against another platform is squarely the Compare Line." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

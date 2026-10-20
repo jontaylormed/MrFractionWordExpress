@@ -102,48 +102,6 @@ MF.registerProblem({
         why: "Between them those sentences give the ribbon a single flag takes and how many flags are being made. Notice what is missing: nothing states how much ribbon that comes to, and that is what the question wants.",
         kinds: "Everything measured here is ribbon, in metres."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story measures ribbon and counts flags, and it also counts the lamp posts. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Flags are just what the ribbon is being made into. Everything being measured is ribbon.",
-                         no:  "That would mean ribbon and lamp posts were pinned to each other, so that cutting ribbon put up a lamp. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the ribbon scaled with the lamp posts. How many lamps are on the platform says nothing about how much ribbon a flag takes." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "Every flag takes the same amount of ribbon, and that amount does not change as the porter works.", no: "" },
-            changed: { yes: "", no: "Tempting, because ribbon gets used up as the flags are made. But the story is not asking what is left on the roll — it asks how much is needed altogether, and the amount a flag takes is fixed." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single thing, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single run of bunting, made of flags that are all the same.", no: "" },
-            separate: { yes: "", no: "That would mean amounts set side by side and measured against each other. No flag is being compared to another — they are all identical." },
-            paired:   { yes: "", no: "That would mean a fixed pairing you could scale to any size. The story gives a set number of flags, not a rule about bunting in general." }
-          }
-        },
-        shape: {
-          ask: "Is anything being cut up, or repeated?",
-          options: {
-            repeat:  { yes: "The same length of ribbon, over and over, once for every flag.", no: "" },
-            cut:     { yes: "", no: "The trickiest call on this problem, because a fraction of a metre really is a cut piece. But look at what the STORY is doing: it is not dividing a roll into named shares, it is laying the same small length down again and again. The fraction describes how big the repeated piece is, not a share of a whole." },
-            neither: { yes: "", no: "Look again at the flags. They all take the same length of ribbon, and the porter makes them in a row — that is something repeating." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the flags, the ribbon each takes, and what the porter needs?",
-          options: {
-            onekind: { yes: "The same amount repeated, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a repeated length and a question about what it comes to, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Identical flags made in a row is squarely Equal Groups — a fraction does not change the shape of the story." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

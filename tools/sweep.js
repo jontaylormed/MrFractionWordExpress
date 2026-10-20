@@ -196,8 +196,8 @@
            own standing rule. */
         /* Three cases, matching `phRead1`'s own fork exactly: an ordinary
            problem visits `platform`, a paired teaching stop visits `crossover`
-           instead, and a paired UNSTAFFED halt visits neither — nobody walks
-           that student to the seam. Rendering a screen the app would not is
+           instead, and a paired UNSTAFFED halt visits `crossover` in its
+           unaided form (pictures only, since 2026-10-20). Rendering a screen the app would not is
            this file's oldest rule; here it would also scan copy that problem
            does not author. */
         /* THE PHASE LIST IS NOT REBUILT HERE ANY MORE — it is asked for.
@@ -220,8 +220,8 @@
            so a fifth tool is swept the day it exists. Only where the app
            offers them: never on a paired problem. */
         /* Which tools a problem offers is the station's decision
-           (`Stations.toolsFor`): all four on the mainland, the checklist at a
-           staffed island stop, none at a halt. */
+           (`Stations.toolsFor`): all of them on the mainland, none on the
+           island since the checklist was removed (2026-10-20). */
         var toolKeys = Stations.toolsFor ? Stations.toolsFor(p)
                      : (!isPaired(p) && Stations.TOOLS ? Object.keys(Stations.TOOLS) : []);
         toolKeys.forEach(function (t) { if (phases.indexOf(t) < 0) phases.push(t); });

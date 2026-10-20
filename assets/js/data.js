@@ -434,48 +434,10 @@
   function validate() {
     var report = [];
 
-    /* THE CHECK SCANNED THE AUTHORED COPY AND NOT THE COPY BESIDE IT.
-       `platformCheck.questions` overrides are refused a digit or a number word
-       because read1 is the numberless phase. The SHARED `CHECK` table in
-       stations.js renders on that same screen, for every problem, and nothing
-       looked at it — so a number word written into a shared reply was
-       numberless-illegal on 31 problems at once and validated perfectly clean.
-
-       Not hypothetical. Found 2026-08-16 while authoring `cl-signal-delay`:
-       the per-problem copy was refused for saying "two", and the shared reply
-       I had written the day before said "Two kinds of situation, one after the
-       other, ... turned one hard problem into two" and was not. The instrument
-       was pointed at the author's file rather than at the student's screen,
-       which is this project's most-repeated instrument error.
-
-       Reported ONCE per run rather than per problem: it is one defect in one
-       table, and printing it 31 times over is how a real hit gets skimmed. */
-    /* ONE word list, used by both the per-problem scan and the shared-table
-       scan below. Read1 is numberless, so a spelled-out number leaks structure
-       exactly as a digit does. */
+    /* ONE word list for every numberless scan below. A spelled-out number
+       leaks structure exactly as a digit does. (The shared checklist table it
+       also scanned was removed with the checklist, 2026-10-20.) */
     var NUMWORD = /\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|half|quarter|third|twice|double)\b/i;
-
-    var sharedDone = false;
-    function sharedCheckErrors() {
-      var out = [];
-      ((global.Stations && Stations.CHECK) || []).forEach(function (q) {
-        var strings = [[q.id + '.ask', q.ask]];
-        (q.options || []).forEach(function (o) {
-          ['text', 'yes', 'no'].forEach(function (f) {
-            if (o[f]) strings.push([q.id + '.' + o.id + '.' + f, o[f]]);
-          });
-        });
-        strings.forEach(function (s) {
-          if (!s[1]) return;
-          if (/\d/.test(s[1]))
-            out.push('SHARED CHECK table: ' + s[0] + ' has a digit — read1 is the numberless phase');
-          else if (NUMWORD.test(s[1]))
-            out.push('SHARED CHECK table: ' + s[0] + ' spells out a number ("' +
-                     s[1].match(NUMWORD)[0] + '") — say the shape, not the count');
-        });
-      });
-      return out;
-    }
 
     /* Every check below runs against a MATERIALISED problem, so a problem with
        four number sets is validated four times over. A set whose answer, hint
@@ -483,7 +445,6 @@
        defect this feature invites, and it would otherwise surface only for the
        student unlucky enough to draw that set. */
     function checkProblem(id, p, err, warn) {
-      if (!sharedDone) { sharedDone = true; sharedCheckErrors().forEach(function (e) { err.push(e); }); }
       if (p.id !== id) err.push('id mismatch');
       if (!/^[a-z0-9-]+$/.test(p.id)) err.push('id must be kebab-case');
       /* A CHALLENGE PROBLEM IS TWO SITUATIONS AND HAS NO SINGLE LINE.
@@ -498,9 +459,8 @@
         if (!LINES[pr.second]) err.push('pair.second "' + pr.second + '" is not one of the five');
         /* The rule that decides whether a problem belongs on the island at all
            (CHALLENGE-MODE.md §5.1). A→A is a multi-step problem inside ONE
-           situation, and `CHECK.fit`'s own reply teaches that steps and
-           situations are not the same thing — content that blurs it makes that
-           reply a lie. */
+           situation, and the Lighthouse teaches that steps and situations are
+           not the same thing — content that blurs it makes that page a lie. */
         if (pr.first === pr.second)
           err.push('pair.first and pair.second are both "' + pr.first + '" — that is one situation taking two steps, not a Challenge problem');
         if (!pr.transfer) err.push('pair has no transfer named');
@@ -512,7 +472,7 @@
            never tap, so stage 1 cannot be passed and the phase hangs — no
            error, just a screen that will not advance. Index 0 is its own trap:
            it means "the story changes kind at its first sentence", which
-           leaves an empty first half for the checklist to be run on. */
+           leaves an empty first half to pick a picture for. */
         var nSent = ((p.problem || {}).sentences || []).length;
         if (typeof pr.crossoverSentence !== 'number')
           err.push('pair.crossoverSentence is missing — the Crossover Read cannot ask where the story changes');
@@ -601,8 +561,8 @@
             /* Wording corrected 2026-08-17: this said "the Plan phase fades to
                the estimate there", which was the pre-reversal ruling. There is
                no Plan phase and no estimate at a halt — `phaseChain` returns
-               `['read1']`, so nothing renders between the checklist and the
-               Engine Room. */
+               `['read1', 'crossover']`, so nothing renders between the picture
+               picks and the Engine Room. */
             err.push('a paired problem at fadeLevel "independent" is an unstaffed halt and must NOT carry signalBox.crossover — the Plan phase does not render there at all');
           ['compareBars', 'barModel', 'ratioTable', 'ratioTables', 'changeTrain'].forEach(function (k) {
             if ((p.signalBox || {})[k])
@@ -627,20 +587,6 @@
             err.push('signalBox.crossover.second needs a row with key "transfer" — that is the cell the named quantity is written into');
         }
 
-        /* AN UNWRITTEN REPLY CANNOT SHIP. `CHECK.fit` inverts on a paired
-           problem: `stacked` becomes correct and `onekind` becomes the
-           distractor, so two replies that no mainland problem can reach
-           become the two that matter most. Both were written 2026-08-16 and
-           this gate passes today — it is kept because the gate is what makes
-           that a fact rather than an intention, and because the next option
-           added to this question will arrive with the same hole. A phase
-           rendering an empty string is this project's most-repeated shipping
-           failure. */
-        var fit = (global.Stations && Stations.CHECK || []).filter(function (q) { return q.id === 'fit'; })[0];
-        (fit ? fit.options : []).forEach(function (o) {
-          if (o.yes === 'TODO' || o.no === 'TODO')
-            err.push('CHECK.fit option "' + o.id + '" still has a TODO reply — it is on the answer key for a paired problem and would render blank');
-        });
       } else if (!LINES[p.line]) {
         err.push('unknown line "' + p.line + '"');
       }
@@ -738,8 +684,8 @@
              answering 1 or 2, and a cleared-noise line is how a real leak gets
              skimmed past. Say the shape instead of counting it. */
       var pc = ((p.threeReads || {}).read1 || {}).platformCheck;
-      /* NUMWORD moved up to validate() scope so the shared CHECK table is
-         judged by the SAME list this is. A second copy of the word list here
+      /* NUMWORD lives at validate() scope so every numberless scan is judged
+         by the SAME list. A second copy of the word list here
          would be two lists, and the day one of them gains "fifteen" the other
          will not — which is the drift class this project has seven files of. */
       if (!pc) err.push('read1.platformCheck is missing — Read 1 renders it (Pedagogy §3.7)');
@@ -802,52 +748,18 @@
           if (sents.length >= nSent)
             err.push('platformCheck.sentences names every sentence — then there is nothing to pick out');
         }
-        /* Per-problem Platform Check questions (optional). Keyed by the shared
-           question and option ids in `stations.js`. A typo in a key would
-           silently fall back to the generic copy and nothing would look wrong,
-           so the keys are checked against the known sets — and the same
-           numberless rules apply, because this text renders on read1. */
-        var QIDS = { kinds: 1, moments: 1, things: 1, shape: 1, fit: 1 };
-        var OIDS = { same: 1, different: 1, changed: 1, steady: 1, single: 1, separate: 1,
-                     paired: 1, cut: 1, repeat: 1, neither: 1, onekind: 1, stacked: 1, nofit: 1 };
-        /* Authored at `read1.questions` — a SIBLING of platformCheck. Nesting
-           it inside platformCheck by mistake produces a field nothing reads and
-           nothing complains about, because the whole block is optional. That
-           happened on the first attempt and cost a round trip, so it is an
-           error now rather than a silence. */
-        if (pc.questions)
-          err.push('platformCheck.questions is nested one level too deep — it belongs at read1.questions');
-        var qover = (p.threeReads || {}).read1 && p.threeReads.read1.questions;
-        if (qover) {
-          Object.keys(qover).forEach(function (qid) {
-            if (!QIDS[qid]) { err.push('platformCheck.questions has unknown question "' + qid + '"'); return; }
-            var strings = [];
-            // Named with its question id — "questions.ask" alone does not say
-            // which of the five, and there are five of them.
-            if (qover[qid].ask) strings.push([qid + '.ask', qover[qid].ask]);
-            var oo = qover[qid].options || {};
-            Object.keys(oo).forEach(function (oid) {
-              if (!OIDS[oid]) { err.push('platformCheck.questions.' + qid + ' has unknown option "' + oid + '"'); return; }
-              ['text', 'yes', 'no'].forEach(function (f) {
-                if (oo[oid][f]) strings.push([qid + '.' + oid + '.' + f, oo[oid][f]]);
-              });
-            });
-            strings.forEach(function (pair) {
-              if (/\d/.test(pair[1]))
-                err.push('platformCheck.questions.' + pair[0] + ' has a digit — read1 is the numberless phase');
-              else if (NUMWORD.test(pair[1]))
-                err.push('platformCheck.questions.' + pair[0] + ' spells out a number ("' +
-                         pair[1].match(NUMWORD)[0] + '") — say the shape, not the count');
-            });
-          });
-        }
+        /* `read1.questions` WAS THE CHECKLIST'S PER-PROBLEM WORDING. The
+           checklist was removed 2026-10-20 and nothing renders this field, so
+           it is refused rather than left to sit in a file looking live — a
+           field nothing reads is the dead-content shape VERIFICATION §9 is
+           about, and an author copying an old problem would copy it forward. */
+        if (pc.questions || ((p.threeReads || {}).read1 || {}).questions)
+          err.push('read1.questions is the removed checklist\'s per-problem wording — nothing renders it; delete it');
 
-        /* THESE TWO FIELDS ARE ESCAPED AT RENDER; THE `questions` COPY IS NOT.
-           `phPlatform.finish()` puts `why` and `kinds` through esc(), so an
-           HTML entity in them renders as literal text — "&mdash;" on the page,
-           user-found on the Ratio problems. The `questions` overrides are
-           inserted raw and use entities freely (93 of them), which is what
-           makes the asymmetry easy to trip over. Write the character itself. */
+        /* THESE TWO FIELDS ARE ESCAPED AT RENDER. `phPlatform.finish()` puts
+           `why` and `kinds` through esc(), so an HTML entity in them renders
+           as literal text — "&mdash;" on the page, user-found on the Ratio
+           problems. Write the character itself. */
         ['why', 'kinds'].forEach(function (k) {
           if (/&[a-z]+;/i.test(pc[k] || ''))
             err.push('platformCheck.' + k + ' contains the HTML entity "' + (pc[k].match(/&[a-z]+;/i) || [])[0] +

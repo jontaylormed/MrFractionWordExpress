@@ -11,6 +11,12 @@
 
 **The new repository was created with an Apache 2.0 `LICENSE`.** The project is **CC BY-NC-SA 4.0** — the README and the whole licence section say so, and Apache would permit commercial use. The first push kept the project's own licence. If the user actually meant to relicense, that is their call and the README must change with it.
 
+## What changed on 2026-10-20 — the checklist is gone
+
+**The five-question checklist was removed from every trip** (user: the heaviest screen for cognitive load). The short **"Ask yourself"** questions in the feedback viewport during the picture choice took its place on the mainland; unstaffed halts now get the Crossover Read's picture picks with no coaching. Details in [`SITE-STATE.md`](SITE-STATE.md).
+
+**Waiting on the user, not to be done without discussion** (user, same day: "any pedagogical changes need more pause and discussion"): the Five Situations hub's "The checklist" page, the Lighthouse pages built on the checklist (the five questions, "a stretch of story", "two right answers"), For Teachers target 11, whether staffed island stops get "Ask yourself" or another help, and what a second wrong shape pick should offer now that the checklist cannot be offered.
+
 ## What changed on 2026-10-18 — the cockpit
 
 **Stations are now one fixed screen with a shorter question path**, built from three teachers' feedback and a layout sketch, reviewed by three agents (Cycle 31) and fixed the same day. **Read [`COCKPIT.md`](COCKPIT.md) before touching `stations.js`** — the panel routing (`distribute`, `relocateStray`, `syncLever`, the host's redirected `querySelector`) changes how every phase's markup reaches the screen. Build facts are in [`SITE-STATE.md`](SITE-STATE.md). Layout probe: `tools/cockpit-probe.js`.

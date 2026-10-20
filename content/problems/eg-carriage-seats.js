@@ -103,48 +103,6 @@ MF.registerProblem({
         why: "Between them those sentences give how many carriages there are and how many the whole train seats. Notice what is missing: nothing states how many seats a carriage has, and that is what the question wants.",
         kinds: "Everything counted here is seats, grouped into carriages."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts seats and carriages, and it also counts the station's platforms. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Carriages are just how the seats are grouped. Everything being counted is seats.",
-                         no:  "That would mean seats and platforms were pinned to each other, so that adding a seat built a platform. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the seats scaled with the platforms. How many platforms the station has says nothing about how big a carriage is." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "The train is described as it is. No seat is fitted or removed while the story runs.", no: "" },
-            changed: { yes: "", no: "Tempting, because a train that fills up sounds like something happening. But look for an AMOUNT that ends up different — the number of seats is fixed, and the story is telling you what the train holds, not watching it fill." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single thing, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single train, made of carriages that are all the same.", no: "" },
-            separate: { yes: "", no: "That would mean amounts set side by side and measured against each other, with the story interested in the gap between them. No carriage is being compared to another — they are all identical." },
-            paired:   { yes: "", no: "That would mean a fixed pairing you could scale to any size. The story describes a particular train, not a rule about trains in general." }
-          }
-        },
-        shape: {
-          ask: "Is anything being cut up, or repeated?",
-          options: {
-            repeat:  { yes: "The same carriage-load of seats, over and over, all the way along the train.", no: "" },
-            cut:     { yes: "", no: "The closest call, because the train's seats do split between the carriages. But Part–Whole cuts a whole into DIFFERENT named shares. Here every carriage is identical, and that sameness is what lets you divide at all." },
-            neither: { yes: "", no: "Look again at the carriages. The story says every carriage has the same number of seats — that is an amount repeating." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the carriages, the seats, and what the train holds?",
-          options: {
-            onekind: { yes: "The same amount repeated, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a repeated amount and a question about how big it is, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Identical carriages along a train is squarely Equal Groups." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

@@ -155,21 +155,6 @@ MF.registerProblem({
         why: "The earlier ones are about the plant's speed and how long the order took, which together say how big the order is without ever stating it. The last stops talking about filling and gives a piece of what was filled. Notice what is never stated anywhere: how many bottles arrived, which is the amount that piece is a piece of.",
         kinds: "Bottles against minutes at the plant, and then bottles split into kinds in the crates."
       },
-
-      /* Tailored as carefully as at the staffed platforms, and for the reason
-         given on `cl-lost-umbrellas`: at an unstaffed halt this screen is the
-         last thing that helps. Everything the student gets about the SHAPE of
-         this problem, they get here. */
-      questions: {
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the plant filling bottles, and the lemonade and water in the crates?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it gives a speed that would hold for an order of any size, and after that it takes what arrived and splits it into kinds. Read it again and find the sentence where it changes." },
-            stacked: { yes: "A relationship between bottles and minutes is a kind of situation. Pieces adding back up to a total is a different kind. This story scales the plant's speed up to the size of the order first, and cuts the order up afterwards — and the scaling is what produces the total being cut.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here, and at this stop it is yours." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

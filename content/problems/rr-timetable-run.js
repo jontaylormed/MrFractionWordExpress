@@ -119,50 +119,6 @@ MF.registerProblem({
         why: "\"Every\" is the lock, and between them those sentences give both halves of it — how long a stretch lasts, and how far the train gets across it. Worth noticing too, the opening line says the speed never changes, which is what lets you stretch the pairing all the way to an hour.",
         kinds: "Miles and minutes — different kinds of thing, held together by a steady speed."
       },
-
-      /* This is the problem the user rode when they found the Moments defect —
-         "something IS happening as the train is moving". So `moments` here says
-         out loud that a moving train is not a changing amount. */
-      questions: {
-        kinds: {
-          ask: "This story counts miles and it counts minutes, and it also counts the train's carriages. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            different: { yes: "Miles and minutes are different sorts of thing, pinned to each other by a steady speed. Travel for longer and the distance grows in proportion.", no: "" },
-            same:      { yes: "", no: "That would mean everything was measured in the same stuff. Miles are not minutes, and the whole question is about how they go together. The carriages are the only thing here that is scenery." }
-          }
-        },
-        moments: {
-          ask: "The train is moving the whole time. Does any amount end up different from how it started, or does the train hold the same relationship all the way along the coast?",
-          options: {
-            steady:  { yes: "The train moves, but no amount turns into a different amount. The miles and the minutes keep exactly the same relationship from the first moment to the last &mdash; that is what \"the same speed the whole way\" means. Motion is not the same thing as change.", no: "" },
-            changed: { yes: "", no: "The most understandable answer on this screen, because the train is plainly moving. But look for an amount that ENDS UP different from how it started &mdash; something added or taken away. The train covers ground at a rate that never varies, so there is no before-and-after amount, only a pairing." }
-          }
-        },
-        things: {
-          ask: "Is the story keeping track of a single amount, of separate amounts being measured against each other, or of miles and minutes travelling together?",
-          options: {
-            paired:   { yes: "Not really separate things at all. Miles and minutes travel together, and the question asks you to stretch that pairing to a longer stretch of time.", no: "" },
-            single:   { yes: "", no: "That would mean the story only ever counted the same stuff. There are miles here and there are minutes, and you need both." },
-            separate: { yes: "", no: "That would mean miles and minutes being compared to see which is bigger. They are not rivals &mdash; they are locked together." }
-          }
-        },
-        shape: {
-          ask: "Is the journey being shared out into parts, or is the same stretch repeated over and over, or neither?",
-          options: {
-            neither: { yes: "Nothing is cut into shares, and the question is not counting identical stretches for their own sake. It asks what distance goes with a given time.", no: "" },
-            repeat:  { yes: "", no: "Close, and worth thinking about &mdash; an hour does hold a whole number of these stretches, and you will use that. But Equal Groups would be counting the stretches as the answer. Here the stretches are the way in, and the pairing of miles with minutes is the situation." },
-            cut:     { yes: "", no: "That would mean a fixed distance divided into shares that add back up to it. The distance is what you are working out, not what you are cutting." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the short stretch you are given, and the hour you are asked about?",
-          options: {
-            onekind: { yes: "A fixed relationship being scaled up, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a steady speed and nothing else &mdash; no second kind of situation on top of it." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Miles that go with minutes is squarely the Ratio and Rate Rail." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

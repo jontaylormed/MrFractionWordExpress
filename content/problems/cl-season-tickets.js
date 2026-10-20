@@ -166,20 +166,6 @@ MF.registerProblem({
         why: "The first of those counts Kelder's season tickets and the next measures it against Harbour Halt. The last stops comparing anything and gives a piece of Harbour Halt's own total. Notice what is never stated anywhere: how many Harbour Halt sells altogether, which is the amount that piece is a piece of.",
         kinds: "Season tickets throughout — counted at the stations first, then split into kinds at Harbour Halt."
       },
-
-      questions: {
-        /* Only `fit` is tailored, as on `cl-signal-delay`, and for the same
-           reason: several of the other four have two true answers on a paired
-           problem and `phRead1` now says so itself. */
-        fit: {
-          ask: "Does a single kind of situation cover this whole story — the stations, and the adult and child tickets?",
-          options: {
-            onekind: { yes: "", no: "Good reading, and on every other line on this map it would be the right answer. Here the story does something and then does something different: it measures the stations against each other, and after that it takes a single station's tickets and splits them into kinds. Read it again and find the sentence where it changes." },
-            stacked: { yes: "Amounts set side by side is a kind of situation. Pieces adding back up to a total is a different kind. This story compares first and divides afterwards — and the comparison works out the very total the division needs.", no: "" },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This story fits more than a single line, which is a different thing — and finding both parts is the whole job here." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

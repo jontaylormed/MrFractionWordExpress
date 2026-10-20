@@ -178,55 +178,6 @@ MF.registerProblem({
         why: "Between them those sentences give the size of the rise and what the gateline came to last Saturday. A single amount, at a before and an after, with something in between that moved it — that is the shape of it.",
         kinds: "Everything counted here is a passenger through the barriers."
       },
-
-      /* Per-problem Platform Check questions. The shared ones ask in the
-         abstract, so their answers are constant along a line and a student can
-         take them off the station header without reading; these name this
-         story's own quantities. `kinds` uses the DISTRACTOR — the platforms —
-         as the thing to rule out, which turns an irrelevant number into the
-         teaching. No digits and no number words: this screen is numberless. */
-      questions: {
-        kinds: {
-          ask: "This story counts passengers through the barriers, and it also counts the station's platforms. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "The platforms are scenery. Everything the question is about is passengers, counted at the same gateline.",
-                         no:  "That would mean the passengers and the platforms were pinned to each other &mdash; that a busier Saturday grew the station another platform. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the crowd scaled with the platforms. How many platforms the station has says nothing about how many people shove through the gates." }
-          }
-        },
-        moments: {
-          ask: "The Saturdays before the footbridge opened, and the Saturdays since. Does any amount end up different from how it started?",
-          options: {
-            changed: { yes: "The footbridge opened and Saturdays got busier. The gateline before it and the gateline after it are not the same amount, and that gap is the whole problem.",
-                       no:  "" },
-            steady:  { yes: "", no: "That would mean the same crowd every Saturday, before the footbridge and since. But the story says Saturdays are busier now than they used to be, which is an amount ending up different from how it started." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of &mdash; just the Saturday crowd, or the crowd and something else being held up against it?",
-          options: {
-            single:   { yes: "A single crowd at a single gateline, described at different moments. Everything else in the story is about that crowd.", no: "" },
-            separate: { yes: "", no: "The closest call on this screen, because a percentage does sound like a comparison. It is comparing &mdash; but it is comparing the crowd with ITSELF, earlier. Separate things would be a second gateline, or a rival station, standing alongside it and counted at the same time." },
-            paired:   { yes: "", no: "That would mean passengers pinned to something else, so that changing either dragged the other along. The footbridge changed the crowd and nothing else." }
-          }
-        },
-        shape: {
-          ask: "Is the crowd being shared out into parts, or is the same amount arriving over and over, or neither?",
-          options: {
-            cut:     { yes: "", no: "Worth asking, because a percentage sounds like a slice of something. But a share is part of a named whole that the pieces add back up to, and nothing here is being carved up or handed out." },
-            repeat:  { yes: "", no: "That would mean the same amount arriving again and again, with the question counting how many. Each Saturday is counted through the gates and that is that." },
-            neither: { yes: "Nothing is cut into shares and nothing repeats. A crowd came through the gates, and now a bigger crowd does.", no: "" }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story &mdash; the quiet Saturdays, the footbridge, and the crowds since?",
-          options: {
-            onekind: { yes: "A starting amount, something happening to it, and a finishing amount. The same kind of situation the whole way through &mdash; the size of the change just happens to be given in per cent.", no: "" },
-            stacked: { yes: "", no: "The best wrong answer on this screen, and worth taking seriously: per cent does feel like a whole extra idea sitting on top of the change. But a percentage is a way of WRITING how big the change was, not a second situation. Say the same rise in passengers instead and nothing about the shape of the story moves." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. This is a crowd with a before and an after, which sits squarely on the Change Line whatever units the change is written in." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {

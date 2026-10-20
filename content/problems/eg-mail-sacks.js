@@ -95,48 +95,6 @@ MF.registerProblem({
         why: "Between them those sentences give the size of a mailbag and the size of the pile of letters. Notice what is missing: nothing states how many bags that fills, and that is what the question wants.",
         kinds: "Everything counted here is letters, packed into bags."
       },
-
-      questions: {
-        kinds: {
-          ask: "This story counts letters and mailbags, and it also counts the sorting benches. Is the question about a single kind of thing, or about different kinds locked together?",
-          options: {
-            same:      { yes: "Bags are just how the letters are held. Everything being counted is letters.",
-                         no:  "That would mean letters and benches were pinned to each other, so that posting a letter built a bench. Nothing in the story ties them." },
-            different: { yes: "", no: "That would mean the letters scaled with the benches. How many benches the office has says nothing about how full a bag is." }
-          }
-        },
-        moments: {
-          ask: "Does any amount end up different from how it started?",
-          options: {
-            steady:  { yes: "The letters are being packed away, but no letter is added or destroyed. Putting something into a bag does not change how much of it there is.", no: "" },
-            changed: { yes: "", no: "Tempting, because the pile of letters goes down as the bags fill. But the story is not asking about a pile before and after — it gives you the whole post in a single amount and asks how many bags it fills." }
-          }
-        },
-        things: {
-          ask: "How many separate things is the story keeping track of — a single thing, or separate things held up against each other?",
-          options: {
-            single:   { yes: "A single evening's post, packed into bags that are all the same.", no: "" },
-            separate: { yes: "", no: "That would mean amounts set side by side and measured against each other, with the story interested in the gap between them. Nothing here is being compared to anything." },
-            paired:   { yes: "", no: "That would mean a fixed pairing you could scale to any size. The story gives a set pile of letters, not a rule about post in general." }
-          }
-        },
-        shape: {
-          ask: "Is anything being cut up, or repeated?",
-          options: {
-            repeat:  { yes: "The same bagful, over and over, until the letters run out. You could act it out: fill a bag, then another the same, then another.", no: "" },
-            cut:     { yes: "", no: "The closest call on this problem, because the pile of letters does get divided up. But Part–Whole cuts a whole into shares that are DIFFERENT named pieces — here every piece is the same size, and that sameness is the whole structure." },
-            neither: { yes: "", no: "Look again at the bags. They all hold the same amount, and the story fills them in a row — that is something repeating." }
-          }
-        },
-        fit: {
-          ask: "Does a single kind of situation cover the whole story — the bags, what they hold, and the pile of letters?",
-          options: {
-            onekind: { yes: "The same amount repeated, the whole way through.", no: "" },
-            stacked: { yes: "", no: "Worth asking every time. Here there is a repeated amount and a question about how many times it goes in, and nothing stacked on top of that." },
-            nofit:   { yes: "", no: "Keep that answer in your pocket, because some problems really do fit none of these. Equal bags filled in a row is squarely Equal Groups." }
-          }
-        }
-      },
       authored: "generated"
     },
     read2: {
