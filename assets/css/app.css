@@ -3581,7 +3581,14 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 /* `.cockpit` on every selector: the base panel rules sit later in this file,
    and at equal specificity they won — the feedback kept scrolling inside
    itself (128px showing of 329). */
-@media (max-width: 1023px) {
+/* WHO GETS THIS LAYOUT (2026-10-20): narrow windows, and portrait ones under
+   1024. It was every window under 1024 — which caught Chromebooks. A school
+   Chromebook with its display scaled reports ~911px across, landscape, and
+   got this phone layout, so the feedback and Mr Fraction scrolled away with
+   the page (user, from school: "not static as designed"). Landscape windows
+   from 900px now get the cockpit; the two queries here and on the cockpit
+   blocks below are exact complements, so every width gets exactly one. */
+@media (max-width: 899px), (max-width: 1023px) and (orientation: portrait) {
   .cockpit .ck-panel { overflow: visible; overscroll-behavior: auto; }
   .cockpit .ck-bottom { flex-direction: column; gap: calc(var(--su)); }
   .cockpit .ck-feedback { order: 1; max-height: none; min-height: 72px; overflow: visible; }
@@ -3812,8 +3819,9 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-askset-slot li:not(.ck-askset-head)::before { content: "?"; display: inline-grid; place-items: center;
   width: 20px; height: 20px; border-radius: 50%; background: var(--orange-deep); color: #fff;
   font-weight: 700; font-size: .8em; flex: 0 0 auto; }
-/* Short laptop windows: the pinned bar is ~84px, so the set tightens to fit. */
-@media (min-width: 1024px) and (max-height: 860px) {
+/* The pinned bar is ~84px (on every cockpit screen since 2026-10-20), so the
+   set tightens to fit. */
+@media (min-width: 1024px), (min-width: 900px) and (orientation: landscape) {
   .ck-askset { gap: 2px 12px; }
   .ck-askset li { font-size: .84em; }
   .ck-ask-thumb, .ck-ask-thumb .mp-svg { width: 30px; }
@@ -3833,11 +3841,16 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-coach .ck-coach-body > * { margin: 0 0 4px; font-size: inherit; color: inherit; }
 .ck-coach .ck-coach-body > :last-child { margin-bottom: 0; }
 .ck-pad { padding: calc(var(--su) * 1); display: flex; }
-.ck-pad .est-pad-wrap { flex: 1; display: flex; flex-direction: column; margin: 0; min-height: 0; }
+/* `min-width: 0`: on a Chromebook-width cockpit (900px+ landscape, since
+   2026-10-20) the pad's column is ~225px, and a flex child that could not
+   shrink below its one-line head pushed the whole pad, canvas and all,
+   48–64px past its panel on every step (measured). The head already
+   ellipsises; it only needed to be allowed to. */
+.ck-pad .est-pad-wrap { flex: 1; display: flex; flex-direction: column; margin: 0; min-height: 0; min-width: 0; }
 .ck-pad .est-pad-box { flex: 1; min-height: 0; }
 .ck-pad .est-pad { width: 100%; height: 100%; }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-width: 900px) and (orientation: landscape) {
   /* THINK VERTICALLY (user, 2026-10-18: "there needs to be more space for
      every element but don't give on position"). The first cockpit squeezed
      every panel into one window height, and on a laptop that left the picture
@@ -3911,15 +3924,21 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
   .ck-say { flex-basis: 34%; }
 }
 
-/* SHORT LAPTOP WINDOWS: THE BOTTOM ROW STAYS IN VIEW. At 1366x768 the header
-   and map took 281px before the story began, so the lever and every verdict
-   started below the window and the page jumped when one arrived (Cycle 31,
-   student-tester and theme-reviewer). Under 860px tall the lever joins the
+/* THE BOTTOM ROW STAYS IN VIEW, ON EVERY COCKPIT SCREEN. At 1366x768 the
+   header and map took 281px before the story began, so the lever and every
+   verdict started below the window and the page jumped when one arrived
+   (Cycle 31, student-tester and theme-reviewer). So the lever joins the
    feedback row, and that row is pinned to the bottom of the window while the
    rest scrolls past — the verdict is always on screen, beside the control that
-   moves on. Taller windows keep the arrangement the user chose: the lever
-   under the question, feedback full width below. */
-@media (min-width: 1024px) and (max-height: 860px) {
+   moves on.
+   This applied only under 860px tall until 2026-10-20; taller windows kept the
+   lever under the question on the assumption the whole cockpit fit them. It
+   did not — 1,165px of page in a 1920x960 window — so on a classroom monitor
+   feedback and Mr Fraction started below the window and scrolled with the
+   page (user, from school: "not static as designed"). The user chose this
+   laptop layout for every screen over pinning a taller bar that covered the
+   work. */
+@media (min-width: 1024px), (min-width: 900px) and (orientation: landscape) {
   .ck-body {
     grid-template-areas:
       "text text scene scene"

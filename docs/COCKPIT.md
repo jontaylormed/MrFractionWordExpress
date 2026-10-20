@@ -27,7 +27,7 @@ Today `Station.render` (`stations.js:650`) builds a header and a `#phase-host` c
 └─────────────────────────────────────────────────────────────────┘
 ```
 - A panel may scroll inside itself only as a last resort.
-- Below 1024px the panels stack in the order problem → question/answer → work → feedback, and a little scrolling is accepted there.
+- Below 1024px the panels stack in the order problem → question/answer → work → feedback, and a little scrolling is accepted there. *(2026-10-20: now under 900px, or portrait under 1024; landscape windows from 900px — scaled Chromebooks — get the cockpit, and the slim bottom bar with the lever in it is pinned on every cockpit screen, not only under 860px tall.)*
 - The touch pad is mounted once and persists for the whole problem, so the student's notes survive between steps. This replaces the two separate pads in Plan and Engine Room.
 - Mr Fraction's asides go into the feedback bar instead of a floating bubble. The bubble's overlap with inputs has been a defect three times.
 

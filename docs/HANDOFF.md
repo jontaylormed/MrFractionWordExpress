@@ -11,6 +11,10 @@
 
 **The new repository was created with an Apache 2.0 `LICENSE`.** The project is **CC BY-NC-SA 4.0** — the README and the whole licence section say so, and Apache would permit commercial use. The first push kept the project's own licence. If the user actually meant to relicense, that is their call and the README must change with it.
 
+## What changed on 2026-10-20 — the bottom bar is pinned everywhere
+
+**Found from a school Chromebook** (user: the dialogue and feedback "were not static as designed"). Two causes, both layout: (1) feedback and Mr Fraction were pinned only under 860px tall, and taller windows do not fit the cockpit (1,165px of page at 1920×960), so on a monitor they started below the window; (2) every window under 1024px got the phone layout, which a Chromebook with a scaled display (~911px across) falls into. Now the slim laptop bar, lever inside it, is pinned on every cockpit screen (the user's choice over a taller pinned bar), and landscape windows from 900px get the cockpit. The sketch pad overflowed its panel at those widths and was fixed (`min-width: 0`). **Lesson: "it works at 1366×657" was the only kind of window ever measured for "static"; check a 1080p monitor and a scaled Chromebook too.**
+
 ## What changed on 2026-10-20 — the checklist is gone
 
 **The five-question checklist was removed from every trip** (user: the heaviest screen for cognitive load). The short **"Ask yourself"** questions in the feedback viewport during the picture choice took its place on the mainland; unstaffed halts now get the Crossover Read's picture picks with no coaching. Details in [`SITE-STATE.md`](SITE-STATE.md).
