@@ -1,7 +1,9 @@
 /* Learning Hub — The Lighthouse.
    Crossover Island's hub, built 2026-08-16 on the user's instruction: focus on
    the crossover, and teach the checklist and the five situations in more depth
-   than anywhere else on the site.
+   than anywhere else on the site. (Since 2026-10-20, when the checklist left
+   the trips, the hub teaches the "Ask yourself" questions and the pictures
+   in its place.)
 
    WHY IT IS A HUB AND NOT AN ISLAND STOP. Hubs are never gated and never
    framed as remedial — a locked decision — and that decides where this belongs.
@@ -13,8 +15,8 @@
 
    ITS RELATIONSHIP TO THE ISLAND is the one the Word Board has to Five
    Situations, and the Percent Yard has to the Ticket Booth: READ IT HERE,
-   DECIDE IT THERE. This hub teaches what a crossover is, how the checklist
-   behaves when a story has two halves, and what it means for a number to be
+   DECIDE IT THERE. This hub teaches what a crossover is, how the questions
+   and the pictures behave when a story has two halves, and what it means for a number to be
    carried from one to the other. Finding the crossover in a particular story
    happens on the island, at a station, where it is the student's job.
 
@@ -70,66 +72,82 @@ MF.registerHub({
     },
 
     {
-      short: "The five questions",
-      art: "checkfive",
-      eyebrow: "The checklist, properly",
+      /* REWRITTEN 2026-10-20 when the checklist was removed from the trips:
+         these were the five checklist questions (Kinds, Moments, Things,
+         Shape, Question). Now they are the five "Ask yourself" questions the
+         trip shows beside the pictures, read slowly. The old fifth question —
+         does one situation cover the whole story — is named at the end as
+         the question underneath, and page three takes it up. Drafted and
+         approved with the user before it went in. */
+      short: "Ask yourself",
+      art: "askset",
+      eyebrow: "The questions, properly",
       heading: "What each question is actually asking",
       body:
-        "<p>You have met these five at every station. They go past quickly there, so here they are slowly &mdash; " +
-        "because on a crossover problem you are going to run them <strong>twice</strong>, and a tool you use " +
-        "twice is worth understanding once.</p>" +
-        "<p><strong>Kinds &mdash; is everything counted in the same stuff?</strong> Benches against benches is " +
-        "one kind. Miles against minutes is two kinds locked together. This question separates amounts you " +
-        "could add from relationships you could not.</p>" +
-        "<p><strong>Moments &mdash; does any amount end up different from how it started?</strong> Not whether " +
-        "the story is busy. A ferry can run all day without a single quantity in the problem changing. " +
-        "Something has to <em>become</em> a different amount.</p>" +
-        "<p><strong>Things &mdash; how many separate amounts is the story keeping track of?</strong> One thing " +
-        "at different times, or two things held up against each other, or a pair that moves together.</p>" +
-        "<p><strong>Shape &mdash; is anything being cut into shares, or repeated?</strong> Cut into parts that " +
-        "add back to a named total, or the same amount laid down again and again &mdash; or neither.</p>" +
-        "<p><strong>Question &mdash; does one kind of situation cover the whole story?</strong> This is the " +
-        "one the island is built on, and until now the answer was always yes.</p>",
+        "<p>You have met these beside the pictures at every station. They go past quickly there, so here they " +
+        "are slowly &mdash; because on a crossover problem you are going to ask them <strong>twice</strong>, and " +
+        "questions you ask twice are worth understanding once.</p>" +
+        "<p><strong>Does an amount change?</strong> Not whether the story is busy. A ferry can run all day " +
+        "without a single quantity in the problem changing. Something has to <em>become</em> a different " +
+        "amount from the one it started as.</p>" +
+        "<p><strong>Are amounts compared?</strong> Two amounts that both exist at once, set side by side, with " +
+        "the story interested in the gap between them &mdash; the early ferry against the late one.</p>" +
+        "<p><strong>Is an amount repeated?</strong> The same amount laid down again and again to build a " +
+        "total: crate after crate, each holding the same. Careful &mdash; a rate sounds like this too, the " +
+        "same miles every hour. The difference is in the next-but-one question.</p>" +
+        "<p><strong>Is a whole split up?</strong> A named total, cut into parts that add back up to it. The " +
+        "parts belong to the whole; between them they account for all of it.</p>" +
+        "<p><strong>Are different kinds linked?</strong> Miles against minutes, oil against hours &mdash; " +
+        "different sorts of thing, pinned together so that changing either drags the other with it. " +
+        "Lamp-hours against lamp-hours is one kind; that is not linked, that is compared.</p>" +
+        "<p>Notice what none of them asks: <em>does one picture cover the whole story?</em> Until the island " +
+        "the answer was always yes, so nobody needed to ask. Page three is about what happens when it isn't.</p>",
       tap: {
-        ask: "\"The lamp is lit for 9 hours on Monday and 14 hours on Tuesday.\" What does the Moments question say?",
+        ask: "\"The lamp is lit for 9 hours on Monday and 14 hours on Tuesday.\" Does an amount change?",
         options: [
-          { text: "Nothing changed — those are two amounts, not one amount before and after", correct: true,
+          { text: "No — those are two amounts, not one amount before and after", correct: true,
             why: "The lamp being on is not a quantity changing. Monday's hours and Tuesday's hours are two separate amounts that both simply are what they are, which is why this reads as a comparison rather than a change." },
-          { text: "It changed, because Tuesday is more than Monday", correct: false,
+          { text: "Yes, because Tuesday is more than Monday", correct: false,
             why: "This is the commonest slip on this question. One amount being bigger than another is a comparison. A change needs a single amount that ends up different from how it started — the same lamp-hours, before and after something happened to them." },
-          { text: "It changed, because the lamp went on and off", correct: false,
+          { text: "Yes, because the lamp went on and off", correct: false,
             why: "Things happening in a story are not the same as quantities changing. Ask what the problem is counting, and then ask whether that count ends up different." }
         ]
       }
     },
 
     {
+      /* The hub's central idea, reworded 2026-10-20 from "the checklist
+         classifies a stretch of story" to the picture the trip now asks for.
+         The claim is unchanged; "do not force one" is the one addition. */
       short: "A stretch, not a problem",
       art: "checktwice",
       eyebrow: "The idea that unlocks the rest",
-      heading: "The checklist classifies a stretch of story",
+      heading: "A picture fits a stretch of story",
       body:
         "<p>Here is the thing worth carrying away from this whole hub, and it is not obvious.</p>" +
-        "<p class=\"hub-key\"><strong>The checklist does not classify a PROBLEM. It classifies a stretch of " +
-        "story.</strong></p>" +
-        "<p>You have been running it on whole problems, and that has worked perfectly &mdash; because until " +
-        "now, whole problems were one situation. So the stretch and the problem were the same thing and " +
-        "nothing made you notice the difference.</p>" +
-        "<p>On a crossover problem they come apart. Run the checklist on the first half and you get one of the " +
-        "five. Run the same five questions, unchanged, on the second half, and you get a different one. The " +
-        "questions did not change. What you pointed them at did.</p>" +
+        "<p class=\"hub-key\"><strong>A picture does not fit a PROBLEM. It fits a stretch of story.</strong></p>" +
+        "<p>On every line you have picked a single picture for a whole story, and that has worked perfectly " +
+        "&mdash; because until now, a whole story was one situation. The stretch and the problem were the same " +
+        "thing, so nothing made you notice the difference.</p>" +
+        "<p>On a crossover problem they come apart. Ask yourself the questions about the first part &mdash; " +
+        "<em>does an amount change? are amounts compared?</em> &mdash; and one picture fits. Ask the same " +
+        "questions, unchanged, about the rest, and a different picture fits. The questions did not change. " +
+        "What you pointed them at did.</p>" +
+        "<p>So when no single picture seems right, do not force one. Ask which stretch of the story you were " +
+        "looking at.</p>" +
         "<p>That is also why <strong>steps and situations are not the same thing</strong>. A Part&ndash;Whole " +
-        "problem can take four moves and still be Part&ndash;Whole the whole way. A crossover problem changes " +
-        "what kind of thing is happening, which is a different sort of difference altogether.</p>",
+        "problem can take four moves and still be Part&ndash;Whole the whole way &mdash; one picture, start to " +
+        "finish. A crossover problem changes what kind of thing is happening, which is a different sort of " +
+        "difference altogether.</p>",
       tap: {
-        ask: "You run the checklist on a story and get a clear answer. Then you read it again and get a different clear answer. What is most likely?",
+        ask: "You ask yourself the questions about a story and a picture fits. You read it again and a different picture fits. What is most likely?",
         options: [
-          { text: "It is two situations, and you ran the checklist on a different stretch each time", correct: true,
-            why: "Two confident answers to the same checklist is not you being inconsistent. It is the story telling you it has a middle — and the next thing to find is where." },
+          { text: "It is two situations, and you were looking at a different stretch each time", correct: true,
+            why: "Two pictures that both fit is not you being inconsistent. It is the story telling you it has a middle — and the next thing to find is where." },
           { text: "You made a mistake one of those times", correct: false,
-            why: "That is worth ruling out, but do not start there. On a crossover problem both readings are genuinely right about the part you were looking at, and treating one as an error throws away the evidence." },
-          { text: "The checklist does not work on that problem", correct: false,
-            why: "It worked exactly as it should — twice. What it cannot do is give one answer to a story that is doing two things, and nothing should." }
+            why: "That is worth ruling out, but do not start there. On a crossover problem both pictures are genuinely right about the part you were looking at, and treating one as an error throws away the evidence." },
+          { text: "The pictures do not work on that problem", correct: false,
+            why: "They worked exactly as they should — twice. What no single picture can do is fit a story that is doing two things, and none should." }
         ]
       }
     },
@@ -214,22 +232,27 @@ MF.registerHub({
       art: "twotrue",
       eyebrow: "Reading the signal",
       heading: "Two right answers means something",
+      /* Reworded 2026-10-20 from "the checklist accepts two answers". The
+         example changed too: the old one (two times compared, then miles
+         against minutes) had the structure of the island's `cl-signal-delay`,
+         which this hub's own header forbids. Compare-then-Equal-Groups, on the
+         island's furniture, is a pairing none of the seven problems uses. */
       body:
-        "<p>On a crossover problem the checklist will sometimes accept two different answers to the same " +
-        "question, and both of them will be correct.</p>" +
-        "<p>Ask <em>are these the same kind of thing?</em> about a story whose first half compares two times " +
-        "and whose second half sets miles against minutes, and the honest answer is <strong>both</strong>. " +
-        "The first half is one kind of stuff. The second half is two kinds locked together. Neither reading " +
-        "is a mistake; each is right about its own end of the story.</p>" +
-        "<p class=\"hub-key\"><strong>Two true answers is not confusion. It is the story telling you it has a " +
+        "<p>On a crossover problem the questions will sometimes get a <em>yes</em> in two places at once, and " +
+        "both of them will be right.</p>" +
+        "<p>Take a story whose first part sets the early ferry's crossing beside the late ferry's, and whose " +
+        "second part loads the hold with crates that each carry the same. Ask <em>are amounts compared?</em> " +
+        "and the honest answer is yes. Ask <em>is an amount repeated?</em> and the honest answer is also yes. " +
+        "Neither is a mistake; each is right about its own end of the story.</p>" +
+        "<p class=\"hub-key\"><strong>Two yeses is not confusion. It is the story telling you it has a " +
         "middle.</strong></p>" +
         "<p>So when it happens, do not pick the one that feels safer and move on. Notice it, and let it send " +
-        "you looking for the seam &mdash; because a story that answers the checklist two ways is a story made " +
-        "of two situations, which is the last question on the list anyway.</p>",
+        "you looking for the seam &mdash; because a story that two different pictures both fit is a story " +
+        "made of two situations.</p>",
       tap: {
         ask: "Which of these is the strongest sign you are looking at a crossover problem?",
         options: [
-          { text: "The checklist gives you two answers you can both defend", correct: true,
+          { text: "More than one picture fits, and you can defend both", correct: true,
             why: "It is the strongest sign because it comes from the structure rather than from the surface. You cannot get it from how the story is worded, only from what the story is doing." },
           { text: "The problem is long", correct: false,
             why: "Length is about how much scenery there is. Plenty of long problems are one situation with a lot of description, and a crossover can be five short sentences." },
@@ -251,7 +274,7 @@ MF.registerHub({
         ask: "Last one. What is the first thing to do with a problem you think has a crossover in it?",
         options: [
           { text: "Find where the story changes what it is doing", correct: true,
-            why: "Before naming either half and long before calculating anything. You cannot run the checklist on a half until you know where the halves are — which is why the island asks for the seam first too." },
+            why: "Before naming either half and long before calculating anything. You cannot pick a picture for a part until you know where the parts are — which is why the island asks for the seam first too." },
           { text: "Work out the first number you can", correct: false,
             why: "That often gets you the transfer, which is genuinely useful — but done before you know the shape, you have no way of telling whether the number you have is the middle or the end." },
           { text: "Decide which of the five it is", correct: false,

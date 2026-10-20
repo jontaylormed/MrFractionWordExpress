@@ -60,10 +60,11 @@
              '</svg></div>';
   }
 
-  /* The five questions, in the order the checklist asks them. Named once here
-     because three of the diagrams below draw the same list, and three copies
-     of it would drift the moment the checklist is reworded. */
-  var FIVE = ['kinds', 'moments', 'things', 'shape', 'question'];
+  /* The five "Ask yourself" questions, short, in the order the trip asks them
+     (`ModelPicker.askHTML`). They were the five checklist labels until the
+     checklist was removed (2026-10-20). Named once here because more than one
+     diagram below draws the same list, and copies would drift. */
+  var FIVE = ['changes?', 'compared?', 'repeated?', 'split up?', 'linked?'];
 
   /* A tick, drawn inside a box at (x, y). `i` staggers it down the list and
      `ph` offsets the whole pass, which is what lets one checklist finish
@@ -144,8 +145,19 @@
         s += tickBox(18, y, INK, i) +
              '<text x="44" y="' + (y + 4) + '" font-size="12" fill="' + INK + '" font-family="inherit">' + name + '</text>';
       });
-      return svg(s, 'The five checklist questions in a list — kinds, moments, things, shape, question — ' +
+      return svg(s, 'The five Ask-yourself questions in a list — changes, compared, repeated, split up, linked — ' +
                     'each with a box beside it that is ticked in turn, top to bottom.', '0 0 260 132');
+    },
+
+    /* "Ask yourself" exactly as the trip shows it in the feedback viewport —
+       built by the same function, so the hub cannot teach a different set of
+       questions from the one a student is asked. The ticked list above is the
+       fallback if the picker is not loaded. */
+    askset: function () {
+      if (!global.ModelPicker || !ModelPicker.askHTML) return ART.checkfive();
+      return '<div class="hub-picture hub-askset" role="img" aria-label="The five Ask-yourself questions, each beside ' +
+        'the picture it points to: does an amount change, are amounts compared, is an amount repeated, is a whole ' +
+        'split up, are different kinds linked.">' + ModelPicker.askHTML(false) + '</div>';
     },
 
     /* THE CENTREPIECE: the same five questions, run twice, one half at a time.
@@ -170,10 +182,10 @@
              tickBox(138, y, A, i) +
              tickBox(208, y, B, i, '2.8s');
       });
-      return svg(s, 'One list of the five questions with two columns of tick boxes beside it. The first ' +
-                    'column, in one colour and headed "first part", is ticked down the list; then the ' +
+      return svg(s, 'One list of the five Ask-yourself questions with two columns of tick boxes beside it. The ' +
+                    'first column, in one colour and headed "first part", is ticked down the list; then the ' +
                     'second column, in a different colour and headed "the rest", is ticked down the same ' +
-                    'five. A dashed line stands between the two columns.', '0 0 260 132');
+                    'questions. A dashed line stands between the two columns.', '0 0 260 132');
     },
 
     /* Where the story stops doing one job and starts another. The scenery
@@ -269,21 +281,21 @@
         '<rect class="rsc-glow" x="14" y="46" width="106" height="36" rx="4" fill="' + A + '"/>' +
         '<rect class="rsc-glow" x="140" y="46" width="106" height="36" rx="4" fill="' + B + '"/>' +
         '<rect x="30" y="8" width="200" height="22" rx="4" fill="var(--cream-mid)" stroke="' + INK + '" stroke-width="2"/>' +
-        '<text x="130" y="23" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">one question, asked once</text>' +
+        '<text x="130" y="23" font-size="11" fill="' + INK + '" font-family="inherit" text-anchor="middle">one story, asked once</text>' +
         '<path d="M92 32 V44 M168 32 V44" stroke="' + INK + '" stroke-width="1.8" opacity=".5"/>' +
         '<rect x="14" y="46" width="106" height="36" rx="4" fill="' + A + '" opacity=".12"/>' +
         '<rect x="14" y="46" width="106" height="36" rx="4" fill="none" stroke="' + A + '" stroke-width="2.4"/>' +
         '<text x="82" y="62" font-size="10.5" fill="' + A + '" font-family="inherit" text-anchor="middle" font-weight="700">first part</text>' +
-        '<text x="82" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">true</text>' +
+        '<text x="82" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">yes</text>' +
         tickBox(22, 66, A, 0) +
         '<rect x="140" y="46" width="106" height="36" rx="4" fill="' + B + '" opacity=".12"/>' +
         '<rect x="140" y="46" width="106" height="36" rx="4" fill="none" stroke="' + B +
           '" stroke-width="2.4" stroke-dasharray="5 4"/>' +
         '<text x="208" y="62" font-size="10.5" fill="' + B + '" font-family="inherit" text-anchor="middle" font-weight="700">the rest</text>' +
-        '<text x="208" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">also true</text>' +
+        '<text x="208" y="75" font-size="10.5" fill="' + INK + '" font-family="inherit" text-anchor="middle">yes, too</text>' +
         tickBox(148, 66, B, 1),
-        'One question at the top, branching to two answer boxes in different colours. Both are ticked: ' +
-        'one marked "first part, true" and the other "the rest, also true".');
+        'One story at the top, branching to two answer boxes in different colours. Both are ticked: ' +
+        'one marked "first part, yes" and the other "the rest, yes, too".');
     },
     /* One amount, at two moments, with the event between them. */
     change: function () {

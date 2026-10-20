@@ -2291,6 +2291,18 @@ select {
   .hub-allfive li, .hub-allfive li:nth-child(4) { grid-column: span 2; }
   .hub-allfive li:nth-child(5) { grid-column: 2 / span 2; }
 }
+/* "Ask yourself" in a hub (hub.js `ART.askset`): the trip's own set, built by
+   `ModelPicker.askHTML`, but as a list down the page with bigger pictures —
+   the hub is where it is read slowly, not glanced at in a feedback bar. */
+.hub-askset .ck-askset { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 8px; }
+.hub-askset .ck-askset li { font-size: 1em; gap: 12px; }
+.hub-askset .ck-ask-thumb, .hub-askset .ck-ask-thumb .mp-svg { width: 72px; }
+/* At 320px a 72px picture left 59px for the question beside it, and the set
+   overflowed its frame (measured). Smaller pictures on phones. */
+@media (max-width: 600px) {
+  .hub-askset .ck-askset li { gap: 8px; }
+  .hub-askset .ck-ask-thumb, .hub-askset .ck-ask-thumb .mp-svg { width: 44px; }
+}
 
 .hub-nav { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--su) * 1.5); }
 .hub-count { font-weight: 700; font-variant-numeric: tabular-nums; }

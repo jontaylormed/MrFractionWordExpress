@@ -15,7 +15,7 @@
 
 **The five-question checklist was removed from every trip** (user: the heaviest screen for cognitive load). The short **"Ask yourself"** questions in the feedback viewport during the picture choice took its place on the mainland; unstaffed halts now get the Crossover Read's picture picks with no coaching. Details in [`SITE-STATE.md`](SITE-STATE.md).
 
-**Waiting on the user, not to be done without discussion** (user, same day: "any pedagogical changes need more pause and discussion"): the Five Situations hub's "The checklist" page, the Lighthouse pages built on the checklist (the five questions, "a stretch of story", "two right answers"), For Teachers target 11, whether staffed island stops get "Ask yourself" or another help, and what a second wrong shape pick should offer now that the checklist cannot be offered.
+**Waiting on the user, not to be done without discussion** (user, same day: "any pedagogical changes need more pause and discussion"): the Five Situations hub's "The checklist" page, For Teachers target 11, whether staffed island stops get "Ask yourself" or another help, and what a second wrong shape pick should offer now that the checklist cannot be offered. (The Lighthouse's checklist pages were rewritten the same day, drafted and approved with the user first.) **Also noticed, not changed:** Lighthouse page 4's seam example (two days' numbers compared, then a fuel rate) has the same compare-then-rate shape as `cl-signal-delay`, which the hub's header forbids.
 
 ## What changed on 2026-10-18 — the cockpit
 
