@@ -67,6 +67,8 @@ MF.registerHub({
       short: "Why five",
       eyebrow: "Start here",
       heading: "Why five, and not five hundred",
+      // The same five pictures a student picks between on a trip.
+      art: "allfive",
       body:
         "<p>Word problems feel endless because the <em>stories</em> are endless &mdash; soup, quilts, free " +
         "throws, delivery vans. The stories are just wrapping.</p>" +
@@ -80,7 +82,7 @@ MF.registerHub({
           { text: "What is happening to the amounts", correct: true,
             why: "That is the whole method. Name the situation first, and the operation follows from it." },
           { text: "Which numbers are in it", correct: false,
-            why: "The numbers are the last thing you need. A problem with the numbers blanked out can still be sorted into one of the five — that is exactly what the first read on a trip asks you to do." },
+            why: "The numbers are the last thing you need. A problem with the numbers blanked out can still be sorted into one of the five — that is exactly what you do on a trip, when you pick the picture that fits before any number is shown." },
           { text: "Which key words it contains", correct: false,
             why: "That is the habit this whole hub exists to replace. There is a page on it later, with the words that fail and the problems they fail on." }
         ]
@@ -264,10 +266,11 @@ MF.registerHub({
       eyebrow: "The process",
       heading: "The five questions, all in one place",
       body:
-        "<p>This is the whole method. On a trip you will be asked these five one at a time &mdash; here " +
-        "they are together, so you can see the shape of what you are doing.</p>" +
+        "<p>These five questions are how you tell the pictures apart. On a trip they are the " +
+        "<strong>Run the checklist</strong> help tool, one question at a time, whenever a story is hard " +
+        "to place &mdash; here they are together, so you can see the shape of what you are doing.</p>" +
         "<p><strong>Ask them about the story, not about the numbers.</strong> Every one of them can be " +
-        "answered with the numbers blanked out, which is exactly how the first read works.</p>",
+        "answered with the numbers blanked out, which is exactly how choosing the picture works.</p>",
       tap: {
         ask: "Which question would settle \"Maya's rope is 7/8 m, Sam's is 1/2 m\" fastest?",
         options: [

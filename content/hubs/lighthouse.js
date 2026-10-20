@@ -35,7 +35,7 @@
 MF.registerHub({
   id: "lighthouse",
   name: "The Lighthouse",
-  blurb: "Problems with a middle: how one story can be two situations, how the same five questions answer twice, and what gets carried between the halves.",
+  blurb: "Problems with a middle: how one story can be two situations, each half with its own picture, and what gets carried between the halves.",
   welcome: "Most problems are one situation all the way through. Some are two, joined — and the join is a number that one half works out and the other half needs. This is where that gets taught properly.",
 
   pages: [
@@ -272,5 +272,5 @@ MF.registerHub({
     { q: "A crossing is 9 miles. The boat does 3 miles every 10 minutes. How many minutes for the crossing?", a: "30" }
   ],
 
-  closing: "A crossover problem is two situations you already know, joined by one number that nobody gives you. Find where the story changes, run the same five questions on each side of it, and work out what gets carried across — then it is two ordinary problems, in an order."
+  closing: "A crossover problem is two situations you already know, joined by one number that nobody gives you. Find where the story changes, pick the picture for each side of it, and work out what gets carried across — then it is two ordinary problems, in an order."
 });

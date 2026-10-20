@@ -443,6 +443,49 @@
     }
   };
 
+  /* ---------- THE SAME PICTURES AS THE TRIP (2026-10-20) ----------
+     On every trip a student now picks between pictures — the five shapes on
+     the Grand Tour and the Percent Line, and their own line's shape with the
+     `?` in each place on a ride of one line (model-picker.js). The hub drew
+     each line with a diagram of its own, so the picture a student learned
+     here was not the one they were asked to choose on the platform (user:
+     "same visuals to help students build patterns and correlate learning").
+
+     Each line's art is now taken FROM `ModelPicker` — the shape and its
+     caption, and underneath, every place its missing piece can be — so the
+     two cannot drift: change a picture there and the hub changes with it.
+     The earlier diagrams stay as the fallback if the picker is not loaded.
+     The percent hub reuses `change`, `compare` and `partwhole`, so its three
+     sub-type pages pick this up too. */
+  function pickerArt(line) {
+    var S = ModelPicker.SHAPES[line], V = ModelPicker.VARIANTS[line];
+    if (!S) return '';
+    var slots = V ? Object.keys(V).map(function (k) {
+      return '<li>' + V[k].art + '<span>' + V[k].caption + '</span></li>';
+    }).join('') : '';
+    return '<div class="hub-picture" style="--line-current:var(--line-' + line + ')">' +
+      '<figure class="hub-shape">' + S.art + '<figcaption>' + S.caption + '</figcaption></figure>' +
+      (slots
+        ? '<div class="hub-slots"><p class="hub-slots-head">Where the missing piece can be</p>' +
+            '<ul>' + slots + '</ul></div>'
+        : '') +
+      '</div>';
+  }
+  ['change', 'compare', 'groups', 'ratio', 'partwhole'].forEach(function (k) {
+    var drawn = ART[k];
+    ART[k] = function () { return global.ModelPicker ? pickerArt(k) : drawn(); };
+  });
+  /* All five at once, as the student will see them on a Grand Tour platform. */
+  ART.allfive = function () {
+    if (!global.ModelPicker) return '';
+    var order = ['change', 'compare', 'groups', 'ratio', 'partwhole'];
+    return '<div class="hub-picture hub-allfive"><p class="hub-slots-head">The pictures you choose between on a trip</p><ul>' +
+      order.filter(function (k) { return ModelPicker.SHAPES[k]; }).map(function (k) {
+        var S = ModelPicker.SHAPES[k];
+        return '<li style="--line-current:var(--line-' + k + ')">' + S.art + '<span>' + S.caption + '</span></li>';
+      }).join('') + '</ul></div>';
+  };
+
   /* ---------- the checklist, as one object ----------
      Built from `stations.js`'s own CHECK if it is loaded, so the hub cannot
      drift from the questions the trip actually asks. That drift is the whole

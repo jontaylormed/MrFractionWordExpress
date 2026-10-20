@@ -30,7 +30,7 @@ That is the same rule `Stations.phaseChain` applies to the fade ladder and `Stat
 | **Validation** | 37 problems, **0 errors**, 28 warnings — the warnings are the long-standing `segmentValue is not a value the problem gives` set and are expected |
 | **Lines** | Five schemas — Part–Whole Loop, Ratio & Rate Rail, The Change Line, The Compare Line, Equal Groups Express — plus **Crossover Island** |
 | **Special routes** | The Grand Tour (mixed), The Percent Line (a *surface* across four lines, not a sixth schema), The Challenge Line (crosses to the island) |
-| **Learning Hubs** | **5**, including the Lighthouse on the island |
+| **Learning Hubs** | **5**, including the Lighthouse on the island. The five line pages (Five Situations) and the Percent Yard's three sub-type pages draw **the trip's own pictures** — `ModelPicker.SHAPES` and `VARIANTS` via `hub.js` `pickerArt` — so the hub and the platform show the same shapes; "Why five" shows all five, three by two |
 | **Teacher page** | `teachers.html` — 18 learning targets with Bloom's levels (core trip, help tools, island, site-wide). Reached by the **For Teachers** pill, which shows on the home map only, and opens in a new tab |
 | **Runtime** | Zero dependencies, no build step, runs from `file://`, no localStorage |
 
