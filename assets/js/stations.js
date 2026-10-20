@@ -1348,6 +1348,13 @@
             'that shows how the amounts in this story are related. No numbers yet &mdash; just the shape.</p>') +
       this.problemHTML(false) +
       '<h3>' + (slotMode ? 'Which picture shows what is missing?' : 'Which picture fits this story?') + '</h3>' +
+      /* ASK YOURSELF — the checklist, short, as questions (user, 2026-10-20:
+         "a shorter and concise version of the checklist in the Feedback…
+         asking more than telling"). `ck-teach`, so it shows in the feedback
+         viewport until the first pick is answered. Each question sits beside
+         the picture it would point to, so the questions and the pictures are
+         learned together — but nothing says which answer this story gives. */
+      '<div class="ck-teach">' + ModelPicker.askHTML(slotMode) + '</div>' +
       '<div class="ck-to-work">' + ModelPicker.html(p, ride) + '</div>' +
       this.toolsHTML() +
       '<div class="feedback" role="status" id="mpfb"></div>' +

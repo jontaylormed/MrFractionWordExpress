@@ -214,7 +214,35 @@
     return right ? SHAPE_YES[k] || '' : SHAPE_ASK[k] || '';
   }
 
+  /* The checklist, short and as questions, for the feedback viewport while a
+     student is choosing. Questions only — no "if yes, it is…": the student
+     makes that link by looking from the question to the picture beside it.
+     No number words: this is a numberless screen. */
+  var ASK_SHAPE = [
+    ['change', 'Does an amount change?'],
+    ['compare', 'Are amounts compared?'],
+    ['groups', 'Is an amount repeated?'],
+    ['partwhole', 'Is a whole split up?'],
+    ['ratio', 'Are different kinds linked?']
+  ];
+  var ASK_SLOT = [
+    'What does the story give you?',
+    'What does the question ask for?',
+    'Which picture has its ? there?'
+  ];
+  function askHTML(slotMode) {
+    var items = slotMode
+      ? ASK_SLOT.map(function (q) { return '<li><span>' + q + '</span></li>'; })
+      : ASK_SHAPE.filter(function (x) { return SHAPES[x[0]]; }).map(function (x) {
+          return '<li><span class="ck-ask-thumb">' + SHAPES[x[0]].art + '</span><span>' + x[1] + '</span></li>';
+        });
+    // The label leads the same row, so the whole set can sit on a slim bar.
+    return '<ul class="ck-askset' + (slotMode ? ' ck-askset-slot' : '') + '">' +
+      '<li class="ck-askset-head"><strong>Ask yourself:</strong></li>' + items.join('') + '</ul>';
+  }
+
   global.ModelPicker = {
+    askHTML: askHTML,
     html: html, why: why, correctLine: correctLine, answerFor: answerFor,
     modeFor: modeFor, slotOf: slotOf, SHAPES: SHAPES, VARIANTS: VARIANTS
   };

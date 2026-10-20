@@ -3825,6 +3825,33 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-tools-row .btn { justify-content: flex-start; }
 .ck-back-row { margin: 0 0 calc(var(--su)); }
 
+/* "Ask yourself" — the checklist, short, beside the pictures it points to.
+   One compact row that wraps, so it fits the slim feedback bar on a laptop. */
+.ck-askset { list-style: none; margin: 0; padding: 0; max-width: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.ck-askset li { display: flex; align-items: center; gap: 6px; font-size: .92em; line-height: 1.25; }
+.ck-ask-thumb { flex: 0 0 auto; width: 40px; }
+.ck-ask-thumb .mp-svg { width: 40px; height: auto; display: block; color: var(--ink); }
+.ck-askset-slot li:not(.ck-askset-head)::before { content: "?"; display: inline-grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%; background: var(--orange-deep); color: #fff;
+  font-weight: 700; font-size: .8em; flex: 0 0 auto; }
+/* Short laptop windows: the pinned bar is ~84px, so the set tightens to fit. */
+@media (min-width: 1024px) and (max-height: 860px) {
+  .ck-askset { gap: 2px 12px; }
+  .ck-askset li { font-size: .84em; }
+  .ck-ask-thumb, .ck-ask-thumb .mp-svg { width: 30px; }
+  /* The slim bar makes room for the set while it is the thing showing —
+     measured 116px of content in 84 — and returns to slim once a pick is
+     answered and the set gives way to the verdict. */
+  .cockpit .ck-feedback:has(.ck-coach[data-latest] .ck-askset) { max-height: 124px; }
+}
+/* Phones: a question a line, with a small picture. Two to a row squeezed
+   each question into a 127px cell, 66–87px tall. */
+@media (max-width: 600px) {
+  .ck-askset { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ck-ask-thumb, .ck-ask-thumb .mp-svg { width: 34px; }
+}
+
 /* The coaching note: a step's instructions, moved out of the question panel. */
 .ck-coach .ck-coach-body > * { margin: 0 0 4px; font-size: inherit; color: inherit; }
 .ck-coach .ck-coach-body > :last-child { margin-bottom: 0; }
