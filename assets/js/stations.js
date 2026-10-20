@@ -1525,9 +1525,13 @@
     }).join('');
 
     this.host().innerHTML =
-      MrFraction.aside('steady',
-        '<p><strong>First read.</strong> The numbers are covered up on purpose &mdash; you cannot work ' +
-        'anything out yet, and you are not meant to. Read it for what <em>kind</em> of thing is going on.</p>') +
+      /* Two voices for one screen: as the "Run the checklist" tool he offers it
+         as help; at an unstaffed halt it is the first read, the one aid there. */
+      MrFraction.aside('steady', asTool
+        ? '<p><strong>The checklist.</strong> A handful of questions about the shape of the story, a question ' +
+          'at a time. Ask them about what happens, not about the numbers &mdash; they are covered for that reason.</p>'
+        : '<p><strong>First read.</strong> The numbers are covered up on purpose &mdash; you cannot work ' +
+          'anything out yet, and you are not meant to. Read it for what <em>kind</em> of thing is going on.</p>') +
       this.problemHTML(false) +
       '<div class="section-head"><span class="eyebrow">The Platform Check &middot; part one</span>' +
         '<h2>What kind of situation is this?</h2><div class="rule"></div></div>' +
@@ -1838,11 +1842,13 @@
 
     this.host().innerHTML =
       MrFraction.aside('steady',
-        '<p><strong>Still the first read, and this story needs a different one.</strong> ' +
-        'On the five lines you read a problem once and asked what kind it is. This one is not a single ' +
-        'kind, so asking that gets you two answers and neither of them is wrong.</p>' +
-        '<p>So read it in two goes. First find the place it changes &mdash; then ask the same five ' +
-        'questions on each side of that place.</p>') +
+        /* Updated for the picture choice (2026-10-20): the halves are now
+           answered with the same pictures the mainland uses, not five questions. */
+        // No number words ("one thing, then another"): this screen is numberless.
+        '<p><strong>This story is not a single situation.</strong> It does something, then something ' +
+        'different, so no single picture fits all of it.</p>' +
+        '<p>First find the place it changes &mdash; then pick the picture for each side of that place. ' +
+        'They are the same pictures you choose between on every line.</p>') +
       this.problemHTML(false, true) +
 
       /* ONE STAGE AT A TIME: the seam, then the first half, then the second.
@@ -2007,8 +2013,9 @@
 
     this.host().innerHTML =
       MrFraction.aside('steady',
-        '<p><strong>Still the first read.</strong> You have said what kind of situation this is. ' +
-        'Now show me where the story says so.</p>') +
+        // After the picture choice now, so he refers back to it.
+        '<p><strong>You picked the picture.</strong> Now show me where the story says so &mdash; ' +
+        'the sentences that make it that shape.</p>') +
       this.problemHTML(false, true) +
       /* This screen had no section-head at all — a bare h3 at 16.8px, smaller
          than the body text above it, and no display face doing any work until
@@ -2174,8 +2181,9 @@
 
     this.host().innerHTML =
       MrFraction.aside('steady',
-        '<p><strong>Second read.</strong> The numbers are showing now &mdash; but not every number in a ' +
-        'problem is there to be used.</p>') +
+        // A help tool now ("Sort the numbers"), not a fixed second read.
+        '<p><strong>Sort the numbers.</strong> Not every number in a story is there to be used &mdash; ' +
+        'some only set the scene.</p>') +
       this.problemHTML(false) +
       '<h3>Which of these do you actually need?</h3>' +
       '<p class="hint-text">Tap the ones the question depends on. Leave the rest.</p>' +
@@ -2321,7 +2329,8 @@
 
     this.host().innerHTML =
       MrFraction.aside('steady',
-        '<p><strong>Third read.</strong> One job only: what is the question actually asking you to produce?</p>') +
+        // A help tool now ("Find the question"), not a fixed third read.
+        '<p><strong>Find the question.</strong> One job only: what is the question actually asking you to produce?</p>') +
       this.problemHTML(true) +
       '<h3>Which one is the question asking for?</h3>' +
       '<p class="hint-text">More than one of these is a real number you could work out. Only one is what was asked.</p>' +

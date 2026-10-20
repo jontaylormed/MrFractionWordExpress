@@ -627,8 +627,8 @@
       MrFraction.aside('steady',
         '<p>You&rsquo;re riding <strong>' + esc(L.name) + '</strong>. How many stops do you want?</p>' +
         (mixed ? '<p>Every stop is drawn from a different line, and I won&rsquo;t tell you which ' +
-                 'until you&rsquo;re on it. Same five strategies &mdash; you just won&rsquo;t know ' +
-                 'which situation is coming.</p>' : '') +
+                 'until you&rsquo;re on it. At each one you pick which of the five pictures fits &mdash; ' +
+                 'that&rsquo;s the whole skill, with nothing giving it away.</p>' : '') +
         /* Said HERE, before the first stop, because it is the promise the route
            makes and the thing the Ticket Booth will hold them to. */
         (percent ? '<p>A warning about this one. Percent is not a situation &mdash; it is a way of ' +

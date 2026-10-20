@@ -24,7 +24,7 @@ MF.registerHub({
   id: "five-situations",
   name: "The Five Situations",
   blurb: "What each line means, how to tell them apart, and the words that trip people up. Work through it a page at a time.",
-  welcome: "Every word problem you meet is describing something happening to a set of amounts. There are only five somethings. Learn to hear which one you're being told, and you're most of the way to solving it.",
+  welcome: "Every word problem you meet is describing something happening to a set of amounts. There are only five somethings, and each one has a picture — the same pictures you pick between on a trip. Learn to see which one you're being told, and you're most of the way to solving it.",
 
   /* The checklist, as one object. This is the process we point students at, so
      it has to be readable in one go rather than remembered from five pages. The
@@ -319,5 +319,5 @@ MF.registerHub({
     }
   ],
 
-  closing: "That's the whole framework. Five situations, and the rest is wrapping. When a problem won't sit still, come back to the mix-ups page — nine times out of ten that's what's going on."
+  closing: "That's the whole framework. Five situations, five pictures, and the rest is wrapping. When a problem won't sit still, come back to the mix-ups page — nine times out of ten that's what's going on."
 });
