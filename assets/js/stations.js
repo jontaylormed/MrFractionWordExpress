@@ -914,6 +914,40 @@
       var cs = Math.floor(Math.min((W - 16 - 3 * (cols - 1)) / cols, (H - 16 - 3 * (rows - 1)) / rows));
       if (cs > 6) ug.style.gridTemplateColumns = 'repeat(' + cols + ',' + Math.min(cs, 64) + 'px)';
     }
+    /* THE FRAMED SCENES FIT WHOLE, CENTRED (user, 2026-10-21: "Illustrations
+       are now out of frame… those windows should be centered"). The drawing
+       was sized from the frame's WIDTH alone (`.rsc-svg` is width 100%, height
+       auto), so in a wide, short panel it overflowed its own frame and the
+       frame cut it off: measured 541x220 of drawing in a frame 127–161px tall
+       at 1920x960, the bottom 60–90px of every rail scene gone. The frame is
+       now sized to the drawing's own proportions (read from its viewBox, so a
+       scene of another shape fits too), as large as the panel allows, and
+       centred; the drawing fills it exactly. Only in the cockpit's
+       size-contained panel — on a phone the panel grows to fit, and the
+       width-based sizing is right there. */
+    /* Each size is written only when it CHANGES. Rewriting an unchanged value
+       still dirties layout, and the next read forces a whole-page relayout —
+       harmless in the app, but tools/sweep.js keeps dozens of stations on the
+       page and it ran ten times slower (52 screens: 3.2s against 322ms). */
+    function put(node, prop, val) { if (node.style[prop] !== val) node.style[prop] = val; }
+    var fr = box.querySelector('.scene > .rsc-frame'), sv = fr && fr.querySelector('svg[viewBox]');
+    if (fr && sv) {
+      if (getComputedStyle(box).contain.indexOf('size') < 0) {
+        put(fr, 'width', ''); put(fr, 'height', ''); put(sv, 'height', '');
+      } else {
+        var vb = sv.viewBox.baseVal, fig = fr.parentNode, fs = getComputedStyle(fig);
+        var bw = fr.offsetWidth - fr.clientWidth;          // the frame's own border, both sides
+        var aw = fig.clientWidth - parseFloat(fs.paddingLeft) - parseFloat(fs.paddingRight) - bw;
+        var ah = fig.clientHeight - parseFloat(fs.paddingTop) - parseFloat(fs.paddingBottom) - bw -
+                 (cap ? cap.offsetHeight + (parseFloat(fs.rowGap) || 0) : 0);
+        if (vb && vb.width && aw > 0 && ah > 0) {
+          var k = Math.min(aw / vb.width, ah / vb.height);
+          put(fr, 'width', Math.floor(vb.width * k + bw) + 'px');
+          put(fr, 'height', Math.floor(vb.height * k + bw) + 'px');
+          put(sv, 'height', '100%');
+        }
+      }
+    }
   }
 
   /* FEEDBACK WRITTEN OUTSIDE A SLOT STILL GOES TO THE FEEDBACK VIEWPORT
@@ -950,6 +984,45 @@
     if (global.ResizeObserver && sceneBox) {
       new ResizeObserver(function () { fitScene(sceneBox); }).observe(sceneBox);
     }
+    /* THE WORD PROBLEM AND ITS PICTURE LOCK AT THE TOP, WHEN THEY FIT (user,
+       2026-10-21: "lock the top too… Feedback row should be locked too"). The
+       teachers' first complaint was scrolling between the story and the
+       questions, so the story row is pinned under the site header while the
+       working row scrolls beneath it — and the feedback bar stays pinned at
+       the bottom, so both ends of the screen hold still.
+       ONLY WHEN THERE IS ROOM: the header, the story row and the bar must leave
+       at least LOCK_ROOM px to work in. Measured: 1920x960 leaves ~560, 1366x657
+       ~270, a scaled Chromebook (911x450) nothing at all — there the story
+       scrolls as before rather than locking a screen with no work area. Decided
+       here rather than in a media query because the story row's height comes
+       from the story. */
+    var LOCK_ROOM = 200;
+    function lockTop() {
+      var text = root.querySelector('#ck-text'), bar = root.querySelector('.ck-bottom'),
+          body = root.querySelector('.ck-body');
+      if (!text || !bar || !body || !root.isConnected) return;
+      var sign = document.querySelector('.station-sign');
+      var signH = sign && getComputedStyle(sign).position === 'sticky' ? sign.offsetHeight : 0;
+      var cockpit = getComputedStyle(body).gridTemplateAreas.indexOf('lever') >= 0;
+      var room = (global.innerHeight || 0) - signH - text.offsetHeight - bar.offsetHeight - 24;
+      root.style.setProperty('--ck-lock-top', signH + 'px');
+      var locked = cockpit && room >= LOCK_ROOM;
+      if (locked) root.setAttribute('data-lock-top', '');
+      else root.removeAttribute('data-lock-top');
+      /* Tell the browser what is pinned, so focus moves and scrollIntoView
+         stop short of the locked story and the pinned bar instead of parking
+         the thing they were bringing into view underneath one of them. */
+      var de = document.documentElement.style;
+      de.scrollPaddingTop = (locked ? signH + text.offsetHeight + 12 : signH) + 'px';
+      de.scrollPaddingBottom = cockpit ? bar.offsetHeight + 'px' : '';
+    }
+    this.lockTop = lockTop;
+    global.addEventListener('resize', lockTop);
+    if (global.ResizeObserver) {
+      var lo = new ResizeObserver(lockTop);
+      [root.querySelector('#ck-text'), root.querySelector('.ck-bottom')].forEach(function (n) { if (n) lo.observe(n); });
+    }
+    setTimeout(lockTop, 0);
     if (global.MutationObserver) {
       new MutationObserver(function () { self.relocateStray(); })
         .observe(root.querySelector('#phase-host'),
@@ -1004,6 +1077,7 @@
         var s = t && t.closest && t.closest('.feedback');
         if (s && fb.contains(s) && s.innerHTML.trim()) slot = s;
       });
+      lockTop();   // the bar's height can change with what it now shows
       if (!slot) return;
       [].forEach.call(fb.querySelectorAll('.feedback[data-latest]'), function (n) {
         if (n !== slot) n.removeAttribute('data-latest');

@@ -3532,6 +3532,12 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
 .ck-scene .scene > svg, .ck-scene .scene > img, .ck-scene .scene > div:not(figcaption) {
   flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
 .ck-scene .scene figcaption { flex: 0 0 auto; margin: 0; }
+/* A framed scene keeps the size `fitScene` gives it — the whole drawing, at
+   its own proportions — and sits centred in the panel instead of stretching
+   to fill it (2026-10-21; it overflowed and was cropped). */
+@media (min-width: 1024px), (min-width: 900px) and (orientation: landscape) {
+  .ck-scene .scene > .rsc-frame { flex: 0 0 auto; align-self: center; max-width: 100%; }
+}
 /* A station's art band (the Arrivals Board's caboose) sitting in the picture
    panel: it fits the panel instead of keeping its 240px band height. */
 .ck-scene .art-band { margin: 0; height: 100%; width: 100%; align-items: center; }
@@ -3828,7 +3834,7 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
   /* The slim bar makes room for the set while it is the thing showing —
      measured 116px of content in 84 — and returns to slim once a pick is
      answered and the set gives way to the verdict. */
-  .cockpit .ck-feedback:has(.ck-coach[data-latest] .ck-askset) { max-height: 124px; }
+  .cockpit .ck-feedback:has(.ck-coach[data-latest] .ck-askset) { min-height: 143px; max-height: 143px; }  /* 124 x 1.15 */
 }
 /* Phones: a question a line, with a small picture. Two to a row squeezed
    each question into a 127px cell, 66–87px tall. */
@@ -3961,16 +3967,29 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
      It measured 97–167px, mostly Mr Fraction's docked speech wrapping and the
      feedback panel's minimum height. Each part is capped at a couple of lines
      and scrolls inside itself if a message is longer; the label sits inline. */
-  .ck-feedback { min-height: 0; max-height: 84px; overflow: auto; padding: 6px 12px; gap: 2px; }
+  /* 15% TALLER, AND ONE HEIGHT (user, 2026-10-21: "increase the height of the
+     Feedback row… by 15% — a little scrolling is ok"). Was capped at 84px and
+     sized to its message, so the row measured 72–136px from step to step;
+     now 97px (84 x 1.15) on every step, so the bar itself never changes size,
+     and a longer message scrolls inside it. */
+  .ck-feedback { min-height: 97px; max-height: 97px; overflow: auto; padding: 6px 12px; gap: 2px; }
   .ck-feedback::before { font-size: .7rem; }
   .ck-feedback .msg { padding: 4px 8px; }
   .ck-say { flex-basis: 30%; }
   .mf-companion[data-docked] .mf-c-figure img { width: 40px; }
-  .mf-companion[data-docked] .mf-c-bubble { max-height: 84px; padding: 6px 10px; font-size: .95rem; line-height: 1.35; }
+  .mf-companion[data-docked] .mf-c-bubble { max-height: 97px; padding: 6px 10px; font-size: .95rem; line-height: 1.35; }
   .ck-lever { align-items: center; }
   .ck-lever-btn { min-height: 48px; }
   /* The empty-state silhouette fits the slimmer box. */
   .ck-feedback:not(:has(.feedback[data-latest]))::after { inset: 4px 0; }
+  /* THE STORY ROW LOCKS UNDER THE HEADER when `lockTop` (stations.js) finds
+     room for it. The spread shadow, in the page's own colour, fills the gaps
+     between and above the two panels, so the work scrolling underneath does
+     not show through them. */
+  .cockpit[data-lock-top] .ck-text, .cockpit[data-lock-top] .ck-scene {
+    position: sticky; top: var(--ck-lock-top, 0px); z-index: 4;
+    box-shadow: 0 0 0 calc(var(--su) * 1.25) var(--cream);
+  }
 }
 
 /* ---------- Print ---------- */
