@@ -3975,7 +3975,16 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
   .ck-feedback { min-height: 97px; max-height: 97px; overflow: auto; padding: 6px 12px; gap: 2px; }
   .ck-feedback::before { font-size: .7rem; }
   .ck-feedback .msg { padding: 4px 8px; }
-  .ck-say { flex-basis: 30%; }
+  /* MR FRACTION GETS MORE OF THE BAR (user, 2026-10-21: "more width in his
+     dialogue boxes"). At 30% his speech was a narrow column that hid most of
+     what he said. Measured over 34 screens, share of his words hidden /
+     share of feedback hidden:
+       1366x657   30% 23% / 15%    40% 6% / 18%
+       1920x960   30%  3% / 11%    40% 1% / 11%
+       911x450    30% 64% / 35%    45% 34% / 43%   (50%: 22% / 48%)
+     40% on laptops and monitors; 45% on Chromebook-width windows, where the
+     bar is small enough that neither side can show everything. */
+  .ck-say { flex-basis: 40%; }
   .mf-companion[data-docked] .mf-c-figure img { width: 40px; }
   .mf-companion[data-docked] .mf-c-bubble { max-height: 97px; padding: 6px 10px; font-size: .95rem; line-height: 1.35; }
   .ck-lever { align-items: center; }
@@ -3990,6 +3999,12 @@ body:has(.cockpit) main { max-width: none; padding: calc(var(--su) * 1.5) calc(v
     position: sticky; top: var(--ck-lock-top, 0px); z-index: 4;
     box-shadow: 0 0 0 calc(var(--su) * 1.25) var(--cream);
   }
+}
+
+/* Chromebook-width cockpits (landscape 900–1199px): Mr Fraction's share of
+   the bar is 45%, not 40% — see the measurements above `.ck-say` there. */
+@media (min-width: 900px) and (max-width: 1199px) and (orientation: landscape) {
+  .ck-say { flex-basis: 45%; }
 }
 
 /* ---------- Print ---------- */
