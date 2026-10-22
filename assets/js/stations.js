@@ -996,7 +996,14 @@
        scrolls as before rather than locking a screen with no work area. Decided
        here rather than in a media query because the story row's height comes
        from the story. */
-    var LOCK_ROOM = 200;
+    /* THE DECISION USES THE BAR AT REST. The bar grows while "Ask yourself"
+       shows (109px to 155px), and deciding on its current height made the
+       story lock, unlock on the picture step, and lock again — at 1366x657,
+       measured on the live site the day it shipped. A lock that comes and
+       goes between steps is the opposite of the point. So the smallest
+       height the bar has had in this window is used; a resize starts over. */
+    var LOCK_ROOM = 200, restBar = Infinity;
+    global.addEventListener('resize', function () { restBar = Infinity; });
     function lockTop() {
       var text = root.querySelector('#ck-text'), bar = root.querySelector('.ck-bottom'),
           body = root.querySelector('.ck-body');
@@ -1004,7 +1011,8 @@
       var sign = document.querySelector('.station-sign');
       var signH = sign && getComputedStyle(sign).position === 'sticky' ? sign.offsetHeight : 0;
       var cockpit = getComputedStyle(body).gridTemplateAreas.indexOf('lever') >= 0;
-      var room = (global.innerHeight || 0) - signH - text.offsetHeight - bar.offsetHeight - 24;
+      restBar = Math.min(restBar, bar.offsetHeight);
+      var room = (global.innerHeight || 0) - signH - text.offsetHeight - restBar - 24;
       root.style.setProperty('--ck-lock-top', signH + 'px');
       var locked = cockpit && room >= LOCK_ROOM;
       if (locked) root.setAttribute('data-lock-top', '');
